@@ -14,7 +14,7 @@ const config = {
 
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel' },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
         'css?localIdentName=[name]_[local]_[hash:base64:5]!postcss!sass'
