@@ -1,42 +1,46 @@
 
 import { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-
+import { PropTypes as RouterPropTypes } from 'react-router';
+import AppBar from 'material-ui/lib/app-bar';
+import Tabs from 'material-ui/lib/tabs/tabs';
+import Tab from 'material-ui/lib/tabs/tab';
 
 class Header extends Component {
+  onTabChange(value) {
+    this.context.history.pushState(null, value);
+  }
+
   render() {
     return (
-      <nav className='navbar'>
-        <div className='container'>
-
-          <div className='navbar-header'>
-            <button type='button' className='navbar-toggle collapsed'>
-              <span className='sr-only'></span>
-              <i className='fa fa-bars'></i>
-            </button>
-            <Link className='navbar-brand' to='/'>moneybase</Link>
-          </div>
-
-          <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
-            <ul className='nav navbar-nav navbar-right'>
-              <li><Link to='/'>home</Link></li>
-              {this.props.auth.authenticated ? ([
-                <li key={1}><Link to='/connect'>connect</Link></li>,
-                <li key={2}><Link to='/logout'>logout</Link></li>,
-              ]) : (
-                <li><Link to='/signup'>get started</Link></li>
-              )}
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <AppBar
+        title='moneybase'
+        iconElementLeft={<span/>}
+        iconElementRight={
+          <Tabs onChange={::this.onTabChange} valueLink={{
+            value: this.context.history.pathname,
+            requestChange: ::this.onTabChange,
+          }}>
+            <Tab label='home' value='/'/>
+            {this.props.auth.authenticated ? ([
+              <Tab key={1} value='/connect' label='connect'/>,
+              <Tab key={2} value='/logout' label='logout'/>,
+            ]) : (
+              <Tab value='/signup' label='get started'/>
+            )}
+          </Tabs>
+        }
+      />
     );
   }
 }
 
 Header.propTypes = {
   auth: PropTypes.object.isRequired,
+};
+
+Header.contextTypes = {
+  history: RouterPropTypes.history,
 };
 
 export default connect((state)=> ({ auth: state.auth }))(Header);

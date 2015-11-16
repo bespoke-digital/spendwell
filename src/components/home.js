@@ -33,7 +33,7 @@ class Home extends Component {
           <ul>
             {this.state.accounts.map((account, index)=> (
               <li key={index}>
-                <h4>{`${account.meta.name} `}<small>{account.meta.number}</small></h4>
+                {`${account.meta.name} (${account.meta.number})`}
               </li>
             ))}
           </ul>

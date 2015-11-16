@@ -49,14 +49,13 @@ export default function(socket) {
       return;
     }
 
-    plaid.getConnectUser(socket.user.plaidKey, { gte: '30 days ago' }, (err, response)=> {
+    plaid.getConnectUser(socket.user.plaidKey, (err, response)=> {
       if (err) {
         console.error(err);
         clbk({ success: false, reason: err.message || 'Plaid error' });
         return;
       }
 
-      console.log(response);
       clbk({
         success: true,
         transactions: response.transactions,

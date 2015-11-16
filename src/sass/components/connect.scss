@@ -4,7 +4,7 @@
 :local(.fi) {
   cursor: pointer;
 
-  @media (min-width: $screen-sm-min) and (max-width: $screen-md-max) {
+  @media (min-width: $small-screen-up) and (max-width: $medium-screen) {
     width: calc(50% - 10px);
     float: left;
 
@@ -13,7 +13,7 @@
     }
   }
 
-  @media (min-width: $screen-lg-min) {
+  @media (min-width: $medium-screen-up) {
     width: calc(33% - 10px);
     float: left;
     margin-right: 20px;
