@@ -1,0 +1,12 @@
+
+@import '../variables';
+
+:local(.root) {
+  width: 300px;
+  margin: inherit auto;
+
+  .auth-other {
+    display: inline-block;
+    margin-left: 5px;
+  }
+}

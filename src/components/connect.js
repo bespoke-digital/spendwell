@@ -1,23 +1,13 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
+import { connectPlaid } from 'state/auth';
 import styles from 'sass/components/connect.scss';
 
 
-const plaidAuth = window.Plaid.create({
-  clientName: 'Moneybase',
-  key: '4b747132cf8c427bec79f00e0dcb4a',
-  product: 'connect',
-  longTail: true,
-  env: 'tartan',
-  onSuccess(publicToken) {
-    console.log('onSuccess', publicToken);
-  },
-});
-
-
-export default class Connect extends Component {
+class Connect extends Component {
   constructor() {
     super();
     this.state = { results: [] };
@@ -33,7 +23,17 @@ export default class Connect extends Component {
   }
 
   selectFi(fi) {
-    plaidAuth.open(fi.id);
+    window.Plaid.create({
+      clientName: 'Moneybase',
+      key: '4b747132cf8c427bec79f00e0dcb4a',
+      product: 'connect',
+      longTail: true,
+      env: 'tartan',
+      onSuccess: (publicToken)=> {
+        console.log('onSuccess', publicToken);
+        this.props.dispatch(connectPlaid({ publicToken }));
+      },
+    }).open(fi.id);
   }
 
   render() {
@@ -75,3 +75,5 @@ export default class Connect extends Component {
 Connect.contextTypes = {
   socket: PropTypes.object,
 };
+
+export default connect((state)=> ({ auth: state.auth }))(Connect);

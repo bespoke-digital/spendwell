@@ -20,6 +20,7 @@ export default function(socket) {
       }
       socket.authenticated = true;
       socket.user = results[0];
+      clbk({ success: true, user: socket.user.public() });
     });
   });
 
@@ -47,7 +48,11 @@ export default function(socket) {
         }
 
         user.apiKey = uuid.v4();
-        user.save().then(()=> clbk({ success: true, apiKey: user.apiKey }));
+        user.save().then(()=> clbk({
+          success: true,
+          apiKey: user.apiKey,
+          user: user.public(),
+        }));
 
         socket.authenticated = true;
         socket.user = user;
@@ -83,11 +88,24 @@ export default function(socket) {
           passwordSalt,
         });
 
-        user.save().then(()=> clbk({ success: true, apiKey: user.apiKey }));
+        user.save().then(()=> clbk({
+          success: true,
+          apiKey: user.apiKey,
+          user: socket.user.public(),
+        }));
 
         socket.authenticated = true;
         socket.user = user;
       });
+    });
+  });
+
+  socket.on('auth.logout', function(clbk) {
+    socket.authenticated = false;
+    socket.user.apiKey = null;
+    socket.user.save().then(()=> {
+      socket.user = null;
+      clbk({ success: true });
     });
   });
 }

@@ -1,9 +1,10 @@
 
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
 
-export default class Header extends Component {
+class Header extends Component {
   render() {
     return (
       <nav className='navbar'>
@@ -20,7 +21,12 @@ export default class Header extends Component {
           <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
             <ul className='nav navbar-nav navbar-right'>
               <li><Link to='/'>home</Link></li>
-              <li><Link to='/connect'>connect</Link></li>
+              {this.props.auth.authenticated ? ([
+                <li key={1}><Link to='/connect'>connect</Link></li>,
+                <li key={2}><Link to='/logout'>logout</Link></li>,
+              ]) : (
+                <li><Link to='/signup'>get started</Link></li>
+              )}
             </ul>
           </div>
         </div>
@@ -28,3 +34,9 @@ export default class Header extends Component {
     );
   }
 }
+
+Header.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+export default connect((state)=> ({ auth: state.auth }))(Header);

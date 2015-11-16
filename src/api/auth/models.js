@@ -9,4 +9,12 @@ export const User = thinky.createModel('User', {
   passwordSalt: thinky.type.string(),
   passwordHash: thinky.type.string(),
   apiKey: thinky.type.string(),
+  plaidKey: thinky.type.string(),
+});
+
+User.define('public', function() {
+  return {
+    name: this.name,
+    isConnected: !!this.plaidKey,
+  };
 });
