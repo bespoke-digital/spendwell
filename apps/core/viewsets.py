@@ -1,6 +1,6 @@
 
-from rest_framework import permissions
+from .permissions import MBOwnedPermission
 
 
-class MBViewSetMixin(object):
-    permission_classes = (permissions.IsAuthenticated,)
+class MBOwnedViewSetMixin(object):
+    permission_classes = (MBOwnedPermission,)

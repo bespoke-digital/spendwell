@@ -44,3 +44,10 @@ class MBModel(models.Model):
 
     def as_json(self):
         return self.as_serializer().as_json()
+
+
+class MBOwnedModel(models.Model):
+    owner = models.ForeignKey('users.User')
+
+    class Meta:
+        abstract = True

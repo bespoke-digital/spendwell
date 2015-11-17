@@ -27,3 +27,13 @@ class MBSerializerMixin(AsJsonSerializerMixin):
     created = serializers.ReadOnlyField()
     modified = serializers.ReadOnlyField()
     deleted = serializers.ReadOnlyField()
+
+
+class MBOwnedSerializerMixin(AsJsonSerializerMixin):
+    owner = serializers.ReadOnlyField()
+
+    def create(self, validated_data):
+        instance = super(MBOwnedSerializerMixin, self).create(validated_data)
+        instance.owner = self.context['request'].user
+        instance.save()
+        return instance

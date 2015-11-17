@@ -3,7 +3,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import auth from './state/auth';
-import bank from './state/bank';
+import institutions from './state/institutions';
 
 
 export default applyMiddleware(
@@ -12,5 +12,5 @@ export default applyMiddleware(
 )(createStore)(combineReducers({
   // reducers:
   auth,
-  bank,
+  institutions,
 }));

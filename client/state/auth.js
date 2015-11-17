@@ -3,10 +3,6 @@ const AUTH_REFRESH = 'moneybase/AUTH_REFRESH';
 const AUTH_REFRESH_SUCCESS = 'moneybase/AUTH_REFRESH_SUCCESS';
 const AUTH_REFRESH_FAIL = 'moneybase/AUTH_REFRESH_FAIL';
 
-const AUTH_SIGNUP = 'moneybase/AUTH_SIGNUP';
-const AUTH_SIGNUP_SUCCESS = 'moneybase/AUTH_SIGNUP_SUCCESS';
-const AUTH_SIGNUP_FAIL = 'moneybase/AUTH_SIGNUP_FAIL';
-
 const AUTH_LOGIN = 'moneybase/AUTH_LOGIN';
 const AUTH_LOGIN_SUCCESS = 'moneybase/AUTH_LOGIN_SUCCESS';
 const AUTH_LOGIN_FAIL = 'moneybase/AUTH_LOGIN_FAIL';
@@ -165,23 +161,5 @@ export function refresh() {
     }).then((response)=> {
       dispatch({ type: AUTH_REFRESH_SUCCESS, user: response.user });
     });
-  };
-}
-
-
-export function connectPlaid({ publicToken }) {
-  return (dispatch)=> {
-    dispatch({ type: AUTH_CONNECT });
-
-    console.warn('TODO: plaid.connected');
-    // socket.emit('plaid.connected', { publicToken }, function(result) {
-    //   if (!result.success) {
-    //     dispatch({ type: AUTH_CONNECT_FAIL, reason: result.reason });
-    //     return;
-    //   }
-
-    //   dispatch({ type: AUTH_CONNECT_SUCCESS });
-    //   dispatch(authenticate());
-    // });
   };
 }

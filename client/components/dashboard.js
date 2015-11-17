@@ -5,13 +5,22 @@ import { Link } from 'react-router';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
-import { fetch, selectAccount } from 'state/bank';
+import { fetch, selectAccount } from 'state/institutions';
 import styles from 'sass/components/home.scss';
 
 
-class Home extends Component {
+class Dashboard extends Component {
   componentDidMount() {
     this.props.dispatch(fetch());
+  }
+
+  componentWillMount() {
+    if (!this.props.auth.authenticated) {
+      this.context.history.pushState(null, '/login');
+      return;
+    } else if (!this.props.auth.user.isConnected) {
+      this.context.history.pushState(null, '/connect');
+    }
   }
 
   onAccountSelect(event, account) {
@@ -20,21 +29,8 @@ class Home extends Component {
   }
 
   render() {
-    if (!this.props.auth.authenticated || !this.props.auth.user.isConnected) {
-      return (
-        <div className={`container ${styles.root}`}>
-          <h1>Home</h1>
-          {this.props.auth.authenticated ? (
-            <span>Please <Link to='/connect'>connect</Link> your account.</span>
-          ) : (
-            <span>Please <Link to='/login'>login</Link>.</span>
-          )}
-        </div>
-      );
-    }
-
-    const { accounts, transactions, selectedAccount } = this.props.bank;
-    console.log(this.props.bank);
+    const { accounts, transactions, selectedAccount } = this.props.institutions;
+    console.log(this.props.institutions);
 
     return (
       <div className={`container ${styles.root}`}>
@@ -71,12 +67,16 @@ class Home extends Component {
   }
 }
 
-Home.propTypes = {
+Dashboard.contextTypes = {
+  history: PropTypes.object.isRequired,
+};
+
+Dashboard.propTypes = {
   auth: PropTypes.object.isRequired,
-  bank: PropTypes.object.isRequired,
+  institutions: PropTypes.object.isRequired,
 };
 
 export default connect((state)=> ({
   auth: state.auth,
-  bank: state.bank,
-}))(Home);
+  institutions: state.institutions,
+}))(Dashboard);

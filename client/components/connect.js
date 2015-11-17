@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { connectPlaid } from 'state/auth';
+import { connect as connectInstitution } from 'state/institutions';
 import styles from 'sass/components/connect.scss';
 
 
@@ -14,12 +14,20 @@ class Connect extends Component {
     this.handleSearch = _.debounce(this.handleSearch.bind(this), 300);
   }
 
+  componentDidMount() {
+    if (!window.Plaid) {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+  }
+
   handleSearch(event) {
-    // this.context.socket.emit(
-    //   'plaid.institutions.search',
-    //   { query: event.target.value },
-    //   (data)=> this.setState({ results: data.results }),
-    // );
+    fetch(`https://tartan.plaid.com/institutions/search?p=connect&q=${event.target.value}`)
+      .then((response)=> response.json())
+      .then((results)=> this.setState({ results }));
   }
 
   selectFi(fi) {
@@ -30,8 +38,7 @@ class Connect extends Component {
       longTail: true,
       env: 'tartan',
       onSuccess: (publicToken)=> {
-        console.log('onSuccess', publicToken);
-        this.props.dispatch(connectPlaid({ publicToken }));
+        this.props.dispatch(connectInstitution({ id: fi.id, publicToken }));
       },
     }).open(fi.id);
   }
@@ -72,4 +79,4 @@ class Connect extends Component {
   }
 }
 
-export default connect((state)=> ({ auth: state.auth }))(Connect);
+export default connect((state)=> ({ institutions: state.institutions }))(Connect);
