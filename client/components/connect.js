@@ -38,7 +38,8 @@ class Connect extends Component {
       longTail: true,
       env: 'tartan',
       onSuccess: (publicToken)=> {
-        this.props.dispatch(connectInstitution({ id: fi.id, publicToken }));
+        console.log({ id: fi.id, publicToken });
+        // this.props.dispatch(connectInstitution({ id: fi.id, publicToken }));
       },
     }).open(fi.id);
   }

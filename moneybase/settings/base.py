@@ -96,3 +96,6 @@ STATIC_ROOT = 'collected_static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
+PLAID_SECRET = None
