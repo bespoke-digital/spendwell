@@ -56,3 +56,14 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    @classmethod
+    def get_serializer_class(Cls):
+        from .serializers import UserSerializer
+        return UserSerializer
+
+    def as_serializer(self):
+        return self.get_serializer_class()(self)
+
+    def as_json(self):
+        return self.as_serializer().as_json()

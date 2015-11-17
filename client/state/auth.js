@@ -1,7 +1,7 @@
 
-const AUTH_AUTHENTICATE = 'moneybase/AUTH_AUTHENTICATE';
-const AUTH_AUTHENTICATE_SUCCESS = 'moneybase/AUTH_AUTHENTICATE_SUCCESS';
-const AUTH_AUTHENTICATE_FAIL = 'moneybase/AUTH_AUTHENTICATE_FAIL';
+const AUTH_REFRESH = 'moneybase/AUTH_REFRESH';
+const AUTH_REFRESH_SUCCESS = 'moneybase/AUTH_REFRESH_SUCCESS';
+const AUTH_REFRESH_FAIL = 'moneybase/AUTH_REFRESH_FAIL';
 
 const AUTH_SIGNUP = 'moneybase/AUTH_SIGNUP';
 const AUTH_SIGNUP_SUCCESS = 'moneybase/AUTH_SIGNUP_SUCCESS';
@@ -42,67 +42,25 @@ const defaultState = {
 export default function(state = defaultState, action) {
   switch (action.type) {
 
-  case AUTH_AUTHENTICATE:
-    return {
-      ...state,
-      authenticate: { loading: true, ...state.authenticate },
-    };
-  case AUTH_AUTHENTICATE_SUCCESS:
-    return {
-      ...state,
-      authenticated: true,
-      authenticate: { loading: false },
-      user: action.user,
-    };
-  case AUTH_AUTHENTICATE_FAIL:
-    return {
-      ...state,
-      authenticated: false,
-      authenticate: {
-        loading: false,
-        failed: true,
-        error: action.reason,
-      },
-      user: null,
-    };
-
-  case AUTH_SIGNUP:
-    return {
-      ...state,
-      signup: { loading: true },
-      user: null,
-    };
-  case AUTH_SIGNUP_SUCCESS:
-    return {
-      ...state,
-      signup: { loading: false },
-      user: action.user,
-    };
-  case AUTH_SIGNUP_FAIL:
-    return {
-      ...state,
-      signup: {
-        loading: false,
-        failed: true,
-        error: action.reason,
-      },
-    };
-
   case AUTH_LOGIN:
     return {
       ...state,
-      login: { loading: true },
+      authenticated: false,
       user: null,
+      login: { loading: true },
     };
   case AUTH_LOGIN_SUCCESS:
     return {
       ...state,
-      login: { loading: false },
+      authenticated: true,
       user: action.user,
+      login: { loading: false },
     };
   case AUTH_LOGIN_FAIL:
     return {
       ...state,
+      authenticated: false,
+      user: null,
       login: {
         loading: false,
         failed: true,
@@ -112,6 +70,30 @@ export default function(state = defaultState, action) {
 
   case AUTH_LOGOUT_SUCCESS:
     return defaultState;
+
+  case AUTH_REFRESH:
+    return {
+      ...state,
+      refresh: { loading: true, ...state.refresh },
+    };
+  case AUTH_REFRESH_SUCCESS:
+    return {
+      ...state,
+      authenticated: true,
+      user: action.user,
+      refresh: { loading: false },
+    };
+  case AUTH_REFRESH_FAIL:
+    return {
+      ...state,
+      authenticated: false,
+      user: null,
+      refresh: {
+        loading: false,
+        failed: true,
+        error: action.reason,
+      },
+    };
 
   case AUTH_CONNECT:
     return {
@@ -139,61 +121,21 @@ export default function(state = defaultState, action) {
 }
 
 
-export function authenticate() {
-  return (dispatch)=> {
-    dispatch({ type: AUTH_AUTHENTICATE });
-
-    const apiKey = ApiKey.get();
-    if (!apiKey) {
-      dispatch({ type: AUTH_AUTHENTICATE_FAIL, reason: 'missing key' });
-      return;
-    }
-
-    console.warn('TODO: auth.authenticate');
-    // socket.emit('auth.authenticate', { apiKey }, function(result) {
-    //   if (result.success)
-    //     dispatch({ type: AUTH_AUTHENTICATE_SUCCESS, user: result.user });
-    //   else
-    //     dispatch({ type: AUTH_AUTHENTICATE_FAIL, reason: result.reason });
-    // });
-  };
-}
-
-
-export function signup({ name, email, password }) {
-  return (dispatch)=> {
-    dispatch({ type: AUTH_SIGNUP, email });
-
-    console.warn('TODO: auth.signup');
-    // socket.emit('auth.signup', { name, email, password }, function(result) {
-    //   if (!result.success) {
-    //     dispatch({ type: AUTH_SIGNUP_FAIL, reason: result.reason });
-    //     return;
-    //   }
-
-    //   ApiKey.set(result.apiKey);
-    //   dispatch({ type: AUTH_SIGNUP_SUCCESS });
-    //   dispatch(authenticate());
-    // });
-  };
-}
-
-
 export function login({ email, password }) {
   return (dispatch)=> {
     dispatch({ type: AUTH_LOGIN, email });
 
-    console.warn('TODO: auth.login');
-    // socket.emit('auth.login', { email, password }, function(result) {
-    //   if (!result.success) {
-    //     dispatch({ type: AUTH_LOGIN_FAIL, reason: result.reason });
-    //     return;
-    //   }
-
-    //   ApiKey.set(result.apiKey);
-    //   dispatch({ type: AUTH_LOGIN_SUCCESS });
-    //   dispatch(authenticate());
-    // });
+    fetch('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((response)=> {
+      if (response.status !== 200)
+        return Promise.reject(dispatch({ type: AUTH_LOGIN_FAIL }));
+      return response.json();
+    }).then((response)=> {
+      dispatch({ type: AUTH_LOGIN_SUCCESS, user: response.user });
+    });
   };
 }
 
@@ -202,14 +144,26 @@ export function logout() {
   return (dispatch)=> {
     dispatch({ type: AUTH_LOGOUT });
 
-    socket.emit('auth.logout', function(result) {
-      if (!result.success) {
-        dispatch({ type: AUTH_LOGOUT_FAIL, reason: result.reason });
-        return;
-      }
+    fetch('/api/auth/logout', { method: 'POST' }).then((response)=> {
+      if (response.status === 200)
+        dispatch({ type: AUTH_LOGOUT_SUCCESS });
+      else
+        dispatch({ type: AUTH_LOGOUT_FAIL });
+    });
+  };
+}
 
-      ApiKey.set(null);
-      dispatch({ type: AUTH_LOGOUT_SUCCESS });
+
+export function refresh() {
+  return (dispatch)=> {
+    dispatch({ type: AUTH_REFRESH });
+
+    fetch('/api/auth/refresh', { method: 'GET' }).then((response)=> {
+      if (response.status !== 200)
+        return Promise.reject(dispatch({ type: AUTH_REFRESH_FAIL }));
+      return response.json();
+    }).then((response)=> {
+      dispatch({ type: AUTH_REFRESH_SUCCESS, user: response.user });
     });
   };
 }
@@ -219,14 +173,15 @@ export function connectPlaid({ publicToken }) {
   return (dispatch)=> {
     dispatch({ type: AUTH_CONNECT });
 
-    socket.emit('plaid.connected', { publicToken }, function(result) {
-      if (!result.success) {
-        dispatch({ type: AUTH_CONNECT_FAIL, reason: result.reason });
-        return;
-      }
+    console.warn('TODO: plaid.connected');
+    // socket.emit('plaid.connected', { publicToken }, function(result) {
+    //   if (!result.success) {
+    //     dispatch({ type: AUTH_CONNECT_FAIL, reason: result.reason });
+    //     return;
+    //   }
 
-      dispatch({ type: AUTH_CONNECT_SUCCESS });
-      dispatch(authenticate());
-    });
+    //   dispatch({ type: AUTH_CONNECT_SUCCESS });
+    //   dispatch(authenticate());
+    // });
   };
 }

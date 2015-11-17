@@ -1,7 +1,7 @@
 
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const webpack = require('webpack');
+const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 
 
@@ -29,6 +29,10 @@ const config = {
 
   plugins: [
     new ExtractTextPlugin('main.css', { allChunks: true }),
+    new webpack.ProvidePlugin({
+      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch',
+      'promise': 'imports?this=>global!exports?global.promise!promise',
+    }),
   ],
 
   resolve: {

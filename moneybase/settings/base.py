@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
+
     'apps.core',
     'apps.landing',
     'apps.users',
@@ -40,14 +42,32 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'moneybase.urls'
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.jinja2.Jinja2',
-    'DIRS': [os.path.join(BASE_DIR, 'templates')],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'environment': 'moneybase.jinja2.environment',
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'moneybase.jinja2.environment',
+        },
     },
-}]
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': (
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
+            ),
+        },
+    },
+]
 
 WSGI_APPLICATION = 'moneybase.wsgi.application'
 

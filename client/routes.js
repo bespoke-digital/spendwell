@@ -1,5 +1,5 @@
 
-import { Router, Route } from 'react-router';
+import { Router, Route, Redirect } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 
 import App from './components/app';
@@ -17,6 +17,7 @@ export default (
       <Route path='connect' component={Connect}/>
       <Route path='login' component={Login}/>
       <Route path='logout' component={Logout}/>
+      <Redirect to='dashboard'/>
     </Route>
   </Router>
 );
