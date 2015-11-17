@@ -27,7 +27,7 @@ class Home extends Component {
           {this.props.auth.authenticated ? (
             <span>Please <Link to='/connect'>connect</Link> your account.</span>
           ) : (
-            <span>Please <Link to='/signup'>sign up</Link>.</span>
+            <span>Please <Link to='/login'>login</Link>.</span>
           )}
         </div>
       );

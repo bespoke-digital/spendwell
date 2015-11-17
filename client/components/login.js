@@ -50,8 +50,6 @@ class Login extends Component {
           >
             Login
           </button>
-
-          <div className='auth-other'>Or <Link to='/signup'>Signup</Link></div>
         </Form>
 
       </div>
