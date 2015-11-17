@@ -36,7 +36,6 @@
     "material-ui": "^0.13.2",
     "morgan": "^1.6.1",
     "node-sass": "^3.4.1",
-    "normalize.css": "^3.0.3",
     "plaid": "^1.0.7",
     "postcss-loader": "^0.7.0",
     "pretty-error": "^1.2.0",

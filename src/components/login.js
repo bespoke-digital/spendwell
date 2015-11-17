@@ -2,8 +2,7 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
-import { FormsyText } from 'formsy-material-ui';
-import RaisedButton from 'material-ui/lib/raised-button';
+import { Input } from 'formsy-react-components';
 import { Link } from 'react-router';
 
 import { login } from 'state/auth';
@@ -41,15 +40,17 @@ class Login extends Component {
           onValid={this.setState.bind(this, { buttonEnabled: true })}
           onInvalid={this.setState.bind(this, { buttonEnabled: false })}
         >
-          <FormsyText floatingLabelText='Email' name='email' type='email' validations='isEmail' required/>
-          <FormsyText floatingLabelText='Password' name='password' type='password' required/>
+          <Input layout='vertical' label='Email' name='email' type='email' validations='isEmail' required/>
+          <Input layout='vertical' label='Password' name='password' type='password' required/>
 
-          <RaisedButton
+          <button
             type='submit'
-            primary={true}
+            className='btn btn-primary'
             disabled={!this.state.buttonEnabled}
-            label='Login'
-          />
+          >
+            Login
+          </button>
+
           <div className='auth-other'>Or <Link to='/signup'>Signup</Link></div>
         </Form>
 

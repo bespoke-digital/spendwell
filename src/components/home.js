@@ -29,15 +29,24 @@ class Home extends Component {
     return (
       <div className={`container ${styles.root}`}>
         <h1>Home</h1>
-        {this.props.auth.authenticated && this.props.auth.user.isConnected ? (
+        {this.props.auth.authenticated && this.props.auth.user.isConnected ? ([
+          <h3>Accounts</h3>,
           <ul>
             {this.state.accounts.map((account, index)=> (
               <li key={index}>
                 {`${account.meta.name} (${account.meta.number})`}
               </li>
             ))}
-          </ul>
-        ) : this.props.auth.authenticated ? (
+          </ul>,
+          <h3>Transactions</h3>,
+          <ul>
+            {this.state.transactions.map((transaction, index)=> (
+              <li key={index}>
+                {`${transaction.name} (${transaction.date})`}
+              </li>
+            ))}
+          </ul>,
+        ]) : this.props.auth.authenticated ? (
           <span>Please <Link to='/connect'>connect</Link> your account.</span>
         ) : (
           <span>Please <Link to='/signup'>sign up</Link>.</span>
