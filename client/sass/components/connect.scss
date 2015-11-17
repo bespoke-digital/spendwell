@@ -1,0 +1,40 @@
+
+@import '../variables';
+
+:local(.fi) {
+  cursor: pointer;
+
+  @media (min-width: $screen-sm-min) and (max-width: $screen-md-max) {
+    width: calc(50% - 10px);
+    float: left;
+
+    &:nth-child(odd) {
+      margin-right: 20px;
+    }
+  }
+
+  @media (min-width: $screen-lg-min) {
+    width: calc(33% - 10px);
+    float: left;
+    margin-right: 20px;
+
+    &:nth-child(3n) {
+      margin-right: 0px;
+    }
+  }
+
+
+  img {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 40px;
+  }
+
+  .fi-name {
+    display: block;
+    float: left;
+    margin-left: 20px;
+    color: white;
+  }
+}

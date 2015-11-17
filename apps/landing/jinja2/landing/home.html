@@ -1,0 +1,26 @@
+{% extends "landing/base.html" %}
+
+{% block body_class %}{{ super() }} landing-home{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Follow Your Money</h1>
+      <p>Know where it goes and hit your goals</p>
+      <div class="cta">
+        <form
+          action="//digital.us12.list-manage.com/subscribe/post?u=bec5076d8b34caeee6a5ef6cb&id=64ed676338"
+          method="post"
+          target="_blank"
+          class="form-inline"
+          novalidate
+        >
+          <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
+          <input class="form-control" name="EMAIL" type="email" placeholder="Enter your email">
+          <button type="submit" class="btn btn-primary">Notify Me</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+
+.navbar {
+  height: 65px;
+  border-radius: 0;
+
+  color: white;
+  background-color: $brand-primary;
+  border-radius: 0;
+
+  .navbar-brand {
+    padding: 15px 15px;
+  }
+
+  .navbar-nav > li > a {
+    padding: 22px 15px;
+    color: white;
+
+    &:active, &:focus {
+      background-color: transparent;
+    }
+  }
+}

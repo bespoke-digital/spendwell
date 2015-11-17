@@ -6,9 +6,10 @@ const autoprefixer = require('autoprefixer');
 
 
 const config = {
-  entry: './src/client.js',
+  entry: './client/index.js',
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, 'static', 'dist'),
+    publicPath: '/static/dist/',
     filename: 'client.js',
   },
 
@@ -20,7 +21,7 @@ const config = {
         'css?localIdentName=[name]_[local]_[hash:base64:5]!postcss!sass'
       ) },
       { test: require.resolve('react'), loader: 'expose?React' },
-      { test: /\.(eot|svg|ttf|woff|woff2)$/, loader: 'file' },
+      { test: /\.(eot|svg|ttf|woff|woff2|png|jpg)$/, loader: 'file' },
     ],
   },
 
@@ -31,7 +32,7 @@ const config = {
   ],
 
   resolve: {
-    modulesDirectories: ['src', 'node_modules'],
+    modulesDirectories: ['client', 'node_modules'],
   },
 
 };
