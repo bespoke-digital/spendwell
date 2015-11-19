@@ -73,7 +73,7 @@ export function fetch() {
   return (dispatch, getState)=> {
     dispatch({ type: TRANSACTIONS_FETCH });
 
-    const state = getState().bank;
+    const state = getState().institutions;
     const args = { account: null };
     if (state.selectedAccount)
       args.account = state.selectedAccount._id;

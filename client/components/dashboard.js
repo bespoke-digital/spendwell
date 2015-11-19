@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
@@ -14,23 +13,12 @@ class Dashboard extends Component {
     this.props.dispatch(fetch());
   }
 
-  componentWillMount() {
-    if (!this.props.auth.authenticated) {
-      this.context.history.pushState(null, '/login');
-      return;
-    } else if (!this.props.auth.user.isConnected) {
-      this.context.history.pushState(null, '/connect');
-    }
-  }
-
   onAccountSelect(event, account) {
-    console.log(account);
     this.props.dispatch(selectAccount({ account }));
   }
 
   render() {
     const { accounts, transactions, selectedAccount } = this.props.institutions;
-    console.log(this.props.institutions);
 
     return (
       <div className={`container ${styles.root}`}>

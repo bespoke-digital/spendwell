@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { connect as connectInstitution } from 'state/institutions';
 import styles from 'sass/components/connect.scss';
+import req from 'lib/req';
 
 
 class Connect extends Component {
@@ -22,6 +23,8 @@ class Connect extends Component {
       script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
       document.getElementsByTagName('head')[0].appendChild(script);
     }
+
+    req('POST', '/test', { some: 'value' });
   }
 
   handleSearch(event) {
@@ -45,7 +48,6 @@ class Connect extends Component {
   }
 
   render() {
-    console.log('results', this.state.results);
     return (
       <div className='container'>
         <h1>Connect Account</h1>

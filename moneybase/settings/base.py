@@ -10,6 +10,7 @@ SECRET_KEY = '&;v_CEg*j%lmzulK(qS.J1Brlezwshavj+`yu5nZc~]A6,G9fuHGWI$hw"WOe'
 DEBUG = False
 
 ALLOWED_HOSTS = ['www.moneybase.co']
+CSRF_COOKIE_SECURE = True
 
 
 INSTALLED_APPS = [
@@ -21,6 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
 
     'apps.core',
     'apps.landing',
@@ -43,32 +46,22 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'moneybase.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'environment': 'moneybase.jinja2.environment',
-        },
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': (
+            'django.contrib.auth.context_processors.auth',
+            'django.template.context_processors.debug',
+            'django.template.context_processors.i18n',
+            'django.template.context_processors.media',
+            'django.template.context_processors.static',
+            'django.template.context_processors.tz',
+            'django.template.context_processors.request',
+            'django.contrib.messages.context_processors.messages',
+        ),
     },
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': (
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.template.context_processors.request',
-                'django.contrib.messages.context_processors.messages',
-            ),
-        },
-    },
-]
+}]
 
 WSGI_APPLICATION = 'moneybase.wsgi.application'
 
@@ -99,3 +92,9 @@ STATICFILES_DIRS = (
 
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_SECRET = None
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}

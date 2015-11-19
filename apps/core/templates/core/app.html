@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block body %}
   <div id="root"></div>
-  <script src="{{ static('dist/client.js') }}"></script>
+  <script src="{% static 'dist/client.js' %}"></script>
 {% endblock %}

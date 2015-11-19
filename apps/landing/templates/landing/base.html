@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
-{% block body_class %}{{ super() }} landing{% endblock %}
+{% load staticfiles %}
+
+{% block body_class %}{{ super }} landing{% endblock %}
 
 {% block body %}
   <nav class="navbar">
@@ -12,7 +14,7 @@
           <i class="fa fa-bars"></i>
         </button>
         <a class="navbar-brand" to="/">
-          <img src={{ static('img/logo-white.svg') }} alt="moneybase"/>
+          <img src={% static 'img/logo-white.svg' %} alt="moneybase"/>
         </a>
       </div>
 
