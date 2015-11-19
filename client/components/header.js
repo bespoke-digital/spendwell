@@ -39,17 +39,15 @@ class Header extends Component {
             </a>
           </div>
 
-          <div className='collapse navbar-collapse'>
-            <ul className='nav navbar-nav navbar-right'>
-              {this.props.auth.authenticated ? ([
-                <NavLink key='dashboard' to='/dashboard'>Dashboard</NavLink>,
-                <NavLink key='connect' to='/connect'>Connect</NavLink>,
-                <NavLink key='logout' to='/logout'>Logout</NavLink>,
-              ]) : (
-                <NavLink to='/login'>Login</NavLink>
-              )}
-            </ul>
-          </div>
+          {this.props.auth.authenticated ? (
+            <div className='collapse navbar-collapse'>
+              <ul className='nav navbar-nav navbar-right'>
+                <NavLink key='dashboard' to='/dashboard'>Dashboard</NavLink>
+                <NavLink key='connect' to='/connect'>Connect</NavLink>
+                <NavLink key='logout' to='/logout'>Logout</NavLink>
+              </ul>
+            </div>
+          ) : null}
         </div>
       </nav>
     );

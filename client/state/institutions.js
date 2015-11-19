@@ -1,4 +1,6 @@
 
+import req from 'lib/req';
+
 const INSTITUTIONS_CONNECT = 'moneybase/INSTITUTIONS_CONNECT';
 const INSTITUTIONS_CONNECT_SUCCESS = 'moneybase/INSTITUTIONS_CONNECT_SUCCESS';
 const INSTITUTIONS_CONNECT_FAIL = 'moneybase/INSTITUTIONS_CONNECT_FAIL';
@@ -98,16 +100,11 @@ export function connect({ id, publicToken }) {
   return (dispatch)=> {
     dispatch({ type: INSTITUTIONS_CONNECT });
 
-    fetch('/api/institutions', {
-      method: 'POST',
-      body: JSON.stringify({ id, publicToken }),
-      headers: { 'Content-Type': 'application/json' },
-    }).then((response)=> {
-      if (response.status !== 200)
-        return Promise.reject(dispatch({ type: INSTITUTIONS_CONNECT_FAIL }));
-      return response.json();
-    }).then((response)=> {
-      dispatch({ type: INSTITUTIONS_CONNECT_SUCCESS, institution: response.institution });
-    });
+    req('POST', '/api/institutions', { id, publicToken })
+      .then((response)=> dispatch({
+        type: INSTITUTIONS_CONNECT_SUCCESS,
+        institution: response.institution,
+      }))
+      .catch(()=> dispatch({ type: INSTITUTIONS_CONNECT_FAIL }));
   };
 }

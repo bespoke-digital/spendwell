@@ -41,7 +41,7 @@ const config = {
 
 };
 
-config.devtool = 'sourcemap';
+// config.devtool = 'sourcemap';
 config.debug = true;
 
 // config.plugins.push(new webpack.optimize.OccurenceOrderPlugin());

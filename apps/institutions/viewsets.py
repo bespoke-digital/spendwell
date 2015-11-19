@@ -23,6 +23,7 @@ class InstitutionViewSet(MBOwnedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = InstitutionSerializer
 
     def create(self, request):
+        import pdb; pdb.set_trace()
         response = plaid_client.exchange_token(request.data.public_token)
 
 

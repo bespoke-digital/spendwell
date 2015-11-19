@@ -5,6 +5,7 @@ import { Form } from 'formsy-react';
 import { Input } from 'formsy-react-components';
 import { Link } from 'react-router';
 
+import Header from './header';
 import { login } from 'state/auth';
 import styles from 'sass/components/login.scss';
 
@@ -21,37 +22,40 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.authenticated)
-      nextProps.history.pushState(null, '/');
+      nextProps.history.pushState(null, this.props.next || '/dashboard');
   }
 
   render() {
     return (
-      <div className={`container ${styles.root}`}>
-        <h1>Login</h1>
+      <div>
+        <Header/>
+        <div className={`container ${styles.root}`}>
+          <h1>Login</h1>
 
-        { this.props.auth.login.error ? (
-          <div className='alert alter-danger'>
-            { this.props.auth.login.error }
-          </div>
-        ) : null}
+          { this.props.auth.login.error ? (
+            <div className='alert alter-danger'>
+              { this.props.auth.login.error }
+            </div>
+          ) : null}
 
-        <Form
-          onValidSubmit={::this.handleSubmit}
-          onValid={this.setState.bind(this, { buttonEnabled: true })}
-          onInvalid={this.setState.bind(this, { buttonEnabled: false })}
-        >
-          <Input layout='vertical' label='Email' name='email' type='email' validations='isEmail' required/>
-          <Input layout='vertical' label='Password' name='password' type='password' required/>
-
-          <button
-            type='submit'
-            className='btn btn-primary'
-            disabled={!this.state.buttonEnabled}
+          <Form
+            onValidSubmit={::this.handleSubmit}
+            onValid={this.setState.bind(this, { buttonEnabled: true })}
+            onInvalid={this.setState.bind(this, { buttonEnabled: false })}
           >
-            Login
-          </button>
-        </Form>
+            <Input layout='vertical' label='Email' name='email' type='email' validations='isEmail' required/>
+            <Input layout='vertical' label='Password' name='password' type='password' required/>
 
+            <button
+              type='submit'
+              className='btn btn-primary'
+              disabled={!this.state.buttonEnabled}
+            >
+              Login
+            </button>
+          </Form>
+
+        </div>
       </div>
     );
   }

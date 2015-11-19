@@ -2,11 +2,14 @@
 from django.contrib.auth import authenticate, login, logout
 
 from rest_framework import status
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
 class LoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
         if 'email' not in request.data:
             return Response(
@@ -41,7 +44,9 @@ logout_view = LogoutView.as_view()
 
 
 class RefreshView(APIView):
-    def post(self, request):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
         if request.user.is_authenticated():
             return Response({'user': request.user.as_json()})
         else:
