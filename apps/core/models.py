@@ -9,6 +9,10 @@ class MBQuerySet(models.QuerySet):
     def as_json(self):
         return self.as_serializer().as_json()
 
+    def delete(self, **kwargs):
+        for instance in self:
+            instance.delete(**kwargs)
+
 
 class MBManager(models.Manager):
     def get_queryset(self):
@@ -19,6 +23,9 @@ class MBManager(models.Manager):
 
     def as_json(self):
         return self.get_queryset().as_json()
+
+    def delete(self, **kwargs):
+        return self.get_queryset().delete(**kwargs)
 
 
 class MBModel(models.Model):
@@ -31,9 +38,12 @@ class MBModel(models.Model):
     class Meta:
         abstract = True
 
-    def delete(self):
-        self.deleted = True
-        self.save()
+    def delete(self, hard=False):
+        if hard:
+            super(MBModel, self).delete()
+        else:
+            self.deleted = True
+            self.save()
 
     @classmethod
     def get_serializer_class(Cls):

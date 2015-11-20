@@ -12,4 +12,4 @@ DATABASES['default'] = {
     'NAME': 'moneybase',
 }
 
-PLAID_SECRET = '4b747132cf8c427bec79f00e0dcb4a'
+PLAID_SECRET = 'da9810c55be7680311950088a45d22'

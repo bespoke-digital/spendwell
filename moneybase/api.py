@@ -5,7 +5,7 @@ from rest_framework import routers
 from apps.institutions.viewsets import InstitutionViewSet
 
 
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'institutions', InstitutionViewSet)
 
 urlpatterns = [

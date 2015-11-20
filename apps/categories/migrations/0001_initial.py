@@ -2,24 +2,25 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Institution',
+            name='Category',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.BooleanField(default=False)),
                 ('plaid_id', models.CharField(max_length=255)),
-                ('access_token', models.CharField(max_length=255)),
                 ('name', models.CharField(max_length=255)),
-                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('type', models.CharField(max_length=255)),
+                ('parent', models.ForeignKey(to='categories.Category', related_name='children')),
             ],
             options={
                 'abstract': False,

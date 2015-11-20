@@ -1,0 +1,53 @@
+
+from django.utils.timezone import now
+from django.db import models
+
+from apps.core.models import MBOwnedModel
+
+
+class AccountManager(models.Manager):
+    def create_from_json(self, json_data):
+        '''
+        Sample Data:
+        {
+          '_id':'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
+          '_user':'eJXpMzpR65FP4RYno6rzuA7OZjd9n3Hna0RYa',
+          '_item':'KdDjmojBERUKx3JkDd9RuxA5EvejA4SENO4AA',
+          'institution_type':'fake_institution',
+          'type':'depository',
+          'subtype':'checking',
+          'meta':{
+            'name':'Plaid Checking',
+            'number':'1702'
+          },
+          'balance':{
+            'current':1253.32,
+            'available':1081.78
+          }
+        }
+        '''
+        account = Account()
+        account.plaid_id = json_data['_id']
+        account.type = json_data['type']
+        account.subtype = json_data['subtype']
+        account.name = json_data['meta']['name']
+        account.number_snippet = json_data['meta']['number']
+        account.balance_current = json_data['balance']['current']
+        account.balance_available = json_data['balance']['available']
+        account.last_updated = now()
+        account.save()
+        return account
+
+
+class Account(MBOwnedModel):
+    institution = models.ForeignKey('institutions.Institution', related_name='accounts')
+    plaid_id = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    subtype = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    number_snippet = models.CharField(max_length=255)
+    balance_current = models.DecimalField(decimal_places=2, max_digits=12)
+    balance_available = models.DecimalField(decimal_places=2, max_digits=12)
+    last_updated = models.DateTimeField()
+
+    objects = AccountManager()

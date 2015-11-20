@@ -8,4 +8,4 @@ from .models import Institution
 class InstitutionSerializer(MBOwnedSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Institution
-        fields = ('name',)
+        fields = ('name', 'id')

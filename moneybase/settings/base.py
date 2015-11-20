@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'apps.landing',
     'apps.users',
     'apps.institutions',
+    'apps.accounts',
+    'apps.transactions',
+    'apps.categories',
 ]
 
 AUTH_USER_MODEL = 'users.User'

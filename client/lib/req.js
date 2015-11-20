@@ -1,6 +1,8 @@
 
 import _ from 'lodash';
 import Cookies from 'cookies-js';
+import NProgress from 'nprogress';
+
 import store from 'store';
 
 
@@ -8,7 +10,7 @@ const csrfToken = Cookies.get('csrftoken');
 
 
 function urlencode(data) {
-  _.map(data, (val, key)=> `${key}=${encodeURIComponent(val)}`).join('&');
+  return _.map(data, (val, key)=> `${key}=${encodeURIComponent(val)}`).join('&');
 }
 
 
@@ -16,6 +18,8 @@ export default function req(method, path, data) {
   const state = store.getState();
   const options = {};
   options.method = method.toUpperCase();
+  options.mode = 'same-origin';
+  options.credentials = 'same-origin';
   options.headers = {
     'X-CSRFToken': csrfToken,
     'Content-Type': 'application/json',
@@ -31,7 +35,9 @@ export default function req(method, path, data) {
     path += `?${urlencode(data)}`;
 
   return new Promise(function(resolve, reject) {
+    NProgress.start();
     fetch(path, options).then((response)=> {
+      NProgress.done();
       if (response.status > 399) {
         reject(response);
       } else {

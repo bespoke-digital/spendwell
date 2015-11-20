@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
-                ('password', models.CharField(verbose_name='password', max_length=128)),
-                ('last_login', models.DateTimeField(null=True, verbose_name='last login', blank=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(verbose_name='last login', null=True, blank=True)),
                 ('email', models.EmailField(max_length=255, verbose_name='email address', unique=True)),
                 ('name', models.CharField(max_length=255)),
                 ('is_active', models.BooleanField(default=True)),

@@ -1,6 +1,5 @@
 
 from django.conf import settings
-
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,23 +11,32 @@ from .models import Institution
 from .serializers import InstitutionSerializer
 
 
-plaid_client = Client(
-    client_id=settings.PLAID_CLIENT_ID,
-    secret=settings.PLAID_SECRET,
-)
-
-
 class InstitutionViewSet(MBOwnedViewSetMixin, viewsets.ModelViewSet):
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
 
     def create(self, request):
-        import pdb; pdb.set_trace()
-        response = plaid_client.exchange_token(request.data.public_token)
+        plaid_client = Client(
+            client_id=settings.PLAID_CLIENT_ID,
+            secret=settings.PLAID_SECRET,
+        )
 
+        token_response = plaid_client.exchange_token(request.data['public_token']).json()
+        access_token = token_response['access_token']
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        institution_response = plaid_client.institution(request.data['id']).json()
+        name = institution_response['name']
+
+        institution = Institution.objects.create(
+            access_token=access_token,
+            name=name,
+            owner=request.user,
+            plaid_id=request.data['id'],
+        )
+
+        serializer = self.get_serializer(instance=institution)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=self.get_success_headers(serializer.data),
+        )

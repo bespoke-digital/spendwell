@@ -100,7 +100,7 @@ export function connect({ id, publicToken }) {
   return (dispatch)=> {
     dispatch({ type: INSTITUTIONS_CONNECT });
 
-    req('POST', '/api/institutions', { id, publicToken })
+    req('POST', '/api/institutions', { id, public_token: publicToken })
       .then((response)=> dispatch({
         type: INSTITUTIONS_CONNECT_SUCCESS,
         institution: response.institution,
