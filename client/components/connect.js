@@ -38,6 +38,7 @@ class Connect extends Component {
       env: 'tartan',
       onSuccess: (publicToken)=> {
         console.log({ id: fi.id, publicToken });
+        this.setState({ playItAgain: { id: fi.id, publicToken } });
         this.props.dispatch(connectInstitution({ id: fi.id, publicToken }));
       },
     }).open(fi.id);
@@ -47,6 +48,14 @@ class Connect extends Component {
     return (
       <div className='container'>
         <h1>Connect Account</h1>
+
+        { this.state.playItAgain ? (
+          <a
+            href='#'
+            className='btn btn-warning'
+            onClick={()=> this.props.dispatch(connectInstitution(this.state.playItAgain))}
+          >Play it again</a>
+        ) : null}
 
         <form onSubmit={(e)=> e.preventDefault()}>
           <div className='form-group'>

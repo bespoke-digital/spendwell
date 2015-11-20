@@ -9,3 +9,9 @@ class Category(MBModel):
     plaid_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
+
+    def __str__(self):
+        if self.parent:
+            return '{} > {}'.format(self.parent, self.name)
+        else:
+            return self.name

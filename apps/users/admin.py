@@ -1,14 +1,21 @@
 
 from django import forms
-from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib import admin
 
+from moneybase.admin import admin_site
 from apps.users.models import User
 
+from rest_framework.authtoken.models import Token
 
-admin.site.unregister(Group)
+
+class TokenAdmin(admin.ModelAdmin):
+    list_display = ('key', 'user', 'created')
+    fields = ('user',)
+    ordering = ('-created',)
+
+admin_site.register(Token, TokenAdmin)
 
 
 class UserCreationForm(forms.ModelForm):
@@ -67,4 +74,4 @@ class UserAdmin(AuthUserAdmin):
     filter_horizontal = ()
 
 
-admin.site.register(User, UserAdmin)
+admin_site.register(User, UserAdmin)

@@ -29,6 +29,9 @@ class Institution(MBOwnedModel):
         from .serializers import InstitutionSerializer
         return InstitutionSerializer
 
+    def __str__(self):
+        return '{} - {}'.format(self.owner, self.name)
+
     def download(self):
         plaid_client = Client(
             client_id=settings.PLAID_CLIENT_ID,
@@ -39,7 +42,7 @@ class Institution(MBOwnedModel):
         connect_response = plaid_client.connect_get().json()
 
         for account_data in connect_response['accounts']:
-            Account.objects.create_from_json(account_data)
+            Account.objects.create_from_plaid(self, account_data)
 
         for transaction_data in connect_response['transactions']:
-            Transaction.objects.create_from_json(transaction_data)
+            Transaction.objects.create_from_plaid(self, transaction_data)

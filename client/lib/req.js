@@ -36,14 +36,20 @@ export default function req(method, path, data) {
 
   return new Promise(function(resolve, reject) {
     NProgress.start();
-    fetch(path, options).then((response)=> {
-      NProgress.done();
-      if (response.status > 399) {
-        reject(response);
-      } else {
-        response.json().then(resolve);
-      }
-    });
+    let status = null;
+    fetch(path, options)
+      .then((response)=> {
+        status = response.status;
+        return response.json();
+      })
+      .then((body)=> {
+        NProgress.done();
+
+        if (status > 399)
+          reject(body);
+        else
+          resolve(body);
+      });
   });
 }
 
@@ -55,6 +61,6 @@ export function dispatchReq(method, path, data, dispatch, successAction, failAct
 
   return req(method, path, data).then(
     (response)=> dispatch({ type: successAction, response }),
-    ()=> dispatch({ type: failAction })
+    (response)=> dispatch({ type: failAction, response })
   );
 }

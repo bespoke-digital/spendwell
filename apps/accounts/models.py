@@ -6,7 +6,7 @@ from apps.core.models import MBOwnedModel
 
 
 class AccountManager(models.Manager):
-    def create_from_json(self, json_data):
+    def create_from_plaid(self, institution, json_data):
         '''
         Sample Data:
         {
@@ -26,15 +26,23 @@ class AccountManager(models.Manager):
           }
         }
         '''
-        account = Account()
-        account.plaid_id = json_data['_id']
+        try:
+            account = Account.objects.get(plaid_id=json_data['_id'])
+        except Account.DoesNotExist:
+            account = Account()
+            account.plaid_id = json_data['_id']
+
+        account.institution = institution
+        account.owner = institution.owner
+
         account.type = json_data['type']
-        account.subtype = json_data['subtype']
+        account.subtype = json_data.get('subtype')
         account.name = json_data['meta']['name']
         account.number_snippet = json_data['meta']['number']
         account.balance_current = json_data['balance']['current']
         account.balance_available = json_data['balance']['available']
         account.last_updated = now()
+
         account.save()
         return account
 
@@ -43,7 +51,7 @@ class Account(MBOwnedModel):
     institution = models.ForeignKey('institutions.Institution', related_name='accounts')
     plaid_id = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
-    subtype = models.CharField(max_length=255)
+    subtype = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=255)
     number_snippet = models.CharField(max_length=255)
     balance_current = models.DecimalField(decimal_places=2, max_digits=12)
@@ -51,3 +59,9 @@ class Account(MBOwnedModel):
     last_updated = models.DateTimeField()
 
     objects = AccountManager()
+
+    def __str__(self):
+        if self.subtype:
+            return '{} - {} > {}'.format(self.name, self.type, self.subtype)
+        else:
+            return '{} - {}'.format(self.name, self.type)

@@ -1,3 +1,6 @@
-from django.contrib import admin
 
-# Register your models here.
+from moneybase.admin import admin_site
+
+from .models import Account
+
+admin_site.register(Account)

@@ -70,11 +70,11 @@ export default function(state, action) {
       login: {
         loading: false,
         failed: true,
-        error: action.reason,
+        response: action.response,
       },
     });
 
-  case AUTH_LOGOUT_SUCCESS:
+  case AUTH_LOGOUT:
     return defaultState;
 
   case AUTH_REFRESH_SUCCESS:
