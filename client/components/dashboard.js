@@ -8,7 +8,7 @@ import styles from 'sass/components/home.scss';
 
 class Dashboard extends Component {
   static propTypes = {
-    categories: PropTypes.object.isRequired,
+    categories: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
@@ -25,7 +25,17 @@ class Dashboard extends Component {
     console.log(this.props.categories);
     return (
       <div className={`container ${styles.root}`}>
-        Dashboard
+        <strong>Dashboard</strong>
+        <table className='table'>
+          <tbody>
+            {this.props.categories.map((category)=> (
+              <tr key={category.id}>
+                <td>{category.name}</td>
+                <td>{category.balance}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }

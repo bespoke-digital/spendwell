@@ -15,3 +15,9 @@ class Category(MBModel):
             return '{} > {}'.format(self.parent, self.name)
         else:
             return self.name
+
+    def all_children(self):
+        children = []
+        for child in self.children.all():
+            children += [child] + child.all_children()
+        return children

@@ -12,10 +12,11 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = super(CategoryViewSet, self).get_queryset()
 
-        if 'parent' in self.request.data and self.request.data['parent'] != 'none':
-            queryset = queryset.filter(parent_id=self.request.data['parent'])
+        if 'parent' in self.request.GET:
+            if self.request.GET['parent'] == 'none':
+                queryset = queryset.filter(parent=None)
 
-        elif 'parent' in self.request.data and self.request.data['parent'] == 'none':
-            queryset = queryset.filter(parent=None)
+            else:
+                queryset = queryset.filter(parent_id=self.request.GET['parent'])
 
         return queryset

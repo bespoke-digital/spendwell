@@ -3,8 +3,6 @@ import _ from 'lodash';
 import Cookies from 'cookies-js';
 import NProgress from 'nprogress';
 
-import store from 'store';
-
 
 const csrfToken = Cookies.get('csrftoken');
 
@@ -15,7 +13,7 @@ function urlencode(data) {
 
 
 export default function req(method, path, data) {
-  const state = store.getState();
+  const state = require('store').default.getState();
   const options = {};
   options.method = method.toUpperCase();
   options.mode = 'same-origin';

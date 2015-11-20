@@ -14,13 +14,10 @@ const reducer = handleActions({
   },
 }, []);
 
-const debugReducer = (state)=> {
-  debugger;
-  return reducer(state);
-};
+export default reducer;
 
-export default debugReducer;
 
 export const load = createAction('CATEGORIES_LOAD', ({ parent })=> {
   return req('GET', '/api/categories', { parent });
 });
+
