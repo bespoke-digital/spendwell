@@ -29,7 +29,7 @@ class MBSerializerMixin(AsJsonSerializerMixin):
     deleted = serializers.ReadOnlyField()
 
 
-class MBOwnedSerializerMixin(AsJsonSerializerMixin):
+class MBOwnedSerializerMixin(MBSerializerMixin, AsJsonSerializerMixin):
     owner = serializers.ReadOnlyField()
 
     def create(self, validated_data):

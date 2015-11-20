@@ -8,8 +8,10 @@
   "dependencies": {
     "autoprefixer": "^6.1.0",
     "babel": "^6.0.15",
-    "babel-core": "^6.1.4",
+    "babel-core": "^6.2.1",
     "babel-loader": "^6.1.0",
+    "babel-plugin-transform-class-properties": "^6.2.2",
+    "babel-plugin-transform-decorators": "^6.1.18",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.4",
     "babel-preset-stage-0": "^6.1.2",
@@ -31,25 +33,32 @@
     "plaid": "^1.0.7",
     "postcss-loader": "^0.7.0",
     "promise": "^7.0.4",
-    "react": "^0.14.2",
+    "react": "^0.14.3",
     "react-bootstrap": "^0.28.1",
-    "react-dom": "^0.14.2",
+    "react-dom": "^0.14.3",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0",
     "redux": "^3.0.4",
+    "redux-actions": "^0.8.0",
     "redux-logger": "^2.0.4",
+    "redux-promise": "^0.5.0",
+    "redux-router": "^1.0.0-beta4",
     "redux-thunk": "^1.0.0",
     "sass-loader": "^3.1.1",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.4",
+    "webpack": "^1.12.8",
     "whatwg-fetch": "^0.10.1"
   },
   "devDependencies": {},
   "babel": {
     "presets": [
-      "es2015",
       "react",
-      "stage-0"
+      "stage-0",
+      "es2015"
+    ],
+    "plugins": [
+      "transform-class-properties",
+      "transform-decorators"
     ],
     "ignore": [
       "node_modules/*"

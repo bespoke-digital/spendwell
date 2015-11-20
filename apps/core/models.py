@@ -56,7 +56,7 @@ class MBModel(models.Model):
         return self.as_serializer().as_json()
 
 
-class MBOwnedModel(models.Model):
+class MBOwnedModel(MBModel):
     owner = models.ForeignKey('users.User')
 
     class Meta:

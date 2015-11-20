@@ -34,7 +34,6 @@ class Login extends Component {
   }
 
   render() {
-    console.log('render');
     return (
       <div>
         <Header/>

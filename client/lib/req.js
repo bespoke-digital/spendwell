@@ -49,6 +49,9 @@ export default function req(method, path, data) {
           reject(body);
         else
           resolve(body);
+      }, ()=> {
+        NProgress.done();
+        reject();
       });
   });
 }
