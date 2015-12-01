@@ -4,6 +4,7 @@ import { ReduxRouter } from 'redux-router';
 
 import App from './components/app';
 import Dashboard from './components/dashboard';
+import Accounts from './components/accounts';
 import Connect from './components/connect';
 import Login from './components/login';
 import Logout from './components/logout';
@@ -15,6 +16,7 @@ export default (
     <Route path='/logout' component={Logout}/>
     <Route path='/' component={App}>
       <Route path='dashboard' component={Dashboard}/>
+      <Route path='accounts' component={Accounts}/>
       <Route path='connect' component={Connect}/>
       <Redirect to='dashboard'/>
     </Route>

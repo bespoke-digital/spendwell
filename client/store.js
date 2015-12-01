@@ -10,6 +10,7 @@ import routes from './routes';
 import auth from './state/auth';
 import institutions from './state/institutions';
 import categories from './state/categories';
+import accounts from './state/accounts';
 
 
 const reducerMap = {
@@ -17,6 +18,7 @@ const reducerMap = {
   categories,
   auth,
   institutions,
+  accounts,
   router: routerStateReducer,
 };
 console.log(reducerMap);

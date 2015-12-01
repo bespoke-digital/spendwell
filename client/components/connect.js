@@ -24,7 +24,8 @@ class Connect extends Component {
   }
 
   handleSearch(event) {
-    fetch(`https://tartan.plaid.com/institutions/search?p=connect&q=${event.target.value}`)
+    fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
+        `/institutions/search?p=connect&q=${event.target.value}`)
       .then((response)=> response.json())
       .then((results)=> this.setState({ results }));
   }
@@ -35,7 +36,7 @@ class Connect extends Component {
       key: '4b747132cf8c427bec79f00e0dcb4a',
       product: 'connect',
       longTail: true,
-      env: 'tartan',
+      env: PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
         console.log({ id: fi.id, publicToken });
         this.setState({ playItAgain: { id: fi.id, publicToken } });

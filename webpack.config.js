@@ -34,6 +34,9 @@ const config = {
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch',
       'promise': 'imports?this=>global!exports?global.promise!promise',
     }),
+    new webpack.DefinePlugin({
+      PLAID_PRODUCTION: false,
+    }),
   ],
 
   resolve: {
