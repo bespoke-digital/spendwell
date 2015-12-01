@@ -36,7 +36,10 @@ class Bucket extends Component {
         <div className='heading'>
           <h1>{bucket.name}</h1>
           <div>
-            <a className='btn btn-primary' onClick={this.setState.bind(this, { showSettings: !showSettings }, null)}>
+            <a
+              className='btn btn-default'
+              onClick={this.setState.bind(this, { showSettings: !showSettings }, null)}
+            >
               <i className='fa fa-cog'/>
             </a>
           </div>
@@ -44,7 +47,7 @@ class Bucket extends Component {
 
         <Card className={showSettings ? '' : 'hidden'}>
           <Form onValidSubmit={::this.handleSubmit}>
-            <Input layout='vertical' label='Name' name='name' required/>
+            <Input layout='vertical' label='Name' name='name' required value={bucket.name}/>
             <button type='submit' className='btn btn-primary'>Save</button>
           </Form>
         </Card>
