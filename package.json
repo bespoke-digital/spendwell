@@ -23,6 +23,7 @@
     "expose-loader": "^0.7.1",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.4",
+    "font-awesome": "^4.5.0",
     "formsy-react": "^0.17.0",
     "formsy-react-components": "^0.6.2",
     "history": "^1.13.0",

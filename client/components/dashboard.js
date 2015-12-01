@@ -2,13 +2,13 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { load as loadCategories } from 'state/categories';
+import { getList } from 'state/buckets';
 import styles from 'sass/components/home.scss';
 
 
 class Dashboard extends Component {
   static propTypes = {
-    categories: PropTypes.array.isRequired,
+    buckets: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
   };
 
@@ -18,20 +18,19 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(loadCategories({ parent: 'none' }));
+    this.props.dispatch(getList());
   }
 
   render() {
-    console.log(this.props.categories);
+    console.log(this.props.buckets);
     return (
       <div className={`container ${styles.root}`}>
         <strong>Dashboard</strong>
         <table className='table'>
           <tbody>
-            {this.props.categories.map((category)=> (
-              <tr key={category.id}>
-                <td>{category.name}</td>
-                <td>{category.balance}</td>
+            {this.props.buckets.map((bucket)=> (
+              <tr key={bucket.id}>
+                <td>{bucket.name}</td>
               </tr>
             ))}
           </tbody>
@@ -42,5 +41,5 @@ class Dashboard extends Component {
 }
 
 export default connect((state)=> ({
-  categories: state.categories,
+  buckets: state.buckets.list,
 }))(Dashboard);

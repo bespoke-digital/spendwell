@@ -22,7 +22,7 @@ const config = {
       ) },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
       { test: require.resolve('react'), loader: 'expose?React' },
-      { test: /\.(eot|svg|ttf|woff|woff2|png|jpg)$/, loader: 'file' },
+      { test: /\.(eot|svg|ttf|woff|woff2|png|jpg)(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
     ],
   },
 

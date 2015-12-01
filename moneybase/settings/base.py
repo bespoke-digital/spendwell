@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.transactions',
     'apps.categories',
+    'apps.buckets',
 ]
 
 AUTH_USER_MODEL = 'users.User'

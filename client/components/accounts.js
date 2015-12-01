@@ -1,6 +1,7 @@
 
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 import { getList } from 'state/accounts';
 import styles from 'sass/components/accounts.scss';
@@ -49,6 +50,10 @@ class Accounts extends Component {
       <div className={`container ${styles.root}`}>
         <div className='row'>
           <div className='col-sm-3'>
+            <Link className='btn btn-default btn-block' to='/connect'>
+              <i className='fa fa-plus'/>
+              {' Add Account'}
+            </Link>
             <ul className='nav nav-pills nav-stacked'>
               {this.props.accounts.map((account)=> (
                 <li key={account.id}>

@@ -8,6 +8,7 @@ from rest_framework import status
 from apps.institutions.viewsets import InstitutionViewSet
 from apps.transactions.viewsets import TransactionViewSet
 from apps.categories.viewsets import CategoryViewSet
+from apps.buckets.viewsets import BucketViewSet
 from apps.accounts.viewsets import AccountViewSet
 
 
@@ -16,6 +17,7 @@ router.register(r'institutions', InstitutionViewSet)
 router.register(r'transactions', TransactionViewSet)
 router.register(r'categories', CategoryViewSet)
 router.register(r'accounts', AccountViewSet)
+router.register(r'buckets', BucketViewSet)
 
 urlpatterns = [
     url(r'^auth/', include('djoser.urls.authtoken')),
