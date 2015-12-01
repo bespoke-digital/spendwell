@@ -2,12 +2,14 @@
 import { Route, Redirect } from 'react-router';
 import { ReduxRouter } from 'redux-router';
 
-import App from './components/app';
-import Dashboard from './components/dashboard';
-import Accounts from './components/accounts';
-import Connect from './components/connect';
-import Login from './components/login';
-import Logout from './components/logout';
+import App from './views/app';
+import Dashboard from './views/dashboard';
+import Accounts from './views/accounts';
+import Connect from './views/connect';
+import Login from './views/login';
+import Logout from './views/logout';
+import CreateBucket from './views/create-bucket';
+import Bucket from './views/bucket';
 
 
 export default (
@@ -18,6 +20,8 @@ export default (
       <Route path='dashboard' component={Dashboard}/>
       <Route path='accounts' component={Accounts}/>
       <Route path='connect' component={Connect}/>
+      <Route path='buckets/new' component={CreateBucket}/>
+      <Route path='buckets/:id' component={Bucket}/>
       <Redirect to='dashboard'/>
     </Route>
   </ReduxRouter>

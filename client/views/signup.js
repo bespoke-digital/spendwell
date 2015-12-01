@@ -6,7 +6,7 @@ import { Input } from 'formsy-react-components';
 import { Link } from 'react-router';
 
 import { signup } from 'state/auth';
-import styles from 'sass/components/signup.scss';
+import styles from 'sass/views/signup.scss';
 
 
 class Signup extends Component {

@@ -3,7 +3,7 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import Header from './header';
+import Header from 'components/header';
 
 
 export default class App extends Component {

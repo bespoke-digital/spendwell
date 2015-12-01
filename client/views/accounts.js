@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 import { getList } from 'state/accounts';
-import styles from 'sass/components/accounts.scss';
+import styles from 'sass/views/accounts.scss';
 
 
 const Transactions = (props)=> (

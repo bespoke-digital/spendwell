@@ -33,7 +33,5 @@ class MBOwnedSerializerMixin(MBSerializerMixin, AsJsonSerializerMixin):
     owner = serializers.ReadOnlyField()
 
     def create(self, validated_data):
-        instance = super(MBOwnedSerializerMixin, self).create(validated_data)
-        instance.owner = self.context['request'].user
-        instance.save()
-        return instance
+        validated_data['owner_id'] = self.context['request'].user.id
+        return super(MBOwnedSerializerMixin, self).create(validated_data)

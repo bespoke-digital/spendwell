@@ -4,7 +4,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { connect as connectInstitution } from 'state/institutions';
-import styles from 'sass/components/connect.scss';
+import styles from 'sass/views/connect.scss';
 
 class Connect extends Component {
   constructor() {

@@ -5,9 +5,9 @@ import { Form } from 'formsy-react';
 import { Input } from 'formsy-react-components';
 import _ from 'lodash';
 
-import Header from './header';
+import Header from 'components/header';
 import { login } from 'state/auth';
-import styles from 'sass/components/login.scss';
+import styles from 'sass/views/login.scss';
 
 
 class Login extends Component {
