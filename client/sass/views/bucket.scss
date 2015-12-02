@@ -1,15 +1,11 @@
 
+@import '../variables';
+
 :local(.root) {
-  .heading {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-
-    margin-bottom: 40px;
-
-    h1 {
-      margin: 0;
-      flex: 1;
+  h1 {
+    a {
+      font-size: 18px;
+      color: $gray-light;
     }
   }
 }

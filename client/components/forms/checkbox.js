@@ -18,18 +18,19 @@ export default createClass({
 
     return (
       <div className={`
-        mui-textfield
-        mui-textfield--float-label
+        mui-checkbox
         ${this.showError() ? 'error' : ''}
         ${style.root}
       `}>
-        <input
-          type='text'
-          onChange={this.changeValue}
-          value={value}
-          className={value ? 'mui--is-not-empty' : ''}
-        />
-        {this.props.label ? <label>{this.props.label}</label> : null}
+        <label>
+          <input
+            type='checkbox'
+            onChange={this.changeValue}
+            value={value}
+            className={value ? 'mui--is-not-empty' : ''}
+          />
+          {this.props.label}
+        </label>
         {errorMessage ? <span>{errorMessage}</span> : null}
       </div>
     );

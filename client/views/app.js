@@ -23,7 +23,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className='app'>
         <Header/>
         {this.props.auth.authenticated ? this.props.children : null}
       </div>

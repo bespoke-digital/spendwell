@@ -10,6 +10,7 @@ import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Input from 'components/forms/input';
+import Checkbox from 'components/forms/checkbox';
 import styles from 'sass/views/bucket.scss';
 
 
@@ -62,12 +63,12 @@ class Bucket extends Component {
               validators='isNumeric'
               required
             />
-            {/* <FormsyCheckbox
-              floatingLabelText='Autofill'
+            <Checkbox
+              label='Autofill'
               name='autofill'
               value={bucket.autofill}
               required
-            /> */}
+            />
             <Button type='submit' varient='primary'>Save</Button>
             <Button onClick={this.setState.bind(this, { showSettings: false }, null)}>Cancel</Button>
           </Form>
