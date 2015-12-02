@@ -18,11 +18,11 @@ const config = {
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
-        'css?localIdentName=[name]_[local]_[hash:base64:5]!postcss!sass'
+        'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'
       ) },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
-      { test: require.resolve('react'), loader: 'expose?React' },
       { test: /\.(eot|svg|ttf|woff|woff2|png|jpg)(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      // { test: require.resolve('react'), loader: 'expose?React' },
     ],
   },
 
@@ -40,6 +40,7 @@ const config = {
   ],
 
   resolve: {
+    extensions: ['', '.js', '.jsx', '.scss', '.css'],
     modulesDirectories: ['client', 'node_modules'],
   },
 

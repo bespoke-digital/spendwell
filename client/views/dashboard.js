@@ -3,7 +3,7 @@ import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { getList } from 'state/buckets';
+import { listBuckets } from 'state/buckets';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import styles from 'sass/views/dashboard.scss';
@@ -21,7 +21,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(getList());
+    this.props.dispatch(listBuckets());
   }
 
   render() {

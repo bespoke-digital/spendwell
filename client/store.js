@@ -12,6 +12,7 @@ import institutions from './state/institutions';
 import categories from './state/categories';
 import accounts from './state/accounts';
 import buckets from './state/buckets';
+import transactions from './state/transactions';
 
 
 const reducerMap = {
@@ -21,6 +22,7 @@ const reducerMap = {
   institutions,
   accounts,
   buckets,
+  transactions,
   router: routerStateReducer,
 };
 console.log(reducerMap);

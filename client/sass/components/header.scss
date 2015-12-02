@@ -1,0 +1,27 @@
+
+@import '../variables';
+
+:local(.root) {
+  background-color: $brand-primary;
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .brand {
+      display: block;
+    }
+
+    .nav {
+      display: block;
+      flex: 1;
+      margin: 0;
+      text-align: right;
+
+      a {
+        color: white;
+      }
+    }
+  }
+}

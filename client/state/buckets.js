@@ -14,12 +14,17 @@ const BUCKETS_CREATE = 'moneybase/BUCKETS_CREATE';
 const BUCKETS_CREATE_SUCCESS = 'moneybase/BUCKETS_CREATE_SUCCESS';
 const BUCKETS_CREATE_FAIL = 'moneybase/BUCKETS_CREATE_FAIL';
 
+const BUCKETS_UPDATE = 'moneybase/BUCKETS_UPDATE';
+const BUCKETS_UPDATE_SUCCESS = 'moneybase/BUCKETS_UPDATE_SUCCESS';
+const BUCKETS_UPDATE_FAIL = 'moneybase/BUCKETS_UPDATE_FAIL';
+
 
 export default function(state = {
   loading: false,
   list: [],
-  create: { loading: false },
+  create: { loading: false, bucket: {} },
   get: { loading: false, bucket: {} },
+  update: { loading: false, bucket: {} },
 }, action) {
   switch (action.type) {
 
@@ -73,13 +78,29 @@ export default function(state = {
       create: { loading: false, failed: true, error: action.reason },
     };
 
+  case BUCKETS_UPDATE:
+    return {
+      ...state,
+      update: { loading: true },
+    };
+  case BUCKETS_UPDATE_SUCCESS:
+    return {
+      ...state,
+      update: { loading: false, failed: false, bucket: action.response },
+    };
+  case BUCKETS_UPDATE_FAIL:
+    return {
+      ...state,
+      update: { loading: false, failed: true, error: action.reason },
+    };
+
   default:
     return state;
   }
 }
 
 
-export function get({ id }) {
+export function getBucket({ id }) {
   return (dispatch, getState)=> {
     dispatch({ type: BUCKETS_GET });
 
@@ -97,7 +118,7 @@ export function get({ id }) {
 }
 
 
-export function getList() {
+export function listBuckets() {
   return (dispatch, getState)=> {
     dispatch({ type: BUCKETS_GET_LIST });
 
@@ -115,7 +136,7 @@ export function getList() {
 }
 
 
-export function create(data) {
+export function createBucket(data) {
   return (dispatch, getState)=> {
     dispatch({ type: BUCKETS_CREATE });
 
@@ -129,6 +150,25 @@ export function create(data) {
       dispatch,
       BUCKETS_CREATE_SUCCESS,
       BUCKETS_CREATE_FAIL
+    );
+  };
+}
+
+
+export function updateBucket({ id, ...data }) {
+  return (dispatch, getState)=> {
+    dispatch({ type: BUCKETS_UPDATE });
+
+    if (!getState().auth.authenticated)
+      return dispatch({ type: BUCKETS_UPDATE_FAIL });
+
+    dispatchReq(
+      'PATCH',
+      `/api/buckets/${id}`,
+      data,
+      dispatch,
+      BUCKETS_UPDATE_SUCCESS,
+      BUCKETS_UPDATE_FAIL
     );
   };
 }

@@ -5,6 +5,7 @@ import { PropTypes as RouterPropTypes } from 'react-router';
 import { Link } from 'react-router';
 
 import logoWhite from 'img/logo-white.svg';
+import style from 'sass/components/header.scss';
 
 
 class NavLink extends Component {
@@ -26,27 +27,19 @@ NavLink.contextTypes = {
 class Header extends Component {
   render() {
     return (
-      <nav className='navbar'>
+      <nav className={`mui-appbar mui--z2 ${style.root}`}>
         <div className='container'>
 
-          <div className='navbar-header'>
-            <button type='button' className='navbar-toggle collapsed'>
-              <span className='sr-only'></span>
-              <i className='fa fa-bars'></i>
-            </button>
-            <a className='navbar-brand' href='/'>
-              <img src={logoWhite} alt='moneybase'/>
-            </a>
-          </div>
+          <a className='brand mui--appbar-height mui--appbar-line-height' href='/'>
+            <img src={logoWhite} alt='moneybase'/>
+          </a>
 
           {this.props.auth.authenticated ? (
-            <div className='collapse navbar-collapse'>
-              <ul className='nav navbar-nav navbar-right'>
-                <NavLink key='dashboard' to='/dashboard'>Dashboard</NavLink>
-                <NavLink key='accounts' to='/accounts'>Accounts</NavLink>
-                <NavLink key='logout' to='/logout'>Logout</NavLink>
-              </ul>
-            </div>
+            <ul className='nav list-inline mui--appbar-height mui--appbar-line-height'>
+              <NavLink key='dashboard' to='/dashboard'>Dashboard</NavLink>
+              <NavLink key='accounts' to='/accounts'>Accounts</NavLink>
+              <NavLink key='logout' to='/logout'>Logout</NavLink>
+            </ul>
           ) : null}
         </div>
       </nav>

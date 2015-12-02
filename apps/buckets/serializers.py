@@ -11,4 +11,6 @@ class BucketSerializer(MBOwnedSerializerMixin, serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'monthly_amount',
+            'autofill',
         )

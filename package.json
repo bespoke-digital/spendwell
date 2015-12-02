@@ -28,6 +28,7 @@
     "history": "^1.13.0",
     "imports-loader": "^0.6.5",
     "lodash": "^3.10.1",
+    "muicss": "git+https://github.com/muicss/mui.git",
     "node-sass": "^3.4.1",
     "nprogress": "^0.2.0",
     "plaid": "^1.0.7",
@@ -59,8 +60,6 @@
     "plugins": [
       "transform-class-properties"
     ],
-    "ignore": [
-      "node_modules/*"
-    ]
+    "ignore": []
   }
 }
