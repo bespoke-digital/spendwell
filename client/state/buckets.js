@@ -6,9 +6,9 @@ const BUCKETS_GET = 'moneybase/BUCKETS_GET';
 const BUCKETS_GET_SUCCESS = 'moneybase/BUCKETS_GET_SUCCESS';
 const BUCKETS_GET_FAIL = 'moneybase/BUCKETS_GET_FAIL';
 
-const BUCKETS_GET_LIST = 'moneybase/BUCKETS_GET_LIST';
-const BUCKETS_GET_LIST_SUCCESS = 'moneybase/BUCKETS_GET_LIST_SUCCESS';
-const BUCKETS_GET_LIST_FAIL = 'moneybase/BUCKETS_GET_LIST_FAIL';
+const BUCKETS_LIST = 'moneybase/BUCKETS_LIST';
+const BUCKETS_LIST_SUCCESS = 'moneybase/BUCKETS_LIST_SUCCESS';
+const BUCKETS_LIST_FAIL = 'moneybase/BUCKETS_LIST_FAIL';
 
 const BUCKETS_CREATE = 'moneybase/BUCKETS_CREATE';
 const BUCKETS_CREATE_SUCCESS = 'moneybase/BUCKETS_CREATE_SUCCESS';
@@ -31,7 +31,7 @@ export default function(state = {
   case BUCKETS_GET:
     return {
       ...state,
-      get: { loading: true, bucket: {} },
+      get: { loading: true, bucket: null },
     };
   case BUCKETS_GET_SUCCESS:
     return {
@@ -44,18 +44,18 @@ export default function(state = {
       get: { loading: false, failed: true, bucket: {} },
     };
 
-  case BUCKETS_GET_LIST:
+  case BUCKETS_LIST:
     return {
       ...state,
       loading: true,
     };
-  case BUCKETS_GET_LIST_SUCCESS:
+  case BUCKETS_LIST_SUCCESS:
     return {
       ...state,
       list: action.response,
       loading: false,
     };
-  case BUCKETS_GET_LIST_FAIL:
+  case BUCKETS_LIST_FAIL:
     return {
       ...state,
       loading: false,
@@ -107,7 +107,7 @@ export function getBucket({ id }) {
     if (!getState().auth.authenticated)
       return dispatch({ type: BUCKETS_GET_FAIL });
 
-    dispatchReq(
+    return dispatchReq(
       'GET',
       `/api/buckets/${id}`,
       dispatch,
@@ -120,17 +120,17 @@ export function getBucket({ id }) {
 
 export function listBuckets() {
   return (dispatch, getState)=> {
-    dispatch({ type: BUCKETS_GET_LIST });
+    dispatch({ type: BUCKETS_LIST });
 
     if (!getState().auth.authenticated)
-      return dispatch({ type: BUCKETS_GET_LIST_FAIL });
+      return dispatch({ type: BUCKETS_LIST_FAIL });
 
-    dispatchReq(
+    return dispatchReq(
       'GET',
       '/api/buckets',
       dispatch,
-      BUCKETS_GET_LIST_SUCCESS,
-      BUCKETS_GET_LIST_FAIL
+      BUCKETS_LIST_SUCCESS,
+      BUCKETS_LIST_FAIL
     );
   };
 }
@@ -143,7 +143,7 @@ export function createBucket(data) {
     if (!getState().auth.authenticated)
       return dispatch({ type: BUCKETS_CREATE_FAIL });
 
-    dispatchReq(
+    return dispatchReq(
       'POST',
       '/api/buckets',
       data,
@@ -162,7 +162,7 @@ export function updateBucket({ id, ...data }) {
     if (!getState().auth.authenticated)
       return dispatch({ type: BUCKETS_UPDATE_FAIL });
 
-    dispatchReq(
+    return dispatchReq(
       'PATCH',
       `/api/buckets/${id}`,
       data,

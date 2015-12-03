@@ -6,19 +6,22 @@ import { Form } from 'formsy-react';
 
 import { getBucket, updateBucket } from 'state/buckets';
 import { listTransactions } from 'state/transactions';
+import { listCategories } from 'state/categories';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Input from 'components/forms/input';
 import Checkbox from 'components/forms/checkbox';
+import Select from 'components/forms/select';
+import TimePicker from 'components/forms/time-picker';
 import styles from 'sass/views/bucket.scss';
 
 
 class Bucket extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    bucket: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    bucket: PropTypes.object,
   };
 
   constructor() {
@@ -28,6 +31,9 @@ class Bucket extends Component {
 
   componentDidMount() {
     this.props.dispatch(getBucket({ id: this.props.params.id }));
+
+    if (this.props.categories.length === 0)
+      this.props.dispatch(listCategories());
   }
 
   handleSubmit(data) {
@@ -37,12 +43,15 @@ class Bucket extends Component {
   }
 
   handleFilterUpdate(data) {
-    this.props.dispatch(listTransactions(data));
+    console.log(data);
+    this.props.dispatch(listTransactions(_.omit(data, (o)=> !o)));
   }
 
   render() {
-    const { bucket, transactions } = this.props;
+    const { bucket, transactions, categories } = this.props;
     const { showSettings } = this.state;
+
+    if (!bucket) return <div></div>;
 
     return (
       <div className={`container ${styles.root}`}>
@@ -77,13 +86,34 @@ class Bucket extends Component {
         <Card>
           <h2>Transactions</h2>
           <Form onChange={_.debounce(::this.handleFilterUpdate)}>
-            <Input label='Name' name='name__icontains'/>
+            <Input label='Name' name='name'/>
+            <Select
+              label='Category'
+              name='category'
+              varient='primary'
+              options={[
+                { value: null, label: 'All' },
+              ].concat(categories.map((category)=> ({
+                value: category.id,
+                label: category.name,
+              })))}
+            />
+            <TimePicker
+              floatingLabelText='After Time'
+              name='time_gte'
+            />
+            <TimePicker
+              floatingLabelText='Before Time'
+              name='time_lte'
+            />
           </Form>
         </Card>
 
         <CardList>
           {transactions.map((transaction)=> (
-            <Card>{`${transaction.name}: ${transaction.amount}`}</Card>
+            <Card ket={transaction.id}>
+              {`${transaction.name}: ${transaction.amount}`}
+            </Card>
           ))}
         </CardList>
       </div>
@@ -94,4 +124,5 @@ class Bucket extends Component {
 export default connect((state)=> ({
   bucket: state.buckets.get.bucket,
   transactions: state.transactions.list,
+  categories: state.categories,
 }))(Bucket);

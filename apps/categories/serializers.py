@@ -2,6 +2,7 @@
 from django.db.models import Sum
 
 from rest_framework import serializers
+from rest_framework_recursive.fields import RecursiveField
 
 from apps.core.serializers import MBSerializerMixin
 
@@ -10,11 +11,12 @@ from .models import Category
 
 
 class CategorySerializer(MBSerializerMixin, serializers.ModelSerializer):
-    balance = serializers.SerializerMethodField()
+    # balance = serializers.SerializerMethodField()
+    children = RecursiveField(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = ('name', 'type', 'parent', 'balance')
+        fields = ('id', 'name', 'type', 'parent', 'children')
 
     def get_balance(self, category):
         return (

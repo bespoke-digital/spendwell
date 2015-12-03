@@ -2,9 +2,10 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
-import { Input } from 'formsy-react-components';
 import _ from 'lodash';
 
+import Input from 'components/forms/input';
+import Button from 'components/button';
 import Header from 'components/header';
 import { login } from 'state/auth';
 import styles from 'sass/views/login.scss';
@@ -55,16 +56,16 @@ class Login extends Component {
             <Input layout='vertical' label='Email' name='email' type='email' validations='isEmail' required/>
             <Input layout='vertical' label='Password' name='password' type='password' required/>
 
-            <button
+            <Button
               type='submit'
-              className='btn btn-primary'
+              varient='primary'
               disabled={!this.state.buttonEnabled}
             >
               Login
               {this.props.auth.login.loading ? (
                 <i className='fa fa-spinner fa-spin'/>
               ) : null}
-            </button>
+            </Button>
           </Form>
 
         </div>

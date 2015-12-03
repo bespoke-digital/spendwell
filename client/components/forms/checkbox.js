@@ -9,12 +9,11 @@ export default createClass({
   mixins: [Formsy.Mixin],
 
   changeValue(event) {
-    this.setValue(event.currentTarget.value);
+    this.setValue(event.currentTarget.checked);
   },
 
   render() {
     const errorMessage = this.getErrorMessage();
-    const value = this.getValue();
 
     return (
       <div className={`
@@ -26,8 +25,7 @@ export default createClass({
           <input
             type='checkbox'
             onChange={this.changeValue}
-            value={value}
-            className={value ? 'mui--is-not-empty' : ''}
+            checked={this.getValue()}
           />
           {this.props.label}
         </label>

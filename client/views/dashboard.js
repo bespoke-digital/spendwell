@@ -6,6 +6,8 @@ import { Link } from 'react-router';
 import { listBuckets } from 'state/buckets';
 import Card from 'components/card';
 import CardList from 'components/card-list';
+import Button from 'components/button';
+
 import styles from 'sass/views/dashboard.scss';
 
 
@@ -30,10 +32,10 @@ class Dashboard extends Component {
         <div className='heading'>
           <h1>Buckets</h1>
           <div>
-            <Link className='btn btn-primary' to='/buckets/new'>
+            <Button to='/buckets/new' raised={true}>
               <i className='fa fa-plus'/>
               {' New Bucket'}
-            </Link>
+            </Button>
           </div>
         </div>
 

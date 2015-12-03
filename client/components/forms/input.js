@@ -20,7 +20,7 @@ export default createClass({
       <div className={`
         mui-textfield
         mui-textfield--float-label
-        ${this.showError() ? 'error' : ''}
+        ${this.showError() ? 'mui-textfield--invalid' : ''}
         ${style.root}
       `}>
         <input

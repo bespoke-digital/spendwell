@@ -3,21 +3,27 @@ import { createAction, handleActions } from 'redux-actions';
 import req from 'lib/req';
 
 
-const reducer = handleActions({
-  CATEGORIES_LOAD: {
+let initialState = localStorage.getItem('categories');
+if (initialState)
+  initialState = JSON.parse(initialState);
+else
+  initialState = [];
+
+
+export default handleActions({
+  LIST_CATEGORIES: {
     next(state, action) {
+      localStorage.setItem('categories', JSON.stringify(action.payload));
       return action.payload;
     },
-    throw() {
-      return [];
+    throw(state) {
+      return state;
     },
   },
-}, []);
-
-export default reducer;
+}, initialState);
 
 
-export const load = createAction('CATEGORIES_LOAD', ({ parent })=> {
-  return req('GET', '/api/categories', { parent });
-});
-
+export const listCategories = createAction(
+  'LIST_CATEGORIES',
+  ()=> req('GET', '/api/categories')
+);

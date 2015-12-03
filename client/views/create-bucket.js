@@ -2,9 +2,11 @@
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
-import { Input } from 'formsy-react-components';
 
-import { create } from 'state/buckets';
+import { createBucket } from 'state/buckets';
+import Button from 'components/button';
+import Card from 'components/card';
+import Input from 'components/forms/input';
 import styles from 'sass/views/create-bucket.scss';
 
 
@@ -19,8 +21,14 @@ class CreateBucket extends Component {
     this.state = { buttonEnabled: false };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.create.failed === false && nextProps.create.bucket) {
+      nextProps.history.pushState(null, `/buckets/${nextProps.create.bucket.id}`);
+    }
+  }
+
   handleSubmit(data) {
-    this.props.dispatch(create(data));
+    this.props.dispatch(createBucket(data));
   }
 
   render() {
@@ -28,30 +36,34 @@ class CreateBucket extends Component {
       <div className={`container ${styles.root}`}>
         <h1>Create Bucket</h1>
 
-        <Form
-          onValidSubmit={::this.handleSubmit}
-          onValid={this.setState.bind(this, { buttonEnabled: true })}
-          onInvalid={this.setState.bind(this, { buttonEnabled: false })}
-          ref='form'
-        >
-          <Input layout='vertical' label='Name' name='name' required/>
-
-          <button
-            type='submit'
-            className='btn btn-primary'
-            disabled={!this.state.buttonEnabled || this.props.create.loading}
+        <Card>
+          <Form
+            onValidSubmit={::this.handleSubmit}
+            onValid={this.setState.bind(this, { buttonEnabled: true })}
+            onInvalid={this.setState.bind(this, { buttonEnabled: false })}
+            ref='form'
           >
-            Save
-            {this.props.create.loading ? (
-              <i className='fa fa-spinner fa-spin'/>
-            ) : null}
-          </button>
+            <Input layout='vertical' label='Name' name='name' required/>
+            <Input
+              label='Monthly Amount'
+              name='monthly_amount'
+              validators='isNumeric'
+              required
+            />
 
-        </Form>
+            <Button
+              type='submit'
+              varient='primary'
+              disabled={!this.state.buttonEnabled || this.props.create.loading}
+            >
+              Next
+              {this.props.create.loading ? (
+                <i className='fa fa-spinner fa-spin'/>
+              ) : null}
+            </Button>
 
-        { this.props.create.bucket ? (
-          'Done!'
-        ) : null }
+          </Form>
+        </Card>
 
       </div>
     );

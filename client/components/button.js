@@ -1,15 +1,19 @@
 
+import { Link } from 'react-router';
+
+
 export default (props)=> {
-  let { className, varient, ...extraProps } = props;
+  const { className, varient, raised, ...extraProps } = props;
 
-  className = className || '';
-  className += ' mui-btn';
+  let classes = className || '';
+  classes += ' mui-btn';
   if (varient)
-    className += ` mui-btn--${varient}`;
+    classes += ` mui-btn--${varient}`;
+  if (raised)
+    classes += ` mui-btn--raised`;
 
-  return (
-    <button className={className} {...props}>
-      {props.children}
-    </button>
-  );
+  if (props.to)
+    return <Link className={classes} {...extraProps}/>;
+  else
+    return <button className={classes} {...extraProps}/>;
 };
