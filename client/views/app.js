@@ -4,9 +4,17 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
 import Header from 'components/header';
+import Nav from 'components/nav';
+
+import style from 'sass/views/app';
 
 
 export default class App extends Component {
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+    nav: PropTypes.object.isRequired,
+  }
+
   componentWillMount() {
     this.checkAuth(this.props);
   }
@@ -22,19 +30,21 @@ export default class App extends Component {
   }
 
   render() {
+    if (!this.props.auth.authenticated) return <div/>;
+
+    const { nav, children } = this.props;
+
     return (
-      <div className='app'>
+      <div className={`${style.root} ${nav.open ? 'nav-open' : ''}`}>
         <Header/>
-        {this.props.auth.authenticated ? this.props.children : null}
+        <Nav open={nav.open}/>
+        {children}
       </div>
     );
   }
 }
 
-App.propTypes = {
-  auth: PropTypes.object.isRequired,
-};
-
 export default connect((state)=> ({
   auth: state.auth,
+  nav: state.nav,
 }))(App);

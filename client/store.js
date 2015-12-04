@@ -13,6 +13,7 @@ import categories from './state/categories';
 import accounts from './state/accounts';
 import buckets from './state/buckets';
 import transactions from './state/transactions';
+import nav from './state/nav';
 
 
 const reducerMap = {
@@ -23,6 +24,7 @@ const reducerMap = {
   accounts,
   buckets,
   transactions,
+  nav,
   router: routerStateReducer,
 };
 console.log(reducerMap);

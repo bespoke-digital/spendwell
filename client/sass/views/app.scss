@@ -1,0 +1,18 @@
+
+// @import '../variables';
+// @import '~muicss/src/sass/mui/colors';
+
+:local(.root) {
+  width: 100%;
+  transition: 0.5s ease;
+
+  &.nav-open {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+
+
+  > .container {
+    padding-top: 40px;
+  }
+}

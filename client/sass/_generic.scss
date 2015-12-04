@@ -23,10 +23,20 @@ div.checkbox {
   overflow: hidden !important;
 }
 
-.app > .container {
-  padding-top: 40px;
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left:  20px;
+  padding-right: 20px;
+
+  @media (min-width: $screen-sm-min) {
+    max-width: $container-sm;
+  }
+  @media (min-width: $screen-md-min) {
+    max-width: $container-md;
+  }
+  @media (min-width: $screen-lg-min) {
+    max-width: $container-lg;
+  }
 }
 
-#mui-overlay {
-  z-index: 99;
-}
