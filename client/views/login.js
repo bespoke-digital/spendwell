@@ -58,7 +58,7 @@ class Login extends Component {
 
             <Button
               type='submit'
-              varient='primary'
+              variant='primary'
               disabled={!this.state.buttonEnabled}
             >
               Login

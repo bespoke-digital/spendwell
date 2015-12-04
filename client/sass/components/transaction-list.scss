@@ -1,0 +1,41 @@
+
+@import '~muicss/src/sass/mui/colors';
+
+
+:local(.root) {
+  .month {
+    display: flex;
+    justify-content: flex-end;
+
+    background-color: mui-color('amber', '100');
+
+    .name {
+      flex: 1;
+    }
+  }
+
+  .transaction {
+    display: flex;
+    justify-content: flex-end;
+
+    .name {
+      flex: 1;
+    }
+
+    .category {
+      flex: 1;
+      color: mui-color('grey', '700');
+    }
+
+    .date {
+      width: 90px;
+      text-align: right;
+      color: mui-color('grey', '500');
+    }
+
+    .amount {
+      width: 70px;
+      text-align: right;
+    }
+  }
+}

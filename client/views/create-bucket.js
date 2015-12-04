@@ -53,7 +53,7 @@ class CreateBucket extends Component {
 
             <Button
               type='submit'
-              varient='primary'
+              variant='primary'
               disabled={!this.state.buttonEnabled || this.props.create.loading}
             >
               Next

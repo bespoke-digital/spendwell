@@ -8,12 +8,12 @@ import { getBucket, updateBucket } from 'state/buckets';
 import { listTransactions } from 'state/transactions';
 import { listCategories } from 'state/categories';
 import Card from 'components/card';
-import CardList from 'components/card-list';
 import Button from 'components/button';
+import TransactionList from 'components/transaction-list';
 import Input from 'components/forms/input';
 import Checkbox from 'components/forms/checkbox';
-import Select from 'components/forms/select';
-import TimePicker from 'components/forms/time-picker';
+import CategorySelector from 'components/forms/category-selector';
+
 import styles from 'sass/views/bucket.scss';
 
 
@@ -32,8 +32,15 @@ class Bucket extends Component {
   componentDidMount() {
     this.props.dispatch(getBucket({ id: this.props.params.id }));
 
+    this.updateTransactions();
+
     if (this.props.categories.length === 0)
       this.props.dispatch(listCategories());
+  }
+
+  updateTransactions(data = {}) {
+    data.inflow = false;
+    this.props.dispatch(listTransactions(_.omit(data, (o)=> _.isUndefined(o) || o === '')));
   }
 
   handleSubmit(data) {
@@ -43,13 +50,22 @@ class Bucket extends Component {
   }
 
   handleFilterUpdate(data) {
-    console.log(data);
-    this.props.dispatch(listTransactions(_.omit(data, (o)=> !o)));
+    this.updateTransactions(data);
+  }
+
+  handleCategoryChange(categoryId) {
+    if (!categoryId) {
+      this.setState({ category: null });
+
+    } else {
+      const category = _.find(this.props.categories, { id: categoryId });
+      this.setState({ category });
+    }
   }
 
   render() {
     const { bucket, transactions, categories } = this.props;
-    const { showSettings } = this.state;
+    const { showSettings, category } = this.state;
 
     if (!bucket) return <div></div>;
 
@@ -78,7 +94,7 @@ class Bucket extends Component {
               value={bucket.autofill}
               required
             />
-            <Button type='submit' varient='primary'>Save</Button>
+            <Button type='submit' variant='primary'>Save</Button>
             <Button onClick={this.setState.bind(this, { showSettings: false }, null)}>Cancel</Button>
           </Form>
         </Card>
@@ -86,36 +102,14 @@ class Bucket extends Component {
         <Card>
           <h2>Transactions</h2>
           <Form onChange={_.debounce(::this.handleFilterUpdate)}>
-            <Input label='Name' name='name'/>
-            <Select
-              label='Category'
-              name='category'
-              varient='primary'
-              options={[
-                { value: null, label: 'All' },
-              ].concat(categories.map((category)=> ({
-                value: category.id,
-                label: category.name,
-              })))}
-            />
-            <TimePicker
-              floatingLabelText='After Time'
-              name='time_gte'
-            />
-            <TimePicker
-              floatingLabelText='Before Time'
-              name='time_lte'
-            />
+            <Input name='name' label='Name'/>
+            <Input name='time_gte' label='After Time'/>
+            <Input name='time_lte' label='Before Time'/>
+            <CategorySelector name='category' categories={categories}/>
           </Form>
         </Card>
 
-        <CardList>
-          {transactions.map((transaction)=> (
-            <Card ket={transaction.id}>
-              {`${transaction.name}: ${transaction.amount}`}
-            </Card>
-          ))}
-        </CardList>
+        <TransactionList transactions={transactions}/>
       </div>
     );
   }

@@ -13,6 +13,7 @@ class TransactionFilter(filters.FilterSet):
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     time_lte = filters.MethodFilter()
     time_gte = filters.MethodFilter()
+    inflow = filters.MethodFilter()
 
     class Meta:
         model = Transaction
@@ -40,3 +41,9 @@ class TransactionFilter(filters.FilterSet):
     def filter_time_gte(self, queryset, value):
         hour, minute = value.split(':')
         return queryset.filter(date__hour__gte=hour, date__minute__gte=minute)
+
+    def filter_inflow(self, queryset, value):
+        if value.lower() == 'true':
+            return queryset.filter(amount__lt=0)
+        else:
+            return queryset.filter(amount__gt=0)

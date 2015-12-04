@@ -3,12 +3,12 @@ import { Link } from 'react-router';
 
 
 export default (props)=> {
-  const { className, varient, raised, ...extraProps } = props;
+  const { className, variant, raised, ...extraProps } = props;
 
   let classes = className || '';
   classes += ' mui-btn';
-  if (varient)
-    classes += ` mui-btn--${varient}`;
+  if (variant)
+    classes += ` mui-btn--${variant}`;
   if (raised)
     classes += ` mui-btn--raised`;
 
