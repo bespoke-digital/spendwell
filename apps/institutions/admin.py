@@ -1,5 +1,5 @@
 
-from moneybase.admin import admin_site
+from spendwell.admin import admin_site
 
 from .models import Institution
 

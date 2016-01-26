@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib import admin
 
-from moneybase.admin import admin_site
+from spendwell.admin import admin_site
 from apps.users.models import User
 
 from rest_framework.authtoken.models import Token

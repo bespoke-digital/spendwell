@@ -9,7 +9,7 @@ SECRET_KEY = '&;v_CEg*j%lmzulK(qS.J1Brlezwshavj+`yu5nZc~]A6,G9fuHGWI$hw"WOe'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.moneybase.co']
+ALLOWED_HOSTS = ['app.spendwell.co']
 CSRF_COOKIE_SECURE = True
 
 
@@ -48,7 +48,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'moneybase.urls'
+ROOT_URLCONF = 'spendwell.urls'
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -67,7 +67,7 @@ TEMPLATES = [{
     },
 }]
 
-WSGI_APPLICATION = 'moneybase.wsgi.application'
+WSGI_APPLICATION = 'spendwell.wsgi.application'
 
 
 DATABASES = {'default': {}}  # set in local settings

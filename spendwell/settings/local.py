@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['dev.moneybase.co']
+ALLOWED_HOSTS = ['dev.spendwell.co']
 
 DATABASES['default'] = {
     'USER': 'postgres',
