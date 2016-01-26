@@ -38,5 +38,46 @@ div.checkbox {
   @media (min-width: $screen-lg-min) {
     max-width: $container-lg;
   }
+
+  > h1, > h2, > h3, > h4, > h5, > h6 {
+    margin-bottom: 40px;
+  }
 }
 
+.heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  margin-bottom: 20px;
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    flex: 1;
+  }
+
+  .back {
+    margin-right: 10px;
+  }
+}
+
+.mui-btn {
+  margin: 0;
+}
+
+.money {
+  &.money--negative {
+    color: $brand-danger;
+
+    &:before {
+      content: '(';
+    }
+    &:after {
+      content: ')';
+    }
+  }
+}
+
+.mui-table > thead > tr > th {
+  font-weight: 500;
+}

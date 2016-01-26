@@ -1,19 +1,18 @@
 
-import { Component } from 'react';
-import { connect } from 'react-redux';
-
-import { logout } from 'state/auth';
+import { Component, PropTypes } from 'react';
 
 
-class Logout extends Component {
+export default class Logout extends Component {
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+  };
+
   componentDidMount() {
-    this.props.dispatch(logout());
-    this.props.history.pushState(null, '/');
+    Meteor.logout();
+    this.props.history.push({ pathname: '/login' });
   }
 
   render() {
     return <div/>;
   }
 }
-
-export default connect()(Logout);

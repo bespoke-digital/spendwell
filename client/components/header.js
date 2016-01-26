@@ -1,26 +1,37 @@
 
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { PropTypes, Component } from 'react';
 
-import { toggleNav } from 'state/nav';
 import logoWhite from 'img/logo-white.svg';
 import style from 'sass/components/header';
 
 
-class Header extends Component {
-  handleHamburgerClick(event) {
+export default class Header extends Component {
+  static propTypes = {
+    navHandle: PropTypes.bool,
+    toggleNav: PropTypes.func,
+  }
+
+  static defaultProps = {
+    navHandle: true,
+  }
+
+  handleHandleClick(event) {
     event.preventDefault();
-    this.props.dispatch(toggleNav());
+    if (this.props.toggleNav)
+      this.props.toggleNav();
   }
 
   render() {
+    const { navHandle } = this.props;
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
-        <a
-          className='hamburger mui--appbar-height mui--appbar-line-height'
-          href='#'
-          onClick={::this.handleHamburgerClick}
-        >☰</a>
+        {navHandle ? (
+          <a
+            className='hamburger mui--appbar-height mui--appbar-line-height'
+            href='#'
+            onClick={::this.handleHandleClick}
+          >☰</a>
+        ) : null}
         <a className='brand mui--appbar-height mui--appbar-line-height' href='/'>
           <img src={logoWhite} alt='moneybase'/>
         </a>
@@ -28,5 +39,3 @@ class Header extends Component {
     );
   }
 }
-
-export default connect((state)=> ({ auth: state.auth }))(Header);

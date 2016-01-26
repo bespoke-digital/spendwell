@@ -15,7 +15,7 @@ const config = {
 
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel?stage=0' },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
         'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'
@@ -46,7 +46,7 @@ const config = {
 
 };
 
-// config.devtool = 'sourcemap';
+config.devtool = 'sourcemap';
 config.debug = true;
 
 // config.plugins.push(new webpack.optimize.OccurenceOrderPlugin());

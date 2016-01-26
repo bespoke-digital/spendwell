@@ -2,8 +2,8 @@
 import styles from 'sass/components/card-list.scss';
 
 
-export default (props)=> (
-  <div className={`${styles.root} ${props.className ? props.className : ''}`}>
-    {props.children}
+export default ({ className, children })=> (
+  <div className={`card-list ${styles.root} ${className ? className : ''}`}>
+    {children}
   </div>
 );

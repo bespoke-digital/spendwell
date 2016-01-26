@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.db import models
 
-from apps.core.models import MBOwnedModel
+from apps.core.models import SWOwnedModel
 from apps.categories.models import Category
 from apps.accounts.models import Account
 
@@ -71,7 +71,7 @@ class TransactionManager(models.Manager):
         return transaction
 
 
-class Transaction(MBOwnedModel):
+class Transaction(SWOwnedModel):
     account = models.ForeignKey('accounts.Account', related_name='transactions')
     category = models.ForeignKey('categories.Category', related_name='transactions', null=True)
     plaid_id = models.CharField(max_length=255)

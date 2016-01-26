@@ -4,26 +4,17 @@
 
 :local(.root) {
   .month {
-    display: flex;
-    justify-content: flex-end;
+    background-color: mui-color('grey', '600');
+    color: mui-color('grey', '100');
+  }
 
-    background-color: mui-color('amber', '100');
-
-    .name {
-      flex: 1;
-    }
+  .total {
+    background-color: mui-color('grey', '600');
+    color: mui-color('grey', '100');
   }
 
   .transaction {
-    display: flex;
-    justify-content: flex-end;
-
-    .name {
-      flex: 1;
-    }
-
     .category {
-      flex: 1;
       color: mui-color('grey', '700');
     }
 

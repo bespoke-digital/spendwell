@@ -30,7 +30,6 @@
     "no-native-reassign": 1,
     "no-new-wrappers": 1,
     "no-new": 1,
-    "no-return-assign": 1,
     "no-self-compare": 1,
     "no-sequences": 1,
     "no-unused-expressions": [1, {
@@ -41,14 +40,12 @@
     "yoda": 1,
     "no-unused-vars": [2, { "argsIgnorePattern": "^_", "varsIgnorePattern": "^React$" }],
     "brace-style": 1,
-    "camelcase": 1,
     "comma-spacing": [1, {"before": false, "after": true}],
     "comma-style": [1, "last"],
     "computed-property-spacing": [1, "never"],
     "eol-last": 1,
     "jsx-quotes": [1, "prefer-single"],
     "key-spacing": [1, {"beforeColon": false, "afterColon": true}],
-    "new-cap": 1,
     "new-parens": 1,
     "no-lonely-if": 1,
     "no-multiple-empty-lines": [1, {"max": 2}],
@@ -77,6 +74,12 @@
     "react"
   ],
   "globals": {
+    "Meteor": true,
+    "ReactMeteorData": true,
+    "Accounts": true,
+    "HTTP": true,
+    "ReactiveMethod": true,
+    "Npm": true,
     "PLAID_PRODUCTION": true
   }
 }

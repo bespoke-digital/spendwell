@@ -1,11 +1,11 @@
 
 from rest_framework import serializers
 
-from apps.core.serializers import MBOwnedSerializerMixin
+from apps.core.serializers import SWOwnedSerializerMixin
 from .models import Bucket
 
 
-class BucketSerializer(MBOwnedSerializerMixin, serializers.ModelSerializer):
+class BucketSerializer(SWOwnedSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Bucket
         fields = (

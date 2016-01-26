@@ -1,66 +1,61 @@
 
 import { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
 
-import { createBucket } from 'state/buckets';
 import Button from 'components/button';
 import Card from 'components/card';
 import Input from 'components/forms/input';
 import styles from 'sass/views/create-bucket.scss';
 
 
-class CreateBucket extends Component {
+export default class CreateBucket extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    create: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
   };
 
   constructor() {
     super();
-    this.state = { buttonEnabled: false };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.create.failed === false && nextProps.create.bucket) {
-      nextProps.history.pushState(null, `/buckets/${nextProps.create.bucket.id}`);
-    }
+    this.state = { valid: false };
   }
 
   handleSubmit(data) {
-    this.props.dispatch(createBucket(data));
+    Meteor.call(
+      'bucketsAdd',
+      Object.assign({ type: this.props.location.query.type }, data),
+      (error, bucketId)=> {
+        if (error) throw error;
+        this.props.history.push({ pathname: `/buckets/${bucketId}` });
+      }
+    );
   }
 
   render() {
+    const { valid } = this.state;
+    const { location } = this.props;
+
     return (
       <div className={`container ${styles.root}`}>
-        <h1>Create Bucket</h1>
+        <h1>
+          New
+          {location.query.type === 'outgoing' ? ' Outgoing ' : ' Savings '}
+          Bucket
+        </h1>
 
         <Card>
           <Form
             onValidSubmit={::this.handleSubmit}
-            onValid={this.setState.bind(this, { buttonEnabled: true })}
-            onInvalid={this.setState.bind(this, { buttonEnabled: false })}
+            onValid={this.setState.bind(this, { valid: true })}
+            onInvalid={this.setState.bind(this, { valid: false })}
             ref='form'
           >
             <Input layout='vertical' label='Name' name='name' required/>
-            <Input
-              label='Monthly Amount'
-              name='monthly_amount'
-              validators='isNumeric'
-              required
-            />
 
-            <Button
-              type='submit'
-              variant='primary'
-              disabled={!this.state.buttonEnabled || this.props.create.loading}
-            >
+            <Button type='submit' variant='primary' disabled={!valid}>
               Next
-              {this.props.create.loading ? (
-                <i className='fa fa-spinner fa-spin'/>
-              ) : null}
             </Button>
+
+            <Button to='/'>Cancel</Button>
 
           </Form>
         </Card>
@@ -69,7 +64,3 @@ class CreateBucket extends Component {
     );
   }
 }
-
-export default connect((state)=> ({
-  create: state.buckets.create,
-}))(CreateBucket);

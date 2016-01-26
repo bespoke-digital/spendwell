@@ -1,11 +1,11 @@
 
-from .permissions import MBOwnedPermission
+from .permissions import SWOwnedPermission
 
 
-class MBOwnedViewSetMixin(object):
-    permission_classes = (MBOwnedPermission,)
+class SWOwnedViewSetMixin(object):
+    permission_classes = (SWOwnedPermission,)
 
     def get_queryset(self):
-        queryset = super(MBOwnedViewSetMixin, self).get_queryset()
+        queryset = super(SWOwnedViewSetMixin, self).get_queryset()
         queryset = queryset.filter(owner=self.request.user)
         return queryset

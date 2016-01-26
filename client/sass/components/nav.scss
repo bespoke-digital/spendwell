@@ -1,21 +1,25 @@
 
-@import '../mui';
+@import '../variables';
+@import '../depth';
 
 :local(.root) {
-  @extend .mui--z4;
+  @extend .depth-z4;
 
   position: fixed;
   top: 0;
   bottom: 0;
   width: 200px;
   left: -210px;
-  padding: 0 20px;
-
+  z-index: 200;
   transition: 0.5s ease;
-
   background-color: white;
 
   &.open {
     left: 0;
+  }
+
+  > ul {
+    padding: 20px 20px 0;
+    margin: 0;
   }
 }

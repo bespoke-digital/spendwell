@@ -2,7 +2,7 @@
 from django.utils.timezone import now
 from django.db import models
 
-from apps.core.models import MBOwnedModel
+from apps.core.models import SWOwnedModel
 
 
 class AccountManager(models.Manager):
@@ -47,7 +47,7 @@ class AccountManager(models.Manager):
         return account
 
 
-class Account(MBOwnedModel):
+class Account(SWOwnedModel):
     institution = models.ForeignKey('institutions.Institution', related_name='accounts')
     plaid_id = models.CharField(max_length=255)
     type = models.CharField(max_length=255)

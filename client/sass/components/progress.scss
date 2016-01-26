@@ -1,0 +1,47 @@
+
+@import '../variables';
+
+:local(.root) {
+  position: relative;
+  height: 2px;
+  width: 100%;
+
+  background-color: $gray-lighter;
+
+  &.progress-over {
+    background-color: $brand-warn;
+  }
+
+  .bar {
+    height: 2px;
+    background-color: $brand-warn;
+  }
+
+  &.progress-full .bar {
+    background-color: $brand-success;
+  }
+
+  &.progress-over .bar {
+    background-color: $brand-danger;
+  }
+
+  &.progress-success .bar {
+    background-color: $brand-success;
+  }
+
+  &.progress-danger .bar {
+    background-color: $brand-danger;
+  }
+
+  &.progress-warn .bar {
+    background-color: $brand-warn;
+  }
+
+  .marker {
+    position: absolute;
+    height: 6px;
+    width: 2px;
+    top: -2px;
+    background-color: $gray-dark;
+  }
+}

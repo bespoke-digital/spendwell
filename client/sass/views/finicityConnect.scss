@@ -1,0 +1,13 @@
+
+:local(.root) {
+  .account {
+    .summary {
+      > :first-child {
+        flex: none;
+      }
+      > :nth-child(2) {
+        flex: 1;
+      }
+    }
+  }
+}

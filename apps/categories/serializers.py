@@ -4,13 +4,13 @@ from django.db.models import Sum
 from rest_framework import serializers
 from rest_framework_recursive.fields import RecursiveField
 
-from apps.core.serializers import MBSerializerMixin
+from apps.core.serializers import SWSerializerMixin
 
 from apps.transactions.models import Transaction
 from .models import Category
 
 
-class CategorySerializer(MBSerializerMixin, serializers.ModelSerializer):
+class CategorySerializer(SWSerializerMixin, serializers.ModelSerializer):
     # balance = serializers.SerializerMethodField()
     children = RecursiveField(many=True, read_only=True)
 

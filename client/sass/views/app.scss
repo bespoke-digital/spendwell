@@ -1,18 +1,41 @@
 
 // @import '../variables';
-// @import '~muicss/src/sass/mui/colors';
 
 :local(.root) {
   width: 100%;
   transition: 0.5s ease;
 
-  &.nav-open {
-    margin-left: 200px;
-    width: calc(100% - 200px);
-  }
-
-
   > .container {
     padding-top: 40px;
   }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+
+    background-color: black;
+    transition: opacity 200ms ease-in;
+    opacity: 0.5;
+  }
+
+  .overlay-enter {
+    opacity: 0.01;
+  }
+
+  .overlay-enter.overlay-enter-active {
+    opacity: 0.5;
+  }
+
+  .overlay-leave {
+    opacity: 0.5;
+  }
+
+  .overlay-leave.overlay-leave-active {
+    opacity: 0.01;
+  }
+
 }

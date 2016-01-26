@@ -5,13 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from plaid import Client
 
-from apps.core.viewsets import MBOwnedViewSetMixin
+from apps.core.viewsets import SWOwnedViewSetMixin
 
 from .models import Institution
 from .serializers import InstitutionSerializer
 
 
-class InstitutionViewSet(MBOwnedViewSetMixin, viewsets.ModelViewSet):
+class InstitutionViewSet(SWOwnedViewSetMixin, viewsets.ModelViewSet):
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
 

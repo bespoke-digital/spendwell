@@ -1,11 +1,11 @@
 
 from rest_framework import serializers
 
-from apps.core.serializers import MBOwnedSerializerMixin
+from apps.core.serializers import SWOwnedSerializerMixin
 from .models import Institution
 
 
-class InstitutionSerializer(MBOwnedSerializerMixin, serializers.ModelSerializer):
+class InstitutionSerializer(SWOwnedSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Institution
         fields = ('name', 'id')

@@ -5,6 +5,8 @@ import Formsy from 'formsy-react';
 
 import Dropdown from 'components/dropdown';
 
+import style from 'sass/components/forms/select';
+
 
 export default createClass({
   mixins: [Formsy.Mixin],
@@ -16,6 +18,11 @@ export default createClass({
     ).isRequired,
     variant: PropTypes.oneOf(['primary', 'danger', 'accent']),
     onChange: PropTypes.func,
+    className: PropTypes.string,
+  },
+
+  defaultProps: {
+    className: '',
   },
 
   handleOptionClick(option, event) {
@@ -28,22 +35,24 @@ export default createClass({
   },
 
   render() {
-    const { label, options, variant } = this.props;
+    const { label, options, variant, className } = this.props;
 
     const value = this.getValue();
     const valueLabel = _.result(_.find(options, { value }), 'label');
 
     return (
-      <Dropdown
-        label={valueLabel ? `${label}: ${valueLabel}` : label}
-        variant={variant}
-      >
-        {options.map((option, index)=> (
-          <a href='#' key={index} onClick={this.handleOptionClick.bind(this, option)}>
-            {option.label}
-          </a>
-        ))}
-      </Dropdown>
+      <div className={`${style.root} ${className}`}>
+        <Dropdown
+          label={valueLabel ? `${label}: ${valueLabel}` : label}
+          variant={variant}
+        >
+          {options.map((option, index)=> (
+            <a href='#' key={index} onClick={this.handleOptionClick.bind(this, option)}>
+              {option.label}
+            </a>
+          ))}
+        </Dropdown>
+      </div>
     );
   },
 });

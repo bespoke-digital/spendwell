@@ -1,28 +1,60 @@
 
-import { Route, Redirect } from 'react-router';
-import { ReduxRouter } from 'redux-router';
+import { Router, Route, browserHistory } from 'react-router';
 
-import App from './views/app';
-import Dashboard from './views/dashboard';
-import Accounts from './views/accounts';
-import Connect from './views/connect';
-import Login from './views/login';
-import Logout from './views/logout';
-import CreateBucket from './views/create-bucket';
-import Bucket from './views/bucket';
+import Logout from 'views/logout';
+import Login from 'views/login';
+import Signup from 'views/signup';
+
+import App from 'views/app';
+import Auth from 'views/auth';
+import Dashboard from 'views/dashboard';
+import Accounts from 'views/accounts';
+import ConnectPlaid from 'views/connect';
+import FinicitySearch from 'views/finicitySearch';
+import FinicityConnect from 'views/finicityConnect';
+import Upload from 'views/upload';
+import Categories from 'views/categories';
+import Buckets from 'views/buckets';
+import Goal from 'views/goal';
+import Bucket from 'views/bucket';
+import Incoming from 'views/incoming';
+import Outgoing from 'views/outgoing';
+
+
+const ensureAuth = function(nextState, replaceState) {
+  if (!Meteor.userId()) replaceState(null, '/login');
+};
 
 
 export default (
-  <ReduxRouter>
-    <Route path='/login' component={Login}/>
-    <Route path='/logout' component={Logout}/>
-    <Route path='/' component={App}>
-      <Route path='dashboard' component={Dashboard}/>
-      <Route path='accounts' component={Accounts}/>
-      <Route path='connect' component={Connect}/>
-      <Route path='buckets/new' component={CreateBucket}/>
-      <Route path='buckets/:id' component={Bucket}/>
-      <Redirect to='dashboard'/>
+  <Router history={browserHistory}>
+    <Route component={Auth}>
+      <Route path='/login' component={Login}/>
+      <Route path='/logout' component={Logout}/>
+      <Route path='/signup' component={Signup}/>
     </Route>
-  </ReduxRouter>
+
+    <Route component={App} onEnter={ensureAuth}>
+      <Route path='/' component={Dashboard}/>
+      <Route path='/dashboard/:year/:month' component={Dashboard}/>
+
+      <Route path='/incoming' component={Incoming}/>
+      <Route path='/outgoing' component={Outgoing}/>
+
+      <Route path='/buckets' component={Buckets}/>
+      <Route path='/buckets/:id' component={Bucket}/>
+
+      <Route path='/goals/new' component={Goal}/>
+      <Route path='/goals/:id' component={Goal}/>
+
+      <Route path='/accounts' component={Accounts}/>
+      <Route path='/accounts/:accountId' component={Accounts}/>
+      <Route path='/connect/plaid' component={ConnectPlaid}/>
+      <Route path='/connect/finicity' component={FinicitySearch}/>
+      <Route path='/connect/finicity/:institutionId' component={FinicityConnect}/>
+      <Route path='/connect/upload' component={Upload}/>
+
+      <Route path='/categories' component={Categories}/>
+    </Route>
+  </Router>
 );

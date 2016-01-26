@@ -1,20 +1,33 @@
+/* global Plaid */
 
 import _ from 'lodash';
 import { Component } from 'react';
-import { connect } from 'react-redux';
+import { Form } from 'formsy-react';
+import reactMixin from 'react-mixin';
 
-import { connect as connectInstitution } from 'state/institutions';
-import styles from 'sass/views/connect.scss';
+import Card from 'components/card';
+import Input from 'components/forms/input';
+import Institution from 'collections/institutions';
 
-class Connect extends Component {
+import style from 'sass/views/connect';
+
+
+@reactMixin.decorate(ReactMeteorData)
+export default class Connect extends Component {
   constructor() {
     super();
     this.state = { results: [] };
     this.handleSearch = _.debounce(this.handleSearch.bind(this), 300);
   }
 
+  getMeteorData() {
+    return {
+      institutions: Institution.find({}).fetch(),
+    };
+  }
+
   componentDidMount() {
-    if (!window.Plaid) {
+    if (!Plaid) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
@@ -23,69 +36,72 @@ class Connect extends Component {
     }
   }
 
-  handleSearch(event) {
+  handleSearch(value) {
     fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
-        `/institutions/search?p=connect&q=${event.target.value}`)
+        `/institutions/search?p=connect&q=${value}`)
       .then((response)=> response.json())
       .then((results)=> this.setState({ results }));
   }
 
+  connectInstitution({ id, publicToken }) {
+    Meteor.call('connectInstitution', { id, publicToken }, (error)=> {
+      if (error) throw error;
+      console.log('SUCCESS');
+    });
+  }
+
   selectFi(fi) {
-    window.Plaid.create({
+    Plaid.create({
       clientName: 'Moneybase',
       key: '4b747132cf8c427bec79f00e0dcb4a',
       product: 'connect',
       longTail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
-        console.log({ id: fi.id, publicToken });
-        this.setState({ playItAgain: { id: fi.id, publicToken } });
-        this.props.dispatch(connectInstitution({ id: fi.id, publicToken }));
+        const connectOpts = { id: fi.id, publicToken };
+        console.log(connectOpts);
+        this.setState({ playItAgain: connectOpts });
+        this.connectInstitution(connectOpts);
       },
     }).open(fi.id);
   }
 
   render() {
-    return (
-      <div className='container'>
-        <h1>Connect Account</h1>
+    const { playItAgain } = this.state;
+    const { institutions } = this.data;
 
-        { this.state.playItAgain ? (
-          <a
-            href='#'
-            className='btn btn-warning'
-            onClick={()=> this.props.dispatch(connectInstitution(this.state.playItAgain))}
-          >Play it again</a>
+    return (
+      <div className={`container ${style.root}`}>
+        <h1>Connect Account ({institutions.length} connected)</h1>
+
+        { playItAgain ? (
+          <a href='#' onClick={()=> this.connectInstitution(playItAgain)}>
+            Play it again
+          </a>
         ) : null}
 
-        <form onSubmit={(e)=> e.preventDefault()}>
-          <div className='form-group'>
-            <label>Search</label>
-            <input type='text' className='form-control' onChange={this.handleSearch}/>
-          </div>
-        </form>
+        <Form>
+          <Input name='search' label='Search' onChange={::this.handleSearch}/>
+        </Form>
 
-        <ul className='list-unstyled'>
+        <div>
           {this.state.results.map((fi)=> (
-            <li className={styles.fi} onClick={this.selectFi.bind(this, fi)} key={fi.id}>
-              <div className='panel panel-default'>
-                <div className='panel-body' style={{ backgroundColor: fi.colors.darker }}>
+            <Card
+              key={fi.id}
+              className='fi'
+              onClick={this.selectFi.bind(this, fi)}
+              style={{ backgroundColor: fi.colors.darker }}
+            >
+              {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
 
-                  {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
-
-                  <div className='fi-name'>
-                    <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
-                    {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
-                  </div>
-
-                </div>
+              <div className='fi-name'>
+                <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
+                {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
               </div>
-            </li>
+            </Card>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
 }
-
-export default connect((state)=> ({ institutions: state.institutions }))(Connect);

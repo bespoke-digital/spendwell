@@ -1,15 +1,117 @@
 
+@import '../variables';
+
 :local(.root) {
-  .heading {
+  .month {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
+    padding: 10px;
 
+    .current {
+      margin: 8px 12px;
+      width: 120px;
+      text-align: center;
+    }
+  }
+
+  .status {
+    display: flex;
+    justify-content: space-around;
     margin-bottom: 40px;
+    flex-direction: column;
 
-    h1 {
-      margin: 0;
-      flex: 1;
+    @media (min-width: $screen-sm-min) {
+      flex-direction: row;
+    }
+
+    > div,
+    > a {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 20px;
+
+      @media (min-width: $screen-sm-min) {
+        margin-bottom: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .amount {
+        font-size: 22px;
+      }
+    }
+
+    > a {
+      color: $gray-dark;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .card {
+    position: relative;
+
+    &.bucket, &.goal {
+      border-right: 2px solid $brand-success;
+    }
+
+    &.bucket-danger,
+    &.goal-danger {
+      border-right-color: $brand-danger;
+    }
+
+    &.bucket-warn,
+    &.goal-warn {
+      border-right-color: $brand-warn;
+    }
+
+    .summary {
+      .amount {
+        min-width: 80px;
+        text-align: right;
+
+        &.avg {
+          color: $gray-light;
+        }
+      }
+    }
+
+    .progress {
+      margin: 30px 0 5px;
+    }
+
+    .progress-numbers {
+      display: flex;
+      flex-direction: row;
+
+      > div {
+        flex: 1;
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+
+    .progress-achieved {
+      text-align: center;
+    }
+
+    .progress-numbers,
+    .progress-achieved {
+      margin-bottom: 20px;
+    }
+
+    .bucket-children,
+    .goal-children {
+      > :last-child {
+        float: right;
+      }
     }
   }
 }

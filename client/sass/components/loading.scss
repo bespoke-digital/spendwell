@@ -1,0 +1,11 @@
+
+:local(.root) {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: calc(25%);
+  left: calc(50% - 50px);
+
+  text-align: center;
+  font-size: 44px;
+}

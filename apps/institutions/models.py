@@ -4,12 +4,12 @@ from django.conf import settings
 
 from plaid import Client
 
-from apps.core.models import MBOwnedModel
+from apps.core.models import SWOwnedModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 
 
-class InstitutionManager(models.Manager):
+class InstitutionManager(SWManager):
     def create(self, **kwargs):
         institution = Institution(**kwargs)
         institution.save()
@@ -17,7 +17,7 @@ class InstitutionManager(models.Manager):
         return institution
 
 
-class Institution(MBOwnedModel):
+class Institution(SWOwnedModel):
     plaid_id = models.CharField(max_length=255)
     access_token = models.CharField(max_length=255)
     name = models.CharField(max_length=255)

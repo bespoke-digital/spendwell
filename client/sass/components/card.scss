@@ -1,9 +1,9 @@
 
 @import '../variables';
-@import '../mui';
+@import '../depth';
 
 :local(.root) {
-  @extend .mui--z1;
+  @extend .depth-z1;
 
   padding: 20px;
   background-color: white;
@@ -16,7 +16,38 @@
   }
 
   &.expanded {
-    @extend .mui--z2;
+    @extend .depth-z2;
     margin: 20px -10px;
+
+    .summary {
+      margin-bottom: 10px;
+    }
+
+    .more-info {
+      height: auto;
+    }
+  }
+
+  &.card-list-headings {
+    font-weight: 500;
+  }
+
+  .summary {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    > :first-child {
+      flex: 1;
+    }
+    > :not(:first-child) {
+      margin-left: 20px;
+    }
+  }
+
+  .more-info {
+    height: 0;
+    overflow: hidden;
+    transition: 0.5s ease;
   }
 }

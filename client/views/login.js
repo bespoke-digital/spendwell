@@ -1,81 +1,70 @@
 
 import { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
-import _ from 'lodash';
 
 import Input from 'components/forms/input';
 import Button from 'components/button';
-import Header from 'components/header';
-import { login } from 'state/auth';
+import Card from 'components/card';
 import styles from 'sass/views/login.scss';
 
 
-class Login extends Component {
+export default class Login extends Component {
+  static propTypes = {
+    location: PropTypes.object,
+    history: PropTypes.object.isRequired,
+  };
+
   constructor() {
     super();
-    this.state = { fields: {}, buttonEnabled: false };
+    this.state = { valid: false, errors: null };
   }
 
-  handleSubmit(data) {
-    this.props.dispatch(login(data));
+  componentDidMount() {
+    if (Meteor.userId())
+      Meteor.logout();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.authenticated)
-      nextProps.history.pushState(null, this.props.next || '/dashboard');
+  handleSubmit({ email, password }, reset, invalidate) {
+    Meteor.loginWithPassword({ email }, password, (error)=> {
+      if (error && error.reason === 'User not found')
+        return invalidate({ email: true });
 
-    if (nextProps.auth.login.failed) {
-      const errors = _.clone(nextProps.auth.login.response);
-      if (errors.non_field_errors)
-        delete errors.non_field_errors;
+      else if (error && error.reason === 'Incorrect password')
+        return invalidate({ password: true });
 
-      this.refs.form.updateInputsWithError(errors);
-    }
+      else if (error)
+        throw error;
+
+      this.props.history.push({ pathname: '/' });
+    });
   }
 
   render() {
+    const { errors, valid } = this.state;
+    if (errors) console.log(errors);
     return (
-      <div>
-        <Header/>
-        <div className={`container ${styles.root}`}>
-          <h1>Login</h1>
+      <div className={`container ${styles.root}`}>
+        <h1>Login</h1>
 
-          { this.props.auth.login.failed && this.props.auth.login.response.non_field_errors ? (
-            this.props.auth.login.response.non_field_errors.map((error, i)=> (
-              <div ket={i} className='alert alert-danger'>{ error }</div>
-            ))
-          ) : null}
-
+        <Card>
           <Form
             onValidSubmit={::this.handleSubmit}
-            onValid={this.setState.bind(this, { buttonEnabled: true })}
-            onInvalid={this.setState.bind(this, { buttonEnabled: false })}
-            ref='form'
+            onValid={this.setState.bind(this, { valid: true })}
+            onInvalid={this.setState.bind(this, { valid: false })}
           >
-            <Input layout='vertical' label='Email' name='email' type='email' validations='isEmail' required/>
-            <Input layout='vertical' label='Password' name='password' type='password' required/>
+            <Input label='Email' name='email' type='email' validations='isEmail' required/>
+            <Input label='Password' name='password' type='password' required/>
 
-            <Button
-              type='submit'
-              variant='primary'
-              disabled={!this.state.buttonEnabled}
-            >
-              Login
-              {this.props.auth.login.loading ? (
-                <i className='fa fa-spinner fa-spin'/>
-              ) : null}
-            </Button>
+            {errors ? (
+              <p className='mui--text-danger'>TODO: fix this error</p>
+            ) : null}
+
+            <Button type='submit' variant='primary' disabled={!valid}>Login</Button>
+            <Button to='/signup'>Signup</Button>
           </Form>
+        </Card>
 
-        </div>
       </div>
     );
   }
 }
-
-Login.propTypes = {
-  auth: PropTypes.object.isRequired,
-};
-
-export default connect((state)=> ({ auth: state.auth }))(Login);

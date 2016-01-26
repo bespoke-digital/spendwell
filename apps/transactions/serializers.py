@@ -1,13 +1,13 @@
 
 from rest_framework import serializers
 
-from apps.core.serializers import MBOwnedSerializerMixin
+from apps.core.serializers import SWOwnedSerializerMixin
 
 from apps.categories.serializers import CategorySerializer
 from .models import Transaction
 
 
-class TransactionSerializer(MBOwnedSerializerMixin, serializers.ModelSerializer):
+class TransactionSerializer(SWOwnedSerializerMixin, serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
 
     class Meta:

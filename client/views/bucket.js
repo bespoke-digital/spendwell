@@ -1,122 +1,100 @@
 
-import _ from 'lodash';
 import { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
 import { Form } from 'formsy-react';
+import reactMixin from 'react-mixin';
 
-import { getBucket, updateBucket } from 'state/buckets';
-import { listTransactions } from 'state/transactions';
-import { listCategories } from 'state/categories';
 import Card from 'components/card';
 import Button from 'components/button';
-import TransactionList from 'components/transaction-list';
 import Input from 'components/forms/input';
-import Checkbox from 'components/forms/checkbox';
-import CategorySelector from 'components/forms/category-selector';
+import TransactionList from 'components/transaction-list';
+
+import Buckets from 'collections/buckets';
 
 import styles from 'sass/views/bucket.scss';
 
 
+@reactMixin.decorate(ReactMeteorData)
 class Bucket extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     params: PropTypes.object.isRequired,
-    bucket: PropTypes.object,
   };
 
   constructor() {
     super();
-    this.state = { showSettings: false };
+    this.state = { alteredFilters: null, showSettings: false };
   }
 
-  componentDidMount() {
-    this.props.dispatch(getBucket({ id: this.props.params.id }));
-
-    this.updateTransactions();
-
-    if (this.props.categories.length === 0)
-      this.props.dispatch(listCategories());
+  getMeteorData() {
+    return {
+      bucket: Buckets.findOne(this.props.params.id),
+    };
   }
 
-  updateTransactions(data = {}) {
-    data.inflow = false;
-    this.props.dispatch(listTransactions(_.omit(data, (o)=> _.isUndefined(o) || o === '')));
-  }
+  handleSubmit({ name }) {
+    const { bucket } = this.data;
 
-  handleSubmit(data) {
-    data.id = this.props.bucket.id;
-    this.props.dispatch(updateBucket(data));
+    bucket.update({ name });
+
     this.setState({ showSettings: false });
   }
 
-  handleFilterUpdate(data) {
-    this.updateTransactions(data);
+  onFiltersChange(filters) {
+    this.setState({ alteredFilters: filters });
   }
 
-  handleCategoryChange(categoryId) {
-    if (!categoryId) {
-      this.setState({ category: null });
+  saveFilters() {
+    const { bucket } = this.data;
+    const { alteredFilters } = this.state;
 
-    } else {
-      const category = _.find(this.props.categories, { id: categoryId });
-      this.setState({ category });
-    }
+    bucket.update({ filters: alteredFilters });
+
+    this.setState({ alteredFilters: null });
   }
 
   render() {
-    const { bucket, transactions, categories } = this.props;
-    const { showSettings, category } = this.state;
+    const { bucket } = this.data;
+    const { showSettings, alteredFilters } = this.state;
 
-    if (!bucket) return <div></div>;
+    if (!bucket) return <div>Bucket not found.</div>;
 
     return (
       <div className={`container ${styles.root}`}>
-        <h1>
-          {`${bucket.name} `}
-          <a href='#' onClick={this.setState.bind(this, { showSettings: !showSettings }, null)}>
+
+        <div className='heading'>
+          <Button onClick={()=> this.props.history.goBack()} className='back'>
+            <i className='fa fa-long-arrow-left'/>
+          </Button>
+
+          <h1>{bucket.name}</h1>
+
+          <Button onClick={this.setState.bind(this, { showSettings: !showSettings }, null)}>
             <i className='fa fa-cog'/>
-          </a>
-        </h1>
+          </Button>
+        </div>
 
         <Card className={showSettings ? '' : 'gone'} expanded={true}>
           <Form onValidSubmit={::this.handleSubmit}>
             <Input label='Name' name='name' value={bucket.name} required/>
-            <Input
-              label='Monthly Amount'
-              name='monthly_amount'
-              value={bucket.monthly_amount}
-              validators='isNumeric'
-              required
-            />
-            <Checkbox
-              label='Autofill'
-              name='autofill'
-              value={bucket.autofill}
-              required
-            />
             <Button type='submit' variant='primary'>Save</Button>
             <Button onClick={this.setState.bind(this, { showSettings: false }, null)}>Cancel</Button>
           </Form>
         </Card>
 
-        <Card>
-          <h2>Transactions</h2>
-          <Form onChange={_.debounce(::this.handleFilterUpdate)}>
-            <Input name='name' label='Name'/>
-            <Input name='time_gte' label='After Time'/>
-            <Input name='time_lte' label='Before Time'/>
-            <CategorySelector name='category' categories={categories}/>
-          </Form>
-        </Card>
+        <TransactionList
+          filters={alteredFilters || bucket.filters}
+          onFiltersChange={::this.onFiltersChange}
+        >
+          {alteredFilters ?
+            <Button variant='primary' onClick={::this.saveFilters}>
+              <i className='fa fa-save'/>
+              {' Save'}
+            </Button>
+          : null}
+        </TransactionList>
 
-        <TransactionList transactions={transactions}/>
       </div>
     );
   }
 }
 
-export default connect((state)=> ({
-  bucket: state.buckets.get.bucket,
-  transactions: state.transactions.list,
-  categories: state.categories,
-}))(Bucket);
+export default Bucket;

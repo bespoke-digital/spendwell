@@ -1,16 +1,16 @@
 
-import { createClass } from 'react';
+import { Component } from 'react';
 import Formsy from 'formsy-react';
+import reactMixin from 'react-mixin';
 
 import style from 'sass/components/forms/input';
 
 
-export default createClass({
-  mixins: [Formsy.Mixin],
-
+@reactMixin.decorate(Formsy.Mixin)
+export default class Checkbox extends Component {
   changeValue(event) {
     this.setValue(event.currentTarget.checked);
-  },
+  }
 
   render() {
     const errorMessage = this.getErrorMessage();
@@ -24,7 +24,7 @@ export default createClass({
         <label>
           <input
             type='checkbox'
-            onChange={this.changeValue}
+            onChange={::this.changeValue}
             checked={this.getValue()}
           />
           {this.props.label}
@@ -32,5 +32,5 @@ export default createClass({
         {errorMessage ? <span>{errorMessage}</span> : null}
       </div>
     );
-  },
-});
+  }
+}
