@@ -1,11 +1,12 @@
+/*eslint no-var: 0*/
 
-const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const webpack = require('webpack');
-const autoprefixer = require('autoprefixer');
+var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
+var autoprefixer = require('autoprefixer');
 
 
-const config = {
+var config = {
   entry: './client/index.js',
   output: {
     path: path.join(__dirname, 'static', 'dist'),
@@ -15,7 +16,11 @@ const config = {
 
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel?stage=0' },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel?stage=0&plugins[]=' + path.join(__dirname, 'babel-relay'),
+      },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
         'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'

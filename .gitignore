@@ -5,3 +5,4 @@ staticfiles
 static/dist
 local
 local.py
+/spendwell/schema.json

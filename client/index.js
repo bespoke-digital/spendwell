@@ -4,4 +4,4 @@ import 'sass/base.scss';
 import routes from 'routes';
 
 
-Meteor.startup(()=> render(routes, document.getElementById('root')));
+window.onload = ()=> render(routes, document.getElementById('root'));

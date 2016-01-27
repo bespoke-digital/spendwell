@@ -1,64 +1,88 @@
 
+import Relay from 'react-relay';
 import { Component } from 'react';
 import reactMixin from 'react-mixin';
+import relay from 'relay-decorator';
 
 import Button from 'components/button';
-import Categories from 'collections/categories';
 
 
-@reactMixin.decorate(ReactMeteorData)
-export default class CategoriesView extends Component {
-  constructor() {
-    super();
-    this.state = { downloading: false };
+const categoryFragment = [1,2,3].reduce((fragment)=> Relay.QL`
+  fragment on CategoryNode {
+    name
+    children(first: 10) {
+      edges {
+        node {
+          ${fragment}
+        }
+      }
+    }
   }
+`, Relay.QL`fragment on CategoryNode { name }`);
 
-  getMeteorData() {
-    return {
-      categories: Categories.find({}).fetch(),
-    };
-  }
 
-  componentDidMount() {
-    if (Meteor.userId() !== Meteor.settings.public.adminId)
-      throw new Error('not-authorized');
-  }
-
-  downloadCategories(event) {
-    event.preventDefault();
-    this.setState({ downloading: true });
-    Meteor.call('downloadCategories', ()=> this.setState({ downloading: false }));
-  }
-
-  childrenOf(id) {
-    const categories = this.data.categories.filter((category)=> category.parent === id);
-    return <ul>
-      {categories.map((category)=> (
-        <li key={category._id}>
-          {category.name} ({category.plaidId})
-          {this.childrenOf(category._id)}
-        </li>
-      ))}
-    </ul>;
-  }
-
+@relay({ fragments: {
+  category: () => categoryFragment,
+} })
+class Category extends Component {
   render() {
+    const { category } = this.props;
+    return (
+      <li>
+        <strong>{category.name}</strong>
+        {category.children.edges.length ?
+          <ul>
+            {category.children.edges.map((edge, index)=> (
+              <Category key={index} category={edge.node}/>
+            ))}
+          </ul>
+        : null}
+      </li>
+    );
+  }
+}
+
+@relay({
+  fragments: {
+    categories: () => Relay.QL`
+      fragment on CategoryNodeDefaultConnection {
+        edges {
+          node {
+            ${Category.getFragment('category')}
+          }
+        }
+      }
+    `,
+  }
+})
+class CategoriesView extends Component {
+  render() {
+    const { categories } = this.props;
+
     return (
       <div className='container'>
-        <div className='row'>
-          <div className='col-sm-3'>
-            <Button variant='primary' onClick={::this.downloadCategories}>
-              {this.state.downloading ? (
-                <i className='fa fa-spinner fa-spin'/>
-              ) : (
-                <i className='fa fa-arrow-circle-o-down'/>
-              )}
-              {' Download'}
-            </Button>
-            {this.childrenOf(null)}
-          </div>
-        </div>
+        <ul>
+          {categories.edges.map((edge, index)=>
+            <Category key={index} category={edge.node}/>
+          )}
+        </ul>
       </div>
     );
   }
 }
+
+class CategoriesRoute extends Relay.Route {
+  static queries = {
+    categories: ()=> Relay.QL`query {
+      categories(parentExists: false)
+    }`,
+  };
+  static routeName = 'CategoriesRoute';
+}
+
+export default ()=> (
+  <Relay.RootContainer
+    Component={CategoriesView}
+    route={new CategoriesRoute()}
+  />
+);

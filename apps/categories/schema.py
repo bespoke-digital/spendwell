@@ -27,7 +27,7 @@ class CategoryNode(DjangoNode):
 
 class CategoriesQuery(ObjectType):
     category = relay.NodeField(CategoryNode)
-    all_categories = DjangoFilterConnectionField(
+    categories = DjangoFilterConnectionField(
         CategoryNode,
         filterset_class=CategoryFilter,
     )
