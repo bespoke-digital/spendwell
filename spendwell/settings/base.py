@@ -21,6 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_graphiql',
+    'graphene.contrib.django',
+
     'apps.core',
     'apps.landing',
     'apps.users',
