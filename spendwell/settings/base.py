@@ -21,10 +21,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'djoser',
-
     'apps.core',
     'apps.landing',
     'apps.users',
@@ -97,9 +93,3 @@ STATICFILES_DIRS = (
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_SECRET = None
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-}

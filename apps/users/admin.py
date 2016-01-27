@@ -2,20 +2,9 @@
 from django import forms
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.contrib import admin
 
 from spendwell.admin import admin_site
 from apps.users.models import User
-
-from rest_framework.authtoken.models import Token
-
-
-class TokenAdmin(admin.ModelAdmin):
-    list_display = ('key', 'user', 'created')
-    fields = ('user',)
-    ordering = ('-created',)
-
-admin_site.register(Token, TokenAdmin)
 
 
 class UserCreationForm(forms.ModelForm):
