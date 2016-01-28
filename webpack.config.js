@@ -4,6 +4,10 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
+var execSync = require('child_process').execSync;
+
+
+execSync('./manage.py export_schema');
 
 
 var config = {

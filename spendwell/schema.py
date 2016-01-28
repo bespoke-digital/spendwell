@@ -1,12 +1,15 @@
 
-from graphene import Schema
+import graphene
 
 from apps.categories.schema import CategoriesQuery
 
 
 class Query(CategoriesQuery):
-    pass
+    viewer = graphene.Field('self')
+
+    def resolve_viewer(self, *args, **kwargs):
+        return self
 
 
-schema = Schema(name='SpendWell Schema')
+schema = graphene.Schema(name='SpendWell Schema')
 schema.query = Query

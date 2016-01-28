@@ -28,27 +28,32 @@ class Category extends Component {
   render() {
     const { category } = this.props;
     return (
-      <li>
+      <div>
         <strong>{category.name}</strong>
         {category.children.edges.length ?
           <ul>
-            {category.children.edges.map((edge, index)=> (
-              <Category key={index} category={edge.node}/>
-            ))}
+            {category.children.edges.map((edge, index)=>
+              <li key={index}><Category category={edge.node}/></li>
+            )}
           </ul>
         : null}
-      </li>
+      </div>
     );
   }
 }
 
 @relay({
   fragments: {
-    categories: () => Relay.QL`
-      fragment on CategoryNodeDefaultConnection {
-        edges {
-          node {
-            ${Category.getFragment('category')}
+    viewer: () => Relay.QL`
+      fragment on Query {
+        categories(parentExists: false, first: 10) {
+          edges {
+            node {
+              parent {
+                id
+              },
+              ${Category.getFragment('category')}
+            }
           }
         }
       }
@@ -57,13 +62,16 @@ class Category extends Component {
 })
 class CategoriesView extends Component {
   render() {
-    const { categories } = this.props;
-
+    const { viewer } = this.props;
+    console.log('viewer', viewer);
     return (
       <div className='container'>
         <ul>
-          {categories.edges.map((edge, index)=>
-            <Category key={index} category={edge.node}/>
+          {viewer.categories.edges.map((edge, index)=>
+            <li key={index}>
+              {edge.node.parent && edge.node.parent.id ? '1' : '0'}
+              <Category category={edge.node}/>
+            </li>
           )}
         </ul>
       </div>
@@ -71,18 +79,16 @@ class CategoriesView extends Component {
   }
 }
 
-class CategoriesRoute extends Relay.Route {
+class ViewerRoute extends Relay.Route {
+  static routeName = 'ViewerRoute';
   static queries = {
-    categories: ()=> Relay.QL`query {
-      categories(parentExists: false)
-    }`,
+    viewer: ()=> Relay.QL`query { viewer }`,
   };
-  static routeName = 'CategoriesRoute';
 }
 
 export default ()=> (
   <Relay.RootContainer
     Component={CategoriesView}
-    route={new CategoriesRoute()}
+    route={new ViewerRoute()}
   />
 );
