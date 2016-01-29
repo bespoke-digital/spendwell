@@ -1,7 +1,6 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
-import reactMixin from 'react-mixin';
 import moment from 'moment';
 
 import Card from 'components/card';
@@ -9,7 +8,6 @@ import Money from 'components/money';
 import Progress from 'components/progress';
 
 
-@reactMixin.decorate(ReactMeteorData)
 export default class Bucket extends Component {
   static propTypes = {
     bucket: PropTypes.object.isRequired,
@@ -21,22 +19,6 @@ export default class Bucket extends Component {
   static defaultProps = {
     selected: false,
   };
-
-  getMeteorData() {
-    const { selected, month, bucket } = this.props;
-
-    if (!selected)
-      return {};
-
-    return {
-      transactions: bucket.transactions({
-        date: {
-          $gte: month.toDate(),
-          $lt: month.clone().add(1, 'month').toDate(),
-        },
-      }).fetch(),
-    };
-  }
 
   render() {
     const { bucket, month, onClick, selected, children } = this.props;

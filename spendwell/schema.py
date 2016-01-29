@@ -5,19 +5,25 @@ from apps.categories.schema import CategoriesQuery
 from apps.institutions.schema import InstitutionsQuery
 from apps.accounts.schema import AccountsQuery
 from apps.transactions.schema import TransactionsQuery
+from apps.users.schema import UsersQuery
 
 
-class Query(
+class Viewer(
     CategoriesQuery,
     InstitutionsQuery,
     AccountsQuery,
     TransactionsQuery,
+    UsersQuery,
 ):
-    viewer = graphene.Field('self')
+    pass
+
+
+class Query(graphene.ObjectType):
+    viewer = graphene.Field(Viewer)
     node = graphene.relay.NodeField()
 
     def resolve_viewer(self, *args, **kwargs):
-        return self
+        return Viewer()
 
 
 schema = graphene.Schema(name='SpendWell Schema')

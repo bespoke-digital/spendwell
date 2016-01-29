@@ -1,12 +1,12 @@
 
-import { Router, Route, browserHistory } from 'react-router';
+import { Route, browserHistory } from 'react-router';
+import Relay from 'react-relay';
 import { RelayRouter } from 'react-router-relay';
 
 // import Logout from 'views/logout';
 // import Login from 'views/login';
 // import Signup from 'views/signup';
 // import Auth from 'views/auth';
-// import Dashboard from 'views/dashboard';
 // import ConnectPlaid from 'views/connect';
 // import FinicitySearch from 'views/finicitySearch';
 // import FinicityConnect from 'views/finicityConnect';
@@ -17,6 +17,7 @@ import { RelayRouter } from 'react-router-relay';
 // import Incoming from 'views/incoming';
 // import Outgoing from 'views/outgoing';
 
+import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
 import Categories from 'views/categories';
 import App from 'views/app';
@@ -31,8 +32,6 @@ import App from 'views/app';
 //     </Route>
 
 //     <Route component={App}>
-//       <Route path='/' component={Dashboard}/>
-//       <Route path='/dashboard/:year/:month' component={Dashboard}/>
 
 //       <Route path='/incoming' component={Incoming}/>
 //       <Route path='/outgoing' component={Outgoing}/>
@@ -55,12 +54,14 @@ import App from 'views/app';
 //   </Router>
 // );
 
-const viewerQuery = { viewer: ()=> Relay.QL`query { viewer }` }
+const viewerQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
 
 export default (
   <RelayRouter history={browserHistory}>
     <Route path='app' component={App}>
+      <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
+      <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
       <Route path='accounts' component={Accounts} queries={viewerQuery}/>
       <Route path='accounts/:accountId' component={Accounts} queries={viewerQuery}/>
       <Route path='categories' component={Categories} queries={viewerQuery}/>

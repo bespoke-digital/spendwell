@@ -1,9 +1,7 @@
 
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
-
-import Button from 'components/button';
 
 import AccountList from './account-list';
 import styles from './styles';
@@ -11,7 +9,7 @@ import styles from './styles';
 
 @relayContainer({ fragments: {
   viewer: ()=> Relay.QL`
-    fragment on Query {
+    fragment on Viewer {
       institutions(first: 10) {
         edges {
           node {

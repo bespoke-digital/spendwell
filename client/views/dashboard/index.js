@@ -1,24 +1,30 @@
 
 import { Component, PropTypes } from 'react';
-import reactMixin from 'react-mixin';
+import Relay from 'react-relay';
 import { Link } from 'react-router';
 import moment from 'moment';
+import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
 
-import Buckets from 'collections/buckets';
-import Transactions from 'collections/transactions';
-import Goals from 'collections/goals';
-
 import styles from 'sass/views/dashboard.scss';
 import Bucket from './bucket';
 import Goal from './goal';
 
 
-@reactMixin.decorate(ReactMeteorData)
+@relayContainer({
+  initialVariables: {},
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        safeToSpend
+      }
+    `,
+  },
+})
 export default class Dashboard extends Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
@@ -29,71 +35,25 @@ export default class Dashboard extends Component {
     this.state = {};
   }
 
-  periods() {
-    const { year, month } = this.props.params;
+  render() {
+    console.log('Dashboard', this.props);
+
+    const { viewer: { safeToSpend }, params: { year, month } } = this.props;
+    const { selected } = this.state;
 
     const now = moment().startOf('month');
     const current = year ? moment(`${year}-${month}-0`) : now;
-    return {
+    const periods = {
       now,
       current,
       previous: current.clone().subtract(1, 'month'),
       next: current.clone().add(1, 'month'),
     };
-  }
 
-  getMeteorData() {
-    const periods = this.periods();
-
-    return {
-      transactions: Transactions.find({
-        transfer: false,
-        date: {
-          $gte: periods.current.toDate(),
-          $lt: periods.current.clone().add(1, 'month').toDate(),
-        },
-      }).fetch(),
-      goals: Goals.find().fetch(),
-      buckets: Buckets.find({ type: 'outgoing' }).fetch(),
-    };
-  }
-
-  render() {
-    const { transactions, buckets, goals } = this.data;
-    const { selected } = this.state;
-    const periods = this.periods();
-
-    const incomingAmount = Transactions.sum(transactions.filter((t)=> t.amount > 0));
-    const spentAmount = Transactions.sum(transactions.filter((t)=> t.amount < 0));
-
-    goals.reduce((remaining, goal)=> {
-      if (remaining <= 0) {
-        goal.filled = 0;
-        return 0;
-      }
-
-      const diff = remaining - goal.amount;
-
-      if (diff >= 0) {
-        goal.filled = goal.amount;
-
-        return diff;
-
-      } else {
-        goal.filled = goal.amount + diff;
-
-        return 0;
-      }
-    }, incomingAmount + spentAmount);
-
-    const savedAmount = goals.reduce((s, g)=> s + g.filled, 0);
-
-    const alocatedAmount = spentAmount - savedAmount;
-
-    const bucketAmount = buckets.reduce((s, b)=> s + b.amount(periods.current), 0);
-    const unbucketedAmount = spentAmount + bucketAmount;
-
-    const safeAmount = incomingAmount + alocatedAmount;
+    const income = 0;
+    const goals = [];
+    const buckets = [];
+    const unbucketedAmount = 0;
 
     return (
       <div className={`container ${styles.root}`}>
@@ -115,22 +75,18 @@ export default class Dashboard extends Component {
         <Card className='status'>
           <Link to='/app/incoming'>
             Income
-            <div className='amount'><Money amount={incomingAmount}/></div>
-          </Link>
-          <Link to='/app/outgoing'>
-            Alocated
-            <div className='amount'><Money amount={alocatedAmount} abs={true}/></div>
+            <div className='amount'><Money amount={income}/></div>
           </Link>
           <div>
             Safe To Spend
-            <div className='amount'><Money amount={safeAmount}/></div>
+            <div className='amount'><Money amount={safeToSpend}/></div>
           </div>
         </Card>
 
         <div className='heading'>
           <h2>Saved</h2>
           <div>
-            <Button to='/app/goals/new' raised={true}>
+            <Button to='/app/goals/new' raised>
               <i className='fa fa-plus'/>
               {' New'}
             </Button>
@@ -165,7 +121,7 @@ export default class Dashboard extends Component {
         <div className='heading'>
           <h2>Spent</h2>
           <div>
-            <Button to='/app/outgoing' raised={true}>
+            <Button to='/app/outgoing' raised>
               <i className='fa fa-plus'/>
               {' New'}
             </Button>
@@ -200,7 +156,7 @@ export default class Dashboard extends Component {
               <div className='summary'>
                 <div>Other</div>
                 <div className='amount'>
-                  <Money amount={unbucketedAmount} abs={true}/>
+                  <Money amount={unbucketedAmount} abs/>
                 </div>
               </div>
             </Card>

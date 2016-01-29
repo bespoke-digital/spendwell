@@ -1,6 +1,5 @@
 
 import { Component, PropTypes } from 'react';
-import reactMixin from 'react-mixin';
 import moment from 'moment';
 
 import Card from 'components/card';
@@ -8,7 +7,6 @@ import Money from 'components/money';
 import Progress from 'components/progress';
 
 
-@reactMixin.decorate(ReactMeteorData)
 export default class Goal extends Component {
   static propTypes = {
     goal: PropTypes.object.isRequired,
@@ -20,10 +18,6 @@ export default class Goal extends Component {
   static defaultProps = {
     selected: false,
   };
-
-  getMeteorData() {
-    return {};
-  }
 
   render() {
     const { goal, onClick, selected, children, month } = this.props;
