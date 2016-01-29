@@ -32,6 +32,7 @@
     "moment": "^2.11.1",
     "muicss": "^0.2.10",
     "node-sass": "^3.4.2",
+    "nprogress": "^0.2.0",
     "null-loader": "^0.1.1",
     "papaparse": "^4.1.2",
     "postcss-loader": "^0.8.0",

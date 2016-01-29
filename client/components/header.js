@@ -32,8 +32,8 @@ export default class Header extends Component {
             onClick={::this.handleHandleClick}
           >☰</a>
         ) : null}
-        <a className='brand mui--appbar-height mui--appbar-line-height' href='/'>
-          <img src={logoWhite} alt='moneybase'/>
+        <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
+          <img src={logoWhite} alt='SpendWell'/>
         </a>
       </nav>
     );

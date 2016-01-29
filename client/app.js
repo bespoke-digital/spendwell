@@ -5,17 +5,10 @@ import { render } from 'react-dom';
 import routes from 'routes';
 import Relay from 'react-relay';
 
-import { getCookie } from 'utils/cookies';
+import networkLayer from 'utils/network-layer';
 
 
-Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer('/graphql', {
-    credentials: 'same-origin',
-    headers: {
-      'X-CSRFToken': getCookie('csrftoken'),
-    },
-  })
-);
+Relay.injectNetworkLayer(networkLayer);
 
 
 window.onload = ()=> render(routes, document.getElementById('root'));
