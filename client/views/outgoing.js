@@ -49,7 +49,7 @@ export default class Outgoing extends Component {
       <div className={`container ${styles.root}`}>
 
         <div className='heading'>
-          <Button to='/' className='back'>
+          <Button to='/app/' className='back'>
             <i className='fa fa-long-arrow-left'/>
           </Button>
 

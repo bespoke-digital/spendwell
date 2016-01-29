@@ -1,0 +1,29 @@
+{% extends "page.html" %}
+
+{% load bootstrap %}
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} users-auth{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="auth-container">
+    <h1>{% trans "Login" %}</h1>
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form|bootstrap }}
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+      </div>
+      <p class="help-block">
+        {% trans "Don't have an account?" %}
+        <a href="{% url 'signup' %}">{% trans 'Sign Up' %}</a>.
+      </p>
+      <p class="help-block">
+        {% trans "Don't remember your password?" %}
+        <a href="{% url 'password_reset' %}">{% trans 'Reset it' %}</a>.
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock %}

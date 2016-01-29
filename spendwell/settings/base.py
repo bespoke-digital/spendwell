@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'bootstrapform',
     'django_graphiql',
     'graphene.contrib.django',
 
@@ -92,6 +93,11 @@ STATIC_ROOT = 'collected_static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+
+LOGIN_REDIRECT_URL = '/app'
+LOGIN_URL = '/login'
+
 
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'

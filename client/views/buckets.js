@@ -34,7 +34,7 @@ export default class BucketsView extends Component {
         <div className='heading'>
           <h1>Buckets</h1>
           <div>
-            <Button to='/buckets/new' raised={true}>
+            <Button to='/app/buckets/new' raised={true}>
               <i className='fa fa-plus'/>
               {' New Bucket'}
             </Button>
@@ -50,7 +50,7 @@ export default class BucketsView extends Component {
             >
               {bucket.name}
               {selectedBucket === bucket._id ? (
-                <div><Link to={`/buckets/${bucket._id}`}>View</Link></div>
+                <div><Link to={`/app/buckets/${bucket._id}`}>View</Link></div>
               ) : null}
             </Card>
           ))}

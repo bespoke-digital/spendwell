@@ -1,0 +1,2 @@
+
+import 'sass/pages.scss';

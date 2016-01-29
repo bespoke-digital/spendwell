@@ -25,10 +25,10 @@
     <meta name="msapplication-TileImage" content="{% static 'img/favicon/mstile-144x144.png' %}">
     <meta name="theme-color" content="#ffffff">
 
-    <title>moneybase</title>
+    <title>{% block title %}SpendWell{% endblock %}</title>
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{% static 'dist/main.css' %}">
+    {% block head %}{% endblock %}
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% block body %}{% endblock %}

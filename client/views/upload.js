@@ -61,7 +61,7 @@ export default class Connect extends Component {
 
     return (
       <div className={`container ${style.root}`}>
-        <Button to='/accounts'>
+        <Button to='/app/accounts'>
           <i className='fa fa-arrow-circle-left'/>
         </Button>
 

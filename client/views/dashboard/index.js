@@ -98,14 +98,14 @@ export default class Dashboard extends Component {
     return (
       <div className={`container ${styles.root}`}>
         <Card className='month'>
-          <Button to={`/dashboard/${periods.previous.format('YYYY/MM')}`}>
+          <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
             <i className='fa fa-backward'/>
           </Button>
 
           <div className='current'>{periods.current.format('MMMM YYYY')}</div>
 
           <Button
-            to={`/dashboard/${periods.next.format('YYYY/MM')}`}
+            to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
             disabled={periods.next.isAfter(periods.now)}
           >
             <i className='fa fa-forward'/>
@@ -113,11 +113,11 @@ export default class Dashboard extends Component {
         </Card>
 
         <Card className='status'>
-          <Link to='/incoming'>
+          <Link to='/app/incoming'>
             Income
             <div className='amount'><Money amount={incomingAmount}/></div>
           </Link>
-          <Link to='/outgoing'>
+          <Link to='/app/outgoing'>
             Alocated
             <div className='amount'><Money amount={alocatedAmount} abs={true}/></div>
           </Link>
@@ -130,7 +130,7 @@ export default class Dashboard extends Component {
         <div className='heading'>
           <h2>Saved</h2>
           <div>
-            <Button to='/goals/new' raised={true}>
+            <Button to='/app/goals/new' raised={true}>
               <i className='fa fa-plus'/>
               {' New'}
             </Button>
@@ -157,7 +157,7 @@ export default class Dashboard extends Component {
                 onClick={()=> this.setState({ selected: null })}
                 propagateClick={false}
               >Close</Button>
-              <Button to={`/goals/${goal._id}`}>Edit</Button>
+              <Button to={`/app/goals/${goal._id}`}>Edit</Button>
             </Goal>
           )}
         </CardList>
@@ -165,7 +165,7 @@ export default class Dashboard extends Component {
         <div className='heading'>
           <h2>Spent</h2>
           <div>
-            <Button to='/outgoing' raised={true}>
+            <Button to='/app/outgoing' raised={true}>
               <i className='fa fa-plus'/>
               {' New'}
             </Button>
@@ -192,7 +192,7 @@ export default class Dashboard extends Component {
                 onClick={()=> this.setState({ selected: null })}
                 propagateClick={false}
               >Close</Button>
-              <Button to={`/buckets/${bucket._id}`}>Edit</Button>
+              <Button to={`/app/buckets/${bucket._id}`}>Edit</Button>
             </Bucket>
           )}
           {unbucketedAmount !== 0 ?

@@ -2,12 +2,13 @@
 import Relay from 'react-relay';
 import { Component } from 'react';
 import reactMixin from 'react-mixin';
-import relay from 'relay-decorator';
+import relayContainer from 'relay-decorator';
 
 import Button from 'components/button';
 
 
-const categoryFragment = [1,2,3].reduce((fragment)=> Relay.QL`
+@relayContainer({ fragments: {
+  category: () => [1,2,3,4,5].reduce((fragment)=> Relay.QL`
   fragment on CategoryNode {
     name
     children(first: 10) {
@@ -18,18 +19,15 @@ const categoryFragment = [1,2,3].reduce((fragment)=> Relay.QL`
       }
     }
   }
-`, Relay.QL`fragment on CategoryNode { name }`);
-
-
-@relay({ fragments: {
-  category: () => categoryFragment,
+`, Relay.QL`fragment on CategoryNode { name }`),
 } })
 class Category extends Component {
   render() {
     const { category } = this.props;
+    console.log('category', category);
     return (
       <div>
-        <strong>{category.name}</strong>
+        {category.name}
         {category.children.edges.length ?
           <ul>
             {category.children.edges.map((edge, index)=>
@@ -42,25 +40,20 @@ class Category extends Component {
   }
 }
 
-@relay({
-  fragments: {
-    viewer: () => Relay.QL`
-      fragment on Query {
-        categories(parentExists: false, first: 10) {
-          edges {
-            node {
-              parent {
-                id
-              },
-              ${Category.getFragment('category')}
-            }
+@relayContainer({ fragments: {
+  viewer: ()=> Relay.QL`
+    fragment on Query {
+      categories(topLevel: true, first: 100) {
+        edges {
+          node {
+            ${Category.getFragment('category')}
           }
         }
       }
-    `,
-  }
-})
-class CategoriesView extends Component {
+    }
+  `,
+} })
+export default class CategoriesView extends Component {
   render() {
     const { viewer } = this.props;
     console.log('viewer', viewer);
@@ -68,27 +61,10 @@ class CategoriesView extends Component {
       <div className='container'>
         <ul>
           {viewer.categories.edges.map((edge, index)=>
-            <li key={index}>
-              {edge.node.parent && edge.node.parent.id ? '1' : '0'}
-              <Category category={edge.node}/>
-            </li>
+            <li key={index}><Category category={edge.node}/></li>
           )}
         </ul>
       </div>
     );
   }
 }
-
-class ViewerRoute extends Relay.Route {
-  static routeName = 'ViewerRoute';
-  static queries = {
-    viewer: ()=> Relay.QL`query { viewer }`,
-  };
-}
-
-export default ()=> (
-  <Relay.RootContainer
-    Component={CategoriesView}
-    route={new ViewerRoute()}
-  />
-);

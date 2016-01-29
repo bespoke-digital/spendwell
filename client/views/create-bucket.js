@@ -55,7 +55,7 @@ export default class CreateBucket extends Component {
               Next
             </Button>
 
-            <Button to='/'>Cancel</Button>
+            <Button to='/app/'>Cancel</Button>
 
           </Form>
         </Card>

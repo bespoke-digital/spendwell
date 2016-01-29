@@ -2,7 +2,11 @@
 
 {% load staticfiles %}
 
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/app.css' %}">
+{% endblock %}
+
 {% block body %}
   <div id="root"></div>
-  <script src="{% static 'dist/client.js' %}"></script>
+  <script src="{% static 'dist/app.js' %}"></script>
 {% endblock %}

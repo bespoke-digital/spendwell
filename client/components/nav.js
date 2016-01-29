@@ -10,10 +10,10 @@ export default function({ open, toggleNav }) {
       <div className='mui--appbar-height'/>
       <div className='mui-divider'></div>
       <ul className='list-unstyled'>
-        <li><Link onClick={toggleNav} to='/'>Dashboard</Link></li>
-        <li><Link onClick={toggleNav} to='/accounts'>Accounts</Link></li>
-        <li><Link onClick={toggleNav} to='/categories'>Categories</Link></li>
-        <li><Link onClick={toggleNav} to='/logout'>Logout</Link></li>
+        <li><Link onClick={toggleNav} to='/app/'>Dashboard</Link></li>
+        <li><Link onClick={toggleNav} to='/app/accounts'>Accounts</Link></li>
+        <li><Link onClick={toggleNav} to='/app/categories'>Categories</Link></li>
+        <li><Link onClick={toggleNav} to='/app/logout'>Logout</Link></li>
       </ul>
     </div>
   );

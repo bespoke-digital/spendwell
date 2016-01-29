@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
+{% endblock %}
+
+{% block body_class %}{{ block.super }} page{% endblock %}
+
+{% block body %}
+  <nav class="mui-appbar mui--z2 page-topbar">
+    <a class="brand mui--appbar-height mui--appbar-line-height" href="/">
+      <img src="{% static 'img/logo-white.svg' %}" alt="SpendWell"/>
+    </a>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <script src="{% static 'dist/pages.js' %}"></script>
+{% endblock %}

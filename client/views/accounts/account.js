@@ -3,44 +3,53 @@ import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import reactMixin from 'react-mixin';
 import moment from 'moment';
+import Relay from 'react-relay';
+import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
 import Button from 'components/button';
 import Money from 'components/money'
 
-import Transactions from 'collections/transactions';
 
-
-@reactMixin.decorate(ReactMeteorData)
+@relayContainer({
+  initialVariables: {
+    open: false,
+  },
+  fragments: {
+    account: ()=> Relay.QL`
+      fragment on AccountNode {
+        id
+        name
+        transactions(first: 100) @include(if: $open) {
+          edges {
+            node {
+              id
+              name
+              date
+              amount
+              category {
+                name
+              }
+            }
+          }
+        }
+      }
+    `,
+  }
+})
 export default class Account extends Component {
-  getMeteorData() {
-    const { account } = this.props;
-    return {
-      transactions: Transactions.find({ account: account._id }).fetch(),
-    };
-  }
-
-  disable(event) {
-    event.stopPropagation();
-    Meteor.call('disableAccount', this.props.account, function() {
-      console.log('client SUCCESS');
-    });
-  }
-
-  enable(event) {
-    event.stopPropagation();
-    Meteor.call('enableAccount', this.props.account, function() {
-      console.log('client SUCCESS');
-    });
+  toggleOpen() {
+    const { open } = this.props.relay.variables;
+    this.props.relay.setVariables({ open: !this.props.relay.variables.open });
   }
 
   render() {
-    const { transactions } = this.data;
-    const { selected, account, onClick } = this.props;
+    const { open } = this.props.relay.variables;
+    const { selected, account } = this.props;
 
     return (
-      <Card expanded={selected} onClick={onClick} className='account'>
-        <div className='summary'>
+      <Card expanded={open} className='account'>
+        <div className='summary' onClick={::this.toggleOpen}>
           <div>
             {account.name}
           </div>
@@ -49,7 +58,7 @@ export default class Account extends Component {
           </div>
         </div>
 
-        {selected ? (
+        {open ? (
           <div>
             <table className='mui-table'>
               <thead>
@@ -61,23 +70,16 @@ export default class Account extends Component {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction)=> (
-                  <tr key={transaction._id}>
-                    <td>{transaction.name}</td>
-                    <td>{transaction.category}</td>
-                    <td>{moment(transaction.date).format('LL')}</td>
-                    <td><Money amount={transaction.amount}/></td>
+                {account.transactions.edges.map((edge)=> (
+                  <tr key={edge.node.id}>
+                    <td>{edge.node.name}</td>
+                    <td>{edge.node.category.name}</td>
+                    <td>{moment(edge.node.date).format('LL')}</td>
+                    <td><Money amount={edge.node.amount}/></td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
-            {/*
-            <Button onClick={account.enabled ? ::this.disable : ::this.enable}>
-              {account.enabled ? 'Disable' : 'Enable'} Account
-            </Button>
-            */}
-            <Button to='/accounts' propagateClick={false}>Close</Button>
           </div>
         ) : null}
       </Card>

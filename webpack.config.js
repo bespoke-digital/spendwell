@@ -11,11 +11,15 @@ execSync('./manage.py export_schema');
 
 
 var config = {
-  entry: './client/index.js',
+  entry: {
+    app: './client/app.js',
+    pages: './client/pages.js',
+  },
+
   output: {
     path: path.join(__dirname, 'static', 'dist'),
     publicPath: '/static/dist/',
-    filename: 'client.js',
+    filename: '[name].js',
   },
 
   module: {
@@ -38,7 +42,7 @@ var config = {
   postcss: [autoprefixer],
 
   plugins: [
-    new ExtractTextPlugin('main.css', { allChunks: true }),
+    new ExtractTextPlugin('[name].css'),
     new webpack.ProvidePlugin({
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch',
       'promise': 'imports?this=>global!exports?global.promise!promise',
