@@ -10,8 +10,9 @@ import { getCookie } from 'utils/cookies';
 
 Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('/graphql', {
+    credentials: 'same-origin',
     headers: {
-      'X-CSRF-TOKEN': getCookie('csrftoken'),
+      'X-CSRFToken': getCookie('csrftoken'),
     },
   })
 );
