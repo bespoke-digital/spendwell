@@ -59,7 +59,7 @@ class TransactionManager(models.Manager):
             transaction.category = Category.objects.get(plaid_id=json_data['category_id'])
 
         transaction.name = json_data['name']
-        transaction.amount = Decimal(json_data['amount'])
+        transaction.amount = -Decimal(json_data['amount'])
         transaction.date = datetime(*map(int, json_data['date'].split('-')))
 
         if json_data['meta'].get('location'):

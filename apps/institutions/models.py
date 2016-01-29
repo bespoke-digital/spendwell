@@ -22,6 +22,8 @@ class Institution(SWOwnedModel):
     access_token = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
 
+    uploaded = models.BooleanField(default=False)
+
     objects = InstitutionManager()
 
     @classmethod

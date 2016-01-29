@@ -8,3 +8,4 @@ graphql-core==0.4.12
 graphql-django-view==1.1.0
 graphql-relay==0.3.3
 django-bootstrap-form==3.2
+python-dateutil==2.4.2

@@ -10,7 +10,6 @@ import { RelayRouter } from 'react-router-relay';
 // import ConnectPlaid from 'views/connect';
 // import FinicitySearch from 'views/finicitySearch';
 // import FinicityConnect from 'views/finicityConnect';
-// import Upload from 'views/upload';
 // import Buckets from 'views/buckets';
 // import Goal from 'views/goal';
 // import Bucket from 'views/bucket';
@@ -19,6 +18,8 @@ import { RelayRouter } from 'react-router-relay';
 
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
+import AddPlaid from 'views/add-plaid';
+import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
 import App from 'views/app';
 
@@ -62,8 +63,12 @@ export default (
     <Route path='app' component={App}>
       <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
+
       <Route path='accounts' component={Accounts} queries={viewerQuery}/>
+      <Route path='accounts/add/plaid' component={AddPlaid} queries={viewerQuery}/>
+      <Route path='accounts/add/upload' component={AddCsv} queries={viewerQuery}/>
       <Route path='accounts/:accountId' component={Accounts} queries={viewerQuery}/>
+
       <Route path='categories' component={Categories} queries={viewerQuery}/>
     </Route>
   </RelayRouter>
