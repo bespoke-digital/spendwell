@@ -10,7 +10,7 @@ from apps.transactions.models import Transaction
 class BucketQuerySet(SWQuerySet):
     def assign(self, transaction):
         for bucket in self:
-            if transaction in bucket.filter_transactions():
+            if transaction in bucket.filtered_transactions():
                 if bucket.owner is not transaction.owner:
                     raise SuspiciousOperation(
                         'bucket owner does not match transaction owner'
@@ -38,7 +38,7 @@ class Bucket(SWModel):
     def __str__(self):
         return self.name
 
-    def filter_transactions(self):
+    def filtered_transactions(self):
         queryset = Transaction.objects.filter(owner=self.owner)
 
         for filter in self.filters:

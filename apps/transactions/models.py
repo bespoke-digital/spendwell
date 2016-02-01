@@ -1,12 +1,16 @@
 
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from apps.core.models import SWModel
 from apps.categories.models import Category
 from apps.accounts.models import Account
+
+from .utils import similarity
 
 
 class TransactionManager(models.Manager):
@@ -79,6 +83,9 @@ class Transaction(SWModel):
     amount = models.DecimalField(decimal_places=2, max_digits=12)
     date = models.DateTimeField()
 
+    transfer_to = models.ForeignKey('accounts.Account', related_name='incoming_transfers', null=True)
+    transfer_pair = models.ForeignKey('self', null=True)
+
     bucket = models.ForeignKey('buckets.Bucket', related_name='transactions', null=True)
     category = models.ForeignKey('categories.Category', related_name='transactions', null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
@@ -90,3 +97,36 @@ class Transaction(SWModel):
 
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
+
+
+@receiver(post_save, sender=Transaction)
+def transaction_post_save(sender, instance, created, raw, **kwargs):
+    "detect account transfers"
+    if not raw and created:
+        potential_transfers = Transaction.objects.filter(
+            owner=instance.owner,
+            transfer_pair__isnull=True,
+            amount=(-instance.amount),
+            date__lte=instance.date + timedelta(days=3),
+            date__gte=instance.date - timedelta(days=3),
+        )
+
+        if len(potential_transfers) == 0:
+            return
+        elif len(potential_transfers) == 1:
+            transfer = potential_transfers[0]
+        else:
+            # Fall back on similarity of description. This may miss many cases.
+            # TODO: find a better algo for this.
+            transfer = sorted(
+                potential_transfers,
+                lambda t: similarity(t.description, instance.description),
+            )[-1]
+
+        transfer.transfer_pair = instance
+        transfer.transfer_to = instance.account
+        transfer.save()
+
+        instance.transfer_pair = transfer
+        instance.transfer_to = transfer.account
+        instance.save()
