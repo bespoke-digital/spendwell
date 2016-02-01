@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.db import models
 
-from apps.core.models import SWOwnedModel
+from apps.core.models import SWModel
 from apps.categories.models import Category
 from apps.accounts.models import Account
 
@@ -58,7 +58,7 @@ class TransactionManager(models.Manager):
         if json_data.get('category_id'):
             transaction.category = Category.objects.get(plaid_id=json_data['category_id'])
 
-        transaction.name = json_data['name']
+        transaction.description = json_data['name']
         transaction.amount = -Decimal(json_data['amount'])
         transaction.date = datetime(*map(int, json_data['date'].split('-')))
 
@@ -71,13 +71,17 @@ class TransactionManager(models.Manager):
         return transaction
 
 
-class Transaction(SWOwnedModel):
+class Transaction(SWModel):
+    owner = models.ForeignKey('users.User', related_name='transactions')
+
     account = models.ForeignKey('accounts.Account', related_name='transactions')
-    category = models.ForeignKey('categories.Category', related_name='transactions', null=True)
-    plaid_id = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
     date = models.DateTimeField()
+
+    bucket = models.ForeignKey('buckets.Bucket', related_name='transactions', null=True)
+    category = models.ForeignKey('categories.Category', related_name='transactions', null=True)
+    plaid_id = models.CharField(max_length=255, blank=True, null=True)
     address_city = models.CharField(max_length=255, null=True)
     address_street = models.CharField(max_length=255, null=True)
     address_state = models.CharField(max_length=255, null=True)
@@ -85,4 +89,4 @@ class Transaction(SWOwnedModel):
     objects = TransactionManager()
 
     def __str__(self):
-        return '{} - ${}'.format(self.name, self.amount)
+        return '{} - ${}'.format(self.description, self.amount)

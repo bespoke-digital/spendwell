@@ -2,7 +2,7 @@
 from django.utils.timezone import now
 from django.db import models
 
-from apps.core.models import SWOwnedModel
+from apps.core.models import SWModel
 
 
 class AccountManager(models.Manager):
@@ -47,16 +47,27 @@ class AccountManager(models.Manager):
         return account
 
 
-class Account(SWOwnedModel):
+class Account(SWModel):
+    owner = models.ForeignKey('users.User', related_name='accounts')
+
     institution = models.ForeignKey('institutions.Institution', related_name='accounts')
-    plaid_id = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
-    subtype = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=255)
-    number_snippet = models.CharField(max_length=255)
-    balance_current = models.DecimalField(decimal_places=2, max_digits=12)
-    balance_available = models.DecimalField(decimal_places=2, max_digits=12)
+    balance_current = models.DecimalField(
+        decimal_places=2,
+        max_digits=12,
+        null=True, blank=True,
+    )
+    balance_available = models.DecimalField(
+        decimal_places=2,
+        max_digits=12,
+        null=True, blank=True,
+    )
     last_updated = models.DateTimeField()
+
+    number_snippet = models.CharField(max_length=255, blank=True, null=True)
+    plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    subtype = models.CharField(max_length=255, null=True)
 
     objects = AccountManager()
 

@@ -4,7 +4,7 @@ from django.conf import settings
 
 from plaid import Client
 
-from apps.core.models import SWOwnedModel, SWManager
+from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 
@@ -13,14 +13,16 @@ class InstitutionManager(SWManager):
     def create(self, **kwargs):
         institution = Institution(**kwargs)
         institution.save()
-        institution.download()
+        # institution.download()
         return institution
 
 
-class Institution(SWOwnedModel):
-    plaid_id = models.CharField(max_length=255)
-    access_token = models.CharField(max_length=255)
+class Institution(SWModel):
+    owner = models.ForeignKey('users.User', related_name='institutions')
     name = models.CharField(max_length=255)
+
+    plaid_id = models.CharField(max_length=255, null=True, blank=True)
+    access_token = models.CharField(max_length=255, null=True, blank=True)
 
     uploaded = models.BooleanField(default=False)
 

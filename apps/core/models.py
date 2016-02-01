@@ -15,8 +15,11 @@ class SWQuerySet(models.QuerySet):
 
 
 class SWManager(models.Manager):
+    use_for_related_fields = True
+    queryset_class = SWQuerySet
+
     def get_queryset(self):
-        return SWQuerySet(self.model, using=self._db).filter(deleted=False)
+        return self.queryset_class(self.model, using=self._db).filter(deleted=False)
 
     def as_serializer(self):
         return self.get_queryset().as_serializer()
@@ -54,10 +57,3 @@ class SWModel(models.Model):
 
     def as_json(self):
         return self.as_serializer().as_json()
-
-
-class SWOwnedModel(SWModel):
-    owner = models.ForeignKey('users.User')
-
-    class Meta:
-        abstract = True
