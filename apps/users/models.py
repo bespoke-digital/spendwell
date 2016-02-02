@@ -1,6 +1,5 @@
 
 from datetime import datetime
-from decimal import Decimal
 
 from django.db import models
 from django.utils import timezone
@@ -35,6 +34,12 @@ class User(AbstractBaseUser):
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+
+    estimated_income = models.DecimalField(
+        decimal_places=2,
+        max_digits=12,
+        default=0,
+    )
 
     objects = UserManager()
 
@@ -71,32 +76,21 @@ class User(AbstractBaseUser):
         return self.as_serializer().as_json()
 
     def income(self, month_start):
-        oldest = Transaction.objects.filter(amount__gt=0).order_by('date').first()
-        if not oldest:
-            return 0
+        income = Transaction.objects.filter(
+            owner=self,
+            date__lt=month_start + relativedelta(months=1),
+            date__gte=month_start,
+            transfer_to__isnull=True,
+            amount__gt=0,
+        ).aggregate(models.Sum('amount'))['amount__sum'] or 0
 
-        months_ago = relativedelta(month_start, oldest.date).months
-        if months_ago > 3:
-            months_ago = 3
-
-        if months_ago == 0:
-            return Transaction.objects.filter(
-                transfer_to__isnull=True,
-                amount__gt=0
-            ).aggregate(models.Sum('amount'))['amount__sum'] or 0
+        if (
+            relativedelta(month_start, timezone.now()).months == 0 and
+            income < self.estimated_income
+        ):
+            return self.estimated_income
         else:
-            transactions = [
-                Transaction.objects.filter(
-                    owner=self,
-                    date__lt=month_start - relativedelta(months=month),
-                    date__gte=month_start - relativedelta(months=month + 1),
-                    transfer_to__isnull=True,
-                    amount__gt=0,
-                ).aggregate(models.Sum('amount'))['amount__sum'] or 0
-                for month in range(months_ago)
-            ]
-
-            return Decimal(sum(transactions)) / Decimal(len(transactions))
+            return income
 
     def safe_to_spend(self):
         now = timezone.now()

@@ -11,17 +11,15 @@ from .factories import UserFactory
 
 class UsersTestCase(SWTestCase):
     def test_safe_to_spend(self):
-        owner = UserFactory.create()
+        owner = UserFactory.create(estimated_income=2000)
 
         result = self.graph_query('{ viewer { safeToSpend } }', user=owner)
 
         self.assertTrue('viewer' in result.data)
         self.assertTrue('safeToSpend' in result.data['viewer'])
-        self.assertEqual(result.data['viewer']['safeToSpend'], 0)
+        self.assertEqual(result.data['viewer']['safeToSpend'], 2000)
 
         account = AccountFactory.create(owner=owner)
-
-        TransactionFactory.create(amount=2000, account=account, owner=owner)
 
         TransactionFactory.create(amount=-200, account=account, owner=owner)
         TransactionFactory.create(amount=-200, account=account, owner=owner)
@@ -32,39 +30,57 @@ class UsersTestCase(SWTestCase):
         self.assertEqual(result.data['viewer']['safeToSpend'], 1400)
 
     def test_income(self):
-        owner = UserFactory.create()
+        owner = UserFactory.create(estimated_income=2000)
         now = timezone.now()
-        query = '{{ viewer {{ income(month: "{}/{}") }} }}'.format(
-            now.year,
-            now.month,
-        )
 
-        result = self.graph_query(query, user=owner)
+        result = self.graph_query(
+            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(now.year, now.month),
+            user=owner,
+        )
 
         self.assertTrue('viewer' in result.data)
         self.assertTrue('income' in result.data['viewer'])
-        self.assertEqual(result.data['viewer']['income'], 0)
+
+        self.assertEqual(
+            result.data['viewer']['income'],
+            2000,
+            msg='Should return estimate for current month with no incoming transactions'
+        )
 
         account = AccountFactory.create(owner=owner)
 
-        TransactionFactory.create(amount=2000, account=account, owner=owner)
+        TransactionFactory.create(amount=4000, account=account, owner=owner)
 
-        TransactionFactory.create(amount=-200, account=account, owner=owner)
-        TransactionFactory.create(amount=-200, account=account, owner=owner)
-        TransactionFactory.create(amount=-200, account=account, owner=owner)
+        result = self.graph_query(
+            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(now.year, now.month),
+            user=owner,
+        )
 
-        result = self.graph_query(query, user=owner)
+        self.assertEqual(
+            result.data['viewer']['income'],
+            4000,
+            msg='Should return transaction-based number',
+        )
 
-        self.assertEqual(result.data['viewer']['income'], 2000)
+        a_month_ago = now - relativedelta(months=1)
 
-        for month in range(3):
-            TransactionFactory.create(
-                amount=1000,
-                date=now - relativedelta(months=month + 1),
-                account=account,
-                owner=owner,
-            )
+        TransactionFactory.create(
+            amount=1000,
+            date=a_month_ago,
+            account=account,
+            owner=owner,
+        )
 
-        result = self.graph_query(query, user=owner)
+        result = self.graph_query(
+            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(
+                a_month_ago.year,
+                a_month_ago.month,
+            ),
+            user=owner,
+        )
 
-        self.assertEqual(result.data['viewer']['income'], 1000)
+        self.assertEqual(
+            result.data['viewer']['income'],
+            1000,
+            msg='Should return transaction-based number for old months',
+        )

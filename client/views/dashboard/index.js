@@ -39,8 +39,6 @@ export default class Dashboard extends Component {
   }
 
   render() {
-    console.log('Dashboard', this.props);
-
     const { viewer: { safeToSpend, income }, params: { year, month } } = this.props;
     const { selected } = this.state;
 
