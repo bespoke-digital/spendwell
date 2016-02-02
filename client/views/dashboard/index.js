@@ -16,11 +16,14 @@ import Goal from './goal';
 
 
 @relayContainer({
-  initialVariables: {},
+  prepareVariables: (variables)=> ({
+    month: variables.year ? `${variables.year}/${variables.month}` : moment().format('YYYY/MM'),
+  }),
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         safeToSpend
+        income(month: $month)
       }
     `,
   },
@@ -38,7 +41,7 @@ export default class Dashboard extends Component {
   render() {
     console.log('Dashboard', this.props);
 
-    const { viewer: { safeToSpend }, params: { year, month } } = this.props;
+    const { viewer: { safeToSpend, income }, params: { year, month } } = this.props;
     const { selected } = this.state;
 
     const now = moment().startOf('month');
@@ -50,7 +53,6 @@ export default class Dashboard extends Component {
       next: current.clone().add(1, 'month'),
     };
 
-    const income = 0;
     const goals = [];
     const buckets = [];
     const unbucketedAmount = 0;
