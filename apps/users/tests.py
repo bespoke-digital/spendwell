@@ -17,7 +17,7 @@ class UsersTestCase(SWTestCase):
 
         self.assertTrue('viewer' in result.data)
         self.assertTrue('safeToSpend' in result.data['viewer'])
-        self.assertEqual(result.data['viewer']['safeToSpend'], 2000)
+        self.assertEqual(result.data['viewer']['safeToSpend'], 200000)
 
         account = AccountFactory.create(owner=owner)
 
@@ -32,18 +32,17 @@ class UsersTestCase(SWTestCase):
     def test_income(self):
         owner = UserFactory.create(estimated_income=2000)
         now = timezone.now()
+        query = '{{ viewer {{ summary(month: "{}/{}") {{ income }} }} }}'
 
-        result = self.graph_query(
-            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(now.year, now.month),
-            user=owner,
-        )
+        result = self.graph_query(query.format(now.year, now.month), user=owner)
 
         self.assertTrue('viewer' in result.data)
-        self.assertTrue('income' in result.data['viewer'])
+        self.assertTrue('summary' in result.data['viewer'])
+        self.assertTrue('income' in result.data['viewer']['summary'])
 
         self.assertEqual(
-            result.data['viewer']['income'],
-            2000,
+            result.data['viewer']['summary']['income'],
+            200000,
             msg='Should return estimate for current month with no incoming transactions'
         )
 
@@ -51,14 +50,11 @@ class UsersTestCase(SWTestCase):
 
         TransactionFactory.create(amount=4000, account=account, owner=owner)
 
-        result = self.graph_query(
-            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(now.year, now.month),
-            user=owner,
-        )
+        result = self.graph_query(query.format(now.year, now.month), user=owner)
 
         self.assertEqual(
-            result.data['viewer']['income'],
-            4000,
+            result.data['viewer']['summary']['income'],
+            400000,
             msg='Should return transaction-based number',
         )
 
@@ -72,15 +68,12 @@ class UsersTestCase(SWTestCase):
         )
 
         result = self.graph_query(
-            '{{ viewer {{ income(month: "{}/{}") }} }}'.format(
-                a_month_ago.year,
-                a_month_ago.month,
-            ),
+            query.format(a_month_ago.year, a_month_ago.month),
             user=owner,
         )
 
         self.assertEqual(
-            result.data['viewer']['income'],
-            1000,
+            result.data['viewer']['summary']['income'],
+            100000,
             msg='Should return transaction-based number for old months',
         )

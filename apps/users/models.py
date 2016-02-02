@@ -92,6 +92,29 @@ class User(AbstractBaseUser):
         else:
             return income
 
+    def allocated(self, month_start):
+        # TODO
+        return 0
+
+    def spent(self, month_start):
+        return Transaction.objects.filter(
+            owner=self,
+            transfer_to__isnull=True,
+            date__gte=month_start,
+            amount__lt=0,
+        ).sum()
+
+    def summary(self, month_start):
+        income = self.income(month_start)
+        allocated = self.allocated(month_start)
+        spent = self.spent(month_start)
+        return {
+            'income': income,
+            'allocated': allocated,
+            'spent': spent,
+            'net': sum([income, allocated, spent]),
+        }
+
     def safe_to_spend(self):
         now = timezone.now()
         month_start = timezone.make_aware(datetime(
@@ -99,19 +122,4 @@ class User(AbstractBaseUser):
             month=now.month,
             day=1,
         ))
-
-        spent = (
-            Transaction.objects
-            .filter(transfer_to__isnull=True)
-            .filter(date__gte=month_start)
-            .filter(amount__lt=0)
-            .aggregate(models.Sum('amount'))
-            ['amount__sum'] or 0
-        )
-
-        # TODO: calculate from Goals
-        saved = 0
-
-        income = self.income(month_start)
-
-        return (income - saved) + spent
+        return self.summary(month_start)['net']

@@ -6,48 +6,58 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.core.models import SWModel
+from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
 from apps.accounts.models import Account
 
 from .utils import similarity
 
 
-class TransactionManager(models.Manager):
+class TransactionsQuerySet(SWQuerySet):
+    def sum(self):
+        return self.aggregate(models.Sum('amount'))['amount__sum'] or 0
+
+
+class TransactionManager(SWManager):
+    queryset_class = TransactionsQuerySet
+
+    def sum(self):
+        return self.get_queryset().sum()
+
     def create_from_plaid(self, institution, json_data):
         '''
         Sample Data:
         {
-          '_account':'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-          '_id':'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR'
-          'name':'Gregorys Coffee',
-          'category':[
-            'Food and Drink',
-            'Restaurants',
-            'Coffee Shop'
-          ],
-          'pending':False,
-          'amount':3.19,
-          'date':'2014-06-21',
-          'meta':{
-            'location':{
-              'city':'New York',
-              'address':'874 Avenue of the Americas',
-              'state':'NY'
-            }
-          },
-          'type':{
-            'primary':'place'
-          },
-          'category_id':'13005043',
-          'score':{
-            'name':0.2,
-            'location':{
-              'city':1,
-              'address':1,
-              'state':1
-            }
-          },
+            '_account':'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
+            '_id':'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR'
+            'name':'Gregorys Coffee',
+            'category':[
+                'Food and Drink',
+                'Restaurants',
+                'Coffee Shop'
+            ],
+            'pending':False,
+            'amount':3.19,
+            'date':'2014-06-21',
+            'meta':{
+                'location':{
+                    'city':'New York',
+                    'address':'874 Avenue of the Americas',
+                    'state':'NY'
+                }
+            },
+            'type':{
+                'primary':'place'
+            },
+            'category_id':'13005043',
+            'score':{
+                'name':0.2,
+                'location':{
+                    'city':1,
+                    'address':1,
+                    'state':1
+                }
+            },
         }
         '''
         try:
