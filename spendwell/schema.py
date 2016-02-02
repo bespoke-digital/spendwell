@@ -19,8 +19,8 @@ class Viewer(
 
 
 class Query(graphene.ObjectType):
-    viewer = graphene.Field(Viewer)
     node = graphene.relay.NodeField()
+    viewer = graphene.Field(Viewer)
 
     def resolve_viewer(self, *args, **kwargs):
         return Viewer()

@@ -1,6 +1,13 @@
 
+from datetime import datetime
+from decimal import Decimal
+
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from dateutil.relativedelta import relativedelta
+
+from apps.transactions.models import Transaction
 
 
 class UserManager(BaseUserManager):
@@ -62,3 +69,55 @@ class User(AbstractBaseUser):
 
     def as_json(self):
         return self.as_serializer().as_json()
+
+    def income(self, month_start):
+        oldest = Transaction.objects.filter(amount__gt=0).order_by('date').first()
+        if not oldest:
+            return 0
+
+        months_ago = relativedelta(month_start, oldest.date).months
+        if months_ago > 3:
+            months_ago = 3
+
+        if months_ago == 0:
+            return Transaction.objects.filter(
+                transfer_to__isnull=True,
+                amount__gt=0
+            ).aggregate(models.Sum('amount'))['amount__sum'] or 0
+        else:
+            transactions = [
+                Transaction.objects.filter(
+                    owner=self,
+                    date__lt=month_start - relativedelta(months=month),
+                    date__gte=month_start - relativedelta(months=month + 1),
+                    transfer_to__isnull=True,
+                    amount__gt=0,
+                ).aggregate(models.Sum('amount'))['amount__sum'] or 0
+                for month in range(months_ago)
+            ]
+
+            return Decimal(sum(transactions)) / Decimal(len(transactions))
+
+    def safe_to_spend(self):
+        now = timezone.now()
+        month_start = timezone.make_aware(datetime(
+            year=now.year,
+            month=now.month,
+            day=1,
+        ))
+
+        spent = (
+            Transaction.objects
+            .filter(transfer_to__isnull=True)
+            .filter(date__gte=month_start)
+            .filter(amount__lt=0)
+            .aggregate(models.Sum('amount'))
+            ['amount__sum'] or 0
+        )
+
+        # TODO: calculate from Goals
+        saved = 0
+
+        income = self.income(month_start)
+
+        return (income - saved) + spent
