@@ -60,7 +60,7 @@ const viewerQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
 export default (
   <RelayRouter history={browserHistory}>
-    <Route path='app' component={App}>
+    <Route path='app' component={App} queries={viewerQuery}>
       <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
 

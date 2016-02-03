@@ -1,10 +1,22 @@
 
 import { PropTypes, Component } from 'react';
+import Relay from 'react-relay';
+import relayContainer from 'relay-decorator';
 
+import Money from 'components/money';
 import logoWhite from 'img/logo-white.svg';
 import style from 'sass/components/header';
 
 
+@relayContainer({
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        safeToSpend
+      }
+    `,
+  },
+})
 export default class Header extends Component {
   static propTypes = {
     navHandle: PropTypes.bool,
@@ -22,7 +34,7 @@ export default class Header extends Component {
   }
 
   render() {
-    const { navHandle } = this.props;
+    const { navHandle, viewer: { safeToSpend } } = this.props;
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
         {navHandle ? (
@@ -35,6 +47,9 @@ export default class Header extends Component {
         <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
           <img src={logoWhite} alt='SpendWell'/>
         </a>
+        <div className='safe-to-spend'>
+          <Money amount={safeToSpend}/>
+        </div>
       </nav>
     );
   }

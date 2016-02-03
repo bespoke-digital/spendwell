@@ -1,9 +1,9 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
+import relayContainer from 'relay-decorator';
 import { Link } from 'react-router';
 import moment from 'moment';
-import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -22,8 +22,12 @@ import Goal from './goal';
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        safeToSpend
-        income(month: $month)
+        summary(month: $month) {
+          income
+          allocated
+          spent
+          net
+        }
       }
     `,
   },
@@ -39,7 +43,15 @@ export default class Dashboard extends Component {
   }
 
   render() {
-    const { viewer: { safeToSpend, income }, params: { year, month } } = this.props;
+    const {
+      params: { year, month },
+      viewer: { summary: {
+        income,
+        allocated,
+        spent,
+        net,
+      } },
+    } = this.props;
     const { selected } = this.state;
 
     const now = moment().startOf('month');
@@ -74,12 +86,16 @@ export default class Dashboard extends Component {
 
         <Card className='status'>
           <Link to='/app/incoming'>
-            Income
+            In
             <div className='amount'><Money amount={income}/></div>
           </Link>
           <div>
-            Safe To Spend
-            <div className='amount'><Money amount={safeToSpend}/></div>
+            Out
+            <div className='amount'><Money amount={allocated + spent}/></div>
+          </div>
+          <div>
+            Net
+            <div className='amount'><Money amount={net}/></div>
           </div>
         </Card>
 

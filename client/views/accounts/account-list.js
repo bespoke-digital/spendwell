@@ -1,7 +1,6 @@
 
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import { browserHistory } from 'react-router';
-import reactMixin from 'react-mixin';
 import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
 
