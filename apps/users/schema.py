@@ -5,12 +5,14 @@ from decimal import Decimal
 from django.utils import timezone
 import graphene
 
+from apps.core.types import Money
+
 
 class Summary(graphene.ObjectType):
-    income = graphene.Int()
-    allocated = graphene.Int()
-    spent = graphene.Int()
-    net = graphene.Int()
+    income = graphene.Field(Money)
+    allocated = graphene.Field(Money)
+    spent = graphene.Field(Money)
+    net = graphene.Field(Money)
 
 
 class UsersQuery(graphene.ObjectType):

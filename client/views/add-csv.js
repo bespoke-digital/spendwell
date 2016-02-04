@@ -1,17 +1,65 @@
 
 import { Component } from 'react';
-import { Form } from 'formsy-react';
 import Papa from 'papaparse';
 import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
-import Input from 'components/forms/input';
-import FileInput from 'components/forms/file';
-import Select from 'components/forms/select';
+import TextInput from 'components/text-input';
+import FileInput from 'components/file-input';
+import Dropdown from 'components/dropdown';
 import Button from 'components/button';
 
 import style from 'sass/views/connect';
+
+
+// class UploadCsvMutation extends Relay.Mutation {
+//   // prop dependency
+//   static fragments = {
+//     account: ()=> Relay.QL`
+//       fragment on Account {
+//         id,
+//       }
+//     `,
+//   };
+
+//   // the GQL mutation
+//   getMutation() {
+//     return Relay.QL`mutation { uploadCsv }`;
+//   }
+
+//   // the GQL mutation input vars
+//   getVariables() {
+//     return {
+//       accountId: this.props.account.id,
+//       csv: this.props.csv,
+//     };
+//   }
+
+//   // Data that could change as a result of the mutation
+//   getFatQuery() {
+//     return Relay.QL`
+//       fragment on UploadCsvPayload {
+//         account {
+//           edges
+//         },
+//       }
+//     `;
+//   }
+//   // These configurations advise Relay on how to handle the UploadCsvPayload
+//   // returned by the server. Here, we tell Relay to use the payload to
+//   // change the fields of a record it already has in the store. The
+//   // key-value pairs of ‘fieldIDs’ associate field names in the payload
+//   // with the ID of the record that we want updated.
+//   getConfigs() {
+//     return [{
+//       type: 'FIELDS_CHANGE',
+//       fieldIDs: {
+//         account: this.props.account.id,
+//       },
+//     }];
+//   }
+// }
 
 
 @relayContainer({
@@ -44,27 +92,18 @@ export default class AddCsv extends Component {
     this.state = { accounts: { edges: [] } };
   }
 
-  submit({ institution, account, csvFile }) {
+  submit({ account, csvFile }) {
     Papa.parse(csvFile[0], { complete: (results)=> {
-      console.log('csvUpload', {
-        institution,
-        account,
-        transactions: results.data,
-      });
+      console.log('csvUpload', { account, csv: results.data });
+      // Relay.Store.commitUpdate(
+      //   new UploadCsvMutation({ account, csv: results.data }),
+      // );
     } });
-  }
-  handleInstitutionChange(id) {
-    const { viewer: { institutions } } = this.props;
-    const institution = institutions.edges.find(({ node })=> node.id === id);
-    this.setState({
-      newInstitution: !id,
-      accounts: institution ? institution.node.accounts : { edges: [] },
-    });
   }
 
   render() {
     const { viewer: { institutions } } = this.props;
-    const { newInstitution, newAccount, accounts } = this.state;
+    const { institution, account } = this.state;
 
     return (
       <div className={`container ${style.root}`}>
@@ -75,45 +114,55 @@ export default class AddCsv extends Component {
         <h1>Upload Account</h1>
 
         <Card>
-          <Form onValidSubmit={::this.submit} ref='form'>
-            <Select
-              name='institution.id'
-              label='Institution'
-              className={institutions.edges.length ? '' : 'gone'}
-              options={[
-                { value: null, label: 'New' },
-              ].concat(institutions.edges.map(({ node })=> (
-                { value: node.id, label: node.name }
-              )))}
-              onChange={::this.handleInstitutionChange}
-            />
-            <Input
-              name='institution.name'
+          <Dropdown label={institution ? institution.name : 'Institution'}>
+            <a
+              href='#'
+              onClick={this.setState.bind(this, { institution: null }, null)}
+            >New</a>
+            {institutions.edges.map(({ node })=>
+              <a
+                key={node.id}
+                href='#'
+                onClick={this.setState.bind(this, { institution: node }, null)}
+              >{node.name}</a>
+            )}
+          </Dropdown>
+
+          {!institution ? (
+            <TextInput
               label='Institution Name'
-              className={!institutions.edges.length || newInstitution ? '' : 'gone'}
+              onChange={(newInstitutionName)=> this.setState({ newInstitutionName })}
             />
+          ) : null}
 
-            <Select
-              name='account.id'
-              label='account'
-              className={accounts.edges.length ? '' : 'gone'}
-              options={[
-                { value: null, label: 'New' },
-              ].concat(accounts.edges.map(({ node })=> (
-                { value: node.id, label: node.name }
-              )))}
-              onChange={(val)=> this.setState({ newAccount: !val })}
-            />
-            <Input
-              name='account.name'
-              label='Account Name'
-              className={!accounts.edges.length || newAccount ? '' : 'gone'}
-            />
+          {institution && institution.accounts.edges.length ? (
+            <div>
+              <Dropdown label={account ? account.name : 'Account'}>
+                <a
+                  href='#'
+                  onClick={this.setState.bind(this, { account: null }, null)}
+                >New</a>
+                {institution.accounts.edges.map(({ node })=>
+                  <a
+                    key={node.id}
+                    href='#'
+                    onClick={this.setState.bind(this, { account: node }, null)}
+                  >{node.name}</a>
+                )}
+              </Dropdown>
 
-            <FileInput name='csvFile' label='CSV' required={true}/>
+              {!account ? (
+                <TextInput
+                  label='Account Name'
+                  onChange={(newAccountName)=> this.setState({ newAccountName })}
+                />
+              ) : null}
+            </div>
+          ) : null}
 
-            <Button type='submit' variant='primary'>Upload</Button>
-          </Form>
+          <FileInput name='csvFile' label='CSV' required={true}/>
+
+          <Button type='submit' variant='primary'>Upload</Button>
         </Card>
       </div>
     );
