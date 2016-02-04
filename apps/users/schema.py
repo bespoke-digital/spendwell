@@ -1,6 +1,5 @@
 
 from datetime import datetime
-from decimal import Decimal
 
 from django.utils import timezone
 import graphene
@@ -16,7 +15,7 @@ class Summary(graphene.ObjectType):
 
 
 class UsersQuery(graphene.ObjectType):
-    safe_to_spend = graphene.Int()
+    safe_to_spend = graphene.Field(Money)
     summary = graphene.Field(Summary, month=graphene.String())
 
     class Meta:
@@ -28,12 +27,6 @@ class UsersQuery(graphene.ObjectType):
     def resolve_summary(self, args, info):
         (year, month) = args['month'].split('/')
         (year, month) = (int(year), int(month))
-
-        summary = info.request_context.user.summary(
+        return Summary(**info.request_context.user.summary(
             timezone.make_aware(datetime(year=year, month=month, day=1)),
-        )
-
-        for key, value in summary.items():
-            summary[key] = int(value * Decimal(100))
-
-        return Summary(**summary)
+        ))
