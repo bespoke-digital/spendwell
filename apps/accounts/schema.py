@@ -1,12 +1,11 @@
 
 import graphene
-from graphene.contrib.django.filter import DjangoFilterConnectionField
-from graphene.contrib.django.types import DjangoNode
 
+from apps.core.schema import OwnedNode, OwnedConnectionField
 from .models import Account
 
 
-class AccountNode(DjangoNode):
+class AccountNode(OwnedNode):
     class Meta:
         model = Account
         filter_order_by = ['name']
@@ -14,7 +13,7 @@ class AccountNode(DjangoNode):
 
 class AccountsQuery(graphene.ObjectType):
     account = graphene.relay.NodeField(AccountNode)
-    accounts = DjangoFilterConnectionField(AccountNode)
+    accounts = OwnedConnectionField(AccountNode)
 
     class Meta:
         abstract = True

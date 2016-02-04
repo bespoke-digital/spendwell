@@ -51,8 +51,8 @@ class Account(SWModel):
     owner = models.ForeignKey('users.User', related_name='accounts')
 
     institution = models.ForeignKey('institutions.Institution', related_name='accounts')
-    type = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, default='chequing')
     balance_current = models.DecimalField(
         decimal_places=2,
         max_digits=12,

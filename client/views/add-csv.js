@@ -1,6 +1,5 @@
 
 import { Component } from 'react';
-import Papa from 'papaparse';
 import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
 
@@ -10,56 +9,9 @@ import FileInput from 'components/file-input';
 import Dropdown from 'components/dropdown';
 import Button from 'components/button';
 
+import { UploadCsvMutation } from 'mutations/transactions';
+
 import style from 'sass/views/connect';
-
-
-// class UploadCsvMutation extends Relay.Mutation {
-//   // prop dependency
-//   static fragments = {
-//     account: ()=> Relay.QL`
-//       fragment on Account {
-//         id,
-//       }
-//     `,
-//   };
-
-//   // the GQL mutation
-//   getMutation() {
-//     return Relay.QL`mutation { uploadCsv }`;
-//   }
-
-//   // the GQL mutation input vars
-//   getVariables() {
-//     return {
-//       accountId: this.props.account.id,
-//       csv: this.props.csv,
-//     };
-//   }
-
-//   // Data that could change as a result of the mutation
-//   getFatQuery() {
-//     return Relay.QL`
-//       fragment on UploadCsvPayload {
-//         account {
-//           edges
-//         },
-//       }
-//     `;
-//   }
-//   // These configurations advise Relay on how to handle the UploadCsvPayload
-//   // returned by the server. Here, we tell Relay to use the payload to
-//   // change the fields of a record it already has in the store. The
-//   // key-value pairs of ‘fieldIDs’ associate field names in the payload
-//   // with the ID of the record that we want updated.
-//   getConfigs() {
-//     return [{
-//       type: 'FIELDS_CHANGE',
-//       fieldIDs: {
-//         account: this.props.account.id,
-//       },
-//     }];
-//   }
-// }
 
 
 @relayContainer({
@@ -93,12 +45,13 @@ export default class AddCsv extends Component {
   }
 
   submit({ account, csvFile }) {
-    Papa.parse(csvFile[0], { complete: (results)=> {
-      console.log('csvUpload', { account, csv: results.data });
-      // Relay.Store.commitUpdate(
-      //   new UploadCsvMutation({ account, csv: results.data }),
-      // );
-    } });
+    const fileReader = new FileReader();
+    fileReader.addEventListener('load', function(event) {
+      const csv = event.target.result;
+      console.log('csvUpload', { account, csv });
+      Relay.Store.commitUpdate(new UploadCsvMutation({ account, csv }));
+    });
+    fileReader.readAsText(csvFile[0]);
   }
 
   render() {
