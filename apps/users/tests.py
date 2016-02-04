@@ -31,7 +31,7 @@ class UsersTestCase(SWTestCase):
 
         self.assertEqual(result.data['viewer']['safeToSpend'], 140000)
 
-    def test_income(self):
+    def test_month_summary(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
         now = timezone.now()
         query = '{{ viewer {{ summary(month: "{}/{}") {{ income }} }} }}'

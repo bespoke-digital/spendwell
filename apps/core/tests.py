@@ -37,7 +37,7 @@ class SWTestCase(TestCase):
         return result
 
 
-class MoneyTypeTestCase(TestCase):
+class TypesTestCase(SWTestCase):
     def test_money(self):
         class TestQuery(graphene.ObjectType):
             money_field = graphene.Field(Money)
@@ -48,6 +48,6 @@ class MoneyTypeTestCase(TestCase):
         schema = graphene.Schema()
         schema.query = TestQuery
 
-        result = schema.execute('{ moneyField }')
+        result = self.graph_query('{ moneyField }', schema=schema)
 
         self.assertEqual(result.data['moneyField'], 2243)
