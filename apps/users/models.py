@@ -1,5 +1,6 @@
 
 from datetime import datetime
+from uuid import uuid4
 
 from django.db import models
 from django.utils import timezone
@@ -123,3 +124,8 @@ class User(AbstractBaseUser):
             day=1,
         ))
         return self.summary(month_start)['net']
+
+
+class BetaCode(models.Model):
+    key = models.CharField(max_length=255, default=uuid4)
+    used_by = models.OneToOneField(User, blank=True, null=True)

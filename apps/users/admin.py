@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from spendwell.admin import admin_site
-from apps.users.models import User
+from .models import User, BetaCode
 
 
 class UserCreationForm(forms.ModelForm):
@@ -64,3 +64,5 @@ class UserAdmin(AuthUserAdmin):
 
 
 admin_site.register(User, UserAdmin)
+
+admin_site.register(BetaCode)
