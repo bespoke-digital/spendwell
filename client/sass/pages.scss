@@ -1,9 +1,11 @@
 
 @import 'variables';
+@import 'font-awesome';
 @import 'mui';
 @import 'bootstrap';
 @import 'generic';
 
 @import 'page_components/topbar';
 
+@import 'pages/home';
 @import 'pages/users-auth';

@@ -1,41 +1,42 @@
-{% extends "landing/base.html" %}
+{% extends "base.html" %}
 
-{% block body_class %}{{ super }} landing-home{% endblock %}
+{% load staticfiles %}
 
-{% block content %}
+{% block body_class %}{{ super }} home{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block body %}
   <div class="hero">
     <div class="hero-content">
-      <h1>Follow Your Money</h1>
-      <p>Know where it goes and hit your goals</p>
-      <div class="cta">
-        <form
-          action="//digital.us12.list-manage.com/subscribe/post?u=bec5076d8b34caeee6a5ef6cb&id=64ed676338"
-          method="post"
-          target="_blank"
-          class="form-inline"
-          novalidate
-        >
-          <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
-          <input class="form-control" name="EMAIL" type="email" placeholder="Enter your email">
-          <button type="submit" class="btn btn-primary">Notify Me</button>
-        </form>
-      </div>
-    </div>
+      <div class="logo"></div>
 
-    <div class="hero-messaging">
-      <div class="hero-message">
-        <div class="visualize"></div>
-        Visualize your money
-      </div>
-      <div class="hero-message">
-        <div class="increase"></div>
-        Increase your savings
-      </div>
-      <div class="hero-message">
-        <div class="goals"></div>
-        Hit your goals faster
-      </div>
-    </div>
+      <h1>
+        Managing your money shouldn't suck.<br class="hidden-xs">
+        Soon it won't have to.
+      </h1>
 
+      <form
+        action="//digital.us12.list-manage.com/subscribe/post?u=bec5076d8b34caeee6a5ef6cb&id=64ed676338"
+        method="post"
+        target="_blank"
+        class="form-inline"
+        novalidate
+      >
+        <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
+        <div class="mui-textfield mui-textfield--float-label">
+          <input class="form-control" name="EMAIL" type="email">
+          <label>Email</label>
+        </div>
+        <button type="submit" class="mui-btn mui-btn--default">
+        <i class="fa fa-chevron-right"></i>
+        </button>
+      </form>
+
+      <p>Leave your email to get early access and start managing money like a boss.</p>
+    </div>
   </div>
 {% endblock %}

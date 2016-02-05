@@ -1,0 +1,101 @@
+
+body.home {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  .hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+
+    color: white;
+    background-image: url('~img/landing/home/cover.jpg');
+    background-position: center;
+
+    @media (max-width: $screen-xs-max) {
+      position: inherit;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .hero-content {
+      width: 100%;
+
+      background-color: rgba(black, 0.3);
+      text-align: center;
+      line-height: 1.1;
+
+      @media (max-width: $screen-xs-max) {
+        padding: 20px 10px;
+        min-height: 100vh;
+      }
+
+      @media (min-width: $screen-sm-min) {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px 20px 20px;
+        max-width: 560px;
+        border-radius: 4px;
+      }
+
+      .logo {
+        height: 40px;
+        margin-bottom: 19px;
+
+        background-image: url('~img/logo-white.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      form {
+        margin-bottom: 15px;
+
+        .mui-textfield {
+          display: inline-block;
+          text-align: left;
+          margin-right: 5px;
+          margin-bottom: 0;
+
+          > input {
+            color: white;
+            border-bottom: 1px solid rgba(white, 0.8);
+            width: 220px;
+
+            &:focus {
+              border-bottom-color: white;
+
+              ~ label {
+                color: white;
+              }
+            }
+          }
+
+          > label {
+            color: rgba(white, 0.8);
+          }
+        }
+
+        .mui-btn {
+          height: 30px;
+          padding: 0 10px 0 13px;
+          line-height: 30px;
+          font-weight: 500;
+        }
+      }
+
+      p {
+        display: inline-block;
+        font-size: 18px;
+        max-width: 300px;
+      }
+    }
+  }
+}

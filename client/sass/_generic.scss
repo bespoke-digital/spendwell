@@ -15,6 +15,14 @@ div.checkbox {
   margin: 0;
 }
 
+label {
+  transition: 0.15s ease-out;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
 .gone {
   margin: 0 !important;
   padding: 0 !important;
