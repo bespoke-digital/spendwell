@@ -21,8 +21,9 @@ import { AddInstitutionMutation } from 'mutations/institutions';
 })
 export default class CreateInstitution extends Component {
   static propTypes = {
-    onClose: PropTypes.func,
-  }
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
 
   constructor() {
     super();
@@ -30,21 +31,21 @@ export default class CreateInstitution extends Component {
   }
 
   handleCreate() {
-    const { viewer } = this.props;
+    const { viewer, onClose } = this.props;
     const { name } = this.state;
 
     if (!name) return;
 
     Relay.Store.commitUpdate(new AddInstitutionMutation({ viewer, name }), {
-      onSuccess: ()=> this.refs.modal.close(),
+      onSuccess: onClose,
       onFailure: console.log.bind(console, 'onFailure'),
     });
   }
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, open } = this.props;
     return (
-      <Modal onClose={onClose} ref='modal'>
+      <Modal onClose={onClose} open={open}>
         <h3>Create Institution</h3>
         <TextInput
           label='Institution Name'

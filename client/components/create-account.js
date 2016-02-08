@@ -21,8 +21,9 @@ import { AddAccountMutation } from 'mutations/accounts';
 })
 export default class CreateAccount extends Component {
   static propTypes = {
-    onClose: PropTypes.func,
-  }
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
 
   constructor() {
     super();
@@ -30,21 +31,21 @@ export default class CreateAccount extends Component {
   }
 
   handleCreate() {
-    const { institution } = this.props;
+    const { institution, onClose } = this.props;
     const { name } = this.state;
 
     if (!name) return;
 
     Relay.Store.commitUpdate(new AddAccountMutation({ institution, name }), {
-      onSuccess: ()=> this.refs.modal.close(),
+      onSuccess: onClose,
       onFailure: console.log.bind(console, 'onFailure'),
     });
   }
 
   render() {
-    const { onClose } = this.props;
+    const { onClose, open } = this.props;
     return (
-      <Modal onClose={onClose} ref='modal'>
+      <Modal onClose={onClose} open={open}>
         <h3>Create Account</h3>
         <TextInput
           label='Institution Name'

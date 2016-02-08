@@ -96,12 +96,13 @@ export default class AddCsv extends Component {
             </Dropdown>
           </div>
 
-          {newInstitution ? (
+          {viewer ?
             <CreateInstitution
               viewer={viewer}
+              open={!!newInstitution}
               onClose={this.setState.bind(this, { newInstitution: false }, null)}
             />
-          ) : null}
+          : null}
 
           <div>
             {institution && institution.accounts ? (
@@ -121,12 +122,13 @@ export default class AddCsv extends Component {
             ) : null}
           </div>
 
-          {newAccount ? (
+          {institution ?
             <CreateAccount
               institution={institution}
+              open={!!newAccount}
               onClose={this.setState.bind(this, { newAccount: false }, null)}
             />
-          ) : null}
+          : null}
 
           <FileInput label='CSV' onChange={(files)=> this.setState({ csvFile: files[0] })}/>
 

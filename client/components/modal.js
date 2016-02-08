@@ -13,33 +13,27 @@ export default class Modal extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     overlayOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func,
-  }
-
-  constructor() {
-    super();
-    this.state = { open: true };
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    this.props.dispatch({ type: 'OVERLAY', open: true });
+    const { open } = this.props;
+    this.props.dispatch({ type: 'OVERLAY', open });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.overlayOpen && this.state.open)
-      this.close();
-  }
+    const { overlayOpen, dispatch, onClose, open } = this.props;
 
-  close() {
-    this.setState({ open: false });
+    if (!nextProps.overlayOpen && overlayOpen && onClose)
+      return onClose();
 
-    if (this.props.onClose)
-      this.props.onClose();
+    if (nextProps.open !== open)
+      dispatch({ type: 'OVERLAY', open: nextProps.open });
   }
 
   render() {
-    const { children } = this.props;
-    const { open } = this.state;
+    const { children, open } = this.props;
     return (
       <Transition transitionName='modal'>{open ?
         <Card className={style.root}>{children}</Card>
