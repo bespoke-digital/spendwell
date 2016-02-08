@@ -18,7 +18,10 @@ class Viewer(
     TransactionsQuery,
     UsersQuery,
 ):
-    pass
+    id = graphene.ID()
+
+    def resolve_id(self, args, info):
+        return info.request_context.user.id
 
 
 class Query(graphene.ObjectType):

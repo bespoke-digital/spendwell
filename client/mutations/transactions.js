@@ -25,6 +25,7 @@ export class UploadCsvMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on UploadCsvMutation {
+        account
         transactions
       }
     `;

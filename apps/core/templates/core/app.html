@@ -9,5 +9,8 @@
 {% block body %}
   <div id="root"></div>
 
+  {% if REACT_HOT_LOADING %}
+    <script src="{% static 'dist/hotLoader.js' %}"></script>
+  {% endif %}
   <script src="{% static 'dist/app.js' %}"></script>
 {% endblock %}

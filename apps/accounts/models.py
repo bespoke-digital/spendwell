@@ -63,7 +63,7 @@ class Account(SWModel):
         max_digits=12,
         null=True, blank=True,
     )
-    last_updated = models.DateTimeField()
+    last_updated = models.DateTimeField(auto_now_add=True)
 
     number_snippet = models.CharField(max_length=255, blank=True, null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)

@@ -2,6 +2,7 @@
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
+import { connect } from 'react-redux';
 
 import Transition from 'components/transition';
 import Header from 'components/header';
@@ -9,6 +10,7 @@ import Nav from 'components/nav';
 import style from 'sass/views/app';
 
 
+@connect((state)=> ({ overlayOpen: state.overlayOpen }))
 @relayContainer({
   fragments: {
     viewer: ()=> Relay.QL`
@@ -20,6 +22,8 @@ import style from 'sass/views/app';
 })
 export default class App extends Component {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    overlayOpen: PropTypes.bool.isRequired,
     nav: PropTypes.object,
   }
 
@@ -29,11 +33,19 @@ export default class App extends Component {
   }
 
   toggleNav() {
-    this.setState({ navOpen: !this.state.navOpen });
+    const navOpen = !this.state.navOpen;
+    this.setState({ navOpen });
+    this.props.dispatch({ type: 'OVERLAY', open: navOpen });
+  }
+
+  closeOverlay() {
+    if (this.state.navOpen)
+      this.setState({ navOpen: false });
+    this.props.dispatch({ type: 'OVERLAY', open: false });
   }
 
   render() {
-    const { children, viewer } = this.props;
+    const { children, viewer, overlayOpen } = this.props;
     const { navOpen } = this.state;
 
     return (
@@ -43,8 +55,8 @@ export default class App extends Component {
         <Nav open={navOpen} toggleNav={::this.toggleNav}/>
 
         <Transition transitionName='overlay'>
-          {navOpen ?
-            <div className='overlay' key='overlay' onClick={::this.toggleNav}/>
+          {overlayOpen ?
+            <div className='overlay' key='overlay' onClick={::this.closeOverlay}/>
           : null}
         </Transition>
 

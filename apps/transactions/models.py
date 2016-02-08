@@ -88,10 +88,15 @@ class TransactionManager(SWManager):
 class Transaction(SWModel):
     owner = models.ForeignKey('users.User', related_name='transactions')
 
-    account = models.ForeignKey('accounts.Account', related_name='transactions')
+    account = models.ForeignKey(
+        'accounts.Account',
+        related_name='transactions',
+        on_delete=models.CASCADE,
+    )
     description = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
     date = models.DateTimeField()
+    balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     transfer_to = models.ForeignKey('accounts.Account', related_name='incoming_transfers', null=True)
     transfer_pair = models.ForeignKey('self', null=True)
@@ -102,6 +107,11 @@ class Transaction(SWModel):
     address_city = models.CharField(max_length=255, null=True)
     address_street = models.CharField(max_length=255, null=True)
     address_state = models.CharField(max_length=255, null=True)
+
+    source = models.CharField(max_length=255, choices=(
+        ('csv', 'CSV'),
+        ('plaid', 'Plaid Connect'),
+    ))
 
     objects = TransactionManager()
 

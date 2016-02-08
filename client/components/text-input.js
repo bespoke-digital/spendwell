@@ -48,7 +48,7 @@ export default class TextInput extends Component {
       `}>
         <input
           type={type}
-          onChange={this.changeValue}
+          onChange={::this.changeValue}
           value={value}
           className={value ? 'mui--is-not-empty' : ''}
         />

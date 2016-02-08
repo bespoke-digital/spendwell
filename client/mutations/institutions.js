@@ -3,6 +3,14 @@ import Relay from 'react-relay';
 
 
 export class AddInstitutionMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
   getMutation() {
     return Relay.QL`mutation { addInstitution }`;
   }
@@ -14,8 +22,28 @@ export class AddInstitutionMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on AddInstitutionMutation {
-        institution
+        viewer { institutions }
+        institutionEdge
       }
     `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'RANGE_ADD',
+      parentName: 'viewer',
+      parentID: this.props.viewer.id,
+      connectionName: 'institutions',
+      edgeName: 'institutionEdge',
+      rangeBehaviors: { '': 'append' },
+    }];
+  }
+
+  getOptimisticResponse() {
+    return {
+      institution: {
+        name: this.props.name,
+      },
+    };
   }
 }

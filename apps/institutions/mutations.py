@@ -1,22 +1,31 @@
 
 import graphene
+from graphene.relay.types import Edge
 
 from .models import Institution
 from .schema import InstitutionNode
+
+
+InstitutionEdge = Edge.for_node(InstitutionNode)
 
 
 class AddInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         name = graphene.String()
 
-    institution = graphene.Field(InstitutionNode)
+    viewer = graphene.Field('Viewer')
+    institution_edge = graphene.Field(InstitutionEdge)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
         return AddInstitutionMutation(
-            institution=Institution.objects.create(
-                owner=info.request_context.user,
-                name=input['name'],
+            viewer={},
+            institution_edge=InstitutionEdge(
+                cursor='none',
+                node=Institution.objects.create(
+                    owner=info.request_context.user,
+                    name=input['name'],
+                ),
             ),
         )
 

@@ -35,7 +35,7 @@ export default class Dropdown extends Component {
     const { open } = this.state;
 
     return (
-      <div className='mui-dropdown'>
+      <div className='mui-dropdown dropdown'>
         <Button onClick={this.setState.bind(this, { open: !open }, null)} variant={variant}>
           {label}
           <span className='mui-caret'/>

@@ -9,25 +9,26 @@ var config = require('./dev.config');
 // Add react-hot-loader to jsx loading config
 config.module.loaders[0].loader = 'react-hot!' + config.module.loaders[0].loader;
 
-config.extry = {
-  // WebpackDevServer host and port
-  devServer: 'webpack-dev-server/client?http://0.0.0.0:3000',
-  // "only" prevents reload on syntax errors
-  devServerNoErrors: 'webpack/hot/only-dev-server',
-  app: './client/app.js',
-  pages: './client/pages.js',
+config.entry = {
+  hotLoader: 'webpack-dev-server/client?https://dev.spendwell.co',
+  app: ['./client/app.js', 'webpack/hot/dev-server'],
+  pages: ['./client/pages.js', 'webpack/hot/dev-server'],
 };
 
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),
 ]);
 
-new WebpackDevServer(webpack(config), {
+var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
-  historyApiFallback: true,
   proxy: { '*': 'http://localhost:8000' },
-}).listen(3000, 'localhost', function(err) {
+  stats: { colors: true },
+});
+
+server.listen(3000, 'localhost', function(err) {
   if (err) throw err;
-  console.log('Listening at https://localhost:3000');
+  console.log('Listening on http://localhost:3000');
+  console.log('Proxying to http://localhost:8000');
+  console.log('https://dev.spendwell.co');
 });

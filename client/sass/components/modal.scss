@@ -1,0 +1,44 @@
+
+@import '../variables';
+
+:local(.root) {
+  position: absolute;
+  z-index: 100;
+
+  @media (min-width: $screen-sm-min) {
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    max-width: 650px;
+    max-height: 80%;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (max-width: $screen-xs-max) {
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+  }
+
+  &.modal {
+    transition: opacity 200ms ease-in;
+    opacity: 1;
+  }
+
+  &.modal-enter {
+    opacity: 0.01;
+  }
+
+  &.modal-enter.modal-enter-active {
+    opacity: 1;
+  }
+
+  &.modal-leave {
+    opacity: 1;
+  }
+
+  &.modal-leave.modal-leave-active {
+    opacity: 0.01;
+  }
+}

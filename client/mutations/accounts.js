@@ -4,10 +4,9 @@ import Relay from 'react-relay';
 
 export class AddAccountMutation extends Relay.Mutation {
   static fragments = {
-    story: ()=> Relay.QL`
+    institution: ()=> Relay.QL`
       fragment on InstitutionNode {
         id
-        accounts
       }
     `,
   };
@@ -26,7 +25,8 @@ export class AddAccountMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on AddAccountMutation {
-        account
+        institution { accounts }
+        accountEdge
       }
     `;
   }
@@ -37,7 +37,7 @@ export class AddAccountMutation extends Relay.Mutation {
       parentName: 'institution',
       parentID: this.props.institution.id,
       connectionName: 'accounts',
-      edgeName: 'account',
+      edgeName: 'accountEdge',
       rangeBehaviors: { '': 'append' },
     }];
   }
