@@ -10,7 +10,7 @@ var execSync = require('child_process').execSync;
 execSync('./manage.py export_schema');
 
 
-var config = {
+module.exports = {
   entry: {
     app: './client/app.js',
     pages: './client/pages.js',
@@ -56,14 +56,4 @@ var config = {
     extensions: ['', '.js', '.jsx', '.scss', '.css'],
     modulesDirectories: ['client', 'node_modules'],
   },
-
 };
-
-config.devtool = 'sourcemap';
-config.debug = true;
-
-// config.plugins.push(new webpack.optimize.OccurenceOrderPlugin());
-// config.plugins.push(new webpack.optimize.DedupePlugin());
-// config.plugins.push(new webpack.optimize.UglifyJsPlugin());
-
-module.exports = config;

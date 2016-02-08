@@ -1,5 +1,5 @@
 
-import { Route, browserHistory } from 'react-router';
+import { Route, IndexRedirect, browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import { RelayRouter } from 'react-router-relay';
 
@@ -33,7 +33,6 @@ import App from 'views/app';
 //     </Route>
 
 //     <Route component={App}>
-
 //       <Route path='/incoming' component={Incoming}/>
 //       <Route path='/outgoing' component={Outgoing}/>
 
@@ -61,6 +60,7 @@ const viewerQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 export default (
   <RelayRouter history={browserHistory}>
     <Route path='app' component={App} queries={viewerQuery}>
+      <IndexRedirect to='dashboard'/>
       <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
 

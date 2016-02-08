@@ -63,6 +63,7 @@ TEMPLATES = [{
             'django.template.context_processors.tz',
             'django.template.context_processors.request',
             'django.contrib.messages.context_processors.messages',
+            'apps.core.context_processors.settings',
         ),
     },
 }]
@@ -102,3 +103,5 @@ LOGIN_URL = '/login'
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_SECRET = None
+
+REACT_HOT_LOADING = False
