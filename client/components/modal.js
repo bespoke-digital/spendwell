@@ -8,14 +8,13 @@ import Transition from 'components/transition';
 import style from 'sass/components/modal';
 
 
-@connect((state)=> ({ overlayOpen: state.overlayOpen }))
-export default class Modal extends Component {
+class Modal extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     overlayOpen: PropTypes.bool.isRequired,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-  }
+  };
 
   componentDidMount() {
     const { open } = this.props;
@@ -41,3 +40,7 @@ export default class Modal extends Component {
     );
   }
 }
+
+Modal = connect((state)=> ({ overlayOpen: state.overlayOpen }))(Modal);
+
+export default Modal;

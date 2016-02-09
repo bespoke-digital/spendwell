@@ -1,5 +1,5 @@
 
-import 'sass/app.scss';
+import 'sass/app';
 
 import { render } from 'react-dom';
 import routes from 'routes';

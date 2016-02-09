@@ -21,11 +21,11 @@ export default class Header extends Component {
   static propTypes = {
     navHandle: PropTypes.bool,
     toggleNav: PropTypes.func,
-  }
+  };
 
   static defaultProps = {
     navHandle: true,
-  }
+  };
 
   handleHandleClick(event) {
     event.preventDefault();

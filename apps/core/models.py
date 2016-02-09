@@ -9,9 +9,11 @@ class SWQuerySet(models.QuerySet):
     def as_json(self):
         return self.as_serializer().as_json()
 
-    def delete(self, **kwargs):
-        for instance in self:
-            instance.delete(**kwargs)
+    def delete(self, hard=False):
+        if hard:
+            super(SWQuerySet, self).delete()
+        else:
+            self.update(deleted=True)
 
 
 class SWManager(models.Manager):

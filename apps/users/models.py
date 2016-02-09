@@ -79,11 +79,11 @@ class User(AbstractBaseUser):
     def income(self, month_start):
         income = Transaction.objects.filter(
             owner=self,
+            transfer_to__isnull=True,
             date__lt=month_start + relativedelta(months=1),
             date__gte=month_start,
-            transfer_to__isnull=True,
             amount__gt=0,
-        ).aggregate(models.Sum('amount'))['amount__sum'] or 0
+        ).sum()
 
         if (
             relativedelta(month_start, timezone.now()).months == 0 and
@@ -102,6 +102,7 @@ class User(AbstractBaseUser):
             owner=self,
             transfer_to__isnull=True,
             date__gte=month_start,
+            date__lt=month_start + relativedelta(months=1),
             amount__lt=0,
         ).sum()
 

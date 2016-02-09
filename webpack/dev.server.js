@@ -5,14 +5,12 @@ var WebpackDevServer = require('webpack-dev-server');
 
 var config = require('./dev.config');
 
-
-// Add react-hot-loader to jsx loading config
-config.module.loaders[0].loader = 'react-hot!' + config.module.loaders[0].loader;
+process.env.NODE_ENV = 'development';
 
 config.entry = {
   hotLoader: 'webpack-dev-server/client?https://dev.spendwell.co',
-  app: ['./client/app.js', 'webpack/hot/dev-server'],
-  pages: ['./client/pages.js', 'webpack/hot/dev-server'],
+  app: './client/app.js',
+  pages: './client/pages.js',
 };
 
 config.plugins = config.plugins.concat([

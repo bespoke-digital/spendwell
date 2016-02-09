@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 import { Link } from 'react-router';
 import moment from 'moment';
 
@@ -15,24 +14,7 @@ import Bucket from './bucket';
 import Goal from './goal';
 
 
-@relayContainer({
-  prepareVariables: (variables)=> ({
-    month: variables.year ? `${variables.year}/${variables.month}` : moment().format('YYYY/MM'),
-  }),
-  fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        summary(month: $month) {
-          income
-          allocated
-          spent
-          net
-        }
-      }
-    `,
-  },
-})
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
   };
@@ -43,6 +25,8 @@ export default class Dashboard extends Component {
   }
 
   render() {
+    if (!this.props.viewer.summary) return <div className='container'>No Summary</div>;
+
     const {
       params: { year, month },
       viewer: { summary: {
@@ -182,3 +166,27 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+Dashboard = Relay.createContainer(Dashboard, {
+  initialVariables: { date: moment().format('YYYY/MM') },
+  prepareVariables: (variables)=> {
+    if (variables.year && variables.month)
+      return { ...variables, date: `${variables.year}/${variables.month}` };
+    else
+      return variables;
+  },
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        summary(month: $date) {
+          income
+          allocated
+          spent
+          net
+        }
+      }
+    `,
+  },
+});
+
+export default Dashboard;

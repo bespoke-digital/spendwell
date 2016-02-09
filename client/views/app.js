@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 import { connect } from 'react-redux';
 
 import Transition from 'components/transition';
@@ -10,22 +9,12 @@ import Nav from 'components/nav';
 import style from 'sass/views/app';
 
 
-@connect((state)=> ({ overlayOpen: state.overlayOpen }))
-@relayContainer({
-  fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        ${Header.getFragment('viewer')}
-      }
-    `,
-  },
-})
-export default class App extends Component {
+class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     overlayOpen: PropTypes.bool.isRequired,
     nav: PropTypes.object,
-  }
+  };
 
   constructor() {
     super();
@@ -65,3 +54,19 @@ export default class App extends Component {
     );
   }
 }
+
+App = connect(function(state) {
+  return { overlayOpen: state.overlayOpen };
+})(App);
+
+App = Relay.createContainer(App, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${Header.getFragment('viewer')}
+      }
+    `,
+  },
+});
+
+export default App;

@@ -4,10 +4,6 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
-var execSync = require('child_process').execSync;
-
-
-execSync('./manage.py export_schema');
 
 
 module.exports = {
@@ -24,18 +20,13 @@ module.exports = {
 
   module: {
     loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel?stage=0&plugins[]=' + path.join(__dirname, 'babel-relay'),
-      },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
         'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'
       ) },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') },
       { test: /\.(eot|svg|ttf|woff|woff2|png|jpg)(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
-      { test: require.resolve('react'), loader: 'expose?React' },
     ],
   },
 

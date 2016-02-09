@@ -9,7 +9,7 @@ export default class Dropdown extends Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     variant: PropTypes.oneOf(['primary', 'danger', 'accent']),
-  }
+  };
 
   constructor() {
     super();

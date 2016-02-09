@@ -1,7 +1,6 @@
 
 import { Component } from 'react';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
 import FileInput from 'components/file-input';
@@ -15,34 +14,7 @@ import { UploadCsvMutation } from 'mutations/transactions';
 import style from 'sass/views/add-csv';
 
 
-@relayContainer({
-  fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        ${CreateInstitution.getFragment('viewer')}
-        institutions(first: 100) {
-          edges {
-            node {
-              ${CreateAccount.getFragment('institution')}
-              id
-              name
-              accounts(first: 100) {
-                edges {
-                  node {
-                    ${UploadCsvMutation.getFragment('account')}
-                    id
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-  },
-})
-export default class AddCsv extends Component {
+class AddCsv extends Component {
   static contextTypes = {
     history: React.PropTypes.object.isRequired,
   };
@@ -142,3 +114,33 @@ export default class AddCsv extends Component {
     );
   }
 }
+
+AddCsv = Relay.createContainer(AddCsv, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${CreateInstitution.getFragment('viewer')}
+        institutions(first: 100) {
+          edges {
+            node {
+              ${CreateAccount.getFragment('institution')}
+              id
+              name
+              accounts(first: 100) {
+                edges {
+                  node {
+                    ${UploadCsvMutation.getFragment('account')}
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+  },
+});
+
+export default AddCsv;

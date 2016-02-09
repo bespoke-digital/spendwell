@@ -1,2 +1,2 @@
 
-import 'sass/pages.scss';
+import 'sass/pages';

@@ -2,10 +2,10 @@
 from django.utils.timezone import now
 from django.db import models
 
-from apps.core.models import SWModel
+from apps.core.models import SWModel, SWManager
 
 
-class AccountManager(models.Manager):
+class AccountManager(SWManager):
     def create_from_plaid(self, institution, json_data):
         '''
         Sample Data:
