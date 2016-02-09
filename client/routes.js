@@ -12,6 +12,7 @@ import AddPlaid from 'views/add-plaid';
 import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
 import App from 'views/app';
+import CreateGoal from 'views/create-goal';
 
 
 const viewerQuery = {
@@ -25,6 +26,9 @@ export default (
         <IndexRedirect to='dashboard'/>
         <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
         <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
+
+        <Route path='goals/new' component={CreateGoal} queries={viewerQuery}/>
+        {/*<Route path='goals/:id' component={Goal} queries={viewerQuery}/>*/}
 
         <Route path='accounts' component={Accounts} queries={viewerQuery}/>
         <Route path='accounts/add/plaid' component={AddPlaid} queries={viewerQuery}/>
@@ -46,7 +50,6 @@ export default (
 // import FinicitySearch from 'views/finicitySearch';
 // import FinicityConnect from 'views/finicityConnect';
 // import Buckets from 'views/buckets';
-// import Goal from 'views/goal';
 // import Bucket from 'views/bucket';
 // import Incoming from 'views/incoming';
 // import Outgoing from 'views/outgoing';

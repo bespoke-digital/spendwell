@@ -21,7 +21,13 @@ var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
   proxy: { '*': 'http://localhost:8000' },
-  stats: { colors: true },
+  stats: {
+    colors: true,
+    assets: false,
+    children: false,
+    chunks: false,
+    modules: false,
+  },
 });
 
 server.listen(3000, 'localhost', function(err) {

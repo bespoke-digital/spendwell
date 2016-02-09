@@ -61,11 +61,13 @@ App = connect(function(state) {
 
 App = Relay.createContainer(App, {
   fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        ${Header.getFragment('viewer')}
-      }
-    `,
+    viewer() {
+      return Relay.QL`
+        fragment on Viewer {
+          ${Header.getFragment('viewer')}
+        }
+      `;
+    },
   },
 });
 

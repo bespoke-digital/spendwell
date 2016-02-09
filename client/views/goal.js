@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import { Form } from 'formsy-react';
-import reactMixin from 'react-mixin';
 
 import Button from 'components/button';
 import Card from 'components/card';
@@ -12,7 +11,6 @@ import Goals from 'collections/goals';
 import styles from 'sass/views/create-bucket.scss';
 
 
-@reactMixin.decorate(ReactMeteorData)
 export default class Goal extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,

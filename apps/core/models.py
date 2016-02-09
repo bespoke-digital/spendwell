@@ -15,6 +15,9 @@ class SWQuerySet(models.QuerySet):
         else:
             self.update(deleted=True)
 
+    def sum(self, field):
+        return self.aggregate(s=models.Sum(field))['s'] or 0
+
 
 class SWManager(models.Manager):
     use_for_related_fields = True
@@ -31,6 +34,9 @@ class SWManager(models.Manager):
 
     def delete(self, **kwargs):
         return self.get_queryset().delete(**kwargs)
+
+    def sum(self):
+        return self.get_queryset().sum()
 
 
 class SWModel(models.Model):

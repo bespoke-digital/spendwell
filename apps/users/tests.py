@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from apps.core.tests import SWTestCase
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
+from apps.goals.factories import GoalFactory
 
 from .factories import UserFactory
 
@@ -78,4 +79,17 @@ class UsersTestCase(SWTestCase):
             result.data['viewer']['summary']['income'],
             100000,
             msg='Should return transaction-based number for old months',
+        )
+
+    def test_summary_goals(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
+
+        result = self.graph_query('{ viewer { safeToSpend } }', user=owner)
+
+        self.assertEqual(
+            result.data['viewer']['safeToSpend'],
+            150000,
+            msg='Should return estimate for current month minus the goal amount'
         )

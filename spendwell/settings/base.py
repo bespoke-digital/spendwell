@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'bootstrapform',
     'django_graphiql',
     'graphene.contrib.django',
 
@@ -33,6 +32,7 @@ INSTALLED_APPS = [
     'apps.transactions',
     'apps.categories',
     'apps.buckets',
+    'apps.goals',
 ]
 
 AUTH_USER_MODEL = 'users.User'

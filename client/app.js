@@ -2,9 +2,9 @@
 import 'sass/app';
 
 import { render } from 'react-dom';
-import routes from 'routes';
 import Relay from 'react-relay';
 
+import routes from 'routes';
 import networkLayer from 'utils/network-layer';
 
 

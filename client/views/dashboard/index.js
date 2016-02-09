@@ -8,10 +8,10 @@ import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
+import GoalMonth from 'components/goal-month';
 
 import styles from 'sass/views/dashboard.scss';
 import Bucket from './bucket';
-import Goal from './goal';
 
 
 class Dashboard extends Component {
@@ -25,21 +25,25 @@ class Dashboard extends Component {
   }
 
   render() {
+    console.log('this.props.viewer', this.props.viewer);
     if (!this.props.viewer.summary) return <div className='container'>No Summary</div>;
 
     const {
       params: { year, month },
-      viewer: { summary: {
-        income,
-        allocated,
-        spent,
-        net,
-      } },
+      viewer: {
+        summary: {
+          income,
+          allocated,
+          spent,
+          net,
+          goalMonths,
+        },
+      },
     } = this.props;
     const { selected } = this.state;
 
     const now = moment().startOf('month');
-    const current = year ? moment(`${year}-${month}-0`) : now;
+    const current = year && month ? moment(`${year}-${month}-0`) : now;
     const periods = {
       now,
       current,
@@ -47,9 +51,7 @@ class Dashboard extends Component {
       next: current.clone().add(1, 'month'),
     };
 
-    const goals = [];
     const buckets = [];
-    const unbucketedAmount = 0;
 
     return (
       <div className={`container ${styles.root}`}>
@@ -75,7 +77,7 @@ class Dashboard extends Component {
           </Link>
           <div>
             Out
-            <div className='amount'><Money amount={allocated + spent}/></div>
+            <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
           </div>
           <div>
             Net
@@ -84,7 +86,7 @@ class Dashboard extends Component {
         </Card>
 
         <div className='heading'>
-          <h2>Saved</h2>
+          <h2>Goals</h2>
           <div>
             <Button to='/app/goals/new' raised>
               <i className='fa fa-plus'/>
@@ -101,21 +103,21 @@ class Dashboard extends Component {
               <div className='amount'>Saved</div>
             </div>
           </Card>
-          {goals.map((goal)=>
-            <Goal
-              key={goal._id}
-              goal={goal}
+          {goalMonths ? goalMonths.edges.map(({ node })=>
+            <GoalMonth
+              key={node.id}
+              goalMonth={node}
               month={periods.current}
-              selected={selected === goal._id}
-              onClick={()=> this.setState({ selected: goal._id })}
+              selected={selected === node.id}
+              onClick={()=> this.setState({ selected: node.id })}
             >
               <Button
                 onClick={()=> this.setState({ selected: null })}
                 propagateClick={false}
               >Close</Button>
-              <Button to={`/app/goals/${goal._id}`}>Edit</Button>
-            </Goal>
-          )}
+              <Button to={`/app/goals/${node.id}`}>Edit</Button>
+            </GoalMonth>
+          ) : null}
         </CardList>
 
         <div className='heading'>
@@ -151,12 +153,12 @@ class Dashboard extends Component {
               <Button to={`/app/buckets/${bucket._id}`}>Edit</Button>
             </Bucket>
           )}
-          {unbucketedAmount !== 0 ?
+          {spent !== 0 ?
             <Card>
               <div className='summary'>
                 <div>Other</div>
                 <div className='amount'>
-                  <Money amount={unbucketedAmount} abs/>
+                  <Money amount={spent} abs/>
                 </div>
               </div>
             </Card>
@@ -168,7 +170,9 @@ class Dashboard extends Component {
 }
 
 Dashboard = Relay.createContainer(Dashboard, {
-  initialVariables: { date: moment().format('YYYY/MM') },
+  initialVariables: {
+    date: moment().format('YYYY/MM'),
+  },
   prepareVariables: (variables)=> {
     if (variables.year && variables.month)
       return { ...variables, date: `${variables.year}/${variables.month}` };
@@ -183,6 +187,14 @@ Dashboard = Relay.createContainer(Dashboard, {
           allocated
           spent
           net
+          goalMonths(first: 1000) {
+            edges {
+              node {
+                id
+                ${GoalMonth.getFragment('goalMonth')}
+              }
+            }
+          }
         }
       }
     `,

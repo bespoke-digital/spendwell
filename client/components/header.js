@@ -1,23 +1,13 @@
 
 import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 
 import Money from 'components/money';
 import logoWhite from 'img/logo-white.svg';
 import style from 'sass/components/header';
 
 
-@relayContainer({
-  fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        safeToSpend
-      }
-    `,
-  },
-})
-export default class Header extends Component {
+class Header extends Component {
   static propTypes = {
     navHandle: PropTypes.bool,
     toggleNav: PropTypes.func,
@@ -48,9 +38,22 @@ export default class Header extends Component {
           <img src={logoWhite} alt='SpendWell'/>
         </a>
         <div className='safe-to-spend'>
+          <small>Safe To Spend</small>
           <Money amount={safeToSpend}/>
         </div>
       </nav>
     );
   }
 }
+
+Header = Relay.createContainer(Header, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        safeToSpend
+      }
+    `,
+  },
+});
+
+export default Header;

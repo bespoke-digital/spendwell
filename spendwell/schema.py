@@ -3,12 +3,15 @@ import graphene
 
 from apps.categories.schema import CategoriesQuery
 from apps.institutions.schema import InstitutionsQuery
-from apps.institutions.mutations import InstitutionsMutations
 from apps.accounts.schema import AccountsQuery
-from apps.accounts.mutations import AccountsMutations
 from apps.transactions.schema import TransactionsQuery
-from apps.transactions.mutations import TransactionsMutations
 from apps.users.schema import UsersQuery
+from apps.goals.schema import GoalsQuery
+
+from apps.institutions.mutations import InstitutionsMutations
+from apps.accounts.mutations import AccountsMutations
+from apps.transactions.mutations import TransactionsMutations
+from apps.goals.mutations import GoalsMutations
 
 
 class Viewer(
@@ -17,6 +20,7 @@ class Viewer(
     AccountsQuery,
     TransactionsQuery,
     UsersQuery,
+    GoalsQuery,
 ):
     id = graphene.ID()
 
@@ -36,6 +40,7 @@ class Mutations(
     InstitutionsMutations,
     AccountsMutations,
     TransactionsMutations,
+    GoalsMutations,
 ):
     pass
 

@@ -8,6 +8,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from dateutil.relativedelta import relativedelta
 
 from apps.transactions.models import Transaction
+from apps.goals.models import GoalMonth
 
 
 class UserManager(BaseUserManager):
@@ -94,8 +95,10 @@ class User(AbstractBaseUser):
             return income
 
     def allocated(self, month_start):
-        # TODO
-        return 0
+        return GoalMonth.objects.filter(
+            goal__owner=self,
+            month_start=month_start,
+        ).sum('filled_amount')
 
     def spent(self, month_start):
         return Transaction.objects.filter(

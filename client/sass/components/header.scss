@@ -34,6 +34,14 @@
     transform: translateY(-50%);
     float: right;
 
+    text-align: right;
     font-size: 20px;
+
+    small {
+      display: block;
+      font-size: 12px;
+      line-height: 1;
+      color: rgba(white, 0.8);
+    }
   }
 }
