@@ -1,11 +1,10 @@
 
 from decimal import Decimal
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from django.db import models
-from django.db.models.signals import post_save
 from django.contrib.postgres.fields import JSONField
-from django.dispatch import receiver
+from django.db import models
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
@@ -48,6 +47,47 @@ class TransactionManager(SWManager):
         transaction.save()
         return transaction
 
+    def detect_transfers(self, owner, month_start=None):
+        transactions = self.filter(owner=owner, account__disabled=False)
+
+        if month_start:
+            transactions = transactions.filter(
+                date__gte=month_start,
+                date__lt=month_start + relativedelta(months=1),
+            )
+
+        transactions.update(transfer_pair=None)
+
+        for transaction in transactions:
+            potential_transfers = Transaction.objects.exclude(
+                account=transaction.account,
+            ).filter(
+                owner=transaction.owner,
+                transfer_pair__isnull=True,
+                account__disabled=False,
+                amount=(-transaction.amount),
+                # date__lte=transaction.date + timedelta(days=3),
+                # date__gte=transaction.date - timedelta(days=3),
+            )
+
+            if len(potential_transfers) == 0:
+                continue
+            elif len(potential_transfers) == 1:
+                transfer = potential_transfers[0]
+            else:
+                # Fall back on similarity of description. This may miss many cases.
+                # TODO: find a better algo for this.
+                transfer = sorted(
+                    potential_transfers,
+                    key=lambda t: similarity(t.description, transaction.description),
+                )[-1]
+
+            transfer.transfer_pair = transaction
+            transfer.save()
+
+            transaction.transfer_pair = transfer
+            transaction.save()
+
 
 class Transaction(SWModel):
     owner = models.ForeignKey(
@@ -63,12 +103,6 @@ class Transaction(SWModel):
     category = models.ForeignKey(
         'categories.Category',
         related_name='transactions',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    transfer_to = models.ForeignKey(
-        'accounts.Account',
-        related_name='incoming_transfers',
         null=True,
         on_delete=models.SET_NULL,
     )
@@ -102,36 +136,3 @@ class Transaction(SWModel):
 
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
-
-
-@receiver(post_save, sender=Transaction)
-def transaction_post_save(sender, instance, created, raw, **kwargs):
-    "detect account transfers"
-    if not raw and created:
-        potential_transfers = Transaction.objects.filter(
-            owner=instance.owner,
-            transfer_pair__isnull=True,
-            amount=(-instance.amount),
-            date__lte=instance.date + timedelta(days=3),
-            date__gte=instance.date - timedelta(days=3),
-        )
-
-        if len(potential_transfers) == 0:
-            return
-        elif len(potential_transfers) == 1:
-            transfer = potential_transfers[0]
-        else:
-            # Fall back on similarity of description. This may miss many cases.
-            # TODO: find a better algo for this.
-            transfer = sorted(
-                potential_transfers,
-                lambda t: similarity(t.description, instance.description),
-            )[-1]
-
-        transfer.transfer_pair = instance
-        transfer.transfer_to = instance.account
-        transfer.save()
-
-        instance.transfer_pair = transfer
-        instance.transfer_to = transfer.account
-        instance.save()

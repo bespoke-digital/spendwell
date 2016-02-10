@@ -14,6 +14,8 @@ import Categories from 'views/categories';
 import App from 'views/app';
 import CreateGoal from 'views/create-goal';
 import Outgoing from 'views/outgoing';
+import Incoming from 'views/incoming';
+import Transfers from 'views/transfers';
 
 
 const viewerQuery = {
@@ -32,6 +34,8 @@ export default (
         {/*<Route path='goals/:id' component={Goal} queries={viewerQuery}/>*/}
 
         <Route path='outgoing' component={Outgoing} queries={viewerQuery}/>
+        <Route path='incoming' component={Incoming} queries={viewerQuery}/>
+        <Route path='transfers' component={Transfers} queries={viewerQuery}/>
 
         <Route path='accounts' component={Accounts} queries={viewerQuery}/>
         <Route path='accounts/add/plaid' component={AddPlaid} queries={viewerQuery}/>
@@ -54,7 +58,6 @@ export default (
 // import FinicityConnect from 'views/finicityConnect';
 // import Buckets from 'views/buckets';
 // import Bucket from 'views/bucket';
-// import Incoming from 'views/incoming';
 
 
 // export default (

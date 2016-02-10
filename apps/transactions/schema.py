@@ -2,14 +2,14 @@
 import graphene
 import django_filters
 
-from apps.core.schema import OwnedNode, OwnedFilterConnectionField
+from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.types import Money
 from .models import Transaction
 
 
 class TransactionFilter(django_filters.FilterSet):
     is_transfer = django_filters.BooleanFilter(
-        name='transfer_to',
+        name='transfer_pair',
         lookup_type='isnull',
         exclude=True,
     )
@@ -26,7 +26,7 @@ class TransactionFilter(django_filters.FilterSet):
         )
 
 
-class TransactionNode(OwnedNode):
+class TransactionNode(SWNode):
     amount = graphene.Field(Money)
 
     class Meta:
@@ -38,17 +38,18 @@ class TransactionNode(OwnedNode):
             'amount',
             'category',
             'account',
-            'transfer_to',
+            'transfer_pair',
             'pending',
         )
-        filter_fields = (
 
-        )
+    @staticmethod
+    def get_queryset(queryset, args, info):
+        return queryset.filter(account__disabled=False)
 
 
 class TransactionsQuery(graphene.ObjectType):
     transaction = graphene.relay.NodeField(TransactionNode)
-    transactions = OwnedFilterConnectionField(
+    transactions = SWFilterConnectionField(
         TransactionNode,
         filterset_class=TransactionFilter,
     )

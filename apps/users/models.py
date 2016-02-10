@@ -80,7 +80,8 @@ class User(AbstractBaseUser):
     def income(self, month_start):
         income = Transaction.objects.filter(
             owner=self,
-            transfer_to__isnull=True,
+            transfer_pair__isnull=True,
+            account__disabled=False,
             date__lt=month_start + relativedelta(months=1),
             date__gte=month_start,
             amount__gt=0,
@@ -103,7 +104,8 @@ class User(AbstractBaseUser):
     def spent(self, month_start):
         return Transaction.objects.filter(
             owner=self,
-            transfer_to__isnull=True,
+            transfer_pair__isnull=True,
+            account__disabled=False,
             date__gte=month_start,
             date__lt=month_start + relativedelta(months=1),
             amount__lt=0,

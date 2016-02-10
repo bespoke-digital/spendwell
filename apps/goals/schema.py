@@ -1,18 +1,18 @@
 
 import graphene
 
-from apps.core.schema import OwnedNode, OwnedConnectionField
+from apps.core.fields import SWNode, SWConnectionField
 from apps.core.types import Money
 from .models import Goal, GoalMonth
 
 
-class GoalNode(OwnedNode):
+class GoalNode(SWNode):
     class Meta:
         model = Goal
         only_fields = ('name', 'months')
 
 
-class GoalMonthNode(OwnedNode):
+class GoalMonthNode(SWNode):
     name = graphene.Field(graphene.String())
     target_amount = graphene.Field(Money)
     filled_amount = graphene.Field(Money)
@@ -32,10 +32,10 @@ class GoalMonthNode(OwnedNode):
 
 class GoalsQuery(graphene.ObjectType):
     goal = graphene.relay.NodeField(GoalNode)
-    goals = OwnedConnectionField(GoalNode)
+    goals = SWConnectionField(GoalNode)
 
     goal_month = graphene.relay.NodeField(GoalMonthNode)
-    goal_months = OwnedConnectionField(GoalMonthNode)
+    goal_months = SWConnectionField(GoalMonthNode)
 
     class Meta:
         abstract = True

@@ -1,12 +1,12 @@
 
 import graphene
 
-from apps.core.schema import OwnedNode, OwnedConnectionField
+from apps.core.fields import SWNode, SWConnectionField
 from apps.core.types import Money
 from .models import Account
 
 
-class AccountNode(OwnedNode):
+class AccountNode(SWNode):
     current_balance = graphene.Field(Money)
     available_balance = graphene.Field(Money)
 
@@ -27,7 +27,7 @@ class AccountNode(OwnedNode):
 
 class AccountsQuery(graphene.ObjectType):
     account = graphene.relay.NodeField(AccountNode)
-    accounts = OwnedConnectionField(AccountNode)
+    accounts = SWConnectionField(AccountNode)
 
     class Meta:
         abstract = True

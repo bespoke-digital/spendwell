@@ -1,5 +1,6 @@
 
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
+import Relay from 'react-relay';
 
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
@@ -7,36 +8,37 @@ import TransactionList from 'components/transaction-list';
 import styles from 'sass/views/bucket.scss';
 
 
-const INCOMING_FILTER = {
-  type: 'hidden',
-  amount: { $gt: 0 },
-  transfer: false,
-};
-
-
-export default class Incoming extends Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-  };
-
-  constructor() {
-    super();
-    this.state = {};
-  }
-
+class Incoming extends Component {
   render() {
+    const { viewer } = this.props;
     return (
       <div className={`container ${styles.root}`}>
+
         <div className='heading'>
-          <Button onClick={()=> this.props.history.goBack()} className='back'>
+          <Button to='/app/' className='back'>
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
           <h1>Incoming</h1>
         </div>
 
-        <TransactionList filters={[INCOMING_FILTER]} editFilters={false}/>
+        <TransactionList transactions={viewer.transactions}/>
       </div>
     );
   }
 }
+
+Incoming = Relay.createContainer(Incoming, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        transactions(first: 1000, amountGt: 0, isTransfer: false) {
+          ${TransactionList.getFragment('transactions')}
+        }
+      }
+    `,
+  },
+});
+
+export default Incoming;
+

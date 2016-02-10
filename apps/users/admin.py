@@ -47,10 +47,12 @@ class UserAdmin(AuthUserAdmin):
 
     list_display = ('email', 'is_admin')
     list_filter = ('is_admin',)
-    fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Permissions', {'fields': ('is_admin',)}),
-    )
+    fieldsets = ((None, {'fields': (
+        'email',
+        'password',
+        'is_admin',
+        'estimated_income',
+    )}),)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

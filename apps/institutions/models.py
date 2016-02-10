@@ -61,5 +61,7 @@ class Institution(SWModel):
         for transaction_data in connect_response['transactions']:
             Transaction.objects.create_from_plaid(self, transaction_data)
 
+        Transaction.objects.detect_transfers(owner=self.owner)
+
         self.last_sync = timezone.now()
         self.save()

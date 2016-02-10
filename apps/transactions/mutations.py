@@ -4,8 +4,9 @@ from decimal import Decimal
 from datetime import datetime
 
 import graphene
+from graphene.relay import ClientIDMutation
 
-from apps.core.schema import OwnedConnectionField
+from apps.core.fields import SWConnectionField
 from apps.core.utils import instance_for_node_id
 from apps.accounts.schema import AccountNode
 
@@ -13,13 +14,13 @@ from .models import Transaction
 from .schema import TransactionNode
 
 
-class UploadCsvMutation(graphene.relay.ClientIDMutation):
+class UploadCsvMutation(ClientIDMutation):
     class Input:
         account_id = graphene.ID()
         csv = graphene.String()
 
     account = graphene.Field(AccountNode)
-    transactions = OwnedConnectionField(TransactionNode)
+    transactions = SWConnectionField(TransactionNode)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
@@ -57,8 +58,24 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
         )
 
 
+class DetectTransfersMutation(ClientIDMutation):
+    class Input:
+        pass
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
+        Transaction.objects.detect_transfers(owner=info.request_context.user)
+
+        return Cls(viewer=Viewer())
+
+
 class TransactionsMutations(graphene.ObjectType):
     upload_csv_mutation = graphene.Field(UploadCsvMutation)
+    detect_transfers = graphene.Field(DetectTransfersMutation)
 
     class Meta:
         abstract = True

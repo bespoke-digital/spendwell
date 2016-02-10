@@ -53,7 +53,7 @@ class Account(SWModel):
     )
     number_snippet = models.CharField(max_length=255, blank=True, null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
-    disabled = models.BooleanField(default=False)
+    disabled = models.BooleanField(default=False, db_index=True)
 
     objects = AccountManager()
 

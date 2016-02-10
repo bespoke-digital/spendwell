@@ -40,3 +40,41 @@ export class UploadCsvMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class DetectTransfersMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id,
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { detectTransfers }`;
+  }
+
+  getVariables() {
+    return {};
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on DetectTransfersMutation {
+        viewer {
+          transactions
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}

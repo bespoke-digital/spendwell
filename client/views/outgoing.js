@@ -1,5 +1,5 @@
 
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import Relay from 'react-relay';
 
 import Button from 'components/button';
@@ -9,10 +9,6 @@ import styles from 'sass/views/bucket.scss';
 
 
 class Outgoing extends Component {
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-  };
-
   render() {
     const { viewer } = this.props;
     return (
@@ -45,4 +41,3 @@ Outgoing = Relay.createContainer(Outgoing, {
 });
 
 export default Outgoing;
-

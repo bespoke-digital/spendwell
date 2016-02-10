@@ -1,11 +1,11 @@
 
 import graphene
-from apps.core.schema import OwnedNode, OwnedConnectionField
+from apps.core.fields import SWNode, SWConnectionField
 
 from .models import Institution
 
 
-class InstitutionNode(OwnedNode):
+class InstitutionNode(SWNode):
     can_sync = graphene.Field(graphene.Boolean())
 
     class Meta:
@@ -24,7 +24,7 @@ class InstitutionNode(OwnedNode):
 
 class InstitutionsQuery(graphene.ObjectType):
     institution = graphene.relay.NodeField(InstitutionNode)
-    institutions = OwnedConnectionField(InstitutionNode)
+    institutions = SWConnectionField(InstitutionNode)
 
     class Meta:
         abstract = True
