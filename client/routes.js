@@ -2,9 +2,6 @@
 import { Route, IndexRedirect, browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import { RelayRouter } from 'react-router-relay';
-import { Provider } from 'react-redux';
-
-import store from 'store';
 
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
@@ -18,33 +15,29 @@ import Incoming from 'views/incoming';
 import Transfers from 'views/transfers';
 
 
-const viewerQuery = {
-  viewer: ()=> Relay.QL`query { viewer }`,
-};
+const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
 export default (
-  <Provider store={store}>
-    <RelayRouter history={browserHistory}>
-      <Route path='app' component={App} queries={viewerQuery}>
-        <IndexRedirect to='dashboard'/>
-        <Route path='dashboard' component={Dashboard} queries={viewerQuery}/>
-        <Route path='dashboard/:year/:month' component={Dashboard} queries={viewerQuery}/>
+  <RelayRouter history={browserHistory}>
+    <Route path='app' component={App} queries={rootQuery}>
+      <IndexRedirect to='dashboard'/>
+      <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
+      <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
-        <Route path='goals/new' component={CreateGoal} queries={viewerQuery}/>
+      <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
 
-        <Route path='outgoing' component={Outgoing} queries={viewerQuery}/>
-        <Route path='incoming' component={Incoming} queries={viewerQuery}/>
-        <Route path='transfers' component={Transfers} queries={viewerQuery}/>
+      <Route path='outgoing' component={Outgoing} queries={rootQuery}/>
+      <Route path='incoming' component={Incoming} queries={rootQuery}/>
+      <Route path='transfers' component={Transfers} queries={rootQuery}/>
 
-        <Route path='accounts' component={Accounts} queries={viewerQuery}/>
-        <Route path='accounts/add/plaid' component={AddPlaid} queries={viewerQuery}/>
-        <Route path='accounts/add/upload' component={AddCsv} queries={viewerQuery}/>
-        <Route path='accounts/:accountId' component={Accounts} queries={viewerQuery}/>
+      <Route path='accounts' component={Accounts} queries={rootQuery}/>
+      <Route path='accounts/add/plaid' component={AddPlaid} queries={rootQuery}/>
+      <Route path='accounts/add/upload' component={AddCsv} queries={rootQuery}/>
+      <Route path='accounts/:accountId' component={Accounts} queries={rootQuery}/>
 
-        <Route path='categories' component={Categories} queries={viewerQuery}/>
-      </Route>
-    </RelayRouter>
-  </Provider>
+      <Route path='categories' component={Categories} queries={rootQuery}/>
+    </Route>
+  </RelayRouter>
 );
 
 

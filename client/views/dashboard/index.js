@@ -25,8 +25,10 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log('this.props.viewer', this.props.viewer);
-    if (!this.props.viewer.summary) return <div className='container'>No Summary</div>;
+    if (!this.props.viewer.summary) {
+      console.log('fuck this shit', this.props);
+      return <div className='container'>No Summary</div>;
+    }
 
     const {
       params: { year, month },
@@ -169,9 +171,12 @@ class Dashboard extends Component {
   }
 }
 
+const now = moment();
+
 Dashboard = Relay.createContainer(Dashboard, {
   initialVariables: {
-    date: moment().format('YYYY/MM'),
+    month: now.format('MM'),
+    year: now.format('YYYY'),
   },
   prepareVariables: (variables)=> {
     if (variables.year && variables.month)

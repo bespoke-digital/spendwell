@@ -23,10 +23,12 @@ class Summary(graphene.ObjectType):
         return super(Summary, self).__init__(*args, **kwargs)
 
     def resolve_goal_months(self, args, info):
-        return GoalMonth.objects.filter(
+        qs = GoalMonth.objects.filter(
             goal__owner=info.request_context.user,
             month_start=self.current_month,
         )
+        print('qs', qs)
+        return qs
 
 
 class UsersQuery(graphene.ObjectType):
