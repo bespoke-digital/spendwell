@@ -11,7 +11,7 @@ from .schema import AccountNode
 AccountEdge = Edge.for_node(AccountNode)
 
 
-class AddAccountMutation(graphene.relay.ClientIDMutation):
+class CreateAccountMutation(graphene.relay.ClientIDMutation):
     class Input:
         institution_id = graphene.ID()
         name = graphene.String()
@@ -26,14 +26,14 @@ class AddAccountMutation(graphene.relay.ClientIDMutation):
             institution=instance_for_node_id(input.get('institution_id'), info),
             name=input['name'],
         )
-        return AddAccountMutation(
+        return CreateAccountMutation(
             institution=account.institution,
             account_edge=AccountEdge(cursor='fake', node=account)
         )
 
 
 class AccountsMutations(graphene.ObjectType):
-    add_account = graphene.Field(AddAccountMutation)
+    create_account = graphene.Field(CreateAccountMutation)
 
     class Meta:
         abstract = True

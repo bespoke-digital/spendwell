@@ -1,5 +1,5 @@
 
-from graphene.contrib.django.filter import DjangoFilterConnectionField
+from graphene.contrib.django.fields import DjangoConnectionField
 from graphene.contrib.django.types import DjangoNode
 
 
@@ -27,7 +27,7 @@ class OwnedNode(DjangoNode):
             return None
 
 
-class OwnedConnectionField(DjangoFilterConnectionField):
+class OwnedConnectionField(DjangoConnectionField):
     def get_queryset(self, queryset, args, info):
         queryset = queryset.filter(owner=info.request_context.user)
         return super(OwnedConnectionField, self).get_queryset(queryset, args, info)

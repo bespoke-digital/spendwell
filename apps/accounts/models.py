@@ -1,5 +1,4 @@
 
-from django.utils.timezone import now
 from django.db import models
 
 from apps.core.models import SWModel, SWManager
@@ -7,25 +6,6 @@ from apps.core.models import SWModel, SWManager
 
 class AccountManager(SWManager):
     def create_from_plaid(self, institution, json_data):
-        '''
-        Sample Data:
-        {
-          '_id':'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-          '_user':'eJXpMzpR65FP4RYno6rzuA7OZjd9n3Hna0RYa',
-          '_item':'KdDjmojBERUKx3JkDd9RuxA5EvejA4SENO4AA',
-          'institution_type':'fake_institution',
-          'type':'depository',
-          'subtype':'checking',
-          'meta':{
-            'name':'Plaid Checking',
-            'number':'1702'
-          },
-          'balance':{
-            'current':1253.32,
-            'available':1081.78
-          }
-        }
-        '''
         try:
             account = Account.objects.get(plaid_id=json_data['_id'])
         except Account.DoesNotExist:
@@ -41,18 +21,26 @@ class AccountManager(SWManager):
         account.number_snippet = json_data['meta']['number']
         account.balance_current = json_data['balance']['current']
         account.balance_available = json_data['balance']['available']
-        account.last_updated = now()
 
         account.save()
         return account
 
 
 class Account(SWModel):
-    owner = models.ForeignKey('users.User', related_name='accounts')
+    owner = models.ForeignKey(
+        'users.User',
+        related_name='accounts',
+        on_delete=models.CASCADE,
+    )
+    institution = models.ForeignKey(
+        'institutions.Institution',
+        related_name='accounts',
+        on_delete=models.CASCADE,
+    )
 
-    institution = models.ForeignKey('institutions.Institution', related_name='accounts')
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, default='chequing')
+    subtype = models.CharField(max_length=255, null=True)
     balance_current = models.DecimalField(
         decimal_places=2,
         max_digits=12,
@@ -63,11 +51,8 @@ class Account(SWModel):
         max_digits=12,
         null=True, blank=True,
     )
-    last_updated = models.DateTimeField(auto_now_add=True)
-
     number_snippet = models.CharField(max_length=255, blank=True, null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
-    subtype = models.CharField(max_length=255, null=True)
 
     objects = AccountManager()
 

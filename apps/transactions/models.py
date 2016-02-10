@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from django.db import models
 from django.db.models.signals import post_save
+from django.contrib.postgres.fields import JSONField
 from django.dispatch import receiver
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
@@ -25,41 +26,6 @@ class TransactionManager(SWManager):
         return self.get_queryset().sum()
 
     def create_from_plaid(self, institution, json_data):
-        '''
-        Sample Data:
-        {
-            '_account':'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-            '_id':'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR'
-            'name':'Gregorys Coffee',
-            'category':[
-                'Food and Drink',
-                'Restaurants',
-                'Coffee Shop'
-            ],
-            'pending':False,
-            'amount':3.19,
-            'date':'2014-06-21',
-            'meta':{
-                'location':{
-                    'city':'New York',
-                    'address':'874 Avenue of the Americas',
-                    'state':'NY'
-                }
-            },
-            'type':{
-                'primary':'place'
-            },
-            'category_id':'13005043',
-            'score':{
-                'name':0.2,
-                'location':{
-                    'city':1,
-                    'address':1,
-                    'state':1
-                }
-            },
-        }
-        '''
         try:
             transaction = Transaction.objects.get(plaid_id=json_data['_id'])
         except Transaction.DoesNotExist:
@@ -75,40 +41,59 @@ class TransactionManager(SWManager):
         transaction.description = json_data['name']
         transaction.amount = -Decimal(json_data['amount'])
         transaction.date = datetime(*map(int, json_data['date'].split('-')))
-
-        if json_data['meta'].get('location'):
-            transaction.address_city = json_data['meta']['location'].get('city')
-            transaction.address_street = json_data['meta']['location'].get('street')
-            transaction.address_state = json_data['meta']['location'].get('state')
+        transaction.pending = json_data['pending']
+        transaction.location = json_data['meta'].get('location', {})
+        transaction.location['score'] = json_data.get('score')
 
         transaction.save()
         return transaction
 
 
 class Transaction(SWModel):
-    owner = models.ForeignKey('users.User', related_name='transactions')
-
+    owner = models.ForeignKey(
+        'users.User',
+        related_name='transactions',
+        on_delete=models.CASCADE,
+    )
     account = models.ForeignKey(
         'accounts.Account',
         related_name='transactions',
         on_delete=models.CASCADE,
     )
+    category = models.ForeignKey(
+        'categories.Category',
+        related_name='transactions',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    transfer_to = models.ForeignKey(
+        'accounts.Account',
+        related_name='incoming_transfers',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    transfer_pair = models.ForeignKey(
+        'self',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    bucket = models.ForeignKey(
+        'buckets.Bucket',
+        related_name='transactions',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
     description = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
     date = models.DateTimeField()
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
-    transfer_to = models.ForeignKey('accounts.Account', related_name='incoming_transfers', null=True)
-    transfer_pair = models.ForeignKey('self', null=True)
-
-    bucket = models.ForeignKey('buckets.Bucket', related_name='transactions', null=True)
-    category = models.ForeignKey('categories.Category', related_name='transactions', null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
-    address_city = models.CharField(max_length=255, null=True)
-    address_street = models.CharField(max_length=255, null=True)
-    address_state = models.CharField(max_length=255, null=True)
+    pending = models.BooleanField(default=False)
+    location = JSONField(null=True)
 
-    source = models.CharField(max_length=255, choices=(
+    source = models.CharField(max_length=255, default='plaid', choices=(
         ('csv', 'CSV'),
         ('plaid', 'Plaid Connect'),
     ))

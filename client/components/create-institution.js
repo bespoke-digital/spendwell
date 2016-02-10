@@ -7,14 +7,14 @@ import TextInput from 'components/text-input';
 import Button from 'components/button';
 import Modal from 'components/modal';
 
-import { AddInstitutionMutation } from 'mutations/institutions';
+import { CreateInstitutionMutation } from 'mutations/institutions';
 
 
 @relayContainer({
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${AddInstitutionMutation.getFragment('viewer')}
+        ${CreateInstitutionMutation.getFragment('viewer')}
       }
     `,
   },
@@ -36,7 +36,7 @@ export default class CreateInstitution extends Component {
 
     if (!name) return;
 
-    Relay.Store.commitUpdate(new AddInstitutionMutation({ viewer, name }), {
+    Relay.Store.commitUpdate(new CreateInstitutionMutation({ viewer, name }), {
       onSuccess: onClose,
       onFailure: console.log.bind(console, 'onFailure'),
     });

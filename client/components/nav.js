@@ -13,7 +13,7 @@ export default function({ open, toggleNav }) {
         <li><Link onClick={toggleNav} to='/app/'>Dashboard</Link></li>
         <li><Link onClick={toggleNav} to='/app/accounts'>Accounts</Link></li>
         <li><Link onClick={toggleNav} to='/app/categories'>Categories</Link></li>
-        <li><a href='/logout'>Logout</a></li>
+        <li><a href='/logout?next=/login'>Logout</a></li>
       </ul>
     </div>
   );

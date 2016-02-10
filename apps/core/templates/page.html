@@ -17,5 +17,8 @@
 
   {% block content %}{% endblock %}
 
+  {% if REACT_HOT_LOADING %}
+    <script src="{% static 'dist/hotLoader.js' %}"></script>
+  {% endif %}
   <script src="{% static 'dist/pages.js' %}"></script>
 {% endblock %}

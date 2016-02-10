@@ -9,12 +9,6 @@ class SWQuerySet(models.QuerySet):
     def as_json(self):
         return self.as_serializer().as_json()
 
-    def delete(self, hard=False):
-        if hard:
-            super(SWQuerySet, self).delete()
-        else:
-            self.update(deleted=True)
-
     def sum(self, field):
         return self.aggregate(s=models.Sum(field))['s'] or 0
 
@@ -24,16 +18,13 @@ class SWManager(models.Manager):
     queryset_class = SWQuerySet
 
     def get_queryset(self):
-        return self.queryset_class(self.model, using=self._db).filter(deleted=False)
+        return self.queryset_class(self.model, using=self._db)
 
     def as_serializer(self):
         return self.get_queryset().as_serializer()
 
     def as_json(self):
         return self.get_queryset().as_json()
-
-    def delete(self, **kwargs):
-        return self.get_queryset().delete(**kwargs)
 
     def sum(self):
         return self.get_queryset().sum()
@@ -42,19 +33,11 @@ class SWManager(models.Manager):
 class SWModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    deleted = models.BooleanField(default=False)
 
     objects = SWManager()
 
     class Meta:
         abstract = True
-
-    def delete(self, hard=False):
-        if hard:
-            super(SWModel, self).delete()
-        else:
-            self.deleted = True
-            self.save()
 
     @classmethod
     def get_serializer_class(Cls):

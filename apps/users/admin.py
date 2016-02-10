@@ -49,13 +49,12 @@ class UserAdmin(AuthUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('anme',)}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'anme', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2'),
         }),
     )
     search_fields = ('email',)

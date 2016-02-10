@@ -2,7 +2,7 @@
 import Relay from 'react-relay';
 
 
-export class AddAccountMutation extends Relay.Mutation {
+export class CreateAccountMutation extends Relay.Mutation {
   static fragments = {
     institution: ()=> Relay.QL`
       fragment on InstitutionNode {
@@ -12,7 +12,7 @@ export class AddAccountMutation extends Relay.Mutation {
   };
 
   getMutation() {
-    return Relay.QL`mutation { addAccount }`;
+    return Relay.QL`mutation { createAccount }`;
   }
 
   getVariables() {
@@ -24,7 +24,7 @@ export class AddAccountMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on AddAccountMutation {
+      fragment on CreateAccountMutation {
         institution { accounts }
         accountEdge
       }

@@ -34,5 +34,8 @@ class GoalsQuery(graphene.ObjectType):
     goal = graphene.relay.NodeField(GoalNode)
     goals = OwnedConnectionField(GoalNode)
 
+    goal_month = graphene.relay.NodeField(GoalMonthNode)
+    goal_months = OwnedConnectionField(GoalMonthNode)
+
     class Meta:
         abstract = True

@@ -2,31 +2,17 @@
 import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 import { Form } from 'formsy-react';
 
 import Input from 'components/forms/input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
+import Button from 'components/button';
+import { ConnectInstitutionMutation } from 'mutations/institutions';
 import styles from 'sass/views/plaid-add.scss';
 
 
-@relayContainer({
-  fragments: {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        institutions(first: 1) {
-          edges {
-            node {
-              name
-            }
-          }
-        }
-      }
-    `,
-  },
-})
-export default class PlaidAdd extends Component {
+class AddPlaid extends Component {
   constructor() {
     super();
     this.state = { results: [] };
@@ -50,7 +36,8 @@ export default class PlaidAdd extends Component {
       .then((results)=> this.setState({ results }));
   }
 
-  selectFi(fi) {
+  selectFi(institution) {
+
     window.Plaid.create({
       clientName: 'Moneybase',
       key: '4b747132cf8c427bec79f00e0dcb4a',
@@ -58,24 +45,40 @@ export default class PlaidAdd extends Component {
       longTail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
-        this.setState({ playItAgain: { id: fi.id, publicToken } });
-
-        console.log('connectInstitution', { id: fi.id, publicToken });
+        this.setState({ playItAgain: { institution, publicToken } });
+        this.connect({ institution, publicToken });
       },
-    }).open(fi.id);
+    }).open(institution.id);
+  }
+
+  connect({ institution, publicToken }) {
+    const { viewer } = this.props;
+    console.log('ConnectInstitutionMutation', { viewer, institution, publicToken });
+    Relay.Store.commitUpdate(
+      new ConnectInstitutionMutation({ viewer, institution, publicToken }),
+      {
+        onSuccess: console.log.bind(console, 'onSuccess'),
+        onFailure: console.log.bind(console, 'onFailure'),
+      },
+    );
   }
 
   render() {
+    const { playItAgain, results } = this.state;
     return (
       <div className={`container ${styles.root}`}>
-        <h1>Connect Plaid Accounts</h1>
+        <h1>Connect Plaid</h1>
+
+        {playItAgain ?
+          <Button onClick={()=> this.connect(playItAgain)}>Replay</Button>
+        : null}
 
         <Form>
           <Input name='query' label='Search' onChange={this.handleSearch}/>
         </Form>
 
         <CardList>
-          {this.state.results.map((fi)=> (
+          {results.map((fi)=> (
             <Card
               className='fi'
               onClick={this.selectFi.bind(this, fi)}
@@ -95,3 +98,16 @@ export default class PlaidAdd extends Component {
     );
   }
 }
+
+
+AddPlaid = Relay.createContainer(AddPlaid, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${ConnectInstitutionMutation.getFragment('viewer')}
+      }
+    `,
+  },
+});
+
+export default AddPlaid;

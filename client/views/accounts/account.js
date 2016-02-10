@@ -67,12 +67,12 @@ export default class Account extends Component {
                 </tr>
               </thead>
               <tbody>
-                {account.transactions.edges.map((edge)=> (
-                  <tr key={edge.node.id}>
-                    <td>{edge.node.description}</td>
-                    <td>{edge.node.category.name}</td>
-                    <td>{moment(edge.node.date).format('LL')}</td>
-                    <td><Money amount={edge.node.amount}/></td>
+                {account.transactions.edges.map(({ node })=> (
+                  <tr key={node.id}>
+                    <td>{node.description}</td>
+                    <td>{node.category ? node.category.name : ''}</td>
+                    <td>{moment(node.date).format('LL')}</td>
+                    <td><Money amount={node.amount}/></td>
                   </tr>
                 ))}
               </tbody>

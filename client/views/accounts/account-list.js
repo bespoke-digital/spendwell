@@ -34,8 +34,8 @@ export default class AccountList extends Component {
     return (
       <div>
         <CardList>
-          {institution.accounts.edges.map((edge)=>
-            <Account key={edge.node.id} account={edge.node}/>
+          {institution.accounts.edges.map(({ node })=>
+            <Account key={node.id} account={node}/>
           )}
         </CardList>
       </div>

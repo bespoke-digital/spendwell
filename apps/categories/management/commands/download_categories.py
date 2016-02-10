@@ -2,8 +2,8 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
+from tqdm import tqdm
 from plaid import Client
-import progressbar
 
 from apps.categories.models import Category
 
@@ -22,9 +22,7 @@ class Command(BaseCommand):
         for category_data in plaid_client.categories().json():
             levels[len(category_data['hierarchy']) - 1].append(category_data)
 
-        bar = progressbar.ProgressBar(max_value=len(plaid_client.categories().json()))
-        bar_progress = 0
-        bar.update(bar_progress)
+        bar = tqdm(total=len(plaid_client.categories().json()))
 
         for level in levels:
             for category_data in level:
@@ -44,5 +42,5 @@ class Command(BaseCommand):
 
                 category.save()
 
-                bar_progress += 1
-                bar.update(bar_progress)
+                bar.update()
+        bar.close()

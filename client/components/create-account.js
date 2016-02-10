@@ -7,14 +7,14 @@ import TextInput from 'components/text-input';
 import Button from 'components/button';
 import Modal from 'components/modal';
 
-import { AddAccountMutation } from 'mutations/accounts';
+import { CreateAccountMutation } from 'mutations/accounts';
 
 
 @relayContainer({
   fragments: {
     institution: ()=> Relay.QL`
       fragment on InstitutionNode {
-        ${AddAccountMutation.getFragment('institution')}
+        ${CreateAccountMutation.getFragment('institution')}
       }
     `,
   },
@@ -36,7 +36,7 @@ export default class CreateAccount extends Component {
 
     if (!name) return;
 
-    Relay.Store.commitUpdate(new AddAccountMutation({ institution, name }), {
+    Relay.Store.commitUpdate(new CreateAccountMutation({ institution, name }), {
       onSuccess: onClose,
       onFailure: console.log.bind(console, 'onFailure'),
     });

@@ -6,6 +6,6 @@ from .models import Account
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'deleted')
+    pass
 
 admin_site.register(Account, AccountAdmin)

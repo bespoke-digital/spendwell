@@ -7,6 +7,12 @@
     background-color: $gray-lighter;
   }
 
+  .last-sync {
+    display: inline-block;
+    margin-right: 10px;
+    color: $gray-light;
+  }
+
   .card-list {
     margin-bottom: 20px;
 

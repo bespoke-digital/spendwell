@@ -4,7 +4,7 @@ import Relay from 'react-relay';
 import relayContainer from 'relay-decorator';
 
 import Button from 'components/button';
-import AccountList from './account-list';
+import Institution from './institution';
 import styles from './styles';
 
 
@@ -16,7 +16,7 @@ import styles from './styles';
           node {
             id
             name
-            ${AccountList.getFragment('institution')}
+            ${Institution.getFragment('institution')}
           }
         }
       }
@@ -30,7 +30,7 @@ export default class InstitutionsView extends Component {
     return (
       <div className={`container ${styles.root}`}>
         <div className='heading'>
-          <h1>Institutions</h1>
+          <h1>Accounts</h1>
           <Button to='/app/accounts/add/plaid'>
             <i className='fa fa-plus'/>
             Add w/ Plaid
@@ -41,14 +41,9 @@ export default class InstitutionsView extends Component {
           </Button>
         </div>
 
-        {institutions.edges.map((edge)=> (
-          <div key={edge.node.id}>
-            <div className='heading'>
-              <h3>{edge.node.name}</h3>
-            </div>
-            <AccountList institution={edge.node}/>
-          </div>
-        ))}
+        {institutions.edges.map(({ node })=>
+          <Institution key={node.id} institution={node}/>
+        )}
       </div>
     );
   }
