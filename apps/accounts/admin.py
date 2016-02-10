@@ -6,6 +6,6 @@ from .models import Account
 
 
 class AccountAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'owner', 'disabled')
 
 admin_site.register(Account, AccountAdmin)

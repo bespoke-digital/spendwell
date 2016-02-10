@@ -48,8 +48,8 @@ export default class Account extends Component {
             {account.name}
           </div>
           <div>
-            {account.balance_current ?
-              <Money amount={account.balance_current}/>
+            {account.currentBalance ?
+              <Money amount={account.currentBalance}/>
             : null}
           </div>
           {!account.disabled ?

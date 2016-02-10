@@ -13,6 +13,7 @@ import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
 import App from 'views/app';
 import CreateGoal from 'views/create-goal';
+import Outgoing from 'views/outgoing';
 
 
 const viewerQuery = {
@@ -29,6 +30,8 @@ export default (
 
         <Route path='goals/new' component={CreateGoal} queries={viewerQuery}/>
         {/*<Route path='goals/:id' component={Goal} queries={viewerQuery}/>*/}
+
+        <Route path='outgoing' component={Outgoing} queries={viewerQuery}/>
 
         <Route path='accounts' component={Accounts} queries={viewerQuery}/>
         <Route path='accounts/add/plaid' component={AddPlaid} queries={viewerQuery}/>
@@ -52,7 +55,6 @@ export default (
 // import Buckets from 'views/buckets';
 // import Bucket from 'views/bucket';
 // import Incoming from 'views/incoming';
-// import Outgoing from 'views/outgoing';
 
 
 // export default (
@@ -65,7 +67,6 @@ export default (
 
 //     <Route component={App}>
 //       <Route path='/incoming' component={Incoming}/>
-//       <Route path='/outgoing' component={Outgoing}/>
 
 //       <Route path='/buckets' component={Buckets}/>
 //       <Route path='/buckets/:id' component={Bucket}/>

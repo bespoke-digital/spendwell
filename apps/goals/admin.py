@@ -6,7 +6,12 @@ from .models import Goal, GoalMonth
 
 
 class GoalAdmin(admin.ModelAdmin):
-    pass
+    list_displat = ('name', 'owner')
 
 admin_site.register(Goal, GoalAdmin)
-admin_site.register(GoalMonth)
+
+
+class GoalMonthAdmin(admin.ModelAdmin):
+    list_display = ('goal', 'month_start')
+
+admin_site.register(GoalMonth, GoalMonthAdmin)

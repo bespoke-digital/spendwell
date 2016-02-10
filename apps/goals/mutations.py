@@ -23,7 +23,7 @@ class AddGoalMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        monthly_amount = Decimal(input['monthly_amount'])
+        monthly_amount = Decimal(input['monthly_amount']) / Decimal('100')
         if monthly_amount > 0:
             monthly_amount = -monthly_amount
 

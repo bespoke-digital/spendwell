@@ -2,10 +2,14 @@
 import graphene
 
 from apps.core.schema import OwnedNode, OwnedConnectionField
+from apps.core.types import Money
 from .models import Account
 
 
 class AccountNode(OwnedNode):
+    current_balance = graphene.Field(Money)
+    available_balance = graphene.Field(Money)
+
     class Meta:
         model = Account
         filter_order_by = ['name']

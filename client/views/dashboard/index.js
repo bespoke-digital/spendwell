@@ -75,10 +75,10 @@ class Dashboard extends Component {
             In
             <div className='amount'><Money amount={income}/></div>
           </Link>
-          <div>
+          <Link to='/app/outgoing'>
             Out
             <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
-          </div>
+          </Link>
           <div>
             Net
             <div className='amount'><Money amount={net}/></div>

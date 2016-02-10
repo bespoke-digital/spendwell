@@ -1,36 +1,24 @@
 
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import moment from 'moment';
-import reactMixin from 'react-mixin';
+import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Money from 'components/money';
 
 
-@reactMixin.decorate(ReactMeteorData)
-export default class Transaction extends Component {
-  static propTypes = {
-    transaction: PropTypes.object.isRequired,
-  };
-
-  getMeteorData() {
-    return {
-      category: this.props.transaction.category(),
-    };
-  }
-
+class Transaction extends Component {
   render() {
     const { transaction } = this.props;
-    const { category } = this.data;
 
     return (
-      <Card key={transaction.id} className='transaction'>
+      <Card className='transaction'>
         <div className='summary'>
           <div className='name'>
-            {transaction.name}
+            {transaction.description}
           </div>
           <div className='category'>
-            {category ? category.name : null}
+            {transaction.category ? transaction.category.name : null}
           </div>
           <div className='date'>
             {moment(transaction.date).format('Do')}
@@ -43,3 +31,20 @@ export default class Transaction extends Component {
     );
   }
 }
+
+Transaction = Relay.createContainer(Transaction, {
+  fragments: {
+    transaction: ()=> Relay.QL`
+      fragment on TransactionNode {
+        description
+        amount
+        date
+        category {
+          name
+        }
+      }
+    `,
+  },
+});
+
+export default Transaction;

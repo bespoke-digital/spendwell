@@ -55,7 +55,6 @@ class Institution(SWModel):
 
         connect_response = plaid_client.connect_get().json()
 
-        print(connect_response)
         for account_data in connect_response['accounts']:
             Account.objects.create_from_plaid(self, account_data)
 
