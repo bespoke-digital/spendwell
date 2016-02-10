@@ -50,3 +50,79 @@ export class CreateAccountMutation extends Relay.Mutation {
     };
   }
 }
+
+
+export class DisableAccountMutation extends Relay.Mutation {
+  static fragments = {
+    account: ()=> Relay.QL`
+      fragment on AccountNode {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { disableAccount }`;
+  }
+
+  getVariables() {
+    return { accountId: this.props.account.id };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on DisableAccountMutation {
+        account {
+          disabled
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        account: this.props.account.id,
+      },
+    }];
+  }
+}
+
+
+export class EnableAccountMutation extends Relay.Mutation {
+  static fragments = {
+    account: ()=> Relay.QL`
+      fragment on AccountNode {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { enableAccount }`;
+  }
+
+  getVariables() {
+    return { accountId: this.props.account.id };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on EnableAccountMutation {
+        account {
+          disabled
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        account: this.props.account.id,
+      },
+    }];
+  }
+}

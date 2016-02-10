@@ -32,8 +32,38 @@ class CreateAccountMutation(graphene.relay.ClientIDMutation):
         )
 
 
+class DisableAccountMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        account_id = graphene.ID()
+
+    account = graphene.Field(AccountNode)
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        account = instance_for_node_id(input.get('account_id'), info)
+        account.disabled = True
+        account.save()
+        return DisableAccountMutation(account=account)
+
+
+class EnableAccountMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        account_id = graphene.ID()
+
+    account = graphene.Field(AccountNode)
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        account = instance_for_node_id(input.get('account_id'), info)
+        account.disabled = False
+        account.save()
+        return EnableAccountMutation(account=account)
+
+
 class AccountsMutations(graphene.ObjectType):
     create_account = graphene.Field(CreateAccountMutation)
+    disable_account = graphene.Field(DisableAccountMutation)
+    enable_account = graphene.Field(EnableAccountMutation)
 
     class Meta:
         abstract = True

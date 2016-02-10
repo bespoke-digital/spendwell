@@ -30,7 +30,7 @@ class AddPlaid extends Component {
   }
 
   handleSearch(query) {
-    fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
+    fetch(`https://${window.ENV.PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
         `/institutions/search?p=connect&q=${query}`)
       .then((response)=> response.json())
       .then((results)=> this.setState({ results }));
@@ -39,11 +39,11 @@ class AddPlaid extends Component {
   selectFi(institution) {
 
     window.Plaid.create({
-      clientName: 'Moneybase',
-      key: '4b747132cf8c427bec79f00e0dcb4a',
+      clientName: 'SpendWell',
+      key: window.ENV.PLAID_PUBLIC_KEY,
       product: 'connect',
       longTail: true,
-      env: PLAID_PRODUCTION ? 'production' : 'tartan',
+      env: window.ENV.PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
         this.setState({ playItAgain: { institution, publicToken } });
         this.connect({ institution, publicToken });

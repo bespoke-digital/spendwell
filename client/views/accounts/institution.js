@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
@@ -44,7 +45,7 @@ class Institution extends Component {
           </div>
         </Card>
         <CardList>
-          {institution.accounts.edges.map(({ node })=>
+          {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
             <Account key={node.id} account={node}/>
           )}
         </CardList>
@@ -66,6 +67,7 @@ Institution = Relay.createContainer(Institution, {
             node {
               ${Account.getFragment('account')}
               id
+              disabled
             }
           }
         }

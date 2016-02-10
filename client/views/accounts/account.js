@@ -2,42 +2,36 @@
 import { Component } from 'react';
 import moment from 'moment';
 import Relay from 'react-relay';
-import relayContainer from 'relay-decorator';
 
 import Card from 'components/card';
+import Button from 'components/button';
 import Money from 'components/money';
+import {
+  DisableAccountMutation,
+  EnableAccountMutation,
+} from 'mutations/accounts';
 
 
-@relayContainer({
-  initialVariables: {
-    open: false,
-  },
-  fragments: {
-    account: ()=> Relay.QL`
-      fragment on AccountNode {
-        id
-        name
-        transactions(first: 100) @include(if: $open) {
-          edges {
-            node {
-              id
-              description
-              date
-              amount
-              category {
-                name
-              }
-            }
-          }
-        }
-      }
-    `,
-  },
-})
 export default class Account extends Component {
   toggleOpen() {
     const { open } = this.props.relay.variables;
     this.props.relay.setVariables({ open: !open });
+  }
+
+  disable() {
+    const { account } = this.props;
+    Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
+      onSuccess: console.log.bind(console, 'onSuccess'),
+      onFailure: console.log.bind(console, 'onFailure'),
+    });
+  }
+
+  enable() {
+    const { account } = this.props;
+    Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
+      onSuccess: console.log.bind(console, 'onSuccess'),
+      onFailure: console.log.bind(console, 'onFailure'),
+    });
   }
 
   render() {
@@ -45,14 +39,28 @@ export default class Account extends Component {
     const { account } = this.props;
 
     return (
-      <Card expanded={open} className='account'>
+      <Card
+        className={`account ${account.disabled ? 'disabled' : ''}`}
+        expanded={open}
+      >
         <div className='summary' onClick={::this.toggleOpen}>
           <div>
             {account.name}
           </div>
           <div>
-            {/*${account.balance.current ? account.balance.current : account.balance}*/}
+            {account.balance_current ?
+              <Money amount={account.balance_current}/>
+            : null}
           </div>
+          {!account.disabled ?
+            <Button onClick={::this.disable} propagateClick={false}>
+              Disable
+            </Button>
+          :
+            <Button onClick={::this.enable} propagateClick={false}>
+              Enable
+            </Button>
+          }
         </div>
 
         {open ? (
@@ -83,3 +91,36 @@ export default class Account extends Component {
     );
   }
 }
+
+Account = Relay.createContainer(Account, {
+  initialVariables: {
+    open: false,
+  },
+  fragments: {
+    account: ()=> Relay.QL`
+      fragment on AccountNode {
+        ${DisableAccountMutation.getFragment('account')}
+        ${EnableAccountMutation.getFragment('account')}
+        id
+        name
+        currentBalance
+        disabled
+        transactions(first: 100) @include(if: $open) {
+          edges {
+            node {
+              id
+              description
+              date
+              amount
+              category {
+                name
+              }
+            }
+          }
+        }
+      }
+    `,
+  },
+});
+
+export default Account;

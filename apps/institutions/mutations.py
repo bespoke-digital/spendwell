@@ -50,7 +50,6 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        request = info.request_context
         plaid_client = Client(
             client_id=settings.PLAID_CLIENT_ID,
             secret=settings.PLAID_SECRET,
@@ -59,12 +58,13 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         token_response = plaid_client.exchange_token(input['public_token']).json()
         institution_response = plaid_client.institution(input['institutionId']).json()
 
-        institution = Institution.objects.create(
-            owner=request.user,
-            access_token=token_response['access_token'],
-            name=institution_response['name'],
+        institution, created = Institution.objects.get_or_create(
+            owner=info.request_context.user,
             plaid_id=input['institutionId'],
+            defaults={'name': institution_response['name']},
         )
+        institution.access_token = token_response['access_token']
+        institution.save()
 
         return ConnectInstitutionMutation(
             viewer=Viewer(),

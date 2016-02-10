@@ -1,5 +1,13 @@
 
 from django.db import models
+from django.conf import settings
+
+from plaid import Client
+
+if settings.PLAID_PRODUCTION:
+    Client.config({'url': 'https://api.plaid.com'})
+else:
+    Client.config({'url': 'https://tartan.plaid.com'})
 
 
 class SWQuerySet(models.QuerySet):

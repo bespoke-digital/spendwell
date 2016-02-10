@@ -13,10 +13,11 @@ class AccountNode(OwnedNode):
             'name',
             'type',
             'subtype',
-            'balance_current',
-            'balance_available',
+            'current_balance',
+            'available_balance',
             'number_snippet',
             'transactions',
+            'disabled',
         )
 
 

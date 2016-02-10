@@ -41,18 +41,19 @@ class Account(SWModel):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255, default='chequing')
     subtype = models.CharField(max_length=255, null=True)
-    balance_current = models.DecimalField(
+    current_balance = models.DecimalField(
         decimal_places=2,
         max_digits=12,
         null=True, blank=True,
     )
-    balance_available = models.DecimalField(
+    available_balance = models.DecimalField(
         decimal_places=2,
         max_digits=12,
         null=True, blank=True,
     )
     number_snippet = models.CharField(max_length=255, blank=True, null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    disabled = models.BooleanField(default=False)
 
     objects = AccountManager()
 

@@ -32,6 +32,9 @@ class Institution(SWModel):
 
     objects = InstitutionManager()
 
+    class Meta:
+        unique_together = ('plaid_id', 'owner')
+
     @classmethod
     def get_serializer_class(Cls):
         from .serializers import InstitutionSerializer
