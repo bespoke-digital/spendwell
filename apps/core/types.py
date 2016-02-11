@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from decimal import Decimal
 import delorean
 
@@ -24,12 +25,15 @@ class Money(Scalar):
 class Month(Scalar):
     @staticmethod
     def serialize(value):
-        return '{:%Y/%m}'.format(value)
+        if type(value) is datetime:
+            return '{:%Y/%m}'.format(value)
+        else:
+            return value
 
     @classmethod
     def parse_literal(Cls, node):
         if isinstance(node, ast.StringValue):
-            return Cls.parse_value(node)
+            return Cls.parse_value(node.value)
 
     @staticmethod
     def parse_value(value):
