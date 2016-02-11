@@ -1,7 +1,6 @@
 
 import graphene
 from graphene.contrib.django.filter import DjangoFilterConnectionField
-from graphene.contrib.django.fields import DjangoConnectionField
 from graphene.contrib.django.types import DjangoNode
 import django_filters
 
@@ -39,16 +38,10 @@ class CategoryNode(DjangoNode):
 
 class CategoriesQuery(graphene.ObjectType):
     category = graphene.relay.NodeField(CategoryNode)
-    categories = DjangoConnectionField(
+    categories = DjangoFilterConnectionField(
         CategoryNode,
-        name=graphene.String(),
+        filterset_class=CategoryFilter
     )
 
     class Meta:
         abstract = True
-
-    def resolve_categories(self, args, info):
-        if args['name']:
-            return Category.objects.filter(name__icontains=args['name'])
-        else:
-            return Category.objects.all()
