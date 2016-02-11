@@ -111,11 +111,10 @@ class Transaction(SWModel):
         null=True,
         on_delete=models.SET_NULL,
     )
-    bucket = models.ForeignKey(
-        'buckets.Bucket',
+    bucket_month = models.ManyToManyField(
+        'buckets.BucketMonth',
         related_name='transactions',
-        null=True,
-        on_delete=models.SET_NULL,
+        through='transactions.BucketTransaction',
     )
 
     description = models.CharField(max_length=255)
@@ -136,3 +135,14 @@ class Transaction(SWModel):
 
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
+
+
+class BucketTransaction(models.Model):
+    bucket_month = models.ForeignKey(
+        'buckets.BucketMonth',
+        on_delete=models.CASCADE,
+    )
+    transaction = models.ForeignKey(
+        'transactions.Transaction',
+        on_delete=models.CASCADE,
+    )

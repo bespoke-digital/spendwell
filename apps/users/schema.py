@@ -1,18 +1,17 @@
 
 from graphene.contrib.django.fields import DjangoConnectionField
 import graphene
-import delorean
 
-from apps.core.types import Money
+from apps.core.types import Money, Month
 from apps.goals.schema import GoalMonthNode
 from apps.goals.models import GoalMonth
 
 
 class Summary(graphene.ObjectType):
-    income = graphene.Field(Money)
-    allocated = graphene.Field(Money)
-    spent = graphene.Field(Money)
-    net = graphene.Field(Money)
+    income = graphene.Field(Money())
+    allocated = graphene.Field(Money())
+    spent = graphene.Field(Money())
+    net = graphene.Field(Money())
 
     goal_months = DjangoConnectionField(GoalMonthNode)
 
@@ -28,8 +27,8 @@ class Summary(graphene.ObjectType):
 
 
 class UsersQuery(graphene.ObjectType):
-    safe_to_spend = graphene.Field(Money)
-    summary = graphene.Field(Summary, month=graphene.String())
+    safe_to_spend = graphene.Field(Money())
+    summary = graphene.Field(Summary, month=Month())
 
     class Meta:
         abstract = True
@@ -38,8 +37,7 @@ class UsersQuery(graphene.ObjectType):
         return info.request_context.user.safe_to_spend()
 
     def resolve_summary(self, args, info):
-        month_start = delorean.parse(args['month']).truncate('month').datetime
         return Summary(
-            month_start=month_start,
-            **info.request_context.user.summary(month_start)
+            month_start=args['month'],
+            **info.request_context.user.summary(args['month'])
         )

@@ -12,6 +12,7 @@ from apps.institutions.mutations import InstitutionsMutations
 from apps.accounts.mutations import AccountsMutations
 from apps.transactions.mutations import TransactionsMutations
 from apps.goals.mutations import GoalsMutations
+from apps.buckets.mutations import BucketsMutations
 
 
 class Viewer(
@@ -41,6 +42,7 @@ class Mutations(
     AccountsMutations,
     TransactionsMutations,
     GoalsMutations,
+    BucketsMutations,
 ):
     pass
 

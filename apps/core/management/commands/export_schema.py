@@ -13,4 +13,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with open(os.path.join(settings.BASE_DIR, 'spendwell/schema.json'), 'w') as schema_file:
-            json.dump(schema.introspect(), schema_file)
+            json.dump(schema.introspect(), schema_file, indent=2)

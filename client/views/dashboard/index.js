@@ -9,6 +9,7 @@ import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
+import { AssignTransactionsMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/dashboard.scss';
 import Bucket from './bucket';
@@ -22,6 +23,14 @@ class Dashboard extends Component {
   constructor() {
     super();
     this.state = {};
+  }
+
+  syncBuckets() {
+    const { viewer } = this.props;
+    Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer }), {
+      onSuccess: console.log.bind(console, 'onSuccess'),
+      onFailure: console.log.bind(console, 'onFailure'),
+    });
   }
 
   render() {
@@ -125,6 +134,9 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Spent</h2>
           <div>
+            <Button raised onClick={::this.syncBuckets}>
+              <i className='fa fa-refresh'/>
+            </Button>
             <Button to='/app/outgoing' raised>
               <i className='fa fa-plus'/>
               {' New'}
