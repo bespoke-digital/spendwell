@@ -3,11 +3,13 @@ from decimal import Decimal
 
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
+import delorean
 
 from apps.core.tests import SWTestCase
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
 from apps.goals.factories import GoalFactory
+from apps.goals.models import GoalMonth
 
 from .factories import UserFactory
 
@@ -93,3 +95,51 @@ class UsersTestCase(SWTestCase):
             150000,
             msg='Should return estimate for current month minus the goal amount'
         )
+
+    def test_summary_goal_months(self):
+        current_month_start = delorean.now().truncate('month').datetime
+        last_month_start = current_month_start - relativedelta(months=1)
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+        query = '''
+        query {{
+            viewer {{
+                summary(month: "{month:%Y/%m}") {{
+                    allocated
+                    goalMonths(month: "{month:%Y/%m}") {{
+                        edges {{
+                            node {{
+                                monthStart
+                            }}
+                        }}
+                    }}
+                }}
+            }}
+        }}
+        '''
+
+        print('query', current_month_start)
+        result = self.graph_query(query.format(month=current_month_start), user=owner)
+        self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
+        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
+
+        goal = GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
+
+        self.assertEqual(goal.months.count(), 1)
+        self.assertEqual(goal.months.all()[0].month_start, current_month_start)
+
+        print('query', current_month_start)
+        result = self.graph_query(query.format(month=current_month_start), user=owner)
+        self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
+        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
+
+        print('query', last_month_start)
+        result = self.graph_query(query.format(month=last_month_start), user=owner)
+        self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
+        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
+
+        GoalMonth.objects.generate(goal, last_month_start)
+
+        print('query', last_month_start)
+        result = self.graph_query(query.format(month=last_month_start), user=owner)
+        self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
+        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)

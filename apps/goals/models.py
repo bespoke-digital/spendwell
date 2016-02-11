@@ -1,7 +1,6 @@
 
-from datetime import datetime
+import delorean
 from django.db import models
-from django.utils import timezone
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 
@@ -16,7 +15,7 @@ class GoalManager(SWManager):
 
     def create(self, **fields):
         goal = super(GoalManager, self).create(**fields)
-        GoalMonth.generate(goal)
+        GoalMonth.objects.generate(goal, delorean.now().truncate('month').datetime)
         return goal
 
 
@@ -31,34 +30,29 @@ class Goal(SWModel):
         return self.name
 
 
-class GoalMonth(SWModel):
-    goal = models.ForeignKey(Goal, related_name='months')
-    month_start = models.DateTimeField()
-    target_amount = models.DecimalField(decimal_places=2, max_digits=12)
-    filled_amount = models.DecimalField(decimal_places=2, max_digits=12)
-
-    class Meta:
-        unique_together = ('goal', 'month_start')
-
-    @classmethod
-    def generate(Cls, goal, month_start=None):
-        if not month_start:
-            now = timezone.now()
-            month_start = timezone.make_aware(datetime(
-                year=now.year,
-                month=now.month,
-                day=1,
-            ))
-
+class GoalMonthManager(SWManager):
+    def generate(self, goal, month_start):
         available_amount = goal.owner.summary(month_start)['net']
         if available_amount < goal.monthly_amount:
             filled_amount = -available_amount
         else:
             filled_amount = goal.monthly_amount
 
-        return Cls.objects.create(
+        return self.model.objects.create(
             goal=goal,
             month_start=month_start,
             target_amount=goal.monthly_amount,
             filled_amount=filled_amount,
         )
+
+
+class GoalMonth(SWModel):
+    goal = models.ForeignKey(Goal, related_name='months')
+    month_start = models.DateTimeField()
+    target_amount = models.DecimalField(decimal_places=2, max_digits=12)
+    filled_amount = models.DecimalField(decimal_places=2, max_digits=12)
+
+    objects = GoalMonthManager()
+
+    class Meta:
+        unique_together = ('goal', 'month_start')

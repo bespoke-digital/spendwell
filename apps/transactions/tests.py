@@ -15,6 +15,9 @@ class BucktsTestCase(SWTestCase):
         self.assertIsNone(transaction1.transfer_pair)
 
         transaction2 = TransactionFactory.create(owner=owner, amount=-100)
+        Transaction.objects.detect_transfers(owner=owner)
+
+        transaction2 = Transaction.objects.get(id=transaction2.id)
         transaction1 = Transaction.objects.get(id=transaction1.id)
 
         self.assertEqual(transaction1.transfer_pair, transaction2)

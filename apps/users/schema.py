@@ -1,9 +1,7 @@
 
-from datetime import datetime
-
-from django.utils import timezone
 from graphene.contrib.django.fields import DjangoConnectionField
 import graphene
+import delorean
 
 from apps.core.types import Money
 from apps.goals.schema import GoalMonthNode
@@ -19,16 +17,14 @@ class Summary(graphene.ObjectType):
     goal_months = DjangoConnectionField(GoalMonthNode)
 
     def __init__(self, *args, **kwargs):
-        self.current_month = kwargs.pop('current_month')
+        self.month_start = kwargs.pop('month_start')
         return super(Summary, self).__init__(*args, **kwargs)
 
     def resolve_goal_months(self, args, info):
-        qs = GoalMonth.objects.filter(
+        return GoalMonth.objects.filter(
             goal__owner=info.request_context.user,
-            month_start=self.current_month,
+            month_start=self.month_start,
         )
-        print('qs', qs)
-        return qs
 
 
 class UsersQuery(graphene.ObjectType):
@@ -42,16 +38,8 @@ class UsersQuery(graphene.ObjectType):
         return info.request_context.user.safe_to_spend()
 
     def resolve_summary(self, args, info):
-        (year, month) = args['month'].split('/')
-        (year, month) = (int(year), int(month))
-
-        current_month = timezone.make_aware(datetime(
-            year=year,
-            month=month,
-            day=1,
-        ))
-
+        month_start = delorean.parse(args['month']).truncate('month').datetime
         return Summary(
-            current_month=current_month,
-            **info.request_context.user.summary(current_month)
+            month_start=month_start,
+            **info.request_context.user.summary(month_start)
         )
