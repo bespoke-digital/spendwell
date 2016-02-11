@@ -25,9 +25,9 @@ class Dashboard extends Component {
     this.state = {};
   }
 
-  syncBuckets() {
+  syncBuckets(month) {
     const { viewer } = this.props;
-    Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer }), {
+    Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer, month }), {
       onSuccess: console.log.bind(console, 'onSuccess'),
       onFailure: console.log.bind(console, 'onFailure'),
     });
@@ -134,7 +134,7 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Spent</h2>
           <div>
-            <Button raised onClick={::this.syncBuckets}>
+            <Button raised onClick={this.syncBuckets.bind(this, periods.current)}>
               <i className='fa fa-refresh'/>
             </Button>
             <Button to='/app/outgoing' raised>

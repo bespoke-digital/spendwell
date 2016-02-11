@@ -16,14 +16,14 @@ export class AssignTransactionsMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    return { month: this.props.month_start };
+    return { month: this.props.month.format('YYYY/MM') };
   }
 
   getFatQuery() {
     return Relay.QL`
       fragment on AssignTransactionsMutation {
         viewer {
-          summary(month: $month)
+          summary
         }
       }
     `;
