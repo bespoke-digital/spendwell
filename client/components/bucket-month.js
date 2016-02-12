@@ -23,10 +23,7 @@ class BucketMonth extends Component {
   render() {
     const { bucketMonth, month, onClick, selected, children } = this.props;
 
-    const currentAmount = 0;
-    const previousAmount = 0;
-
-    const progress = parseInt((currentAmount / previousAmount) * 100);
+    const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
     const monthProgress = month.isBefore(moment().subtract(1, 'month')) ? 100 : (
       parseInt((moment().date() / month.clone().endOf('month').date()) * 100)
     );
@@ -39,20 +36,24 @@ class BucketMonth extends Component {
       }`}>
         <div className='summary'>
           <div>{bucketMonth.name}</div>
-          <div className='amount avg'><Money amount={previousAmount} abs={true}/></div>
-          <div className='amount'><Money amount={currentAmount} abs={true}/></div>
+          <div className='amount avg'>
+            {bucketMonth.avgAmount ?
+              <Money amount={bucketMonth.avgAmount} abs={true}/>
+            : 'N/A'}
+          </div>
+          <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
         </div>
         {selected ?
           <div>
             <Progress
-              current={currentAmount}
-              target={previousAmount}
+              current={bucketMonth.amount}
+              target={bucketMonth.avgAmount}
               marker={monthProgress}
               color={progress > 100 ? 'danger' : progress > monthProgress ? 'warn' : 'success'}
             />
             <div className='progress-numbers'>
-              <div><Money amount={currentAmount} abs={true}/></div>
-              <div><Money amount={previousAmount} abs={true}/></div>
+              <div><Money amount={bucketMonth.amount} abs={true}/></div>
+              <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
             </div>
             {bucketMonth.transactions.edges.length ?
               <table className='mui-table'>
@@ -87,6 +88,8 @@ BucketMonth = Relay.createContainer(BucketMonth, {
     bucketMonth: ()=> Relay.QL`
       fragment on BucketMonthNode {
         name
+        amount
+        avgAmount
         transactions(first: 1000) {
           edges {
             node {

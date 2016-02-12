@@ -62,6 +62,29 @@ class BucketMonth(SWModel):
     class Meta:
         unique_together = ('bucket', 'month_start')
 
+    @property
+    def amount(self):
+        if not hasattr(self, '_amount'):
+            self._amount = self.transactions.sum()
+        return self._amount
+
+    @property
+    def avg_amount(self):
+        if not hasattr(self, '_avg_amount'):
+            amounts = [
+                bucket_month.amount
+                for bucket_month in BucketMonth.objects.filter(month_start__in=[
+                    self.month_start - relativedelta(months=i)
+                    for i in range(1, 4)
+                ])
+            ]
+            if len(amounts) == 0:
+                self._avg_amount = None
+            else:
+                self._avg_amount = sum(amounts) / len(amounts)
+
+        return self._avg_amount
+
     def assign_transactions(self):
         for transaction_id in self.bucket.filtered_transactions(
             date__gte=self.month_start,
