@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import { Form } from 'formsy-react';
-import reactMixin from 'react-mixin';
 
 import Card from 'components/card';
 import Button from 'components/button';
@@ -13,7 +12,6 @@ import Buckets from 'collections/buckets';
 import styles from 'sass/views/bucket.scss';
 
 
-@reactMixin.decorate(ReactMeteorData)
 class Bucket extends Component {
   static propTypes = {
     params: PropTypes.object.isRequired,

@@ -9,10 +9,11 @@ import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
+import BucketMonth from 'components/bucket-month';
+
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/dashboard.scss';
-import Bucket from './bucket';
 
 
 class Dashboard extends Component {
@@ -48,6 +49,7 @@ class Dashboard extends Component {
           spent,
           net,
           goalMonths,
+          bucketMonths,
         },
       },
     } = this.props;
@@ -61,8 +63,6 @@ class Dashboard extends Component {
       previous: current.clone().subtract(1, 'month'),
       next: current.clone().add(1, 'month'),
     };
-
-    const buckets = [];
 
     return (
       <div className={`container ${styles.root}`}>
@@ -114,7 +114,7 @@ class Dashboard extends Component {
               <div className='amount'>Saved</div>
             </div>
           </Card>
-          {goalMonths ? goalMonths.edges.map(({ node })=>
+          {goalMonths.edges.map(({ node })=>
             <GoalMonth
               key={node.id}
               goalMonth={node}
@@ -128,16 +128,16 @@ class Dashboard extends Component {
               >Close</Button>
               <Button to={`/app/goals/${node.id}`}>Edit</Button>
             </GoalMonth>
-          ) : null}
+          )}
         </CardList>
 
         <div className='heading'>
-          <h2>Spent</h2>
+          <h2>Buckets</h2>
           <div>
             <Button raised onClick={this.syncBuckets.bind(this, periods.current)}>
               <i className='fa fa-refresh'/>
             </Button>
-            <Button to='/app/outgoing' raised>
+            <Button to='/app/buckets/new' raised>
               <i className='fa fa-plus'/>
               {' New'}
             </Button>
@@ -152,20 +152,20 @@ class Dashboard extends Component {
               <div className='amount'>Spent</div>
             </div>
           </Card>
-          {buckets.map((bucket)=>
-            <Bucket
-              key={bucket._id}
-              bucket={bucket}
+          {bucketMonths.edges.map(({ node })=>
+            <BucketMonth
+              key={node.id}
+              bucketMonth={node}
               month={periods.current}
-              selected={selected === bucket._id}
-              onClick={()=> this.setState({ selected: bucket._id })}
+              selected={selected === node.id}
+              onClick={()=> this.setState({ selected: node.id })}
             >
               <Button
                 onClick={()=> this.setState({ selected: null })}
                 propagateClick={false}
               >Close</Button>
-              <Button to={`/app/buckets/${bucket._id}`}>Edit</Button>
-            </Bucket>
+              <Button to={`/app/buckets/${node.id}`}>Edit</Button>
+            </BucketMonth>
           )}
           {spent !== 0 ?
             <Card>
@@ -199,6 +199,7 @@ Dashboard = Relay.createContainer(Dashboard, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${AssignTransactionsMutation.getFragment('viewer')}
         summary(month: $date) {
           income
           allocated
@@ -209,6 +210,14 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 id
                 ${GoalMonth.getFragment('goalMonth')}
+              }
+            }
+          }
+          bucketMonths(first: 1000) {
+            edges {
+              node {
+                id
+                ${BucketMonth.getFragment('bucketMonth')}
               }
             }
           }

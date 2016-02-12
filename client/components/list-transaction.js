@@ -7,7 +7,7 @@ import Card from 'components/card';
 import Money from 'components/money';
 
 
-class Transaction extends Component {
+class ListTransaction extends Component {
   render() {
     const { transaction } = this.props;
 
@@ -32,7 +32,7 @@ class Transaction extends Component {
   }
 }
 
-Transaction = Relay.createContainer(Transaction, {
+ListTransaction = Relay.createContainer(ListTransaction, {
   fragments: {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
@@ -47,4 +47,4 @@ Transaction = Relay.createContainer(Transaction, {
   },
 });
 
-export default Transaction;
+export default ListTransaction;

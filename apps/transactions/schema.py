@@ -1,11 +1,12 @@
 
 import graphene
 
-from apps.core.fields import SWNode, SWFilterConnectionField
+from apps.core.fields import SWNode
 from apps.core.types import Money
 
 from .models import Transaction
 from .filters import TransactionFilter
+from .fields import TransactionConnectionField
 
 
 class TransactionNode(SWNode):
@@ -31,7 +32,7 @@ class TransactionNode(SWNode):
 
 class TransactionsQuery(graphene.ObjectType):
     transaction = graphene.relay.NodeField(TransactionNode)
-    transactions = SWFilterConnectionField(
+    transactions = TransactionConnectionField(
         TransactionNode,
         filterset_class=TransactionFilter,
     )

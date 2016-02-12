@@ -2,15 +2,15 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import moment from 'moment';
+import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Money from 'components/money';
 import Progress from 'components/progress';
 
 
-export default class Bucket extends Component {
+class BucketMonth extends Component {
   static propTypes = {
-    bucket: PropTypes.object.isRequired,
     month: PropTypes.object.isRequired,
     onClick: PropTypes.func,
     selected: PropTypes.bool,
@@ -21,17 +21,10 @@ export default class Bucket extends Component {
   };
 
   render() {
-    const { bucket, month, onClick, selected, children } = this.props;
-    const { transactions } = this.data;
+    const { bucketMonth, month, onClick, selected, children } = this.props;
 
-    const currentAmount = bucket.amount(month);
-
-    const previousMonths = _.dropWhile([
-      bucket.amount(month.clone().subtract(1, 'month')),
-      bucket.amount(month.clone().subtract(2, 'months')),
-      bucket.amount(month.clone().subtract(3, 'months')),
-    ], 0);
-    const previousAmount = _.sum(previousMonths) / previousMonths.length;
+    const currentAmount = 0;
+    const previousAmount = 0;
 
     const progress = parseInt((currentAmount / previousAmount) * 100);
     const monthProgress = month.isBefore(moment().subtract(1, 'month')) ? 100 : (
@@ -45,7 +38,7 @@ export default class Bucket extends Component {
         'bucket-success'
       }`}>
         <div className='summary'>
-          <div>{bucket.name}</div>
+          <div>{bucketMonth.name}</div>
           <div className='amount avg'><Money amount={previousAmount} abs={true}/></div>
           <div className='amount'><Money amount={currentAmount} abs={true}/></div>
         </div>
@@ -61,7 +54,7 @@ export default class Bucket extends Component {
               <div><Money amount={currentAmount} abs={true}/></div>
               <div><Money amount={previousAmount} abs={true}/></div>
             </div>
-            {transactions && transactions.length ?
+            {bucketMonth.transactions.edges.length ?
               <table className='mui-table'>
                 <thead>
                   <tr>
@@ -71,11 +64,11 @@ export default class Bucket extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction)=> (
-                    <tr key={transaction._id}>
-                      <td>{moment(transaction.date).format('Do')}</td>
-                      <td>{transaction.name}</td>
-                      <td><Money amount={transaction.amount} abs={true}/></td>
+                  {bucketMonth.transactions.edges.map(({ node })=> (
+                    <tr key={node.id}>
+                      <td>{moment(node.date).format('Do')}</td>
+                      <td>{node.description}</td>
+                      <td><Money amount={node.amount} abs={true}/></td>
                     </tr>
                   ))}
                 </tbody>
@@ -88,3 +81,24 @@ export default class Bucket extends Component {
     );
   }
 }
+
+BucketMonth = Relay.createContainer(BucketMonth, {
+  fragments: {
+    bucketMonth: ()=> Relay.QL`
+      fragment on BucketMonthNode {
+        name
+        transactions(first: 1000) {
+          edges {
+            node {
+              id
+              description
+              amount
+            }
+          }
+        }
+      }
+    `,
+  },
+});
+
+export default BucketMonth;

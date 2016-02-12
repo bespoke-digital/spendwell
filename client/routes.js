@@ -10,6 +10,7 @@ import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
 import App from 'views/app';
 import CreateGoal from 'views/create-goal';
+import CreateBucket from 'views/create-bucket';
 import Outgoing from 'views/outgoing';
 import Incoming from 'views/incoming';
 import Transfers from 'views/transfers';
@@ -25,6 +26,7 @@ export default (
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
       <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
+      <Route path='buckets/new' component={CreateBucket} queries={rootQuery}/>
 
       <Route path='outgoing' component={Outgoing} queries={rootQuery}/>
       <Route path='incoming' component={Incoming} queries={rootQuery}/>
@@ -39,11 +41,3 @@ export default (
     </Route>
   </RelayRouter>
 );
-
-
-// import Buckets from 'views/buckets';
-// import Bucket from 'views/bucket';
-
-// <Route path='/buckets' component={Buckets}/>
-// <Route path='/buckets/:id' component={Bucket}/>
-// <Route path='/goals/:id' component={Goal}/>

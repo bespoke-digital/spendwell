@@ -69,15 +69,9 @@ Transfers = Relay.createContainer(Transfers, {
               id
               description
               amount
-              account {
-                name
-              }
               transferPair {
                 description
                 amount
-                account {
-                  name
-                }
               }
             }
           }

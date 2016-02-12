@@ -2,7 +2,7 @@
 import Relay from 'react-relay';
 
 
-export class AddGoalMutation extends Relay.Mutation {
+export class CreateGoalMutation extends Relay.Mutation {
   static fragments = {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
@@ -12,7 +12,7 @@ export class AddGoalMutation extends Relay.Mutation {
   };
 
   getMutation() {
-    return Relay.QL`mutation { addGoal }`;
+    return Relay.QL`mutation { createGoal }`;
   }
 
   getVariables() {
@@ -24,7 +24,7 @@ export class AddGoalMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on AddGoalMutation {
+      fragment on CreateGoalMutation {
         viewer { goals }
         goalEdge
       }

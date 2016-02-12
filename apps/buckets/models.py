@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from dateutil.relativedelta import relativedelta
+import delorean
 
 from apps.core.models import SWModel, SWManager
 from apps.transactions.models import Transaction, BucketTransaction
@@ -37,7 +38,9 @@ class Bucket(SWModel):
 
 
 class BucketMonthManager(SWManager):
-    def generate(self, bucket, month_start):
+    def generate(self, bucket, month_start=None):
+        if month_start is None:
+            month_start = delorean.now().truncate('month').datetime
         return self.model.objects.create(bucket=bucket, month_start=month_start)
 
     def assign_transactions(self, owner, month_start):

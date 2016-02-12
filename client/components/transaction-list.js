@@ -7,10 +7,9 @@ import Relay from 'react-relay';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Money from 'components/money';
+import ListTransaction from 'components/list-transaction';
 
 import styles from 'sass/components/transaction-list';
-
-import Transaction from './transaction';
 
 
 const sumTransactions = (transactions)=> transactions.reduce((s, t)=> s + t.amount, 0);
@@ -35,10 +34,10 @@ class TransactionList extends Component {
       months.push(
         <CardList key={month}>
           <Card className='month'>
-            {moment(month).format('MMMM YYYY')}
+            {moment(month, 'YYYY/MM').format('MMMM YYYY')}
           </Card>
           {_.sortBy(transactions, (t)=> t.date).reverse().map((transaction)=>
-            <Transaction key={transaction.id} transaction={transaction}/>
+            <ListTransaction key={transaction.id} transaction={transaction}/>
           )}
           <Card className='total'>
             <div className='summary'>
@@ -64,7 +63,7 @@ TransactionList = Relay.createContainer(TransactionList, {
       fragment on TransactionNodeDefaultConnection {
         edges {
           node {
-            ${Transaction.getFragment('transaction')}
+            ${ListTransaction.getFragment('transaction')}
             id
             amount
             date

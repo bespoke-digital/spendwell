@@ -3,8 +3,10 @@ from graphene.contrib.django.fields import DjangoConnectionField
 import graphene
 
 from apps.core.types import Money, Month
-from apps.goals.schema import GoalMonthNode
 from apps.goals.models import GoalMonth
+from apps.goals.schema import GoalMonthNode
+from apps.buckets.models import BucketMonth
+from apps.buckets.schema import BucketMonthNode
 
 
 class Summary(graphene.ObjectType):
@@ -14,6 +16,7 @@ class Summary(graphene.ObjectType):
     net = graphene.Field(Money())
 
     goal_months = DjangoConnectionField(GoalMonthNode)
+    bucket_months = DjangoConnectionField(BucketMonthNode)
 
     def __init__(self, *args, **kwargs):
         self.month_start = kwargs.pop('month_start')
@@ -22,6 +25,12 @@ class Summary(graphene.ObjectType):
     def resolve_goal_months(self, args, info):
         return GoalMonth.objects.filter(
             goal__owner=info.request_context.user,
+            month_start=self.month_start,
+        )
+
+    def resolve_bucket_months(self, args, info):
+        return BucketMonth.objects.filter(
+            bucket__owner=info.request_context.user,
             month_start=self.month_start,
         )
 

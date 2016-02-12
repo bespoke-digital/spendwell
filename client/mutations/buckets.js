@@ -38,3 +38,48 @@ export class AssignTransactionsMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class CreateBucketMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { createBucket }`;
+  }
+
+  getVariables() {
+    return {
+      name: this.props.name,
+      filters: this.props.filters,
+    };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on CreateBucketMutation {
+        viewer {
+          buckets
+          summary {
+            bucketMonths
+          }
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}
+

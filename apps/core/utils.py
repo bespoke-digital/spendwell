@@ -1,6 +1,10 @@
 
+import graphene
 from graphql_relay.node.node import from_global_id
 from graphql_relay.connection.arrayconnection import cursor_for_object_in_connection
+
+
+STUB_SCHEMA = graphene.Schema()
 
 
 def instance_for_node_id(node_id, info, owner=True):
@@ -23,3 +27,8 @@ def get_cursor(instance):
         list(type(instance).objects.filter(owner=instance.owner).values_list('id', flat=True)),
         instance.id
     )
+
+
+def get_core_type(graphene_type):
+    "converts a Graphene scalar type into a graphel-core scalar type"
+    return STUB_SCHEMA.T(graphene_type)

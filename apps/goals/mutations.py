@@ -11,7 +11,7 @@ from .schema import GoalNode
 GoalEdge = Edge.for_node(GoalNode)
 
 
-class AddGoalMutation(graphene.relay.ClientIDMutation):
+class CreateGoalMutation(graphene.relay.ClientIDMutation):
     class Input:
         name = graphene.String()
         monthly_amount = graphene.Int()
@@ -27,7 +27,7 @@ class AddGoalMutation(graphene.relay.ClientIDMutation):
         if monthly_amount > 0:
             monthly_amount = -monthly_amount
 
-        return AddGoalMutation(
+        return CreateGoalMutation(
             viewer=Viewer(),
             goal_edge=GoalEdge(
                 cursor='none',
@@ -41,7 +41,7 @@ class AddGoalMutation(graphene.relay.ClientIDMutation):
 
 
 class GoalsMutations(graphene.ObjectType):
-    add_goal = graphene.Field(AddGoalMutation)
+    create_goal = graphene.Field(CreateGoalMutation)
 
     class Meta:
         abstract = True

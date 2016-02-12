@@ -7,6 +7,7 @@ from apps.accounts.schema import AccountsQuery
 from apps.transactions.schema import TransactionsQuery
 from apps.users.schema import UsersQuery
 from apps.goals.schema import GoalsQuery
+from apps.buckets.schema import BucketsQuery
 
 from apps.institutions.mutations import InstitutionsMutations
 from apps.accounts.mutations import AccountsMutations
@@ -16,17 +17,18 @@ from apps.buckets.mutations import BucketsMutations
 
 
 class Viewer(
+    graphene.relay.Node,
     CategoriesQuery,
     InstitutionsQuery,
     AccountsQuery,
     TransactionsQuery,
     UsersQuery,
     GoalsQuery,
+    BucketsQuery,
 ):
-    id = graphene.ID()
-
-    def resolve_id(self, args, info):
-        return info.request_context.user.id
+    @classmethod
+    def get_node(Cls, args, info):
+        return Cls()
 
 
 class Query(graphene.ObjectType):

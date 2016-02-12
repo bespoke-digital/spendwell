@@ -7,8 +7,13 @@ import Button from 'components/button';
 
 export default class Dropdown extends Component {
   static propTypes = {
-    label: PropTypes.string.isRequired,
+    label: PropTypes.object.isRequired,
     variant: PropTypes.oneOf(['primary', 'danger', 'accent']),
+    disabled: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    disabled: false,
   };
 
   constructor() {
@@ -31,12 +36,16 @@ export default class Dropdown extends Component {
   }
 
   render() {
-    const { label, children, variant } = this.props;
+    const { label, children, variant, disabled } = this.props;
     const { open } = this.state;
 
     return (
       <div className='mui-dropdown dropdown'>
-        <Button onClick={this.setState.bind(this, { open: !open }, null)} variant={variant}>
+        <Button
+          onClick={this.setState.bind(this, { open: !open }, null)}
+          variant={variant}
+          disabled={disabled}
+        >
           {label}
           <span className='mui-caret'/>
         </Button>
