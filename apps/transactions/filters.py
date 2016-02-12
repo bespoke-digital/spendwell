@@ -21,7 +21,6 @@ class TransactionFilter(filters.FilterSet):
 
     class Meta:
         model = Transaction
-        order_by = ('-date',)
         fields = (
             'description',
             'category',

@@ -14,7 +14,6 @@ class TransactionNode(SWNode):
 
     class Meta:
         model = Transaction
-        filter_order_by = ('date',)
         only_fields = (
             'description',
             'date',

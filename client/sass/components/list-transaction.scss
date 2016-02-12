@@ -1,0 +1,19 @@
+
+@import '../variables';
+
+:local(.root) {
+  .category {
+    color: mui-color('grey', '600');
+  }
+
+  .date {
+    width: 60px;
+    text-align: right;
+    color: mui-color('grey', '600');
+  }
+
+  .amount {
+    width: 60px;
+    text-align: right;
+  }
+}

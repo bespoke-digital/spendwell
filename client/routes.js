@@ -28,8 +28,8 @@ export default (
 
       <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
 
-      <Route path='buckets/:id' component={Bucket} queries={rootQuery}/>
       <Route path='buckets/new' component={CreateBucket} queries={rootQuery}/>
+      <Route path='buckets/:id' component={Bucket} queries={rootQuery}/>
 
       <Route path='outgoing' component={Outgoing} queries={rootQuery}/>
       <Route path='incoming' component={Incoming} queries={rootQuery}/>

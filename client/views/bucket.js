@@ -4,6 +4,8 @@ import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import moment from 'moment';
 
+import CardList from 'components/card-list';
+import Card from 'components/card';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 
@@ -45,10 +47,18 @@ class Bucket extends Component {
         </div>
 
         {bucket.months.edges.map(({ node })=>
-          <TransactionList key={node.id} transactions={node.transactions}/>
+          <CardList key={node.id}>
+            <Card className='card-list-headings'>
+              {moment(node.monthStart).format('MMMM YYYY')}
+            </Card>
+            <TransactionList transactions={node.transactions} monthHeaders={false}/>
+          </CardList>
         )}
 
-        <Button onClick={::this.generateBucketMonth}>Generate Next Month</Button>
+        <Button onClick={::this.generateBucketMonth}>
+          <i className='fa fa-plus'/>
+          {' Next Month'}
+        </Button>
       </div>
     );
   }

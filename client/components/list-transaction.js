@@ -6,13 +6,15 @@ import Relay from 'react-relay';
 import Card from 'components/card';
 import Money from 'components/money';
 
+import styles from 'sass/components/list-transaction';
+
 
 class ListTransaction extends Component {
   render() {
     const { transaction } = this.props;
 
     return (
-      <Card className='transaction'>
+      <Card className={`transaction ${styles.root}`}>
         <div className='summary'>
           <div className='name'>
             {transaction.description}

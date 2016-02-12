@@ -12,21 +12,4 @@
     background-color: mui-color('grey', '600');
     color: mui-color('grey', '100');
   }
-
-  .transaction {
-    .category {
-      color: mui-color('grey', '700');
-    }
-
-    .date {
-      width: 90px;
-      text-align: right;
-      color: mui-color('grey', '500');
-    }
-
-    .amount {
-      width: 70px;
-      text-align: right;
-    }
-  }
 }
