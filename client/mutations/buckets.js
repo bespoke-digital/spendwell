@@ -83,3 +83,44 @@ export class CreateBucketMutation extends Relay.Mutation {
   }
 }
 
+
+export class GenerateBucketMonthMutation extends Relay.Mutation {
+  static fragments = {
+    bucket: ()=> Relay.QL`
+      fragment on BucketNode {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { generateBucketMonth }`;
+  }
+
+  getVariables() {
+    return {
+      bucketId: this.props.bucket.id,
+      month: this.props.month.format('YYYY/MM'),
+    };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on GenerateBucketMonthMutation {
+        bucket {
+          months
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        bucket: this.props.bucket.id,
+      },
+    }];
+  }
+}
+

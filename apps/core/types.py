@@ -10,7 +10,7 @@ from graphql.core.language import ast
 class Money(Scalar):
     @staticmethod
     def serialize(value):
-        return int(value * Decimal(100))
+        return int(Decimal(value) * Decimal(100))
 
     @staticmethod
     def parse_literal(node):
@@ -38,3 +38,18 @@ class Month(Scalar):
     @staticmethod
     def parse_value(value):
         return delorean.parse(value).truncate('month').datetime
+
+
+class DateTime(Scalar):
+    @staticmethod
+    def serialize(dt):
+        return dt.isoformat()
+
+    @staticmethod
+    def parse_literal(node):
+        if isinstance(node, ast.StringValue):
+            return datetime.strptime(node.value, '%Y-%m-%dT%H:%M:%S.%f')
+
+    @staticmethod
+    def parse_value(value):
+        return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')

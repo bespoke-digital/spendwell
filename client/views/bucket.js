@@ -1,98 +1,95 @@
 
-import { Component, PropTypes } from 'react';
-import { Form } from 'formsy-react';
+import { Component } from 'react';
+import { browserHistory } from 'react-router';
+import Relay from 'react-relay';
+import moment from 'moment';
 
-import Card from 'components/card';
 import Button from 'components/button';
-import Input from 'components/forms/input';
 import TransactionList from 'components/transaction-list';
 
-import Buckets from 'collections/buckets';
+import { GenerateBucketMonthMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/bucket.scss';
 
 
 class Bucket extends Component {
-  static propTypes = {
-    params: PropTypes.object.isRequired,
-  };
+  generateBucketMonth() {
+    const { viewer: { bucket } } = this.props;
 
-  constructor() {
-    super();
-    this.state = { alteredFilters: null, showSettings: false };
-  }
+    const lastMonth = bucket.months.edges[bucket.months.edges.length - 1].node;
+    const month = moment(lastMonth.monthStart).subtract('1 month');
 
-  getMeteorData() {
-    return {
-      bucket: Buckets.findOne(this.props.params.id),
-    };
-  }
+    console.log('GenerateBucketMonthMutation', { bucket, month });
 
-  handleSubmit({ name }) {
-    const { bucket } = this.data;
-
-    bucket.update({ name });
-
-    this.setState({ showSettings: false });
-  }
-
-  onFiltersChange(filters) {
-    this.setState({ alteredFilters: filters });
-  }
-
-  saveFilters() {
-    const { bucket } = this.data;
-    const { alteredFilters } = this.state;
-
-    bucket.update({ filters: alteredFilters });
-
-    this.setState({ alteredFilters: null });
+    Relay.Store.commitUpdate(new GenerateBucketMonthMutation({ bucket, month }), {
+      onSuccess: ()=> console.log('GenerateBucketMonthMutation Success'),
+      onFailure: ()=> console.log('GenerateBucketMonthMutation Failure'),
+    });
   }
 
   render() {
-    const { bucket } = this.data;
-    const { showSettings, alteredFilters } = this.state;
+    const { viewer: { bucket } } = this.props;
 
-    if (!bucket) return <div>Bucket not found.</div>;
+    if (!bucket)
+      return this.render404();
 
     return (
       <div className={`container ${styles.root}`}>
 
         <div className='heading'>
-          <Button onClick={()=> this.props.history.goBack()} className='back'>
+          <Button onClick={()=> browserHistory.goBack()} className='back'>
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
           <h1>{bucket.name}</h1>
-
-          <Button onClick={this.setState.bind(this, { showSettings: !showSettings }, null)}>
-            <i className='fa fa-cog'/>
-          </Button>
         </div>
 
-        <Card className={showSettings ? '' : 'gone'} expanded={true}>
-          <Form onValidSubmit={::this.handleSubmit}>
-            <Input label='Name' name='name' value={bucket.name} required/>
-            <Button type='submit' variant='primary'>Save</Button>
-            <Button onClick={this.setState.bind(this, { showSettings: false }, null)}>Cancel</Button>
-          </Form>
-        </Card>
+        {bucket.months.edges.map(({ node })=>
+          <TransactionList key={node.id} transactions={node.transactions}/>
+        )}
 
-        <TransactionList
-          filters={alteredFilters || bucket.filters}
-          onFiltersChange={::this.onFiltersChange}
-        >
-          {alteredFilters ?
-            <Button variant='primary' onClick={::this.saveFilters}>
-              <i className='fa fa-save'/>
-              {' Save'}
-            </Button>
-          : null}
-        </TransactionList>
+        <Button onClick={::this.generateBucketMonth}>Generate Next Month</Button>
+      </div>
+    );
+  }
 
+  render404() {
+    return (
+      <div className={`container ${styles.root}`}>
+        <div className='heading'>
+          <Button onClick={()=> browserHistory.goBack()} className='back'>
+            <i className='fa fa-long-arrow-left'/>
+          </Button>
+          <h1>Bucket Not Found</h1>
+        </div>
       </div>
     );
   }
 }
+
+Bucket = Relay.createContainer(Bucket, {
+  initialVariables: { id: null },
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        bucket(id: $id) {
+          ${GenerateBucketMonthMutation.getFragment('bucket')}
+          name
+          months(first: 100) {
+            edges {
+              node {
+                id
+                monthStart
+                transactions(first: 1000) {
+                  ${TransactionList.getFragment('transactions')}
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+  },
+});
 
 export default Bucket;

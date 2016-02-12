@@ -3,7 +3,8 @@ import graphene
 from graphene.relay import ClientIDMutation
 from graphene.relay.types import Edge
 
-from apps.core.types import Month
+from apps.core.types import Month, DateTime
+from apps.core.utils import instance_for_node_id
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
 from .models import BucketMonth, Bucket
@@ -55,9 +56,24 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         )
 
 
+class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        bucket_id = graphene.ID()
+        month = graphene.InputField(Month)
+
+    bucket = graphene.Field(BucketNode)
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        bucket = instance_for_node_id(input['bucket_id'], info)
+        BucketMonth.objects.generate(bucket, input['month'])
+        return Cls(bucket=bucket)
+
+
 class BucketsMutations(graphene.ObjectType):
     assign_transactions = graphene.Field(AssignTransactionsMutation)
     create_bucket = graphene.Field(CreateBucketMutation)
+    generate_bucket_month = graphene.Field(GenerateBucketMonthMutation)
 
     class Meta:
         abstract = True

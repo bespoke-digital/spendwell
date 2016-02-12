@@ -29,8 +29,8 @@ class Dashboard extends Component {
   syncBuckets(month) {
     const { viewer } = this.props;
     Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer, month }), {
-      onSuccess: console.log.bind(console, 'onSuccess'),
-      onFailure: console.log.bind(console, 'onFailure'),
+      onSuccess: ()=> console.log('AssignTransactionsMutation Success'),
+      onFailure: ()=> console.log('AssignTransactionsMutation Failure'),
     });
   }
 
@@ -164,7 +164,7 @@ class Dashboard extends Component {
                 onClick={()=> this.setState({ selected: null })}
                 propagateClick={false}
               >Close</Button>
-              <Button to={`/app/buckets/${node.id}`}>Edit</Button>
+              <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
             </BucketMonth>
           )}
           {spent !== 0 ?
@@ -216,8 +216,11 @@ Dashboard = Relay.createContainer(Dashboard, {
           bucketMonths(first: 1000) {
             edges {
               node {
-                id
                 ${BucketMonth.getFragment('bucketMonth')}
+                id
+                bucket {
+                  id
+                }
               }
             }
           }

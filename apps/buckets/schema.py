@@ -1,15 +1,26 @@
 
 import graphene
+from graphene.contrib.django.fields import DjangoConnectionField
 
 from apps.core.fields import SWNode, SWConnectionField
 from apps.core.types import Money
+from apps.transactions.schema import TransactionNode
 from .models import Bucket, BucketMonth
 
 
 class BucketNode(SWNode):
+    transactions = DjangoConnectionField(TransactionNode)
+
     class Meta:
         model = Bucket
-        only_fields = ('name', 'months')
+        only_fields = (
+            'name',
+            'months',
+            'transactions',
+        )
+
+    def resolve_transactions(self, args, info):
+        return self.instance.transactions()
 
 
 class BucketMonthNode(SWNode):
@@ -25,6 +36,7 @@ class BucketMonthNode(SWNode):
             'transactions',
             'amount',
             'avg_amount',
+            'bucket',
         )
 
     def resolve_name(self, args, info):

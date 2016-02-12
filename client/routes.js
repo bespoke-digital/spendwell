@@ -14,6 +14,7 @@ import CreateBucket from 'views/create-bucket';
 import Outgoing from 'views/outgoing';
 import Incoming from 'views/incoming';
 import Transfers from 'views/transfers';
+import Bucket from 'views/bucket';
 
 
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
@@ -26,6 +27,8 @@ export default (
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
       <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
+
+      <Route path='buckets/:id' component={Bucket} queries={rootQuery}/>
       <Route path='buckets/new' component={CreateBucket} queries={rootQuery}/>
 
       <Route path='outgoing' component={Outgoing} queries={rootQuery}/>
