@@ -2,8 +2,16 @@
 @import '../variables';
 
 :local(.root) {
-  .category {
+  .buckets {
     color: mui-color('grey', '600');
+
+    > span:after {
+      content: ', ';
+    }
+
+    > span:last-child:after {
+      content: '';
+    }
   }
 
   .date {

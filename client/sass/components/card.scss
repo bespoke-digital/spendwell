@@ -23,7 +23,8 @@
       margin-bottom: 10px;
     }
 
-    .more-info {
+    .more-info,
+    .extanded-content {
       height: auto;
     }
 
@@ -53,9 +54,12 @@
     }
   }
 
-  .more-info {
+  .more-info,
+  .extanded-content {
     height: 0;
     overflow: hidden;
     transition: 0.5s ease;
+
+    padding: 5px 0;
   }
 }

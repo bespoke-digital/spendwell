@@ -32,7 +32,7 @@ Incoming = Relay.createContainer(Incoming, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        transactions(first: 1000, amountGt: 0, isTransfer: false) {
+        transactions(first: 1000, amountGt: 0, isTransfer: false, isSavings: false) {
           ${TransactionList.getFragment('transactions')}
         }
       }

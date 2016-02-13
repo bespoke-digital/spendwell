@@ -111,7 +111,7 @@ class Transaction(SWModel):
         null=True,
         on_delete=models.SET_NULL,
     )
-    bucket_month = models.ManyToManyField(
+    bucket_months = models.ManyToManyField(
         'buckets.BucketMonth',
         related_name='transactions',
         through='transactions.BucketTransaction',
@@ -123,6 +123,7 @@ class Transaction(SWModel):
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    savings = models.BooleanField(default=False)
     pending = models.BooleanField(default=False)
     location = JSONField(null=True)
 
@@ -139,13 +140,12 @@ class Transaction(SWModel):
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
 
+    def mark_as_savings(self):
+        self.bucket_months.clear()
+        self.savings = True
+        self.save()
+
 
 class BucketTransaction(models.Model):
-    bucket_month = models.ForeignKey(
-        'buckets.BucketMonth',
-        on_delete=models.CASCADE,
-    )
-    transaction = models.ForeignKey(
-        'transactions.Transaction',
-        on_delete=models.CASCADE,
-    )
+    bucket_month = models.ForeignKey('buckets.BucketMonth')
+    transaction = models.ForeignKey('transactions.Transaction')

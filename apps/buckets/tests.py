@@ -4,6 +4,7 @@ from apps.transactions.factories import TransactionFactory
 from apps.users.factories import UserFactory
 
 from .factories import BucketFactory
+from .models import BucketMonth
 
 
 class BucktsTestCase(SWTestCase):
@@ -12,25 +13,27 @@ class BucktsTestCase(SWTestCase):
 
         bucket = BucketFactory.create(
             owner=owner,
-            filters=[{'type': 'description', 'value': 'desc'}],
+            filters=[{'description': 'desc'}],
         )
+        BucketMonth.objects.generate(bucket)
 
         transaction = TransactionFactory.create(
             description='Description',
             owner=owner,
         )
 
-        self.assertIsNone(transaction.bucket)
+        self.assertEqual(transaction.bucket_months.count(), 0)
 
-        owner.buckets.assign(transaction)
+        bucket.months.first().assign_transactions()
 
-        self.assertEqual(transaction.bucket, bucket)
+        self.assertEqual(transaction.bucket_months.count(), 1)
+        self.assertEqual(transaction.bucket_months.all()[0].bucket, bucket)
 
         transaction2 = TransactionFactory.create(
             description='this doesnt work',
             owner=owner,
         )
 
-        owner.buckets.assign(transaction2)
+        bucket.months.first().assign_transactions()
 
-        self.assertIsNone(transaction2.bucket)
+        self.assertEqual(transaction2.bucket_months.count(), 0)

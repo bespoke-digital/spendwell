@@ -87,7 +87,7 @@ CreateGoal = Relay.createContainer(CreateGoal, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${CreateBucketMutation.getFragment('viewer')}
-        transactions(first: 500, filters: $filters) {
+        transactions(first: 500, isTransfer: false, isSavings: false, filters: $filters) {
           ${TransactionList.getFragment('transactions')}
         }
       }

@@ -32,7 +32,8 @@ class Goal(SWModel):
 
 class GoalMonthManager(SWManager):
     def generate(self, goal, month_start):
-        available_amount = goal.owner.summary(month_start)['net']
+        from apps.users.summary import MonthSummary
+        available_amount = MonthSummary(goal.owner, month_start).net
         if available_amount < goal.monthly_amount:
             filled_amount = -available_amount
         else:

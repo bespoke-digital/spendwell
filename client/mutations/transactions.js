@@ -78,3 +78,39 @@ export class DetectTransfersMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class MarkTransactionAsSavings extends Relay.Mutation {
+  static fragments = {
+    transaction: ()=> Relay.QL`
+      fragment on TransactionNode {
+        id,
+      }
+    `,
+  };
+
+  getVariables() {
+    return { transactionId: this.props.transaction.id };
+  }
+
+  getMutation() {
+    return Relay.QL`mutation { markTransactionAsSavings }`;
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on MarkTransactionAsSavings {
+        transaction
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        transaction: this.props.transaction.id,
+      },
+    }];
+  }
+}

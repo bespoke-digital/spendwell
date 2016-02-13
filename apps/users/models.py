@@ -1,14 +1,9 @@
 
-from datetime import datetime
 from uuid import uuid4
 
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from dateutil.relativedelta import relativedelta
-
-from apps.transactions.models import Transaction
-from apps.goals.models import GoalMonth
+import delorean
 
 
 class UserManager(BaseUserManager):
@@ -76,60 +71,6 @@ class User(AbstractBaseUser):
 
     def as_json(self):
         return self.as_serializer().as_json()
-
-    def income(self, month_start):
-        income = Transaction.objects.filter(
-            owner=self,
-            transfer_pair__isnull=True,
-            account__disabled=False,
-            date__lt=month_start + relativedelta(months=1),
-            date__gte=month_start,
-            amount__gt=0,
-        ).sum()
-
-        if (
-            relativedelta(month_start, timezone.now()).months == 0 and
-            income < self.estimated_income
-        ):
-            return self.estimated_income
-        else:
-            return income
-
-    def allocated(self, month_start):
-        return GoalMonth.objects.filter(
-            goal__owner=self,
-            month_start=month_start,
-        ).sum('filled_amount')
-
-    def spent(self, month_start):
-        return Transaction.objects.filter(
-            owner=self,
-            transfer_pair__isnull=True,
-            account__disabled=False,
-            date__gte=month_start,
-            date__lt=month_start + relativedelta(months=1),
-            amount__lt=0,
-        ).sum()
-
-    def summary(self, month_start):
-        income = self.income(month_start)
-        allocated = self.allocated(month_start)
-        spent = self.spent(month_start)
-        return {
-            'income': income,
-            'allocated': allocated,
-            'spent': spent,
-            'net': sum([income, allocated, spent]),
-        }
-
-    def safe_to_spend(self):
-        now = timezone.now()
-        month_start = timezone.make_aware(datetime(
-            year=now.year,
-            month=now.month,
-            day=1,
-        ))
-        return self.summary(month_start)['net']
 
 
 class BetaCode(models.Model):

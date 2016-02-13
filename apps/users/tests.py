@@ -105,7 +105,7 @@ class UsersTestCase(SWTestCase):
             viewer {{
                 summary(month: "{month:%Y/%m}") {{
                     allocated
-                    goalMonths(month: "{month:%Y/%m}") {{
+                    goalMonths(first: 10) {{
                         edges {{
                             node {{
                                 monthStart
@@ -117,7 +117,6 @@ class UsersTestCase(SWTestCase):
         }}
         '''
 
-        print('query', current_month_start)
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
@@ -127,19 +126,16 @@ class UsersTestCase(SWTestCase):
         self.assertEqual(goal.months.count(), 1)
         self.assertEqual(goal.months.all()[0].month_start, current_month_start)
 
-        print('query', current_month_start)
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
 
-        print('query', last_month_start)
         result = self.graph_query(query.format(month=last_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
 
         GoalMonth.objects.generate(goal, last_month_start)
 
-        print('query', last_month_start)
         result = self.graph_query(query.format(month=last_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)

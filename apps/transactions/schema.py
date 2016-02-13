@@ -1,8 +1,10 @@
 
 import graphene
+from graphene.contrib.django.fields import DjangoConnectionField
 
 from apps.core.fields import SWNode
 from apps.core.types import Money
+from apps.buckets.models import Bucket
 
 from .models import Transaction
 from .filters import TransactionFilter
@@ -11,6 +13,7 @@ from .fields import TransactionConnectionField
 
 class TransactionNode(SWNode):
     amount = graphene.Field(Money)
+    buckets = DjangoConnectionField('BucketNode')
 
     class Meta:
         model = Transaction
@@ -22,11 +25,20 @@ class TransactionNode(SWNode):
             'account',
             'transfer_pair',
             'pending',
+            'bucket_months',
+            'buckets',
+            'savings',
         )
 
     @staticmethod
     def get_queryset(queryset, args, info):
         return queryset.filter(account__disabled=False)
+
+    def resolve_buckets(self, args, info):
+        return Bucket.objects.filter(
+            owner=info.request_context.user,
+            months__transactions=self.instance,
+        ).distinct()
 
 
 class TransactionsQuery(graphene.ObjectType):

@@ -14,10 +14,12 @@ class TransactionConnectionField(DjangoFilterConnectionField):
 
         super(TransactionConnectionField, self).__init__(node_type, *args, **kwargs)
 
-    def get_queryset(self, qs, args, info):
-        qs = qs.filter(owner=info.request_context.user)
+    def get_queryset(self, queryset, args, info):
+        queryset = queryset.filter(owner=info.request_context.user)
 
         if not args.get('filters'):
-            return super(TransactionConnectionField, self).get_queryset(qs, args, info)
+            return super(TransactionConnectionField, self).get_queryset(queryset, args, info)
 
-        return apply_filter_list(qs, args['filters'], self.filterset_class)
+        queryset = self.filterset_class(args, queryset=queryset)
+
+        return apply_filter_list(queryset, args['filters'], self.filterset_class)

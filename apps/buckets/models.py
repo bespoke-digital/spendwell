@@ -10,17 +10,10 @@ from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
 
 
-class BucketManager(SWManager):
-    def assign_transactions(self, *args, **kwargs):
-        return self.get_queryset().assign(*args, **kwargs)
-
-
 class Bucket(SWModel):
     owner = models.ForeignKey('users.User', related_name='buckets')
     name = models.CharField(max_length=255)
     filters = JSONField(default=list)
-
-    objects = BucketManager()
 
     def __str__(self):
         return self.name
