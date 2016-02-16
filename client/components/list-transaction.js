@@ -1,6 +1,5 @@
 
 import { Component, PropTypes } from 'react';
-import moment from 'moment';
 import Relay from 'react-relay';
 
 import Card from 'components/card';

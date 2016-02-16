@@ -37,21 +37,16 @@ class GoalMonth extends Component {
           <div className='amount'><Money abs={true} amount={goalMonth.filledAmount}/></div>
         </div>
 
-        {selected ?
-          <div>
-            <Progress current={goalMonth.filledAmount} target={goalMonth.targetAmount}/>
-            {goalMonth.targetAmount !== goalMonth.filledAmount ?
-              <div className='progress-numbers'>
-                <div><Money abs={true} amount={goalMonth.filledAmount}/></div>
-                <div><Money abs={true} amount={goalMonth.targetAmount}/></div>
-              </div>
-            :
-              <div className='progress-achieved'>Goal Achieved!</div>
-            }
-            <div className='goal-children'>{children}</div>
+        <Progress current={goalMonth.filledAmount} target={goalMonth.targetAmount}/>
+        {goalMonth.targetAmount !== goalMonth.filledAmount ?
+          <div className='progress-numbers'>
+            <div><Money abs={true} amount={goalMonth.filledAmount}/></div>
+            <div><Money abs={true} amount={goalMonth.targetAmount}/></div>
           </div>
-        : null}
-
+        :
+          <div className='progress-achieved'>Goal Achieved!</div>
+        }
+        <div className='goal-children'>{children}</div>
       </Card>
     );
   }

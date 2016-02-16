@@ -34,6 +34,15 @@ class Dashboard extends Component {
     });
   }
 
+  select(id) {
+    const { selected } = this.state;
+
+    if (selected === id)
+      this.setState({ selected: null });
+    else
+      this.setState({ selected: id });
+  }
+
   render() {
     if (!this.props.viewer.summary) {
       console.log('fuck this shit', this.props);
@@ -120,12 +129,8 @@ class Dashboard extends Component {
               goalMonth={node}
               month={periods.current}
               selected={selected === node.id}
-              onClick={()=> this.setState({ selected: node.id })}
+              onClick={this.select.bind(this, node.id)}
             >
-              <Button
-                onClick={()=> this.setState({ selected: null })}
-                propagateClick={false}
-              >Close</Button>
               <Button to={`/app/goals/${node.id}`}>Edit</Button>
             </GoalMonth>
           )}
@@ -158,12 +163,8 @@ class Dashboard extends Component {
               bucketMonth={node}
               month={periods.current}
               selected={selected === node.id}
-              onClick={()=> this.setState({ selected: node.id })}
+              onClick={this.select.bind(this, node.id)}
             >
-              <Button
-                onClick={()=> this.setState({ selected: null })}
-                propagateClick={false}
-              >Close</Button>
               <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
             </BucketMonth>
           )}

@@ -2,9 +2,6 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
-import CardList from 'components/card-list';
-import Card from 'components/card';
-import Money from 'components/money';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 
