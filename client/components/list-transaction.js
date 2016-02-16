@@ -6,6 +6,7 @@ import Relay from 'react-relay';
 import Card from 'components/card';
 import Money from 'components/money';
 import Button from 'components/button';
+import DateTime from 'components/date-time';
 
 import { MarkTransactionAsSavings } from 'mutations/transactions';
 
@@ -46,14 +47,37 @@ class ListTransaction extends Component {
             )}
           </div>
           <div className='date'>
-            {moment(transaction.date).format('Do')}
+            <DateTime value={transaction.date} format='Do'/>
           </div>
           <div className='amount'>
             <Money amount={transaction.amount} abs={true}/>
           </div>
         </div>
         <div className='extanded-content'>
-          <Button onClick={::this.markAsFromSavings}>
+          <ul className='list-unstyled'>
+            <li>
+              <strong>{'Date: '}</strong>
+              <DateTime value={transaction.date}/>
+            </li>
+            <li>
+              <strong>{'Amount: '}</strong>
+              <Money amount={transaction.amount}/>
+            </li>
+            <li>
+              <strong>{'Account: '}</strong>
+              {transaction.account.name}
+            </li>
+            <li>
+              <strong>{'Buckets: '}</strong>
+              <div className='buckets'>
+                {transaction.buckets.edges.map(({ node })=>
+                  <span key={node.id}>{node.name}</span>
+                )}
+              </div>
+            </li>
+          </ul>
+
+          <Button onClick={::this.markAsFromSavings} variant='primary'>
             Mark As Spend From Savings
           </Button>
         </div>
@@ -70,9 +94,8 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         description
         amount
         date
-        category {
-          name
-        }
+        category { name }
+        account { name }
         buckets(first: 100) {
           edges {
             node {
