@@ -59,6 +59,10 @@ class TransactionManager(SWManager):
         transactions.update(transfer_pair=None)
 
         for transaction in transactions:
+            transaction.refresh_from_db(fields=('transfer_pair',))
+            if transaction.transfer_pair:
+                continue
+
             potential_transfers = Transaction.objects.exclude(
                 account=transaction.account,
             ).filter(
@@ -106,11 +110,7 @@ class Transaction(SWModel):
         null=True,
         on_delete=models.SET_NULL,
     )
-    transfer_pair = models.ForeignKey(
-        'self',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+    transfer_pair = models.OneToOneField('self', null=True, on_delete=models.SET_NULL)
     bucket_months = models.ManyToManyField(
         'buckets.BucketMonth',
         related_name='transactions',
