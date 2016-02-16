@@ -30,7 +30,7 @@ class Outgoing extends Component {
           <h1>Outgoing</h1>
         </div>
 
-        <TransactionList transactions={viewer.transactions} expand={true}/>
+        <TransactionList transactions={viewer.transactions}/>
       </ScrollTrigger>
     );
   }

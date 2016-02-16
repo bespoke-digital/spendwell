@@ -37,6 +37,7 @@ class ListTransaction extends Component {
 
     return (
       <Card className={`transaction ${styles.root}`} expanded={expanded}>
+
         <div className='summary' onClick={onClick}>
           <div className='name'>
             {transaction.description}
@@ -53,6 +54,7 @@ class ListTransaction extends Component {
             <Money amount={transaction.amount} abs={true}/>
           </div>
         </div>
+
         <div className='extanded-content'>
           <ul className='list-unstyled'>
             <li>
@@ -67,20 +69,31 @@ class ListTransaction extends Component {
               <strong>{'Account: '}</strong>
               {transaction.account.name}
             </li>
-            <li>
-              <strong>{'Buckets: '}</strong>
-              <div className='buckets'>
-                {transaction.buckets.edges.map(({ node })=>
-                  <span key={node.id}>{node.name}</span>
-                )}
-              </div>
-            </li>
+            {transaction.buckets.edges.length ?
+              <li>
+                <strong>{'Buckets: '}</strong>
+                <div className='buckets'>
+                  {transaction.buckets.edges.map(({ node })=>
+                    <span key={node.id}>{node.name}</span>
+                  )}
+                </div>
+              </li>
+            : null}
+            {transaction.transferPair ?
+              <li>
+                <strong>{'Transfer Pair: '}</strong>
+                {transaction.transferPair.description}
+                {' - '}
+                <Money amount={transaction.transferPair.amount}/>
+              </li>
+            : null}
           </ul>
 
           <Button onClick={::this.markAsFromSavings} variant='primary'>
             Mark As Spend From Savings
           </Button>
         </div>
+
       </Card>
     );
   }
@@ -94,6 +107,10 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         description
         amount
         date
+        transferPair {
+          description
+          amount
+        }
         category { name }
         account { name }
         buckets(first: 100) {

@@ -6,6 +6,7 @@ import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
 import Button from 'components/button';
+import TransactionList from 'components/transaction-list';
 
 import { DetectTransfersMutation } from 'mutations/transactions';
 
@@ -35,24 +36,7 @@ class Transfers extends Component {
           </Button>
         </div>
 
-        <CardList>
-          {transactions.edges.map(({ node })=>
-            <Card key={node.id}>
-              <div className='summary'>
-                <div>
-                  {node.description}
-                  {' - '}
-                  <Money amount={node.amount}/>
-                </div>
-                <div>
-                  <Money amount={node.transferPair.amount}/>
-                  {' - '}
-                  {node.transferPair.description}
-                </div>
-              </div>
-            </Card>
-          )}
-        </CardList>
+        <TransactionList transactions={transactions}/>
       </div>
     );
   }
@@ -64,17 +48,7 @@ Transfers = Relay.createContainer(Transfers, {
       fragment on Viewer {
         ${DetectTransfersMutation.getFragment('viewer')}
         transactions(first: 500, isTransfer: true) {
-          edges {
-            node {
-              id
-              description
-              amount
-              transferPair {
-                description
-                amount
-              }
-            }
-          }
+          ${TransactionList.getFragment('transactions')}
         }
       }
     `,

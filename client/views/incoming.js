@@ -22,7 +22,7 @@ class Incoming extends Component {
           <h1>Incoming</h1>
         </div>
 
-        <TransactionList transactions={viewer.transactions} expand={true}/>
+        <TransactionList transactions={viewer.transactions}/>
       </div>
     );
   }

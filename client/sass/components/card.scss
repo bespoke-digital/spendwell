@@ -5,7 +5,10 @@
 .card, :local(.root) {
   @extend .depth-z1;
 
+  max-height: 60px;
+  overflow: hidden;
   padding: 20px;
+
   background-color: white;
   border-bottom: 1px solid $gray-lighter;
 
@@ -18,24 +21,15 @@
   &.expanded {
     @extend .depth-z2;
     margin: 20px -10px;
-
-    .summary {
-      margin-bottom: 10px;
-    }
-
-    .more-info,
-    .extanded-content {
-      height: auto;
-      padding: 5px 0;
-    }
-
-    h1, h2, h3, h4, h5 {
-      margin: 0;
-    }
+    max-height: 1000px;
   }
 
   &.card-list-headings {
     font-weight: 500;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin: 0;
   }
 
   .summary {
@@ -43,8 +37,9 @@
     flex-direction: row;
     justify-content: flex-end;
 
+    height: 20px;
     // hack out to the edges of card to enable click surface
-    margin: -20px;
+    margin: -20px -20px 20px -20px;
     padding: 20px;
 
     > :first-child {
@@ -53,13 +48,5 @@
     > :not(:first-child) {
       margin-left: 20px;
     }
-  }
-
-  .more-info,
-  .extanded-content {
-    height: 0;
-    overflow: hidden;
-    transition: 0.5s ease;
-    padding: 0;
   }
 }
