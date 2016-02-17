@@ -106,7 +106,7 @@ class Dashboard extends Component {
         </Card>
 
         <div className='heading'>
-          <h2>Goals</h2>
+          <h2>Obligations</h2>
           <div>
             <Button to='/app/goals/new' raised>
               <i className='fa fa-plus'/>
@@ -137,7 +137,7 @@ class Dashboard extends Component {
         </CardList>
 
         <div className='heading'>
-          <h2>Buckets</h2>
+          <h2>Expenses</h2>
           <div>
             <Button raised onClick={this.syncBuckets.bind(this, periods.current)}>
               <i className='fa fa-refresh'/>
@@ -171,7 +171,7 @@ class Dashboard extends Component {
           {spent !== 0 ?
             <Card>
               <div className='summary'>
-                <div>Other</div>
+                <div>All Expenses</div>
                 <div className='amount'>
                   <Money amount={spent} abs/>
                 </div>

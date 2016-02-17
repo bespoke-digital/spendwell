@@ -59,6 +59,12 @@ export default class Filter extends Component {
 
     const fieldOptions = _.filter([
       { label: 'Description', value: 'description' },
+      { label: 'Category', value: 'category' },
+      { label: 'Amount Greater Than', value: 'amountGt' },
+      { label: 'Amount Less Than', value: 'amountLt' },
+      { label: 'Date Greater Than', value: 'dateGt' },
+      { label: 'Date Less Than', value: 'dateLt' },
+      { label: 'Account', value: 'accountId' },
     ], ({ value })=> fields.indexOf(value) === -1);
 
     return (

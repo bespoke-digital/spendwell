@@ -56,6 +56,29 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         )
 
 
+class UpdateBucketMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        bucket_id = graphene.ID()
+        name = graphene.String()
+        filters = filter_list_schema(TransactionFilter, 'BucketFilterSet')
+
+    bucket = graphene.Field(BucketNode)
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        bucket = instance_for_node_id(input['bucket_id'], info)
+
+        if 'name' in input and input['name']:
+            bucket.name = input['name']
+
+        if 'filters' in input and input['filters']:
+            bucket.filters = input['filters']
+
+        bucket.save()
+
+        return Cls(bucket=bucket)
+
+
 class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
     class Input:
         bucket_id = graphene.ID()

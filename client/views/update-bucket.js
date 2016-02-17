@@ -6,27 +6,26 @@ import { browserHistory } from 'react-router';
 import Button from 'components/button';
 import BucketForm from 'components/bucket-form';
 
-import { CreateBucketMutation } from 'mutations/buckets';
+import { UpdateBucketMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/create-bucket.scss';
 
 
-class CreateBucket extends Component {
+class UpdateBucket extends Component {
   handleSubmit({ filters, name }) {
     const { viewer } = this.props;
 
-    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters }), {
+    Relay.Store.commitUpdate(new UpdateBucketMutation({ viewer, name, filters }), {
       onSuccess: ()=> {
-        console.log('CreateBucketMutation Success');
+        console.log('UpdateBucketMutation Success');
         browserHistory.goBack();
       },
-      onFailure: ()=> console.log('CreateBucketMutation Failure'),
+      onFailure: ()=> console.log('UpdateBucketMutation Failure'),
     });
   }
 
   render() {
-    const { viewer} = this.props;
-
+    const { viewer } = this.props;
     return (
       <div className={`container ${styles.root}`}>
         <div className='heading'>
@@ -34,32 +33,35 @@ class CreateBucket extends Component {
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
-          <h1>New Bucket</h1>
+          <h1>Edit Bucket</h1>
         </div>
 
         <BucketForm
           onSubmit={::this.handleSubmit}
           viewer={viewer}
-          bucket={null}
+          bucket={viewer.bucket}
         />
       </div>
     );
   }
 }
 
-CreateBucket = Relay.createContainer(CreateBucket, {
+UpdateBucket = Relay.createContainer(UpdateBucket, {
   initialVariables: {
-    filters: [],
-    count: 50,
+    bucketId: null,
   },
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${CreateBucketMutation.getFragment('viewer')}
+        ${UpdateBucketMutation.getFragment('viewer')}
         ${BucketForm.getFragment('viewer')}
+
+        bucket(id: $bucketId) {
+          ${BucketForm.getFragment('bucket')}
+        }
       }
     `,
   },
 });
 
-export default CreateBucket;
+export default UpdateBucket;

@@ -41,6 +41,9 @@ class ListTransaction extends Component {
           <div className='name'>
             {transaction.description}
           </div>
+          {/*<div className='category'>
+            {transaction.category ? transaction.category.name : null}
+          </div>*/}
           <div className='buckets'>
             {transaction.buckets.edges.map(({ node })=>
               <span key={node.id}>{node.name}</span>

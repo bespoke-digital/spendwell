@@ -18,6 +18,13 @@
     transition: 0.5s ease;
     max-height: 60px;
     overflow: hidden;
+
+    .summary {
+      height: 20px;
+      // hack out to the edges of card to enable click surface
+      margin: -20px -20px 20px -20px;
+      padding: 20px;
+    }
   }
 
   &.can-expand.expanded {
@@ -39,14 +46,10 @@
     flex-direction: row;
     justify-content: flex-end;
 
-    height: 20px;
-    // hack out to the edges of card to enable click surface
-    margin: -20px -20px 20px -20px;
-    padding: 20px;
-
     > :first-child {
       flex: 1;
     }
+
     > :not(:first-child) {
       margin-left: 20px;
     }

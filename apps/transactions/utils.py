@@ -2,7 +2,12 @@
 import graphene
 from graphene.utils import to_camel_case
 from graphene.contrib.django.form_converter import convert_form_field
-from graphql.core.type import GraphQLInputObjectType, GraphQLInputObjectField
+from graphql.core.type import (
+    GraphQLInputObjectType,
+    GraphQLInputObjectField,
+    GraphQLObjectType,
+    GraphQLField,
+)
 
 from apps.core.utils import get_core_type
 from difflib import SequenceMatcher
@@ -28,11 +33,18 @@ def apply_filter_list(base_queryset, filter_list, filter_class):
     return queryset
 
 
-def filter_list_schema(filterset_class, name=None):
+def filter_list_schema(filterset_class, name=None, input=True):
     if name is None:
         name = filterset_class.__name__
 
-    return graphene.List(GraphQLInputObjectType(name, {
-        to_camel_case(key): GraphQLInputObjectField(get_core_type(convert_form_field(value.field)))
+    if input:
+        ObjectType = GraphQLInputObjectType
+        ObjectField = GraphQLInputObjectField
+    else:
+        ObjectType = GraphQLObjectType
+        ObjectField = GraphQLField
+
+    return graphene.List(ObjectType(name, {
+        to_camel_case(key): ObjectField(get_core_type(convert_form_field(value.field)))
         for key, value in filterset_class.base_filters.items()
     }))

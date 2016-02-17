@@ -9,7 +9,7 @@ import ScrollTrigger from 'components/scroll-trigger';
 import styles from 'sass/views/bucket.scss';
 
 
-class Outgoing extends Component {
+class AllTransactions extends Component {
   handleScroll() {
     this.props.relay.setVariables({ count: this.props.relay.variables.count + 50 });
   }
@@ -26,7 +26,7 @@ class Outgoing extends Component {
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
-          <h1>Outgoing</h1>
+          <h1>All Transactions</h1>
         </div>
 
         <TransactionList transactions={viewer.transactions}/>
@@ -35,14 +35,14 @@ class Outgoing extends Component {
   }
 }
 
-Outgoing = Relay.createContainer(Outgoing, {
+AllTransactions = Relay.createContainer(AllTransactions, {
   initialVariables: {
     count: 50,
   },
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        transactions(first: $count, amountLt: 0, isTransfer: false, isSavings: false) {
+        transactions(first: $count) {
           ${TransactionList.getFragment('transactions')}
         }
       }
@@ -50,4 +50,4 @@ Outgoing = Relay.createContainer(Outgoing, {
   },
 });
 
-export default Outgoing;
+export default AllTransactions;

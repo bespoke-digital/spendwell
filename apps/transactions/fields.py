@@ -15,9 +15,10 @@ class TransactionConnectionField(DjangoFilterConnectionField):
 
     def get_queryset(self, queryset, args, info):
         queryset = queryset.filter(owner=info.request_context.user)
-        queryset = self.filterset_class(args, queryset=queryset)
+        queryset = self.filterset_class(args, queryset=queryset).qs
 
         if not args.get('filters'):
             return queryset
         else:
-            return apply_filter_list(queryset, args['filters'], self.filterset_class)
+            result = apply_filter_list(queryset, args['filters'], self.filterset_class)
+        return result

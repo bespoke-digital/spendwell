@@ -43,7 +43,7 @@ class Category extends Component {
 @relayContainer({ fragments: {
   viewer: ()=> Relay.QL`
     fragment on Viewer {
-      categories(topLevel: true, first: 100) {
+      categories(topLevel: true, first: 1000) {
         edges {
           node {
             ${Category.getFragment('category')}
