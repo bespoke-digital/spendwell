@@ -73,7 +73,7 @@ class DetectTransfersMutation(ClientIDMutation):
         return Cls(viewer=Viewer())
 
 
-class MarkTransactionAsSavings(ClientIDMutation):
+class MarkTransactionAsFromSavings(ClientIDMutation):
     class Input:
         transaction_id = graphene.ID()
 
@@ -82,14 +82,14 @@ class MarkTransactionAsSavings(ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
         transaction = instance_for_node_id(input.get('transaction_id'), info)
-        transaction.mark_as_savings()
+        transaction.mark_as_from_savings()
         return Cls(transaction=transaction)
 
 
 class TransactionsMutations(graphene.ObjectType):
     upload_csv_mutation = graphene.Field(UploadCsvMutation)
     detect_transfers = graphene.Field(DetectTransfersMutation)
-    mark_transaction_as_savings = graphene.Field(MarkTransactionAsSavings)
+    mark_transaction_as_from_savings = graphene.Field(MarkTransactionAsFromSavings)
 
     class Meta:
         abstract = True

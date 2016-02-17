@@ -1,16 +1,17 @@
 
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 
+from .filters import TransactionFilter
 from .utils import apply_filter_list, filter_list_schema
 
 
 class TransactionConnectionField(DjangoFilterConnectionField):
     def __init__(self, node_type, *args, **kwargs):
-        filterset_class = kwargs.get('filterset_class')
-
-        if filterset_class is not None:
-            kwargs['filters'] = filter_list_schema(filterset_class)
-
+        kwargs['filterset_class'] = TransactionFilter
+        kwargs['filters'] = filter_list_schema(
+            TransactionFilter,
+            name=kwargs.pop('filters_name', None),
+        )
         super(TransactionConnectionField, self).__init__(node_type, *args, **kwargs)
 
     def get_queryset(self, queryset, args, info):

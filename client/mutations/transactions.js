@@ -80,7 +80,7 @@ export class DetectTransfersMutation extends Relay.Mutation {
 }
 
 
-export class MarkTransactionAsSavings extends Relay.Mutation {
+export class MarkTransactionAsFromSavings extends Relay.Mutation {
   static fragments = {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
@@ -94,12 +94,12 @@ export class MarkTransactionAsSavings extends Relay.Mutation {
   }
 
   getMutation() {
-    return Relay.QL`mutation { markTransactionAsSavings }`;
+    return Relay.QL`mutation { markTransactionAsFromSavings }`;
   }
 
   getFatQuery() {
     return Relay.QL`
-      fragment on MarkTransactionAsSavings {
+      fragment on MarkTransactionAsFromSavings {
         transaction
       }
     `;

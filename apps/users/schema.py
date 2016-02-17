@@ -5,6 +5,8 @@ import graphene
 from apps.core.types import Money, Month
 from apps.goals.schema import GoalMonthNode
 from apps.buckets.schema import BucketMonthNode
+from apps.transactions.schema import TransactionNode
+from apps.transactions.fields import TransactionConnectionField
 
 from .summary import MonthSummary
 
@@ -14,9 +16,14 @@ class Summary(graphene.ObjectType):
     allocated = graphene.Field(Money())
     spent = graphene.Field(Money())
     net = graphene.Field(Money())
+    spent_from_savings = graphene.Field(Money())
 
     goal_months = DjangoConnectionField(GoalMonthNode)
     bucket_months = DjangoConnectionField(BucketMonthNode)
+    transactions = TransactionConnectionField(
+        TransactionNode,
+        filters_name='SummaryTransactionsFilters',
+    )
 
 
 class UsersQuery(graphene.ObjectType):

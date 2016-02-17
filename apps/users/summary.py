@@ -16,12 +16,12 @@ class MonthSummary(object):
         else:
             self.month_start = month_start
 
-    def transactions(self):
+    def source_transactions(self, from_savings=False):
         return Transaction.objects.filter(
             owner=self.user,
             transfer_pair__isnull=True,
             account__disabled=False,
-            savings=False,
+            from_savings=from_savings,
             date__lt=self.month_start + relativedelta(months=1),
             date__gte=self.month_start,
         )
@@ -29,7 +29,7 @@ class MonthSummary(object):
     @property
     def income(self):
         if not hasattr(self, '_income'):
-            self._income = self.transactions().filter(amount__gt=0).sum()
+            self._income = self.source_transactions().filter(amount__gt=0).sum()
 
             if (
                 relativedelta(self.month_start, delorean.now().datetime).months == 0 and
@@ -50,8 +50,14 @@ class MonthSummary(object):
     @property
     def spent(self):
         if not hasattr(self, '_spent'):
-            self._spent = self.transactions().filter(amount__lt=0).sum()
+            self._spent = self.source_transactions().filter(amount__lt=0).sum()
         return self._spent
+
+    @property
+    def spent_from_savings(self):
+        if not hasattr(self, '_spent_from_savings'):
+            self._spent_from_savings = self.source_transactions(from_savings=True).sum()
+        return self._spent_from_savings
 
     @property
     def net(self):
@@ -76,3 +82,9 @@ class MonthSummary(object):
                 month_start=self.month_start,
             )
         return self._bucket_months
+
+    @property
+    def transactions(self):
+        if not hasattr(self, '_transactions'):
+            self._transactions = self.source_transactions()
+        return self._transactions

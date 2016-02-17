@@ -13,7 +13,6 @@ class TransactionFilter(filters.FilterSet):
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     amount_lt = filters.NumberFilter(name='amount', lookup_type='lt')
     amount_gt = filters.NumberFilter(name='amount', lookup_type='gt')
-    is_savings = filters.BooleanFilter(name='savings')
     is_transfer = filters.BooleanFilter(
         name='transfer_pair',
         lookup_type='isnull',
@@ -29,7 +28,7 @@ class TransactionFilter(filters.FilterSet):
             'date_gte',
             'amount_gt',
             'amount_lt',
-            'is_savings',
+            'from_savings',
             'is_transfer',
         )
 

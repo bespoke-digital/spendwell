@@ -92,7 +92,7 @@ BucketForm = Relay.createContainer(BucketForm, {
           first: $count,
           filters: $filters,
           isTransfer: false,
-          isSavings: false,
+          fromSavings: false,
         ) {
           ${TransactionList.getFragment('transactions')}
         }

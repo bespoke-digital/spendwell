@@ -10,6 +10,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
 import BucketMonth from 'components/bucket-month';
+import SpentFromSavings from 'components/spent-from-savings';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
@@ -49,19 +50,16 @@ class Dashboard extends Component {
       return <div className='container'>No Summary</div>;
     }
 
+    const { params: { year, month }, viewer: { summary } } = this.props;
     const {
-      params: { year, month },
-      viewer: {
-        summary: {
-          income,
-          allocated,
-          spent,
-          net,
-          goalMonths,
-          bucketMonths,
-        },
-      },
-    } = this.props;
+      income,
+      allocated,
+      spent,
+      net,
+      goalMonths,
+      bucketMonths,
+    } = summary;
+
     const { selected } = this.state;
 
     const now = moment().startOf('month');
@@ -136,6 +134,15 @@ class Dashboard extends Component {
           )}
         </CardList>
 
+        <CardList>
+          <SpentFromSavings
+            summary={summary}
+            month={periods.current}
+            selected={selected === 'spentFromSavings'}
+            onClick={this.select.bind(this, 'spentFromSavings')}
+          />
+        </CardList>
+
         <div className='heading'>
           <h2>Expenses</h2>
           <div>
@@ -202,6 +209,7 @@ Dashboard = Relay.createContainer(Dashboard, {
       fragment on Viewer {
         ${AssignTransactionsMutation.getFragment('viewer')}
         summary(month: $date) {
+          ${SpentFromSavings.getFragment('summary')}
           income
           allocated
           spent
@@ -209,8 +217,8 @@ Dashboard = Relay.createContainer(Dashboard, {
           goalMonths(first: 1000) {
             edges {
               node {
-                id
                 ${GoalMonth.getFragment('goalMonth')}
+                id
               }
             }
           }

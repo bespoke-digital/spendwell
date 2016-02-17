@@ -42,7 +42,7 @@ Outgoing = Relay.createContainer(Outgoing, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        transactions(first: $count, amountLt: 0, isTransfer: false, isSavings: false) {
+        transactions(first: $count, amountLt: 0, isTransfer: false, fromSavings: false) {
           ${TransactionList.getFragment('transactions')}
         }
       }

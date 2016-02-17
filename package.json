@@ -6,9 +6,9 @@
   "author": "defrex",
   "license": "All Rights Reserved",
   "scripts": {
-    "start": "node webpack/dev.server.js",
-    "build-dev": "webpack --config=webpack/dev.config.js",
-    "build-prod": "webpack --config=webpack/prod.config.js"
+    "start": "node ./webpack/dev.server.js",
+    "build-dev": "./node_modules/.bin/webpack --config=./webpack/dev.config.js",
+    "build-prod": "./node_modules/.bin/webpack --config=./webpack/prod.config.js"
   },
   "dependencies": {
     "autoprefixer": "^6.3.1",

@@ -1,11 +1,18 @@
 
-import dj_database_url
-
 from .base import *
+from .secrets import db_password, plaid_secret
 
 
 ALLOWED_HOSTS = ['*']
 
-DATABASES['default'] = dj_database_url.config()
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'spendwell',
+    'USER': 'spendwell',
+    'PASSWORD': db_password,
+}
+
+PLAID_PRODUCTION = True
+PLAID_SECRET = plaid_secret
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

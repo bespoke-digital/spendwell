@@ -7,7 +7,6 @@ from apps.core.types import Money
 from apps.buckets.models import Bucket
 
 from .models import Transaction
-from .filters import TransactionFilter
 from .fields import TransactionConnectionField
 
 
@@ -44,10 +43,7 @@ class TransactionNode(SWNode):
 
 class TransactionsQuery(graphene.ObjectType):
     transaction = graphene.relay.NodeField(TransactionNode)
-    transactions = TransactionConnectionField(
-        TransactionNode,
-        filterset_class=TransactionFilter,
-    )
+    transactions = TransactionConnectionField(TransactionNode)
 
     class Meta:
         abstract = True

@@ -123,7 +123,7 @@ class Transaction(SWModel):
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
-    savings = models.BooleanField(default=False)
+    from_savings = models.BooleanField(default=False)
     pending = models.BooleanField(default=False)
     location = JSONField(null=True)
 
@@ -140,9 +140,12 @@ class Transaction(SWModel):
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
 
-    def mark_as_savings(self):
+    def mark_as_from_savings(self):
+        if self.amount > 0:
+            raise ValueError('only outgoing transactions can be "from savings".')
+
         self.bucket_months.clear()
-        self.savings = True
+        self.from_savings = True
         self.save()
 
 
