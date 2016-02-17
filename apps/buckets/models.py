@@ -20,7 +20,12 @@ class Bucket(SWModel):
 
     def transactions(self, **filters):
         return apply_filter_list(
-            Transaction.objects.filter(owner=self.owner, **filters),
+            Transaction.objects.filter(
+                owner=self.owner,
+                account__disabled=False,
+                amount__lt=0,
+                **filters
+            ),
             self.filters,
             TransactionFilter,
         )
@@ -62,17 +67,10 @@ class BucketMonth(SWModel):
     @property
     def avg_amount(self):
         if not hasattr(self, '_avg_amount'):
-            amounts = [
-                bucket_month.amount
-                for bucket_month in BucketMonth.objects.filter(month_start__in=[
-                    self.month_start - relativedelta(months=i)
-                    for i in range(1, 4)
-                ])
-            ]
-            if len(amounts) == 0:
-                self._avg_amount = None
-            else:
-                self._avg_amount = sum(amounts) / len(amounts)
+            self._avg_amount = self.bucket.transactions(
+                date__gte=self.month_start - relativedelta(months=3),
+                date__lt=self.month_start,
+            ).sum() / 3
 
         return self._avg_amount
 

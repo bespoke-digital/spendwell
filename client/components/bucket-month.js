@@ -96,6 +96,7 @@ BucketMonth = Relay.createContainer(BucketMonth, {
               id
               description
               amount
+              date
             }
           }
         }

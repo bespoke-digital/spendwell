@@ -3,7 +3,7 @@ import graphene
 from graphene.relay import ClientIDMutation
 from graphene.relay.types import Edge
 
-from apps.core.types import Month, DateTime
+from apps.core.types import Month
 from apps.core.utils import instance_for_node_id
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter

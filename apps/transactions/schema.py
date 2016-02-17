@@ -28,6 +28,7 @@ class TransactionNode(SWNode):
             'bucket_months',
             'buckets',
             'savings',
+            'balance',
         )
 
     @staticmethod
