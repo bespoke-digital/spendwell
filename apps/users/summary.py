@@ -87,4 +87,5 @@ class MonthSummary(object):
     def transactions(self):
         if not hasattr(self, '_transactions'):
             self._transactions = self.source_transactions()
+        print('self._transactions.count()', self._transactions.count())
         return self._transactions

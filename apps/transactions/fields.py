@@ -5,13 +5,13 @@ from .filters import TransactionFilter
 from .utils import apply_filter_list, filter_list_schema
 
 
+TransactionsFiltersField = filter_list_schema(TransactionFilter)
+
+
 class TransactionConnectionField(DjangoFilterConnectionField):
     def __init__(self, node_type, *args, **kwargs):
         kwargs['filterset_class'] = TransactionFilter
-        kwargs['filters'] = filter_list_schema(
-            TransactionFilter,
-            name=kwargs.pop('filters_name', None),
-        )
+        kwargs['filters'] = TransactionsFiltersField
         super(TransactionConnectionField, self).__init__(node_type, *args, **kwargs)
 
     def get_queryset(self, queryset, args, info):

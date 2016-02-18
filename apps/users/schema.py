@@ -20,10 +20,7 @@ class Summary(graphene.ObjectType):
 
     goal_months = DjangoConnectionField(GoalMonthNode)
     bucket_months = DjangoConnectionField(BucketMonthNode)
-    transactions = TransactionConnectionField(
-        TransactionNode,
-        filters_name='SummaryTransactionsFilters',
-    )
+    transactions = TransactionConnectionField(TransactionNode)
 
 
 class UsersQuery(graphene.ObjectType):
