@@ -12,13 +12,8 @@ export default class Checkbox extends Component {
     errorMessage: PropTypes.string,
   };
 
-  changeValue(event) {
-    const { onChange } = this.props;
-    onChange(event.currentTarget.checked);
-  }
-
   render() {
-    const { checked, errorMessage, label } = this.props;
+    const { checked, errorMessage, label, onChange } = this.props;
 
     return (
       <div className={`
@@ -26,12 +21,9 @@ export default class Checkbox extends Component {
         ${errorMessage ? 'error' : ''}
         ${style.root}
       `}>
-        <label>
-          <input
-            type='checkbox'
-            onChange={::this.changeValue}
-            checked={checked}
-          />
+        <label onClick={onChange.bind(null, !checked)}>
+          <i className={`fa fa-${checked ? 'check-' : ''}square-o`}/>
+          {' '}
           {label}
         </label>
         {errorMessage ? <span>{errorMessage}</span> : null}

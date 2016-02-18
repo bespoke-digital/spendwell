@@ -9,6 +9,7 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import Checkbox from 'components/checkbox';
 import Select from 'components/select';
+import TextInput from 'components/text-input';
 
 import styles from 'sass/views/bucket.scss';
 
@@ -38,9 +39,15 @@ class Transactions extends Component {
     this.props.relay.setVariables({ isTransfer });
   }
 
+  handleSearchChange(value) {
+    this.props.relay.setVariables({
+      description: value ? value : null,
+    });
+  }
+
   render() {
     const { viewer } = this.props;
-    const { amountGt, amountLt, fromSavings, isTransfer } = this.props.relay.variables;
+    const { amountGt, amountLt, fromSavings, isTransfer, description } = this.props.relay.variables;
     return (
       <ScrollTrigger
         className={`container ${styles.root}`}
@@ -55,17 +62,22 @@ class Transactions extends Component {
         </div>
 
         <CardList>
+          <Card className='card-list-headings'>Filters</Card>
           <Card>
             <Checkbox
               label='Outgoing'
               checked={amountGt === null}
               onChange={::this.handleOutgoingChange}
             />
+          </Card>
+          <Card>
             <Checkbox
               label='Incoming'
               checked={amountLt === null}
               onChange={::this.handleIncomingChange}
             />
+          </Card>
+          <Card>
             <Select
               label='From Savings'
               onChange={::this.handleFromSavingsChange}
@@ -76,6 +88,8 @@ class Transactions extends Component {
                 { value: false, label: 'None' },
               ]}
             />
+          </Card>
+          <Card>
             <Select
               label='Transfers'
               onChange={::this.handleTransfersChange}
@@ -85,6 +99,13 @@ class Transactions extends Component {
                 { value: true, label: 'Only' },
                 { value: false, label: 'None' },
               ]}
+            />
+          </Card>
+          <Card>
+            <TextInput
+              label='Search'
+              onChange={::this.handleSearchChange}
+              value={description || ''}
             />
           </Card>
         </CardList>
@@ -102,6 +123,7 @@ Transactions = Relay.createContainer(Transactions, {
     amountLt: null,
     fromSavings: null,
     isTransfer: null,
+    description: null,
   },
   fragments: {
     viewer: ()=> Relay.QL`
@@ -112,6 +134,7 @@ Transactions = Relay.createContainer(Transactions, {
           amountLt: $amountLt,
           fromSavings: $fromSavings,
           isTransfer: $isTransfer,
+          description: $description,
         ) {
           ${TransactionList.getFragment('transactions')}
         }
