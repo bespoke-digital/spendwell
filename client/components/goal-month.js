@@ -30,13 +30,13 @@ class GoalMonth extends Component {
         goal
         ${!currentMonth && !full ? 'goal-danger' : ''}
         ${currentMonth && !full ? 'goal-warn' : ''}
-      `}>
-        <div className='summary'>
+      `} summary={
+        <div>
           <div>{goalMonth.name}</div>
           <div className='amount avg'><Money abs={true} amount={goalMonth.targetAmount}/></div>
           <div className='amount'><Money abs={true} amount={goalMonth.filledAmount}/></div>
         </div>
-
+      }>
         <Progress current={goalMonth.filledAmount} target={goalMonth.targetAmount}/>
         {goalMonth.targetAmount !== goalMonth.filledAmount ?
           <div className='progress-numbers'>

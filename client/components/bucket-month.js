@@ -1,12 +1,13 @@
 
-import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import moment from 'moment';
 import Relay from 'react-relay';
 
+import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import Money from 'components/money';
 import Progress from 'components/progress';
+import TransactionList from 'components/transaction-list';
 
 
 class BucketMonth extends Component {
@@ -29,56 +30,42 @@ class BucketMonth extends Component {
     );
 
     return (
-      <Card onClick={onClick} expanded={selected} className={` bucket ${
-        progress > 100 ? 'bucket-danger' :
-        progress > monthProgress ? 'bucket-warn' :
-        'bucket-success'
-      }`}>
-        <div className='summary'>
-          <div>{bucketMonth.name}</div>
-          <div className='amount avg'>
-            {bucketMonth.avgAmount ?
-              <Money amount={bucketMonth.avgAmount} abs={true}/>
-            : 'N/A'}
-          </div>
-          <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
-        </div>
-        {selected ?
-          <div>
-            <Progress
-              current={bucketMonth.amount}
-              target={bucketMonth.avgAmount}
-              marker={monthProgress}
-              color={progress > 100 ? 'danger' : progress > monthProgress ? 'warn' : 'success'}
-            />
-            <div className='progress-numbers'>
-              <div><Money amount={bucketMonth.amount} abs={true}/></div>
-              <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
+      <SuperCard expanded={selected} summary={
+        <Card
+          onSummaryClick={onClick}
+          expanded={selected}
+          className={` bucket ${
+            progress > 100 ? 'bucket-danger' :
+            progress > monthProgress ? 'bucket-warn' :
+            'bucket-success'
+          }`}
+          summary={
+            <div>
+              <div>{bucketMonth.name}</div>
+              <div className='amount avg'>
+                {bucketMonth.avgAmount ?
+                  <Money amount={bucketMonth.avgAmount} abs={true}/>
+                : 'N/A'}
+              </div>
+              <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
             </div>
-            {bucketMonth.transactions.edges.length ?
-              <table className='mui-table'>
-                <thead>
-                  <tr>
-                    <th>Day</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bucketMonth.transactions.edges.map(({ node })=> (
-                    <tr key={node.id}>
-                      <td>{moment(node.date).format('Do')}</td>
-                      <td>{node.description}</td>
-                      <td><Money amount={node.amount} abs={true}/></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            : null}
-            <div className='bucket-children'>{children}</div>
+          }
+        >
+          <Progress
+            current={bucketMonth.amount}
+            target={bucketMonth.avgAmount}
+            marker={monthProgress}
+            color={progress > 100 ? 'danger' : progress > monthProgress ? 'warn' : 'success'}
+          />
+          <div className='progress-numbers'>
+            <div><Money amount={bucketMonth.amount} abs={true}/></div>
+            <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
-        : null}
-      </Card>
+          <div className='bucket-children'>{children}</div>
+        </Card>
+      }>
+        <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
+      </SuperCard>
     );
   }
 }
@@ -91,14 +78,7 @@ BucketMonth = Relay.createContainer(BucketMonth, {
         amount
         avgAmount
         transactions(first: 1000) {
-          edges {
-            node {
-              id
-              description
-              amount
-              date
-            }
-          }
+          ${TransactionList.getFragment('transactions')}
         }
       }
     `,

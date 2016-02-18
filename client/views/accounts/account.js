@@ -42,51 +42,48 @@ export default class Account extends Component {
       <Card
         className={`account ${account.disabled ? 'disabled' : ''}`}
         expanded={open}
+        summary={
+          <div onClick={::this.toggleOpen}>
+            <div>
+              {account.name}
+            </div>
+            <div>
+              {account.currentBalance ?
+                <Money amount={account.currentBalance}/>
+              : null}
+            </div>
+            {!account.disabled ?
+              <Button onClick={::this.disable} propagateClick={false}>
+                Disable
+              </Button>
+            :
+              <Button onClick={::this.enable} propagateClick={false}>
+                Enable
+              </Button>
+            }
+          </div>
+        }
       >
-        <div className='summary' onClick={::this.toggleOpen}>
-          <div>
-            {account.name}
-          </div>
-          <div>
-            {account.currentBalance ?
-              <Money amount={account.currentBalance}/>
-            : null}
-          </div>
-          {!account.disabled ?
-            <Button onClick={::this.disable} propagateClick={false}>
-              Disable
-            </Button>
-          :
-            <Button onClick={::this.enable} propagateClick={false}>
-              Enable
-            </Button>
-          }
-        </div>
-
-        {open ? (
-          <div>
-            <table className='mui-table'>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {account.transactions.edges.map(({ node })=> (
-                  <tr key={node.id}>
-                    <td>{node.description}</td>
-                    <td>{node.category ? node.category.name : ''}</td>
-                    <td>{moment(node.date).format('LL')}</td>
-                    <td><Money amount={node.amount}/></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : null}
+        <table className='mui-table'>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {account.transactions.edges.map(({ node })=> (
+              <tr key={node.id}>
+                <td>{node.description}</td>
+                <td>{node.category ? node.category.name : ''}</td>
+                <td>{moment(node.date).format('LL')}</td>
+                <td><Money amount={node.amount}/></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Card>
     );
   }

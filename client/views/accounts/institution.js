@@ -32,17 +32,15 @@ class Institution extends Component {
     return (
       <div>
         <Card>
-          <div className='summary'>
-            <h3>{institution.name}</h3>
-            { institution.canSync ?
-              <div>
-                <span className='last-sync'>
-                  {moment(institution.lastSync).fromNow()}
-                </span>
-                <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
-              </div>
-            : null}
-          </div>
+          <h3>{institution.name}</h3>
+          { institution.canSync ?
+            <div>
+              <span className='last-sync'>
+                {moment(institution.lastSync).fromNow()}
+              </span>
+              <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
+            </div>
+          : null}
         </Card>
         <CardList>
           {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>

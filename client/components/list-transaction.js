@@ -36,9 +36,8 @@ class ListTransaction extends Component {
     const { transaction, expanded, onClick, abs } = this.props;
 
     return (
-      <Card className={`transaction ${styles.root}`} expanded={expanded}>
-
-        <div className='summary' onClick={onClick}>
+      <Card className={`transaction ${styles.root}`} expanded={expanded} summary={
+        <div onClick={onClick}>
           <div className='name'>
             {transaction.description}
           </div>
@@ -57,46 +56,43 @@ class ListTransaction extends Component {
             <Money amount={transaction.amount} abs={abs}/>
           </div>
         </div>
-
-        <div className='extanded-content'>
-          <ul className='list-unstyled'>
+      }>
+        <ul className='list-unstyled'>
+          <li>
+            <strong>{'Date: '}</strong>
+            <DateTime value={transaction.date}/>
+          </li>
+          <li>
+            <strong>{'Amount: '}</strong>
+            <Money amount={transaction.amount}/>
+          </li>
+          <li>
+            <strong>{'Account: '}</strong>
+            {transaction.account.name}
+          </li>
+          {transaction.buckets.edges.length ?
             <li>
-              <strong>{'Date: '}</strong>
-              <DateTime value={transaction.date}/>
+              <strong>{'Buckets: '}</strong>
+              <div className='buckets'>
+                {transaction.buckets.edges.map(({ node })=>
+                  <span key={node.id}>{node.name}</span>
+                )}
+              </div>
             </li>
+          : null}
+          {transaction.transferPair ?
             <li>
-              <strong>{'Amount: '}</strong>
-              <Money amount={transaction.amount}/>
+              <strong>{'Transfer Pair: '}</strong>
+              {transaction.transferPair.description}
+              {' - '}
+              <Money amount={transaction.transferPair.amount}/>
             </li>
-            <li>
-              <strong>{'Account: '}</strong>
-              {transaction.account.name}
-            </li>
-            {transaction.buckets.edges.length ?
-              <li>
-                <strong>{'Buckets: '}</strong>
-                <div className='buckets'>
-                  {transaction.buckets.edges.map(({ node })=>
-                    <span key={node.id}>{node.name}</span>
-                  )}
-                </div>
-              </li>
-            : null}
-            {transaction.transferPair ?
-              <li>
-                <strong>{'Transfer Pair: '}</strong>
-                {transaction.transferPair.description}
-                {' - '}
-                <Money amount={transaction.transferPair.amount}/>
-              </li>
-            : null}
-          </ul>
+          : null}
+        </ul>
 
-          <Button onClick={::this.markAsFromSavings} variant='primary'>
-            Mark As Spend From Savings
-          </Button>
-        </div>
-
+        <Button onClick={::this.markAsFromSavings} variant='primary'>
+          Mark As Spend From Savings
+        </Button>
       </Card>
     );
   }

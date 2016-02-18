@@ -89,15 +89,15 @@ class Dashboard extends Component {
         </Card>
 
         <Card className='status'>
-          <div>
+          <div className='number'>
             In
             <div className='amount'><Money amount={income}/></div>
           </div>
-          <div>
+          <div className='number'>
             Out
             <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
           </div>
-          <div>
+          <div className='number'>
             Net
             <div className='amount'><Money amount={net}/></div>
           </div>
@@ -115,12 +115,11 @@ class Dashboard extends Component {
 
         <CardList>
           <Card className='card-list-headings'>
-            <div className='summary'>
-              <div></div>
-              <div className='amount'>Target</div>
-              <div className='amount'>Saved</div>
-            </div>
+            <div></div>
+            <div className='amount'>Target</div>
+            <div className='amount'>Saved</div>
           </Card>
+
           {goalMonths.edges.map(({ node })=>
             <GoalMonth
               key={node.id}
@@ -158,11 +157,9 @@ class Dashboard extends Component {
 
         <CardList>
           <Card className='card-list-headings'>
-            <div className='summary'>
-              <div></div>
-              <div className='amount'>Average</div>
-              <div className='amount'>Spent</div>
-            </div>
+            <div></div>
+            <div className='amount'>Average</div>
+            <div className='amount'>Spent</div>
           </Card>
           {bucketMonths.edges.map(({ node })=>
             <BucketMonth
@@ -176,14 +173,14 @@ class Dashboard extends Component {
             </BucketMonth>
           )}
           {spent !== 0 ?
-            <Card>
-              <div className='summary'>
+            <Card summary={
+              <div>
                 <div>All Expenses</div>
                 <div className='amount'>
                   <Money amount={spent} abs/>
                 </div>
               </div>
-            </Card>
+            }/>
           : null}
         </CardList>
       </div>

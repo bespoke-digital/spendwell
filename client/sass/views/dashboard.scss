@@ -25,8 +25,7 @@
       flex-direction: row;
     }
 
-    > div,
-    > a {
+    .number {
       text-align: center;
       font-size: 16px;
       margin-bottom: 20px;
@@ -53,6 +52,10 @@
     }
   }
 
+  .super-card.expanded > .summary {
+    font-weight: 500;
+  }
+
   .card {
     position: relative;
 
@@ -70,14 +73,12 @@
       border-right-color: $brand-warn;
     }
 
-    .summary {
-      .amount {
-        min-width: 80px;
-        text-align: right;
+    .amount {
+      min-width: 80px;
+      text-align: right;
 
-        &.avg {
-          color: $gray-light;
-        }
+      &.avg {
+        color: $gray-light;
       }
     }
 

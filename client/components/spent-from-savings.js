@@ -1,10 +1,11 @@
 
 import { Component, PropTypes } from 'react';
-import moment from 'moment';
 import Relay from 'react-relay';
 
+import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import Money from 'components/money';
+import TransactionList from 'components/transaction-list';
 
 
 class SpentFromSavings extends Component {
@@ -22,34 +23,19 @@ class SpentFromSavings extends Component {
     const { summary, onClick, selected } = this.props;
 
     return (
-      <Card onClick={onClick} expanded={selected}>
-        <div className='summary'>
-          <div>Spent From Savings</div>
-          <div className='amount'>
-            <Money amount={summary.spentFromSavings} abs={true}/>
+      <SuperCard expanded={selected} summary={
+        <Card expanded={selected} onSummaryClick={onClick} summary={
+          <div>
+            <div>Spent From Savings</div>
+            <div className='amount'>
+              <Money amount={summary.spentFromSavings} abs={true}/>
+            </div>
           </div>
-        </div>
-        {summary.transactions.edges.length ?
-          <table className='mui-table'>
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Description</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {summary.transactions.edges.map(({ node })=> (
-                <tr key={node.id}>
-                  <td>{moment(node.date).format('Do')}</td>
-                  <td>{node.description}</td>
-                  <td><Money amount={node.amount} abs={true}/></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        : null}
-      </Card>
+        }>
+        </Card>
+      }>
+        <TransactionList transactions={summary.transactions} monthHeaders={false}/>
+      </SuperCard>
     );
   }
 }
@@ -60,14 +46,7 @@ SpentFromSavings = Relay.createContainer(SpentFromSavings, {
       fragment on Summary {
         spentFromSavings
         transactions(first: 1000, fromSavings: true) {
-          edges {
-            node {
-              id
-              description
-              amount
-              date
-            }
-          }
+          ${TransactionList.getFragment('transactions')}
         }
       }
     `,

@@ -2,7 +2,7 @@
 @import '../variables';
 @import '../depth';
 
-.card, :local(.root) {
+:local(.root) {
   @extend .depth-z1;
 
   padding: 20px;
@@ -20,9 +20,9 @@
     overflow: hidden;
 
     .summary {
-      height: 20px;
+      height: 60px;
       // hack out to the edges of card to enable click surface
-      margin: -20px -20px 20px -20px;
+      margin: -20px;
       padding: 20px;
     }
   }
@@ -37,11 +37,8 @@
     font-weight: 500;
   }
 
-  h1, h2, h3, h4, h5 {
-    margin: 0;
-  }
-
-  .summary {
+  &.card-list-headings,
+  .summary > div {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -53,5 +50,13 @@
     > :not(:first-child) {
       margin-left: 20px;
     }
+  }
+
+  .expanded-content {
+    padding-top: 20px;
+  }
+
+  h1, h2, h3, h4, h5 {
+    margin: 0;
   }
 }

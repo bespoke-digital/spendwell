@@ -1,0 +1,44 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  &.can-expand {
+    transition: margin 0.2s ease, padding 0.2s ease;
+  }
+
+  &.can-expand.expanded {
+    margin: 20px -10px;
+    padding: 0 10px 10px;
+    background-color: $gray-lighter;
+
+    > .summary .card {
+      @extend .depth-z1;
+      margin: 0 -10px 20px;
+    }
+  }
+
+  .children {
+    transition: max-height 500ms ease;
+    max-height: 1000px;
+    overflow: hidden;
+  }
+
+  .children-enter {
+    max-height: 0px;
+  }
+
+  .children-enter.children-enter-active {
+    max-height: 1000px;
+    overflow: hidden;
+  }
+
+  .children-leave {
+    max-height: 1000px;
+    overflow: hidden;
+  }
+
+  .children-leave.children-leave-active {
+    max-height: 0px;
+  }
+}
