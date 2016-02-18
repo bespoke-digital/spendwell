@@ -7,7 +7,7 @@ import Money from 'components/money';
 import Button from 'components/button';
 import DateTime from 'components/date-time';
 
-import { MarkTransactionAsSavings } from 'mutations/transactions';
+import { MarkTransactionAsFromSavings } from 'mutations/transactions';
 
 import styles from 'sass/components/list-transaction';
 
@@ -16,6 +16,7 @@ class ListTransaction extends Component {
   static propTypes = {
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
+    abs: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -25,14 +26,14 @@ class ListTransaction extends Component {
   markAsFromSavings() {
     const { transaction } = this.props;
 
-    Relay.Store.commitUpdate(new MarkTransactionAsSavings({ transaction }), {
-      onSuccess: ()=> console.log('MarkTransactionAsSavings Success'),
-      onFailure: ()=> console.log('MarkTransactionAsSavings Failure'),
+    Relay.Store.commitUpdate(new MarkTransactionAsFromSavings({ transaction }), {
+      onSuccess: ()=> console.log('MarkTransactionAsFromSavings Success'),
+      onFailure: ()=> console.log('MarkTransactionAsFromSavings Failure'),
     });
   }
 
   render() {
-    const { transaction, expanded, onClick } = this.props;
+    const { transaction, expanded, onClick, abs } = this.props;
 
     return (
       <Card className={`transaction ${styles.root}`} expanded={expanded}>
@@ -53,7 +54,7 @@ class ListTransaction extends Component {
             <DateTime value={transaction.date} format='Do'/>
           </div>
           <div className='amount'>
-            <Money amount={transaction.amount} abs={true}/>
+            <Money amount={transaction.amount} abs={abs}/>
           </div>
         </div>
 
@@ -105,7 +106,7 @@ ListTransaction = Relay.createContainer(ListTransaction, {
   fragments: {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
-        ${MarkTransactionAsSavings.getFragment('transaction')}
+        ${MarkTransactionAsFromSavings.getFragment('transaction')}
         description
         amount
         date

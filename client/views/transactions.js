@@ -8,11 +8,12 @@ import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import Checkbox from 'components/checkbox';
+import Select from 'components/select';
 
 import styles from 'sass/views/bucket.scss';
 
 
-class AllTransactions extends Component {
+class Transactions extends Component {
   handleScroll() {
     this.props.relay.setVariables({ count: this.props.relay.variables.count + 50 });
   }
@@ -29,18 +30,13 @@ class AllTransactions extends Component {
     });
   }
 
-  handleFromSavingsChange(checked) {
-    this.props.relay.setVariables({
-      fromSavings: checked ? null : false,
-    });
+  handleFromSavingsChange(fromSavings) {
+    this.props.relay.setVariables({ fromSavings });
   }
 
-  handleTransfersChange(checked) {
-    this.props.relay.setVariables({
-      isTransfer: checked ? null : false,
-    });
+  handleTransfersChange(isTransfer) {
+    this.props.relay.setVariables({ isTransfer });
   }
-
 
   render() {
     const { viewer } = this.props;
@@ -55,7 +51,7 @@ class AllTransactions extends Component {
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
-          <h1>All Transactions</h1>
+          <h1>Transactions</h1>
         </div>
 
         <CardList>
@@ -70,15 +66,25 @@ class AllTransactions extends Component {
               checked={amountLt === null}
               onChange={::this.handleIncomingChange}
             />
-            <Checkbox
+            <Select
               label='From Savings'
-              checked={fromSavings === null}
               onChange={::this.handleFromSavingsChange}
+              value={fromSavings}
+              options={[
+                { value: null, label: 'All' },
+                { value: true, label: 'Only' },
+                { value: false, label: 'None' },
+              ]}
             />
-            <Checkbox
+            <Select
               label='Transfers'
-              checked={isTransfer === null}
               onChange={::this.handleTransfersChange}
+              value={isTransfer}
+              options={[
+                { value: null, label: 'All' },
+                { value: true, label: 'Only' },
+                { value: false, label: 'None' },
+              ]}
             />
           </Card>
         </CardList>
@@ -89,7 +95,7 @@ class AllTransactions extends Component {
   }
 }
 
-AllTransactions = Relay.createContainer(AllTransactions, {
+Transactions = Relay.createContainer(Transactions, {
   initialVariables: {
     count: 50,
     amountGt: null,
@@ -114,4 +120,4 @@ AllTransactions = Relay.createContainer(AllTransactions, {
   },
 });
 
-export default AllTransactions;
+export default Transactions;

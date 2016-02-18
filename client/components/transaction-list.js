@@ -15,11 +15,13 @@ class TransactionList extends Component {
   static propTypes = {
     monthHeaders: PropTypes.bool,
     expand: PropTypes.bool,
+    abs: PropTypes.bool,
   };
 
   static defaultProps = {
     monthHeaders: true,
     expand: true,
+    abs: true,
   };
 
   constructor() {
@@ -36,7 +38,7 @@ class TransactionList extends Component {
   }
 
   renderTransaction(transaction) {
-    const { expand } = this.props;
+    const { expand, abs } = this.props;
     const { expanded } = this.state;
 
     return <ListTransaction
@@ -44,6 +46,7 @@ class TransactionList extends Component {
       transaction={transaction}
       onClick={this.toggleSelect.bind(this, transaction)}
       expanded={expand && expanded === transaction.id}
+      abs={abs}
     />;
   }
 

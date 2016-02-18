@@ -4,8 +4,6 @@ import { Component, PropTypes } from 'react';
 
 import Dropdown from 'components/dropdown';
 
-import style from 'sass/components/forms/select';
-
 
 export default class Select extends Component {
   static propTypes = {
@@ -34,7 +32,7 @@ export default class Select extends Component {
     const valueLabel = _.result(_.find(options, { value }), 'label');
 
     return (
-      <div className={`${style.root} ${className}`}>
+      <span className={className}>
         <Dropdown
           label={valueLabel ? `${label}: ${valueLabel}` : label}
           variant={variant}
@@ -45,7 +43,7 @@ export default class Select extends Component {
             </a>
           ))}
         </Dropdown>
-      </div>
+      </span>
     );
   }
 }

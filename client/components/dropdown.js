@@ -7,7 +7,7 @@ import Button from 'components/button';
 
 export default class Dropdown extends Component {
   static propTypes = {
-    label: PropTypes.object.isRequired,
+    label: PropTypes.any.isRequired,
     variant: PropTypes.oneOf(['primary', 'danger', 'accent']),
     disabled: PropTypes.bool,
   };

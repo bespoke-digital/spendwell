@@ -11,11 +11,8 @@ import Categories from 'views/categories';
 import App from 'views/app';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
-import Outgoing from 'views/outgoing';
-import Incoming from 'views/incoming';
-import Transfers from 'views/transfers';
 import Bucket from 'views/bucket';
-import AllTransactions from 'views/all-transactions';
+import Transactions from 'views/transactions';
 
 
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
@@ -32,10 +29,7 @@ export default (
       <Route path='buckets/new' component={CreateBucket} queries={rootQuery}/>
       <Route path='buckets/:id' component={Bucket} queries={rootQuery}/>
 
-      <Route path='transactions' component={AllTransactions} queries={rootQuery}/>
-      <Route path='outgoing' component={Outgoing} queries={rootQuery}/>
-      <Route path='incoming' component={Incoming} queries={rootQuery}/>
-      <Route path='transfers' component={Transfers} queries={rootQuery}/>
+      <Route path='transactions' component={Transactions} queries={rootQuery}/>
 
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/add/plaid' component={AddPlaid} queries={rootQuery}/>

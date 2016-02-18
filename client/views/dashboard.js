@@ -89,14 +89,14 @@ class Dashboard extends Component {
         </Card>
 
         <Card className='status'>
-          <Link to='/app/incoming'>
+          <div>
             In
             <div className='amount'><Money amount={income}/></div>
-          </Link>
-          <Link to='/app/outgoing'>
+          </div>
+          <div>
             Out
             <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
-          </Link>
+          </div>
           <div>
             Net
             <div className='amount'><Money amount={net}/></div>
