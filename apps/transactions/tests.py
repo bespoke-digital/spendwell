@@ -80,10 +80,10 @@ class BucktsTestCase(SWTestCase):
     def test_from_savings_query(self):
         owner = UserFactory.create()
 
-        TransactionFactory.create(owner=owner, amount=100)
-        TransactionFactory.create(owner=owner, amount=100)
-        TransactionFactory.create(owner=owner, amount=100, from_savings=True)
-        TransactionFactory.create(owner=owner, amount=100, from_savings=True)
+        TransactionFactory.create(owner=owner, amount=-100)
+        TransactionFactory.create(owner=owner, amount=-100)
+        TransactionFactory.create(owner=owner, amount=-101).mark_as_from_savings()
+        TransactionFactory.create(owner=owner, amount=-101).mark_as_from_savings()
 
         result = self.graph_query('''{
             viewer {
@@ -98,3 +98,7 @@ class BucktsTestCase(SWTestCase):
         }''', user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            -10100,
+        )
