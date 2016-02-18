@@ -1,10 +1,14 @@
 
 from decimal import Decimal
 from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
+from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
@@ -147,6 +151,25 @@ class Transaction(SWModel):
         self.bucket_months.clear()
         self.from_savings = True
         self.save()
+
+    def assign_to_buckets(self):
+        from apps.buckets.models import BucketMonth
+
+        month_start = Delorean(datetime=self.date).truncate('month').datetime
+
+        for bucket_month in BucketMonth.objects.filter(month_start=month_start):
+            if self in bucket_month.bucket.transactions():
+                print('assign bucket')
+                BucketTransaction.objects.create(
+                    bucket_month=bucket_month,
+                    transaction=self,
+                )
+
+
+@receiver(post_save, sender=Transaction)
+def transaction_post_save(sender, instance, created, raw, **kwargs):
+    if created and not raw:
+        instance.assign_to_buckets()
 
 
 class BucketTransaction(models.Model):

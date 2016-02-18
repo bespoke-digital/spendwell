@@ -76,3 +76,25 @@ class BucktsTestCase(SWTestCase):
         }''', user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 4)
+
+    def test_from_savings_query(self):
+        owner = UserFactory.create()
+
+        TransactionFactory.create(owner=owner, amount=100)
+        TransactionFactory.create(owner=owner, amount=100)
+        TransactionFactory.create(owner=owner, amount=100, from_savings=True)
+        TransactionFactory.create(owner=owner, amount=100, from_savings=True)
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(fromSavings: true) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)

@@ -12,7 +12,7 @@ class TransactionFactory(DjangoModelFactory):
     owner = factory.SubFactory(UserFactory)
     account = factory.SubFactory(AccountFactory)
     description = factory.Sequence(lambda n: 'Transaction {}'.format(n))
-    amount = factory.Sequence(lambda n: 102 * n)
+    amount = factory.Sequence(lambda n: -102 * n)
     date = factory.LazyAttribute(lambda o: now())
 
     class Meta:

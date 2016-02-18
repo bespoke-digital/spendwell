@@ -2,6 +2,8 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
+import Card from 'components/card';
+import CardList from 'components/card-list';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
@@ -38,6 +40,9 @@ class AllTransactions extends Component {
 AllTransactions = Relay.createContainer(AllTransactions, {
   initialVariables: {
     count: 50,
+    amountGt: null,
+    amountLt: null,
+    fromSavings: true,
   },
   fragments: {
     viewer: ()=> Relay.QL`
