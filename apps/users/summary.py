@@ -16,14 +16,14 @@ class MonthSummary(object):
         else:
             self.month_start = month_start
 
-    def source_transactions(self, from_savings=False):
+    def source_transactions(self, **filters):
         return Transaction.objects.filter(
             owner=self.user,
             transfer_pair__isnull=True,
             account__disabled=False,
-            from_savings=from_savings,
             date__lt=self.month_start + relativedelta(months=1),
             date__gte=self.month_start,
+            **filters
         )
 
     @property
@@ -50,13 +50,18 @@ class MonthSummary(object):
     @property
     def spent(self):
         if not hasattr(self, '_spent'):
-            self._spent = self.source_transactions().filter(amount__lt=0).sum()
+            self._spent = self.source_transactions(
+                amount__lt=0,
+                from_savings=False,
+            ).sum()
         return self._spent
 
     @property
     def spent_from_savings(self):
         if not hasattr(self, '_spent_from_savings'):
-            self._spent_from_savings = self.source_transactions(from_savings=True).sum()
+            self._spent_from_savings = self.source_transactions(
+                from_savings=True,
+            ).sum()
         return self._spent_from_savings
 
     @property
