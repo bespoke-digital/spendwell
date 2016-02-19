@@ -19,12 +19,11 @@ class MonthSummary(object):
     def source_transactions(self, **filters):
         return Transaction.objects.filter(
             owner=self.user,
-            transfer_pair__isnull=True,
             account__disabled=False,
             date__lt=self.month_start + relativedelta(months=1),
             date__gte=self.month_start,
             **filters
-        )
+        ).is_transfer(False)
 
     @property
     def income(self):

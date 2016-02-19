@@ -16,19 +16,20 @@ def estimate_income(user, month_start):
         months_ago = 3
 
     if months_ago == 0:
-        return Transaction.objects.filter(
-            transfer_pair__isnull=True,
-            amount__gt=0
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        return (
+            Transaction.objects
+            .filter(amount__gt=0)
+            .is_transfer(False)
+            .aggregate(Sum('amount'))['amount__sum'] or 0
+        )
     else:
         transactions = [
             Transaction.objects.filter(
                 owner=user,
                 date__lt=month_start - relativedelta(months=month),
                 date__gte=month_start - relativedelta(months=month + 1),
-                transfer_pair__isnull=True,
                 amount__gt=0,
-            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            ).is_transfer(False).aggregate(Sum('amount'))['amount__sum'] or 0
             for month in range(months_ago)
         ]
 

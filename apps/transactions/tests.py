@@ -23,8 +23,8 @@ class BucktsTestCase(SWTestCase):
 
         self.assertEqual(transfer_to.transfer_pair, transfer_from)
         self.assertEqual(transfer_from.transfer_pair, transfer_to)
-        self.assertEqual(Transaction.objects.filter(transfer_pair__isnull=False).count(), 2)
-        self.assertEqual(Transaction.objects.filter(transfer_pair__isnull=True).count(), 0)
+        self.assertEqual(Transaction.objects.is_transfer(True).count(), 2)
+        self.assertEqual(Transaction.objects.is_transfer(False).count(), 0)
 
         TransactionFactory.create(owner=owner, amount=100)
         TransactionFactory.create(owner=owner, amount=100)
@@ -33,8 +33,8 @@ class BucktsTestCase(SWTestCase):
 
         Transaction.objects.detect_transfers(owner=owner)
 
-        self.assertEqual(Transaction.objects.filter(transfer_pair__isnull=False).count(), 2)
-        self.assertEqual(Transaction.objects.filter(transfer_pair__isnull=True).count(), 4)
+        self.assertEqual(Transaction.objects.is_transfer(True).count(), 2)
+        self.assertEqual(Transaction.objects.is_transfer(False).count(), 4)
 
     def test_is_transfer_query(self):
         owner = UserFactory.create()

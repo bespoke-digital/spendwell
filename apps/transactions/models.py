@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
-from django.db import models, IntegrityError
+from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import get_current_timezone
@@ -22,12 +22,22 @@ class TransactionsQuerySet(SWQuerySet):
     def sum(self):
         return self.aggregate(models.Sum('amount'))['amount__sum'] or 0
 
+    def is_transfer(self, has_transfer):
+        queryset = self.annotate(models.Count('_transfer_pair'))
+        if has_transfer:
+            return queryset.filter(_transfer_pair__count__gt=0)
+        else:
+            return queryset.filter(_transfer_pair__count=0)
+
 
 class TransactionManager(SWManager):
     queryset_class = TransactionsQuerySet
 
-    def sum(self):
-        return self.get_queryset().sum()
+    def sum(self, *args, **kwargs):
+        return self.get_queryset().sum(*args, **kwargs)
+
+    def is_transfer(self, *args, **kwargs):
+        return self.get_queryset().is_transfer(*args, **kwargs)
 
     def create_from_plaid(self, institution, json_data):
         try:
@@ -64,22 +74,20 @@ class TransactionManager(SWManager):
                 date__lt=month_start + relativedelta(months=1),
             )
 
-        transactions.update(transfer_pair=None)
+        for transaction in transactions:
+            transactions.transfer_pair = None
 
         for transaction in transactions:
-            transaction.refresh_from_db(fields=('transfer_pair',))
             if transaction.transfer_pair:
                 continue
 
-            potential_transfers = Transaction.objects.exclude(
-                account=transaction.account,
-            ).filter(
-                owner=transaction.owner,
-                transfer_pair__isnull=True,
-                account__disabled=False,
-                amount=(-transaction.amount),
-                # date__lte=transaction.date + timedelta(days=3),
-                # date__gte=transaction.date - timedelta(days=3),
+            potential_transfers = (
+                Transaction.objects
+                .exclude(account=transaction.account)
+                .filter(owner=transaction.owner)
+                .filter(account__disabled=False)
+                .filter(amount=(-transaction.amount))
+                .is_transfer(False)
             )
 
             if len(potential_transfers) == 0:
@@ -96,9 +104,6 @@ class TransactionManager(SWManager):
 
             transaction.transfer_pair = transfer
             transaction.save()
-
-            transaction.transfer_pair.transfer_pair = transaction
-            transaction.transfer_pair.save()
 
 
 class Transaction(SWModel):
@@ -118,12 +123,12 @@ class Transaction(SWModel):
         null=True,
         on_delete=models.SET_NULL,
     )
-    transfer_pair = models.OneToOneField('self', null=True, on_delete=models.SET_NULL)
     bucket_months = models.ManyToManyField(
         'buckets.BucketMonth',
         related_name='transactions',
         through='transactions.BucketTransaction',
     )
+    _transfer_pair = models.ManyToManyField('self')
 
     description = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
@@ -167,6 +172,19 @@ class Transaction(SWModel):
                     bucket_month=bucket_month,
                     transaction=self,
                 )
+
+    def get_transfer_pair(self):
+        try:
+            return self._transfer_pair.all()[0]
+        except IndexError:
+            return None
+
+    def set_transfer_pair(self, value):
+        self._transfer_pair.clear()
+        if value:
+            return self._transfer_pair.add(value)
+
+    transfer_pair = property(get_transfer_pair, set_transfer_pair)
 
 
 @receiver(post_save, sender=Transaction)

@@ -13,11 +13,7 @@ class TransactionFilter(filters.FilterSet):
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     amount_lt = filters.NumberFilter(name='amount', lookup_type='lt')
     amount_gt = filters.NumberFilter(name='amount', lookup_type='gt')
-    is_transfer = filters.BooleanFilter(
-        name='transfer_pair',
-        lookup_type='isnull',
-        exclude=True,
-    )
+    is_transfer = filters.MethodFilter(widget=filters.widgets.BooleanWidget())
 
     class Meta:
         model = Transaction
@@ -35,3 +31,6 @@ class TransactionFilter(filters.FilterSet):
     def filter_category(self, queryset, value):
         category = Category.objects.get(id=value)
         return queryset.filter(category__in=[category] + category.all_children())
+
+    def filter_is_transfer(self, queryset, value):
+        return queryset.is_transfer(value)
