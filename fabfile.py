@@ -113,7 +113,7 @@ def deploy(force=False, interactive=False):
                 return
             npm_build()
 
-        if 'static' in changed or force:
+        if 'static' in changed or 'client' in changed or 'webpack' in changed or force:
             if interactive and not console.confirm('Continue with collectstatic?'):
                 return
             collectstatic()
