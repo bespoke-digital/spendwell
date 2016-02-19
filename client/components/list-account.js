@@ -41,11 +41,9 @@ export default class Account extends Component {
         className={`account ${account.disabled ? 'disabled' : ''}`}
         expanded={open}
         summary={
-          <Card summary={
-            <div onClick={::this.toggleOpen}>
-              <div>
-                {account.name}
-              </div>
+          <Card onSummaryClick={::this.toggleOpen} summary={
+            <div>
+              <div>{account.name}</div>
               <div>
                 {account.currentBalance ?
                   <Money amount={account.currentBalance}/>

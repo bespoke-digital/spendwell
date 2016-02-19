@@ -36,27 +36,32 @@ class ListTransaction extends Component {
     const { transaction, expanded, onClick, abs } = this.props;
 
     return (
-      <Card className={`transaction ${styles.root}`} expanded={expanded} summary={
-        <div onClick={onClick}>
-          <div className='name'>
-            {transaction.description}
+      <Card
+        className={`transaction ${styles.root}`}
+        expanded={expanded}
+        onSummaryClick={onClick}
+        summary={
+          <div>
+            <div className='name'>
+              {transaction.description}
+            </div>
+            {/*<div className='category'>
+              {transaction.category ? transaction.category.name : null}
+            </div>*/}
+            <div className='buckets'>
+              {transaction.buckets.edges.map(({ node })=>
+                <span key={node.id}>{node.name}</span>
+              )}
+            </div>
+            <div className='date'>
+              <DateTime value={transaction.date} format='Do'/>
+            </div>
+            <div className='amount'>
+              <Money amount={transaction.amount} abs={abs}/>
+            </div>
           </div>
-          {/*<div className='category'>
-            {transaction.category ? transaction.category.name : null}
-          </div>*/}
-          <div className='buckets'>
-            {transaction.buckets.edges.map(({ node })=>
-              <span key={node.id}>{node.name}</span>
-            )}
-          </div>
-          <div className='date'>
-            <DateTime value={transaction.date} format='Do'/>
-          </div>
-          <div className='amount'>
-            <Money amount={transaction.amount} abs={abs}/>
-          </div>
-        </div>
-      }>
+        }
+      >
         <ul className='list-unstyled'>
           <li>
             <strong>{'Date: '}</strong>
