@@ -24,6 +24,10 @@
       // hack out to the edges of card to enable click surface
       margin: -20px;
       padding: 20px;
+
+      .mui-btn {
+        margin-top: -10px;
+      }
     }
   }
 

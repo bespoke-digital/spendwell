@@ -8,9 +8,9 @@ import moment from 'moment';
 import CardList from 'components/card-list';
 import Card from 'components/card';
 import Button from 'components/button';
-import { SyncInstitutionMutation } from 'mutations/institutions';
+import ListAccount from 'components/list-account';
 
-import Account from './account';
+import { SyncInstitutionMutation } from 'mutations/institutions';
 
 
 class Institution extends Component {
@@ -30,21 +30,23 @@ class Institution extends Component {
     const { institution } = this.props;
 
     return (
-      <div>
-        <Card>
-          <h3>{institution.name}</h3>
-          { institution.canSync ?
-            <div>
-              <span className='last-sync'>
-                {moment(institution.lastSync).fromNow()}
-              </span>
-              <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
-            </div>
-          : null}
-        </Card>
+      <div className='institution'>
+        <Card summary={
+          <div>
+            <h3>{institution.name}</h3>
+            { institution.canSync ?
+              <div>
+                <span className='last-sync'>
+                  {moment(institution.lastSync).fromNow()}
+                </span>
+                <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
+              </div>
+            : null}
+          </div>
+        }/>
         <CardList>
           {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
-            <Account key={node.id} account={node}/>
+            <ListAccount key={node.id} account={node}/>
           )}
         </CardList>
       </div>
@@ -63,7 +65,7 @@ Institution = Relay.createContainer(Institution, {
         accounts(first: 10) {
           edges {
             node {
-              ${Account.getFragment('account')}
+              ${ListAccount.getFragment('account')}
               id
               disabled
             }

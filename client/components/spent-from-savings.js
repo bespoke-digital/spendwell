@@ -31,8 +31,7 @@ class SpentFromSavings extends Component {
               <Money amount={summary.spentFromSavings} abs={true}/>
             </div>
           </div>
-        }>
-        </Card>
+        }/>
       }>
         <TransactionList transactions={summary.transactions} monthHeaders={false}/>
       </SuperCard>

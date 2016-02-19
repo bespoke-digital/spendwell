@@ -1,7 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import { Link } from 'react-router';
 import moment from 'moment';
 
 import Card from 'components/card';

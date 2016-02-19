@@ -54,10 +54,6 @@ class Transactions extends Component {
         onTrigger={::this.handleScroll}
       >
         <div className='heading'>
-          <Button to='/app/' className='back'>
-            <i className='fa fa-long-arrow-left'/>
-          </Button>
-
           <h1>Transactions</h1>
         </div>
 

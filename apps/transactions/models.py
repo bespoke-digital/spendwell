@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.timezone import get_current_timezone
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
@@ -43,7 +44,10 @@ class TransactionManager(SWManager):
 
         transaction.description = json_data['name']
         transaction.amount = -Decimal(json_data['amount'])
-        transaction.date = datetime(*map(int, json_data['date'].split('-')))
+        transaction.date = datetime(
+            *map(int, json_data['date'].split('-')),
+            tzinfo=get_current_timezone()
+        )
         transaction.pending = json_data['pending']
         transaction.location = json_data['meta'].get('location', {})
         transaction.location['score'] = json_data.get('score')
