@@ -25,7 +25,7 @@ export default (props)=> {
       {summary ?
         <div className='summary' onClick={onSummaryClick}>{summary}</div>
       : null}
-      {canExpand ?
+      {canExpand && children ?
         <Transition name='children'>{expanded ? (
           <div className='expanded-content'>
             {children}

@@ -7,6 +7,4 @@ var config = require('./base.config.js');
 // config.devtool = 'cheap-module-eval-source-map';
 config.debug = true;
 
-config.module.loaders.push({ test: require.resolve('react'), loader: 'expose?React' });
-
 module.exports = config;

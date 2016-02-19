@@ -46,8 +46,10 @@ def npm_install():
 
 @task
 def npm_build():
-    with cd(env.dir):
-        run('npm run build-prod')
+    with prefix('source {activate}'.format(**env)):
+        with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
+            with cd(env.dir):
+                run('npm run build-prod')
 
 
 @task
