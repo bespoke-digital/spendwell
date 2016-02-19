@@ -28,6 +28,7 @@ graphiql_view = login_required(GraphiQL.as_view())
 urlpatterns = [
     url(r'^admin/', admin_site.urls),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^watchman/', include('watchman.urls')),
 
     url(r'^$', home_view, name='home'),
     url(r'^signup', signup_view, name='signup'),

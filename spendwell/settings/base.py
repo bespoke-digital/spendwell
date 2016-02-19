@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
     'django_graphiql',
     'graphene.contrib.django',
+    'watchman',
 
     'apps.core',
     'apps.landing',
