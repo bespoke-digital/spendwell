@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.timezone import get_current_timezone
@@ -98,7 +98,11 @@ class TransactionManager(SWManager):
             transfer.save()
 
             transaction.transfer_pair = transfer
-            transaction.save()
+            try:
+                transaction.save()
+            except IntegrityError:
+                transfer.transfer_pair = None
+                transfer.save()
 
 
 class Transaction(SWModel):
