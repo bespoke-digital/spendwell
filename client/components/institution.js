@@ -62,7 +62,7 @@ Institution = Relay.createContainer(Institution, {
         name
         canSync
         lastSync
-        accounts(first: 10) {
+        accounts(first: 100) {
           edges {
             node {
               ${ListAccount.getFragment('account')}
