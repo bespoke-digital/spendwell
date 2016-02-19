@@ -13,6 +13,7 @@ from .fields import TransactionConnectionField
 class TransactionNode(SWNode):
     amount = graphene.Field(Money)
     buckets = DjangoConnectionField('BucketNode')
+    transfer_pair = graphene.Field('TransactionNode')
 
     class Meta:
         model = Transaction

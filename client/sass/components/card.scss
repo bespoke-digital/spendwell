@@ -34,7 +34,7 @@
   &.can-expand.expanded {
     @extend .depth-z2;
     margin: 20px -10px;
-    max-height: auto;
+    max-height: none;
   }
 
   &.card-list-headings {
