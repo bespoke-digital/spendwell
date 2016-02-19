@@ -8,3 +8,4 @@ python-dateutil==2.4.2
 factory-boy==2.6.0
 Delorean==0.6.0
 graphene==0.7.3
+tqdm==3.8.0
