@@ -30,7 +30,7 @@ class Institution extends Component {
     const { institution } = this.props;
 
     return (
-      <div className='institution'>
+      <CardList className='institution'>
         <Card summary={
           <div>
             <h3>{institution.name}</h3>
@@ -44,12 +44,10 @@ class Institution extends Component {
             : null}
           </div>
         }/>
-        <CardList>
-          {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
-            <ListAccount key={node.id} account={node}/>
-          )}
-        </CardList>
-      </div>
+        {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
+          <ListAccount key={node.id} account={node}/>
+        )}
+      </CardList>
     );
   }
 }
