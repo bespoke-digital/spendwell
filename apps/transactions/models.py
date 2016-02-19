@@ -94,15 +94,11 @@ class TransactionManager(SWManager):
                     key=lambda t: similarity(t.description, transaction.description),
                 )[-1]
 
-            transfer.transfer_pair = transaction
-            transfer.save()
-
             transaction.transfer_pair = transfer
-            try:
-                transaction.save()
-            except IntegrityError:
-                transfer.transfer_pair = None
-                transfer.save()
+            transaction.save()
+
+            transaction.transfer_pair.transfer_pair = transaction
+            transaction.transfer_pair.save()
 
 
 class Transaction(SWModel):
