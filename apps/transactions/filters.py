@@ -1,9 +1,14 @@
 
+from django import forms
 import django_filters as filters
 
 from apps.categories.models import Category
 
 from .models import Transaction
+
+
+class BooleanMethodFilter(filters.MethodFilter):
+    field_class = forms.BooleanField
 
 
 class TransactionFilter(filters.FilterSet):
@@ -13,7 +18,7 @@ class TransactionFilter(filters.FilterSet):
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     amount_lt = filters.NumberFilter(name='amount', lookup_type='lt')
     amount_gt = filters.NumberFilter(name='amount', lookup_type='gt')
-    is_transfer = filters.MethodFilter(widget=filters.widgets.BooleanWidget())
+    is_transfer = BooleanMethodFilter()
 
     class Meta:
         model = Transaction
