@@ -1,13 +1,12 @@
 
 from dateutil.relativedelta import relativedelta
-import delorean
 
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
-from apps.core.models import SWModel, SWManager
+from apps.core.models import SWModel, SWManager, SWQuerySet
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -34,7 +33,14 @@ class Bucket(SWModel):
         )
 
 
+class BucketMonthQueryset(SWQuerySet):
+    def owned_by(self, user):
+        return self.filter(bucket__owner=user)
+
+
 class BucketMonthManager(SWManager):
+    queryset_class = BucketMonthQueryset
+
     def assign_transactions(self, owner, month_start):
         BucketTransaction.objects.filter(
             transaction__owner=owner,
@@ -69,6 +75,10 @@ class BucketMonth(SWModel):
             ).sum() / 3
 
         return self._avg_amount
+
+    @property
+    def owner(self):
+        return self.bucket.owner
 
     def assign_transactions(self):
         for transaction_id in self.bucket.transactions(

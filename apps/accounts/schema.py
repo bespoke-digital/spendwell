@@ -3,12 +3,16 @@ import graphene
 
 from apps.core.fields import SWNode, SWConnectionField
 from apps.core.types import Money
+from apps.transactions.schema import TransactionNode
+from apps.transactions.fields import TransactionConnectionField
+
 from .models import Account
 
 
 class AccountNode(SWNode):
     current_balance = graphene.Field(Money)
     available_balance = graphene.Field(Money)
+    transactions = TransactionConnectionField(TransactionNode)
 
     class Meta:
         model = Account

@@ -21,13 +21,6 @@
 
     .summary {
       height: 60px;
-      // hack out to the edges of card to enable click surface
-      margin: -20px;
-      padding: 20px;
-
-      .mui-btn {
-        margin-top: -10px;
-      }
     }
   }
 
@@ -39,6 +32,16 @@
 
   &.card-list-headings {
     font-weight: 500;
+  }
+
+  .summary {
+    // hack out to the edges of card to enable click surface
+    margin: -20px;
+    padding: 20px;
+
+    .mui-btn {
+      margin-top: -10px;
+    }
   }
 
   &.card-list-headings,

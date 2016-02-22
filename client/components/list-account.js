@@ -32,9 +32,18 @@ export default class Account extends Component {
     });
   }
 
+  loadTransactions() {
+    const { relay } = this.props;
+    const { transactionCount } = relay.variables;
+
+    console.log(transactionCount);
+
+    relay.setVariables({ transactionCount: transactionCount + 20 });
+  }
+
   render() {
     const { account, relay } = this.props;
-    const { open, transactionCount } = relay.variables;
+    const { open } = relay.variables;
 
     return (
       <SuperCard
@@ -64,11 +73,11 @@ export default class Account extends Component {
       >
         <TransactionList transactions={account.transactions}/>
 
-        <div className='bottom-load-button'>
-          <Button onClick={relay.setVariables.bind(relay, {
-            transactionCount: transactionCount + 20,
-          })}>Load More</Button>
-        </div>
+        {account.transactions && account.transactions.pageInfo.hasNextPage ?
+          <div className='bottom-load-button'>
+            <Button onClick={::this.loadTransactions}>Load More</Button>
+          </div>
+        : null}
       </SuperCard>
     );
   }
@@ -90,6 +99,9 @@ Account = Relay.createContainer(Account, {
         disabled
         transactions(first: $transactionCount) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
+          pageInfo {
+            hasNextPage
+          }
         }
       }
     `,

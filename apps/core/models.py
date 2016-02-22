@@ -20,6 +20,9 @@ class SWQuerySet(models.QuerySet):
     def sum(self, field):
         return self.aggregate(s=models.Sum(field))['s'] or 0
 
+    def owned_by(self, user):
+        return self.filter(owner=user)
+
 
 class SWManager(models.Manager):
     use_for_related_fields = True
@@ -34,8 +37,11 @@ class SWManager(models.Manager):
     def as_json(self):
         return self.get_queryset().as_json()
 
-    def sum(self):
-        return self.get_queryset().sum()
+    def sum(self, *args, **kwargs):
+        return self.get_queryset().sum(*args, **kwargs)
+
+    def owned_by(self, *args, **kwargs):
+        return self.get_queryset().owned_by(*args, **kwargs)
 
 
 class SWModel(models.Model):

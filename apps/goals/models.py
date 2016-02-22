@@ -30,7 +30,14 @@ class Goal(SWModel):
         return self.name
 
 
+class GoalMonthQueryset(SWQuerySet):
+    def owned_by(self, user):
+        return self.filter(goal__owner=user)
+
+
 class GoalMonthManager(SWManager):
+    queryset_class = GoalMonthQueryset
+
     def generate(self, goal, month_start):
         from apps.users.summary import MonthSummary
         available_amount = MonthSummary(goal.owner, month_start).net

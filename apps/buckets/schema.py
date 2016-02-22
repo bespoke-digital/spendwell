@@ -1,18 +1,18 @@
 
 import graphene
-from graphene.contrib.django.fields import DjangoConnectionField
 
 from apps.core.fields import SWNode, SWConnectionField
 from apps.core.types import Money
 from apps.transactions.schema import TransactionNode
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
+from apps.transactions.fields import TransactionConnectionField
 
 from .models import Bucket, BucketMonth
 
 
 class BucketNode(SWNode):
-    transactions = DjangoConnectionField(TransactionNode)
+    transactions = TransactionConnectionField(TransactionNode)
     filters = filter_list_schema(TransactionFilter, name='BucketFilters', input=False)
 
     class Meta:
@@ -32,6 +32,7 @@ class BucketMonthNode(SWNode):
     name = graphene.Field(graphene.String())
     amount = graphene.Field(Money)
     avg_amount = graphene.Field(Money)
+    transactions = TransactionConnectionField(TransactionNode)
 
     class Meta:
         model = BucketMonth

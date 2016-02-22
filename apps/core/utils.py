@@ -24,7 +24,7 @@ def get_cursor(instance):
     # WARNING: this will scale like shit.
     # See https://github.com/graphql-python/graphene/issues/59
     return cursor_for_object_in_connection(
-        list(type(instance).objects.filter(owner=instance.owner).values_list('id', flat=True)),
+        list(type(instance).objects.owned_by(instance.owner).values_list('id', flat=True)),
         instance.id
     )
 

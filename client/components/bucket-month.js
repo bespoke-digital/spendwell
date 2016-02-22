@@ -22,7 +22,8 @@ class BucketMonth extends Component {
   };
 
   render() {
-    const { bucketMonth, month, onClick, selected, children } = this.props;
+    const { bucketMonth, month, onClick, selected, children, relay } = this.props;
+    const { transactionCount } = relay.variables;
 
     const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
     const monthProgress = month.isBefore(moment().subtract(1, 'month')) ? 100 : (
@@ -67,6 +68,14 @@ class BucketMonth extends Component {
         {bucketMonth.transactions ?
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
         : null}
+
+        {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage < transactionCount ?
+          <div className='bottom-load-button'>
+            <Button onClick={relay.setVariables.bind(relay, {
+              transactionCount: transactionCount + 20,
+            })}>Load More</Button>
+          </div>
+        : null}
       </SuperCard>
     );
   }
@@ -75,6 +84,7 @@ class BucketMonth extends Component {
 BucketMonth = Relay.createContainer(BucketMonth, {
   initialVariables: {
     selected: false,
+    transactionCount: 20,
   },
   fragments: {
     bucketMonth: ()=> Relay.QL`
@@ -82,8 +92,11 @@ BucketMonth = Relay.createContainer(BucketMonth, {
         name
         amount
         avgAmount
-        transactions(first: 1000) @include(if: $selected) {
+        transactions(first: $transactionCount) @include(if: $selected) {
           ${TransactionList.getFragment('transactions')}
+          pageInfo {
+            hasNextPage
+          }
         }
       }
     `,

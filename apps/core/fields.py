@@ -19,10 +19,7 @@ class SWNode(DjangoNode):
             return None
 
         try:
-            instance = Cls._meta.model.objects.get(
-                owner=info.request_context.user,
-                id=id,
-            )
+            instance = Cls._meta.model.objects.owned_by(info.request_context.user).get(id=id)
             return Cls(instance)
         except Cls._meta.model.DoesNotExist:
             return None
@@ -30,10 +27,7 @@ class SWNode(DjangoNode):
 
 class SWConnectionMixin(object):
     def get_queryset(self, queryset, args, info):
-        if queryset is None:
-            queryset = self.get_manager()
-
-        queryset = queryset.filter(owner=info.request_context.user)
+        queryset = queryset.owned_by(info.request_context.user)
         if hasattr(self.type, 'get_queryset'):
             queryset = self.type.get_queryset(queryset, args, info)
         return super(SWConnectionMixin, self).get_queryset(queryset, args, info)
