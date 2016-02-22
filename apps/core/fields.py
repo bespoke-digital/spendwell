@@ -30,6 +30,9 @@ class SWNode(DjangoNode):
 
 class SWConnectionMixin(object):
     def get_queryset(self, queryset, args, info):
+        if queryset is None:
+            queryset = self.get_manager()
+
         queryset = queryset.filter(owner=info.request_context.user)
         if hasattr(self.type, 'get_queryset'):
             queryset = self.type.get_queryset(queryset, args, info)

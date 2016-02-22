@@ -64,20 +64,25 @@ class BucketMonth extends Component {
           <div className='bucket-children'>{children}</div>
         </Card>
       }>
-        <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
+        {bucketMonth.transactions ?
+          <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
+        : null}
       </SuperCard>
     );
   }
 }
 
 BucketMonth = Relay.createContainer(BucketMonth, {
+  initialVariables: {
+    selected: false,
+  },
   fragments: {
     bucketMonth: ()=> Relay.QL`
       fragment on BucketMonthNode {
         name
         amount
         avgAmount
-        transactions(first: 1000) {
+        transactions(first: 1000) @include(if: $selected) {
           ${TransactionList.getFragment('transactions')}
         }
       }

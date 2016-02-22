@@ -38,7 +38,6 @@ class AddPlaid extends Component {
   }
 
   selectFi(institution) {
-
     window.Plaid.create({
       clientName: 'SpendWell',
       key: window.ENV.PLAID_PUBLIC_KEY,

@@ -103,7 +103,7 @@ class Dashboard extends Component {
         </Card>
 
         <div className='heading'>
-          <h2>Obligations</h2>
+          <h2>Goals</h2>
           <div>
             <Button to='/app/goals/new' raised>
               <i className='fa fa-plus'/>
@@ -140,6 +140,16 @@ class Dashboard extends Component {
             onClick={this.select.bind(this, 'spentFromSavings')}
           />
         </CardList>
+
+        <div className='heading'>
+          <h2>Bills</h2>
+          <div>
+            <Button to='/app/bills/new' raised>
+              <i className='fa fa-plus'/>
+              {' New'}
+            </Button>
+          </div>
+        </div>
 
         <div className='heading'>
           <h2>Expenses</h2>
