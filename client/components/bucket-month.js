@@ -69,7 +69,7 @@ class BucketMonth extends Component {
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
         : null}
 
-        {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage < transactionCount ?
+        {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
           <div className='bottom-load-button'>
             <Button onClick={relay.setVariables.bind(relay, {
               transactionCount: transactionCount + 20,

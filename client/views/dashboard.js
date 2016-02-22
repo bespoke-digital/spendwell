@@ -10,6 +10,8 @@ import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
 import BucketMonth from 'components/bucket-month';
 import SpentFromSavings from 'components/spent-from-savings';
+import TransactionList from 'components/transaction-list';
+import ScrollTrigger from 'components/scroll-trigger';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
@@ -43,6 +45,13 @@ class Dashboard extends Component {
       this.setState({ selected: id });
   }
 
+  loadTransactions() {
+    const { relay } = this.props;
+    const { transactionCount } = relay.variables;
+
+    relay.setVariables({ transactionCount: transactionCount + 20 });
+  }
+
   render() {
     if (!this.props.viewer.summary) {
       console.log('fuck this shit', this.props);
@@ -57,6 +66,7 @@ class Dashboard extends Component {
       net,
       goalMonths,
       bucketMonths,
+      transactions,
     } = summary;
 
     const { selected } = this.state;
@@ -71,7 +81,10 @@ class Dashboard extends Component {
     };
 
     return (
-      <div className={`container ${styles.root}`}>
+      <ScrollTrigger
+        className={`container ${styles.root}`}
+        onTrigger={::this.loadTransactions}
+      >
         <Card className='month'>
           <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
             <i className='fa fa-backward'/>
@@ -181,18 +194,26 @@ class Dashboard extends Component {
               <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
             </BucketMonth>
           )}
+        </CardList>
+        <CardList>
           {spent !== 0 ?
-            <Card summary={
-              <div>
-                <div>All Expenses</div>
-                <div className='amount'>
-                  <Money amount={spent} abs/>
-                </div>
+            <Card className='card-list-headings'>
+              <div>All Expenses</div>
+              <div className='amount'>
+                <Money amount={spent} abs/>
               </div>
-            }/>
+            </Card>
+          : null}
+
+          <TransactionList transactions={transactions} monthHeaders={false}/>
+
+          {transactions && transactions.pageInfo.hasNextPage ?
+            <div className='bottom-load-button'>
+              <Button onClick={::this.loadTransactions}>Load More</Button>
+            </div>
           : null}
         </CardList>
-      </div>
+      </ScrollTrigger>
     );
   }
 }
@@ -203,6 +224,7 @@ Dashboard = Relay.createContainer(Dashboard, {
   initialVariables: {
     month: now.format('MM'),
     year: now.format('YYYY'),
+    transactionCount: 20,
   },
   prepareVariables: (variables)=> {
     if (variables.year && variables.month)
@@ -237,6 +259,12 @@ Dashboard = Relay.createContainer(Dashboard, {
                   id
                 }
               }
+            }
+          }
+          transactions(first: $transactionCount) {
+            ${TransactionList.getFragment('transactions')}
+            pageInfo {
+              hasNextPage
             }
           }
         }

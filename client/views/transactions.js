@@ -4,7 +4,6 @@ import Relay from 'react-relay';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
-import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import Checkbox from 'components/checkbox';

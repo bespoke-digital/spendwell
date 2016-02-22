@@ -36,8 +36,6 @@ export default class Account extends Component {
     const { relay } = this.props;
     const { transactionCount } = relay.variables;
 
-    console.log(transactionCount);
-
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
