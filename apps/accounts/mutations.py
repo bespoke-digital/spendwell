@@ -41,8 +41,7 @@ class DisableAccountMutation(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, input, info):
         account = instance_for_node_id(input.get('account_id'), info)
-        account.disabled = True
-        account.save()
+        account.disable()
         return DisableAccountMutation(account=account)
 
 
@@ -55,8 +54,7 @@ class EnableAccountMutation(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, input, info):
         account = instance_for_node_id(input.get('account_id'), info)
-        account.disabled = False
-        account.save()
+        account.enable()
         return EnableAccountMutation(account=account)
 
 

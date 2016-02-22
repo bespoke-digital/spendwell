@@ -7,9 +7,10 @@ import { Form } from 'formsy-react';
 import Input from 'components/forms/input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
-import Button from 'components/button';
+
 import { ConnectInstitutionMutation } from 'mutations/institutions';
-import styles from 'sass/views/plaid-add.scss';
+
+import styles from 'sass/views/add-plaid.scss';
 
 
 class AddPlaid extends Component {
@@ -45,7 +46,6 @@ class AddPlaid extends Component {
       longTail: true,
       env: window.ENV.PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
-        this.setState({ playItAgain: { institution, publicToken } });
         this.connect({ institution, publicToken });
       },
     }).open(institution.id);
@@ -57,42 +57,39 @@ class AddPlaid extends Component {
     Relay.Store.commitUpdate(
       new ConnectInstitutionMutation({ viewer, institution, publicToken }),
       {
-        onSuccess: console.log.bind(console, 'onSuccess'),
-        onFailure: console.log.bind(console, 'onFailure'),
+        onSuccess: ()=> console.log('Success: ConnectInstitutionMutation'),
+        onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
       },
     );
   }
 
   render() {
-    const { playItAgain, results } = this.state;
+    const { results } = this.state;
     return (
       <div className={`container ${styles.root}`}>
-        <h1>Connect Plaid</h1>
-
-        {playItAgain ?
-          <Button onClick={()=> this.connect(playItAgain)}>Replay</Button>
-        : null}
-
-        <Form>
-          <Input name='query' label='Search' onChange={this.handleSearch}/>
-        </Form>
+        <h1>Connect Accounts</h1>
 
         <CardList>
-          {results.map((fi)=> (
+          <Card>
+            <Form>
+              <Input name='query' label='Search' onChange={this.handleSearch}/>
+            </Form>
+          </Card>
+          {results.length ? results.map((fi)=> (
             <Card
-              className='fi'
+              className={`fi ${fi.logo ? 'has-logo' : ''}`}
               onClick={this.selectFi.bind(this, fi)}
               key={fi.id}
-              style={{ backgroundColor: fi.colors.darker }}
+              style={{ borderLeftColor: fi.colors.darker }}
             >
               {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
 
-              <div className='fi-name'>
+              <span className='fi-name'>
                 <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
                 {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
-              </div>
+              </span>
             </Card>
-          ))}
+          )) : null}
         </CardList>
       </div>
     );

@@ -62,3 +62,17 @@ class Account(SWModel):
             return '{} - {} > {}'.format(self.name, self.type, self.subtype)
         else:
             return '{} - {}'.format(self.name, self.type)
+
+    def disable(self):
+        from apps.transactions.models import Transaction
+
+        self.disabled = True
+        self.save()
+        Transaction.objects.detect_transfers(owner=self.owner)
+
+    def enable(self):
+        from apps.transactions.models import Transaction
+
+        self.disabled = False
+        self.save()
+        Transaction.objects.detect_transfers(owner=self.owner)
