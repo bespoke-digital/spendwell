@@ -1,30 +1,11 @@
 
 import Relay from 'react-relay';
 import { Component } from 'react';
-import reactMixin from 'react-mixin';
-import relayContainer from 'relay-decorator';
-
-import Button from 'components/button';
 
 
-@relayContainer({ fragments: {
-  category: () => [1,2,3,4,5].reduce((fragment)=> Relay.QL`
-  fragment on CategoryNode {
-    name
-    children(first: 10) {
-      edges {
-        node {
-          ${fragment}
-        }
-      }
-    }
-  }
-`, Relay.QL`fragment on CategoryNode { name }`),
-} })
 class Category extends Component {
   render() {
     const { category } = this.props;
-    console.log('category', category);
     return (
       <div>
         {category.name}
@@ -40,23 +21,27 @@ class Category extends Component {
   }
 }
 
-@relayContainer({ fragments: {
-  viewer: ()=> Relay.QL`
-    fragment on Viewer {
-      categories(topLevel: true, first: 1000) {
-        edges {
-          node {
-            ${Category.getFragment('category')}
+Category = Relay.createContainer(Category, {
+  fragments: {
+    category: ()=> [1, 2, 3, 4, 5].reduce((fragment)=> Relay.QL`
+      fragment on CategoryNode {
+        name
+        children(first: 10) {
+          edges {
+            node {
+              ${fragment}
+            }
           }
         }
       }
-    }
-  `,
-} })
+    `, Relay.QL`fragment on CategoryNode { name }`),
+  },
+});
+
+
 export default class CategoriesView extends Component {
   render() {
     const { viewer } = this.props;
-    console.log('viewer', viewer);
     return (
       <div className='container'>
         <ul>
@@ -68,3 +53,21 @@ export default class CategoriesView extends Component {
     );
   }
 }
+
+CategoriesView = Relay.createContainer(CategoriesView, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        categories(topLevel: true, first: 1000) {
+          edges {
+            node {
+              ${Category.getFragment('category')}
+            }
+          }
+        }
+      }
+    `,
+  },
+});
+
+export default CategoriesView;

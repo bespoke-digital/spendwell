@@ -15,6 +15,11 @@ class SignupView(CreateView):
     context_object_name = 'user'
     form_class = SignupForm
 
+    def get_initial(self):
+        return {
+            'beta_code': self.request.session.get('beta_code')
+        }
+
     def form_valid(self, form):
         form.save()
 

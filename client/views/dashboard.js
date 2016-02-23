@@ -156,13 +156,13 @@ class Dashboard extends Component {
 
         <div className='heading'>
           <h2>Bills</h2>
-          <div>
-            <Button to='/app/bills/new' raised>
-              <i className='fa fa-plus'/>
-              {' New'}
-            </Button>
-          </div>
         </div>
+
+        <CardList>
+          <Card>
+            Info about Bills feature
+          </Card>
+        </CardList>
 
         <div className='heading'>
           <h2>Expenses</h2>
