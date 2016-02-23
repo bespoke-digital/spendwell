@@ -261,7 +261,7 @@ Dashboard = Relay.createContainer(Dashboard, {
               }
             }
           }
-          transactions(first: $transactionCount) {
+          transactions(first: $transactionCount, amountLt: 0) {
             ${TransactionList.getFragment('transactions')}
             pageInfo {
               hasNextPage
