@@ -10,11 +10,13 @@ import style from 'sass/components/header';
 class Header extends Component {
   static propTypes = {
     navHandle: PropTypes.bool,
+    showSafeToSpend: PropTypes.bool,
     toggleNav: PropTypes.func,
   };
 
   static defaultProps = {
     navHandle: true,
+    showSafeToSpend: true,
   };
 
   handleHandleClick(event) {
@@ -24,7 +26,7 @@ class Header extends Component {
   }
 
   render() {
-    const { navHandle, viewer: { safeToSpend } } = this.props;
+    const { showSafeToSpend, navHandle, viewer: { safeToSpend } } = this.props;
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
         {navHandle ? (
@@ -37,10 +39,12 @@ class Header extends Component {
         <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
           <img src={logoWhite} alt='SpendWell'/>
         </a>
-        <div className='safe-to-spend'>
-          <small>Safe To Spend</small>
-          <Money amount={safeToSpend}/>
-        </div>
+        {showSafeToSpend ?
+          <div className='safe-to-spend'>
+            <small>Safe To Spend</small>
+            <Money amount={safeToSpend}/>
+          </div>
+        : null}
       </nav>
     );
   }

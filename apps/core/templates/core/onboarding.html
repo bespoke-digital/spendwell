@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/onboarding.css' %}">
+{% endblock %}
+
+{% block body %}
+  <div id="root"></div>
+
+  <script>
+    window.ENV = {
+      PLAID_PRODUCTION: {% if PLAID_PRODUCTION %}true{% else %}false{% endif %},
+      PLAID_PUBLIC_KEY: '{{ PLAID_PUBLIC_KEY }}',
+    };
+  </script>
+  {% if REACT_HOT_LOADING %}
+    <script src="{% static 'dist/hotLoader.js' %}"></script>
+  {% endif %}
+  <script src="{% static 'dist/onboarding.js' %}"></script>
+{% endblock %}

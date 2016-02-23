@@ -2,7 +2,7 @@
 @import '../variables';
 @import '../depth';
 
-:local(.root) {
+:local(.root), .card {
   @extend .depth-z1;
 
   padding: 20px;

@@ -8,11 +8,7 @@ const config = require('./dev.config');
 
 process.env.NODE_ENV = 'development';
 
-config.entry = {
-  hotLoader: 'webpack-hot-middleware/client',
-  app: './client/app.js',
-  pages: './client/pages.js',
-};
+config.entry.hotLoader = 'webpack-hot-middleware/client';
 
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),

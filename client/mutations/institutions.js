@@ -136,3 +136,41 @@ export class SyncInstitutionMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class SyncInstitutionsMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { syncInstitutions }`;
+  }
+
+  getVariables() {
+    return {};
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on Viewer {
+        institutions
+        accounts
+        transactions
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}

@@ -6,7 +6,7 @@ import Relay from 'react-relay';
 import { Provider } from 'react-redux';
 
 import store from 'store';
-import routes from 'routes';
+import routes from 'app-routes';
 import networkLayer from 'utils/network-layer';
 
 

@@ -88,10 +88,27 @@ class SyncInstitutionMutation(graphene.relay.ClientIDMutation):
         return SyncInstitutionMutation(institution=institution)
 
 
+class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        pass
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        from spendwell.schema import Viewer
+
+        for institution in info.request_context.user.institutions.all():
+            institution.sync()
+
+        return SyncInstitutionsMutation(viewer=Viewer())
+
+
 class InstitutionsMutations(graphene.ObjectType):
     create_institution = graphene.Field(CreateInstitutionMutation)
     connect_institution = graphene.Field(ConnectInstitutionMutation)
     sync_institution = graphene.Field(SyncInstitutionMutation)
+    sync_institutions = graphene.Field(SyncInstitutionsMutation)
 
     class Meta:
         abstract = True

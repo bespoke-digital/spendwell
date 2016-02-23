@@ -9,6 +9,7 @@ var autoprefixer = require('autoprefixer');
 module.exports = {
   entry: {
     app: './client/app.js',
+    onboarding: './client/onboarding.js',
     pages: './client/pages.js',
   },
 

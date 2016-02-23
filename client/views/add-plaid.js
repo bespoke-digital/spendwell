@@ -1,6 +1,6 @@
 
 import _ from 'lodash';
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import { Form } from 'formsy-react';
 
@@ -14,6 +14,14 @@ import styles from 'sass/views/add-plaid.scss';
 
 
 class AddPlaid extends Component {
+  static propTypes = {
+    location: PropTypes.object,
+  };
+
+  static contextTypes = {
+    router: PropTypes.object,
+  };
+
   constructor() {
     super();
     this.state = { results: [] };
@@ -51,15 +59,21 @@ class AddPlaid extends Component {
   }
 
   connect({ institution, publicToken }) {
-    const { viewer } = this.props;
+    const { viewer, location } = this.props;
+    const { router } = this.context;
+
     console.log('ConnectInstitutionMutation', { viewer, institution, publicToken });
-    Relay.Store.commitUpdate(
-      new ConnectInstitutionMutation({ viewer, institution, publicToken }),
-      {
-        onSuccess: ()=> console.log('Success: ConnectInstitutionMutation'),
-        onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
+    Relay.Store.commitUpdate(new ConnectInstitutionMutation({ viewer, institution, publicToken }), {
+      onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
+      onSuccess: ()=> {
+        console.log('Success: ConnectInstitutionMutation');
+
+        if (location.pathname.indexOf('onboarding') !== -1)
+          router.go('/onboarding/accounts');
+        else
+          router.go('/app/accounts');
       },
-    );
+    });
   }
 
   render() {

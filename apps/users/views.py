@@ -30,6 +30,9 @@ class SignupView(CreateView):
         if user:
             login(self.request, user)
 
+        if 'beta_code' in self.request.session:
+            del self.request.session['beta_code']
+
         return redirect(self.request.GET.get('next', reverse('app')))
 
 signup_view = SignupView.as_view()

@@ -74,5 +74,5 @@ class User(AbstractBaseUser):
 
 
 class BetaCode(models.Model):
-    key = models.CharField(max_length=255, default=uuid4)
+    key = models.CharField(max_length=255, default=lambda: uuid4().hex)
     used_by = models.OneToOneField(User, blank=True, null=True)

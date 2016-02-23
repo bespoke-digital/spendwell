@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from graphene.contrib.django.views import GraphQLView
 from django_graphiql.views import GraphiQL
 
-from apps.core.views import app_view
+from apps.core.views import app_view, onboarding_view
 from apps.landing.views import home_view
 from apps.users.views import signup_view
 
@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^graphiql', graphiql_view, name='graphiql'),
     url(r'^graphql', auth_graphql_view, name='graphql'),
     url(r'^app', app_view, name='app'),
+    url(r'^onboarding', onboarding_view, name='onboarding'),
 ]
