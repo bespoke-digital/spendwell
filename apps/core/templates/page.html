@@ -9,9 +9,10 @@
 {% block body_class %}{{ block.super }} page{% endblock %}
 
 {% block body %}
-  <nav class="mui-appbar mui--z2 page-topbar">
+  <nav class="header mui-appbar mui--z2 page-topbar">
     <a class="brand mui--appbar-height mui--appbar-line-height" href="/">
-      <img src="{% static 'img/logo-white.svg' %}" alt="SpendWell"/>
+      <img src="{% static 'img/logo-white.svg' %}" alt="Spendwell" class="logo"/>
+      <img src="{% static 'img/logo-icon-white.svg' %}" alt="Spendwell" class="icon"/>
     </a>
   </nav>
 

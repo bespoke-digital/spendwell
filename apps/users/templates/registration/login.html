@@ -8,6 +8,7 @@
 <div class="container">
   <div class="auth-container card">
     <h1>{% trans "Login" %}</h1>
+
     <form action="" method="post">
       {% csrf_token %}
 
@@ -15,8 +16,8 @@
         {{ form.non_field_errors }}
         <div class="mui-textfield mui-textfield--float-label">
           {{ field.errors }}
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
           {{ field }}
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         </div>
       {% endfor %}
 
