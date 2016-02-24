@@ -25,6 +25,22 @@
 
   .brand {
     display: inline-block;
+
+    img {
+      max-height: calc(100% - 24px);
+
+      &.logo {
+        @media (max-width: $screen-xs-max) {
+          display: none;
+        }
+      }
+
+      &.icon {
+        @media (min-width: $screen-sm-min) {
+          display: none;
+        }
+      }
+    }
   }
 
   .safe-to-spend {
