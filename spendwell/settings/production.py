@@ -13,7 +13,7 @@ DATABASES['default'] = {
     'PASSWORD': db_password,
 }
 
-PLAID_PRODUCTION = True
+PLAID_PRODUCTION = False
 PLAID_SECRET = plaid_secret
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
