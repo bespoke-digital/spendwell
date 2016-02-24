@@ -64,6 +64,10 @@ class ListTransaction extends Component {
       >
         <ul className='list-unstyled'>
           <li>
+            <strong>{'ID: '}</strong>
+            {transaction.id}
+          </li>
+          <li>
             <strong>{'Date: '}</strong>
             <DateTime value={transaction.date}/>
           </li>
@@ -74,6 +78,12 @@ class ListTransaction extends Component {
           <li>
             <strong>{'Account: '}</strong>
             {transaction.account.name}
+            {` (${transaction.account.id})`}
+          </li>
+          <li>
+            <strong>{'Institution: '}</strong>
+            {transaction.account.institution.name}
+            {` (${transaction.account.institution.id})`}
           </li>
           {transaction.buckets.edges.length ?
             <li>
@@ -108,6 +118,7 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
         ${MarkTransactionAsFromSavings.getFragment('transaction')}
+        id
         description
         amount
         date
@@ -116,7 +127,14 @@ ListTransaction = Relay.createContainer(ListTransaction, {
           amount
         }
         category { name }
-        account { name }
+        account {
+          id
+          name
+          institution {
+            id
+            name
+          }
+        }
         buckets(first: 100) {
           edges {
             node {

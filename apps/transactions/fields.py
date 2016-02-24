@@ -16,6 +16,7 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
         super(TransactionConnectionField, self).__init__(node_type, *args, **kwargs)
 
     def get_queryset(self, queryset, args, info):
+        queryset = queryset.filter(owner=info.request_context.user)
         queryset = self.filterset_class(
             data=self.get_filter_kwargs(args),
             queryset=queryset,
@@ -25,6 +26,7 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
             queryset = apply_filter_list(queryset, args['filters'], self.filterset_class)
 
         queryset = queryset.order_by(args.get('order_by', '-date'))
+        queryset = queryset.distinct()
 
         return queryset
 

@@ -26,6 +26,7 @@ class AccountNode(SWNode):
             'number_snippet',
             'transactions',
             'disabled',
+            'institution',
         )
 
 

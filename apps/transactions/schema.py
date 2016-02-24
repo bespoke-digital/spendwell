@@ -14,6 +14,7 @@ class TransactionNode(SWNode):
     amount = graphene.Field(Money)
     buckets = DjangoConnectionField('BucketNode')
     transfer_pair = graphene.Field('TransactionNode')
+    djid = graphene.Int()
 
     class Meta:
         model = Transaction
@@ -40,6 +41,9 @@ class TransactionNode(SWNode):
             owner=info.request_context.user,
             months__transactions=self.instance,
         ).distinct()
+
+    def resolve_djid(self, args, info):
+        return self.instance.id
 
 
 class TransactionsQuery(graphene.ObjectType):

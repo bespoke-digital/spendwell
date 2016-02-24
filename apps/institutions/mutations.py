@@ -91,7 +91,7 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        for institution in info.request_context.user.institutions.all():
+        for institution in info.request_context.user.institutions.filter(plaid_id__isnull=False):
             institution.sync()
 
         return SyncInstitutionsMutation(viewer=Viewer())

@@ -69,7 +69,7 @@ export default class Account extends Component {
           }/>
         }
       >
-        <TransactionList transactions={account.transactions}/>
+        <TransactionList transactions={account.transactions} abs={false}/>
 
         {account.transactions && account.transactions.pageInfo.hasNextPage ?
           <div className='bottom-load-button'>

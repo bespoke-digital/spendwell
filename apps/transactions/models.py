@@ -143,6 +143,7 @@ class Transaction(SWModel):
     source = models.CharField(max_length=255, default='plaid', choices=(
         ('csv', 'CSV'),
         ('plaid', 'Plaid Connect'),
+        ('demo', 'Demo Data'),
     ))
 
     objects = TransactionManager()

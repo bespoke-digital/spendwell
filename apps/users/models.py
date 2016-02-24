@@ -3,7 +3,6 @@ from uuid import uuid4
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-import delorean
 
 
 class UserManager(BaseUserManager):
@@ -32,11 +31,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    estimated_income = models.DecimalField(
-        decimal_places=2,
-        max_digits=12,
-        default=0,
-    )
+    estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     objects = UserManager()
 
