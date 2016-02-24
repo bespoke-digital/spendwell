@@ -35,7 +35,9 @@ class Header extends Component {
             className='hamburger mui--appbar-height mui--appbar-line-height'
             href='#'
             onClick={::this.handleHandleClick}
-          >☰</a>
+          >
+            <i className='fa fa-bars'/>
+          </a>
         ) : null}
         <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
           <img src={logoWhite} alt='Spendwell' className='logo'/>
