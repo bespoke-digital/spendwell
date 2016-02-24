@@ -41,10 +41,9 @@ class CreateInstitutionMutation(graphene.relay.ClientIDMutation):
 class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         public_token = graphene.String()
-        institution_id = graphene.String()
+        institution_plaid_id = graphene.String()
 
     viewer = graphene.Field('Viewer')
-    institution_edge = graphene.Field(InstitutionEdge)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
@@ -56,23 +55,17 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         )
 
         token_response = plaid_client.exchange_token(input['public_token']).json()
-        institution_response = plaid_client.institution(input['institutionId']).json()
+        institution_response = plaid_client.institution(input['institution_plaid_id']).json()
 
         institution, created = Institution.objects.get_or_create(
             owner=info.request_context.user,
-            plaid_id=input['institutionId'],
+            plaid_id=input['institution_plaid_id'],
             defaults={'name': institution_response['name']},
         )
         institution.access_token = token_response['access_token']
         institution.save()
-
-        return ConnectInstitutionMutation(
-            viewer=Viewer(),
-            institution_edge=InstitutionEdge(
-                cursor=get_cursor(institution),
-                node=institution,
-            ),
-        )
+        institution.sync_accounts()
+        return ConnectInstitutionMutation(viewer=Viewer())
 
 
 class SyncInstitutionMutation(graphene.relay.ClientIDMutation):

@@ -2,9 +2,9 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import { Form } from 'formsy-react';
+import { browserHistory } from 'react-router';
 
-import Input from 'components/forms/input';
+import TextInput from 'components/text-input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 
@@ -16,10 +16,6 @@ import styles from 'sass/views/add-plaid.scss';
 class AddPlaid extends Component {
   static propTypes = {
     location: PropTypes.object,
-  };
-
-  static contextTypes = {
-    router: PropTypes.object,
   };
 
   constructor() {
@@ -45,33 +41,38 @@ class AddPlaid extends Component {
       .then((results)=> this.setState({ results }));
   }
 
-  selectFi(institution) {
+  selectFi(fi) {
     window.Plaid.create({
-      clientName: 'SpendWell',
+      clientName: 'Spendwell',
       key: window.ENV.PLAID_PUBLIC_KEY,
       product: 'connect',
-      longTail: true,
+      longtail: true,
       env: window.ENV.PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> {
-        this.connect({ institution, publicToken });
+        this.connect({ fi, publicToken });
       },
-    }).open(institution.id);
+    }).open(fi.id);
   }
 
-  connect({ institution, publicToken }) {
+  connect({ fi, publicToken }) {
     const { viewer, location } = this.props;
-    const { router } = this.context;
 
-    console.log('ConnectInstitutionMutation', { viewer, institution, publicToken });
-    Relay.Store.commitUpdate(new ConnectInstitutionMutation({ viewer, institution, publicToken }), {
+    const mutationInput = {
+      viewer,
+      publicToken,
+      institutionPlaidId: fi.id,
+    };
+
+    console.log('ConnectInstitutionMutation', mutationInput);
+    Relay.Store.commitUpdate(new ConnectInstitutionMutation(mutationInput), {
       onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
       onSuccess: ()=> {
         console.log('Success: ConnectInstitutionMutation');
 
         if (location.pathname.indexOf('onboarding') !== -1)
-          router.go('/onboarding/accounts');
+          browserHistory.push('/onboarding/accounts');
         else
-          router.go('/app/accounts');
+          browserHistory.push('/app/accounts');
       },
     });
   }
@@ -84,9 +85,7 @@ class AddPlaid extends Component {
 
         <CardList>
           <Card>
-            <Form>
-              <Input name='query' label='Search' onChange={this.handleSearch}/>
-            </Form>
+            <TextInput label='Bank Search' onChange={this.handleSearch}/>
           </Card>
           {results.length ? results.map((fi)=> (
             <Card

@@ -16,7 +16,7 @@ class OnboardingWalkthrough extends Component {
 
         <div className='flex-row'>
           <div/>
-          <Button variant='primary' to='/somewhere'>
+          <Button variant='primary' href='/app/dashboard'>
             Continue
           </Button>
         </div>

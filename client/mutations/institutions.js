@@ -18,36 +18,30 @@ export class ConnectInstitutionMutation extends Relay.Mutation {
   getVariables() {
     return {
       publicToken: this.props.publicToken,
-      institutionId: this.props.institution.id,
+      institutionPlaidId: this.props.institutionPlaidId,
     };
   }
 
   getFatQuery() {
     return Relay.QL`
       fragment on ConnectInstitutionMutation {
-        viewer { institutions }
-        institutionEdge
+        viewer {
+          summary
+          institutions
+          accounts
+          transactions
+        }
       }
     `;
   }
 
   getConfigs() {
     return [{
-      type: 'RANGE_ADD',
-      parentName: 'viewer',
-      parentID: this.props.viewer.id,
-      connectionName: 'institutions',
-      edgeName: 'institutionEdge',
-      rangeBehaviors: { '': 'append' },
-    }];
-  }
-
-  getOptimisticResponse() {
-    return {
-      institution: {
-        name: this.props.name,
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
       },
-    };
+    }];
   }
 }
 
@@ -157,10 +151,12 @@ export class SyncInstitutionsMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on Viewer {
-        institutions
-        accounts
-        transactions
+      fragment on SyncInstitutionsMutation {
+        viewer {
+          institutions
+          accounts
+          transactions
+        }
       }
     `;
   }

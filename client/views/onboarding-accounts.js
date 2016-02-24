@@ -1,6 +1,7 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
+import { browserHistory } from 'react-router';
 
 import Button from 'components/button';
 import Institution from 'components/institution';
@@ -11,20 +12,15 @@ import styles from 'sass/views/accounts';
 
 
 class OnboardingAccounts extends Component {
-  static contextTypes = {
-    router: PropTypes.object,
-  };
-
   continue() {
     const { viewer } = this.props;
-    const { router } = this.context;
 
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
       onSuccess: ()=> console.log('Success: SyncInstitutionsMutation'),
       onFailure: ()=> console.log('Failure: SyncInstitutionsMutation'),
     });
 
-    router.go('/onboarding/walkthrough');
+    browserHistory.push('/onboarding/walkthrough');
   }
 
   render() {

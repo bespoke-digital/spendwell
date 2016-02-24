@@ -7,13 +7,16 @@ from apps.core.models import SWModel, SWManager
 class AccountManager(SWManager):
     def create_from_plaid(self, institution, json_data):
         try:
-            account = Account.objects.get(plaid_id=json_data['_id'])
+            account = Account.objects.get(
+                owner=institution.owner,
+                institution=institution,
+                plaid_id=json_data['_id'],
+            )
         except Account.DoesNotExist:
             account = Account()
+            account.owner = institution.owner
+            account.institution = institution
             account.plaid_id = json_data['_id']
-
-        account.institution = institution
-        account.owner = institution.owner
 
         account.type = json_data['type']
         account.subtype = json_data.get('subtype')

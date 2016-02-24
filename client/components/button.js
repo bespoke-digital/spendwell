@@ -38,6 +38,8 @@ export default (props)=> {
 
   if (props.to)
     return <Link className={classes} {...extraProps}/>;
+  else if (props.href)
+    return <a className={classes} {...extraProps}/>;
   else
     return <button
       className={classes}

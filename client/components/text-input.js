@@ -8,7 +8,7 @@ import style from 'sass/components/forms/input';
 export default class TextInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     error: PropTypes.string,
     className: PropTypes.string,
     type: PropTypes.string,
