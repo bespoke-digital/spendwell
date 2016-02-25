@@ -194,12 +194,9 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Expenses</h2>
           <div>
-            <Button raised onClick={this.syncBuckets.bind(this, periods.current)}>
-              <i className='fa fa-refresh'/>
-            </Button>
             <Button to='/app/buckets/new' raised>
               <i className='fa fa-plus'/>
-              {' New'}
+              {' New Bucket'}
             </Button>
           </div>
         </div>
@@ -239,7 +236,7 @@ class Dashboard extends Component {
 
           {transactions && transactions.pageInfo.hasNextPage ?
             <div className='bottom-load-button'>
-              <Button onClick={::this.loadTransactions}>Load More</Button>
+              <Button onClick={::this.loadTransactions} raised>Load More</Button>
             </div>
           : null}
         </CardList>

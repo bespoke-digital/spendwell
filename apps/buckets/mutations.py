@@ -36,7 +36,6 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         filters = filter_list_schema(TransactionFilter, 'BucketFilterSet')
 
     viewer = graphene.Field('Viewer')
-    bucket_edge = graphene.Field(BucketEdge)
 
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
@@ -50,10 +49,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
 
         BucketMonth.objects.generate(bucket)
 
-        return Cls(
-            viewer=Viewer(),
-            bucket_edge=BucketEdge(cursor='none', node=bucket),
-        )
+        return Cls(viewer=Viewer())
 
 
 class UpdateBucketMutation(graphene.relay.ClientIDMutation):

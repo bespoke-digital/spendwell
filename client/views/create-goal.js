@@ -24,11 +24,11 @@ class CreateGoal extends Component {
     monthlyAmount = parseInt(monthlyAmount * 100);
 
     Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, name, monthlyAmount }), {
+      onFailure: ()=> console.log('Failure: CreateGoalMutation'),
       onSuccess: ()=> {
-        console.log('SUCCESS');
-        browserHistory.goBack();
+        console.log('Success: CreateGoalMutation');
+        browserHistory.push('/app/dashboard');
       },
-      onFailure: console.log.bind(console, 'onFailure'),
     });
   }
 
@@ -38,7 +38,7 @@ class CreateGoal extends Component {
     return (
       <div className={`container ${styles.root}`}>
         <div className='heading'>
-          <Button onClick={()=> browserHistory.goBack()} className='back'>
+          <Button onClick={()=> browserHistory.push('/app/dashboard')} className='back'>
             <i className='fa fa-long-arrow-left'/>
           </Button>
 

@@ -25,29 +25,22 @@ export class CreateGoalMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on CreateGoalMutation {
-        viewer { goals }
-        goalEdge
+        viewer {
+          goals
+          summary {
+            goalMonths
+          }
+        }
       }
     `;
   }
 
   getConfigs() {
     return [{
-      type: 'RANGE_ADD',
-      parentName: 'viewer',
-      parentID: this.props.viewer.id,
-      connectionName: 'goals',
-      edgeName: 'goalEdge',
-      rangeBehaviors: { '': 'append' },
-    }];
-  }
-
-  getOptimisticResponse() {
-    return {
-      goal: {
-        name: this.props.name,
-        monthlyAmount: this.props.monthlyAmount,
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
       },
-    };
+    }];
   }
 }
