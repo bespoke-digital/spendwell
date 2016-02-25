@@ -22,6 +22,13 @@ class BucketMonth extends Component {
     selected: false,
   };
 
+  componentWillReceiveProps(props) {
+    const { selected, bucketMonth } = props;
+    console.log('componentWillReceiveProps', selected, bucketMonth.name);
+    // if (relay.variables.loadTransactions !== selected)
+    //   relay.setVariables({ loadTransactions: selected });
+  }
+
   render() {
     const { bucketMonth, month, onClick, selected, relay } = this.props;
     const { transactionCount } = relay.variables;
@@ -87,6 +94,10 @@ BucketMonth = Relay.createContainer(BucketMonth, {
   initialVariables: {
     selected: false,
     transactionCount: 20,
+  },
+  prepareVariables(vars) {
+    console.log('prepareVariables', vars);
+    return vars;
   },
   fragments: {
     bucketMonth: ()=> Relay.QL`

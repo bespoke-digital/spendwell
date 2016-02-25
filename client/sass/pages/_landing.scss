@@ -1,0 +1,104 @@
+
+body.landing {
+  .hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+
+    color: white;
+    background-image: url('~img/landing/home/cover.jpg');
+    background-position: center;
+
+    @media (max-width: $screen-xs-max) {
+      position: inherit;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .hero-content {
+      width: 100%;
+
+      background-color: rgba(black, 0.3);
+      text-align: center;
+      line-height: 1.1;
+
+      @media (max-width: $screen-xs-max) {
+        padding: 20px 10px;
+        min-height: 100vh;
+      }
+
+      @media (min-width: $screen-sm-min) {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 30px 20px;
+        max-width: 560px;
+        border-radius: 4px;
+      }
+
+      .logo {
+        height: 60px;
+        margin-bottom: 30px;
+
+        background-image: url('~img/logo-white.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 44px;
+        font-weight: 600;
+      }
+
+      p {
+        display: inline-block;
+        font-size: 20px;
+        margin-bottom: 40px;
+      }
+
+      .cta {
+        text-align: center;
+      }
+    }
+  }
+
+  #landing-form-container {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+    background-color: rgba(black, 0.5);
+
+    form {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      max-height: 100%;
+      max-width: 100%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+
+      background-color: white;
+
+      .mui-textfield {
+        display: inline-block;
+        text-align: left;
+        margin-right: 5px;
+        margin-bottom: 0;
+      }
+
+      .mui-btn {
+        height: 30px;
+        padding: 0 10px 0 13px;
+        line-height: 30px;
+        font-weight: 500;
+      }
+    }
+  }
+}

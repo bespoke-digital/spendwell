@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block body_class %}{{ super }} home{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
+{% endblock %}
+
+{% block body %}
+  <div class="hero">
+    <div class="hero-content">
+      <div class="logo"></div>
+
+      <h1>
+        Managing your money shouldn't suck.<br class="hidden-xs">
+        Soon it won't have to.
+      </h1>
+
+      <form
+        action="//spendwell.us12.list-manage.com/subscribe/post?u=f06a44d9caea5e9890f52c259&id=edd6ea8786"
+        method="post"
+        target="_blank"
+        class="form-inline"
+        novalidate
+      >
+        <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
+        <div class="mui-textfield mui-textfield--float-label">
+          <input class="form-control" name="EMAIL" type="email">
+          <label>Email</label>
+        </div>
+        <button type="submit" name="subscribe" class="mui-btn mui-btn--default">
+        <i class="fa fa-chevron-right"></i>
+        </button>
+      </form>
+
+      <p>Leave your email to get early access and start managing money like a boss.</p>
+    </div>
+  </div>
+{% endblock %}

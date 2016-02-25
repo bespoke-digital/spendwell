@@ -49,7 +49,7 @@ class Bucket extends Component {
         {bucket.months.edges.map(({ node })=>
           <CardList key={node.id}>
             <Card className='card-list-headings'>
-              {moment(node.monthStart).format('MMMM YYYY')}
+              {moment(node.monthStart).asUtc().format('MMMM YYYY')}
             </Card>
             <TransactionList transactions={node.transactions} monthHeaders={false}/>
           </CardList>

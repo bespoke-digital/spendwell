@@ -2,7 +2,6 @@
 from django.views.generic import TemplateView
 
 
-class HomeView(TemplateView):
-    template_name = 'landing/home.html'
-
-home_view = HomeView.as_view()
+home_view = TemplateView.as_view(template_name='landing/home.html')
+freedom_view = TemplateView.as_view(template_name='landing/freedom.html')
+debt_view = TemplateView.as_view(template_name='landing/debt.html')
