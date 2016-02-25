@@ -1,4 +1,5 @@
 
+import delorean
 import graphene
 from graphql_relay.node.node import from_global_id
 from graphql_relay.connection.arrayconnection import cursor_for_object_in_connection
@@ -32,3 +33,7 @@ def get_cursor(instance):
 def get_core_type(graphene_type):
     "converts a Graphene scalar type into a graphel-core scalar type"
     return STUB_SCHEMA.T(graphene_type)
+
+
+def this_month():
+    return delorean.now().truncate('month').datetime

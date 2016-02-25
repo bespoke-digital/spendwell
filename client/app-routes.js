@@ -11,6 +11,7 @@ import Categories from 'views/categories';
 import App from 'views/app';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
+import CreateBill from 'views/create-bill';
 import Bucket from 'views/bucket';
 import Transactions from 'views/transactions';
 
@@ -25,9 +26,9 @@ export default (
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
       <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
-
       <Route path='buckets/new' component={CreateBucket} queries={rootQuery}/>
       <Route path='buckets/:id' component={Bucket} queries={rootQuery}/>
+      <Route path='bills/new' component={CreateBill} queries={rootQuery}/>
 
       <Route path='transactions' component={Transactions} queries={rootQuery}/>
 

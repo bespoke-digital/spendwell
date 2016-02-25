@@ -24,8 +24,8 @@ class Bucket extends Component {
     console.log('GenerateBucketMonthMutation', { bucket, month });
 
     Relay.Store.commitUpdate(new GenerateBucketMonthMutation({ bucket, month }), {
-      onSuccess: ()=> console.log('GenerateBucketMonthMutation Success'),
-      onFailure: ()=> console.log('GenerateBucketMonthMutation Failure'),
+      onSuccess: ()=> console.log('Success: GenerateBucketMonthMutation'),
+      onFailure: ()=> console.log('Failure: GenerateBucketMonthMutation'),
     });
   }
 
@@ -55,10 +55,11 @@ class Bucket extends Component {
           </CardList>
         )}
 
-        <Button onClick={::this.generateBucketMonth}>
-          <i className='fa fa-plus'/>
-          {' Next Month'}
-        </Button>
+        <div className='bottom-load-button'>
+          <Button onClick={::this.generateBucketMonth} raised>
+            <i className='fa fa-plus'/>{' Next Month'}
+          </Button>
+        </div>
       </div>
     );
   }

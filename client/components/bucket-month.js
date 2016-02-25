@@ -8,6 +8,7 @@ import Card from 'components/card';
 import Money from 'components/money';
 import Progress from 'components/progress';
 import TransactionList from 'components/transaction-list';
+import Button from 'components/button';
 
 
 class BucketMonth extends Component {
@@ -22,7 +23,7 @@ class BucketMonth extends Component {
   };
 
   render() {
-    const { bucketMonth, month, onClick, selected, children, relay } = this.props;
+    const { bucketMonth, month, onClick, selected, relay } = this.props;
     const { transactionCount } = relay.variables;
 
     const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
@@ -62,7 +63,8 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
-          <div className='bucket-children'>{children}</div>
+
+          <Button to={`/app/buckets/${bucketMonth.bucket.id}`}>View</Button>
         </Card>
       }>
         {bucketMonth.transactions ?
@@ -97,6 +99,9 @@ BucketMonth = Relay.createContainer(BucketMonth, {
           pageInfo {
             hasNextPage
           }
+        }
+        bucket {
+          id
         }
       }
     `,

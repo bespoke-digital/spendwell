@@ -33,6 +33,7 @@ class AssignTransactionsMutation(ClientIDMutation):
 class CreateBucketMutation(graphene.relay.ClientIDMutation):
     class Input:
         name = graphene.String()
+        type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'BucketFilterSet')
 
     viewer = graphene.Field('Viewer')
@@ -41,13 +42,12 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(Cls, input, info):
         from spendwell.schema import Viewer
 
-        bucket = Bucket.objects.create(
+        Bucket.objects.create(
             owner=info.request_context.user,
             name=input['name'],
             filters=input['filters'],
+            type=input['type'],
         )
-
-        BucketMonth.objects.generate(bucket)
 
         return Cls(viewer=Viewer())
 
@@ -85,7 +85,7 @@ class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
         bucket = instance_for_node_id(input['bucket_id'], info)
-        BucketMonth.objects.generate(bucket, input['month'])
+        BucketMonth.objects.create(bucket=bucket, month_start=input['month'])
         return Cls(bucket=bucket)
 
 

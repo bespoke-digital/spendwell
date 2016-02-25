@@ -83,9 +83,20 @@ class MonthSummary(object):
         if not hasattr(self, '_bucket_months'):
             self._bucket_months = BucketMonth.objects.filter(
                 bucket__owner=self.user,
+                bucket__type='expense',
                 month_start=self.month_start,
             )
         return self._bucket_months
+
+    @property
+    def bill_months(self):
+        if not hasattr(self, '_bill_months'):
+            self._bill_months = BucketMonth.objects.filter(
+                bucket__owner=self.user,
+                bucket__type='bill',
+                month_start=self.month_start,
+            )
+        return self._bill_months
 
     @property
     def transactions(self):

@@ -74,6 +74,7 @@ class Dashboard extends Component {
       net,
       goalMonths,
       bucketMonths,
+      billMonths,
       transactions,
     } = summary;
 
@@ -147,7 +148,7 @@ class Dashboard extends Component {
           <div>
             <Button to='/app/goals/new' raised>
               <i className='fa fa-plus'/>
-              {' New'}
+              {' New Goal'}
             </Button>
           </div>
         </div>
@@ -183,13 +184,32 @@ class Dashboard extends Component {
 
         <div className='heading'>
           <h2>Bills</h2>
+          <div>
+            <Button to='/app/bills/new' raised>
+              <i className='fa fa-plus'/>
+              {' New Bill'}
+            </Button>
+          </div>
         </div>
 
-        <CardList>
-          <Card>
-            Info about Bills feature
-          </Card>
-        </CardList>
+        {billMonths.edges.length > 0 ?
+          <CardList>
+            <Card className='card-list-headings'>
+              <div></div>
+              <div className='amount'>Average</div>
+              <div className='amount'>Spent</div>
+            </Card>
+            {billMonths.edges.map(({ node })=>
+              <BucketMonth
+                key={node.id}
+                bucketMonth={node}
+                month={periods.current}
+                selected={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+              />
+            )}
+          </CardList>
+        : null}
 
         <div className='heading'>
           <h2>Expenses</h2>
@@ -215,9 +235,7 @@ class Dashboard extends Component {
                 month={periods.current}
                 selected={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
-              >
-                <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
-              </BucketMonth>
+              />
             )}
           </CardList>
         : null}
@@ -282,9 +300,14 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 ${BucketMonth.getFragment('bucketMonth')}
                 id
-                bucket {
-                  id
-                }
+              }
+            }
+          }
+          billMonths(first: 1000) {
+            edges {
+              node {
+                ${BucketMonth.getFragment('bucketMonth')}
+                id
               }
             }
           }

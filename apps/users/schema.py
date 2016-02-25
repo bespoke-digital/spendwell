@@ -20,6 +20,7 @@ class Summary(graphene.ObjectType):
 
     goal_months = DjangoConnectionField(GoalMonthNode)
     bucket_months = DjangoConnectionField(BucketMonthNode)
+    bill_months = DjangoConnectionField(BucketMonthNode)
     transactions = TransactionConnectionField(TransactionNode)
 
 

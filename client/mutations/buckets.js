@@ -57,6 +57,7 @@ export class CreateBucketMutation extends Relay.Mutation {
     return {
       name: this.props.name,
       filters: this.props.filters,
+      type: this.props.type,
     };
   }
 

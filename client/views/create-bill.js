@@ -11,11 +11,11 @@ import { CreateBucketMutation } from 'mutations/buckets';
 import styles from 'sass/views/create-bucket.scss';
 
 
-class CreateBucket extends Component {
+class CreateBill extends Component {
   handleSubmit({ filters, name }) {
     const { viewer } = this.props;
 
-    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type: 'expense' }), {
+    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type: 'bill' }), {
       onFailure: ()=> console.log('Failure: CreateBucketMutation'),
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
@@ -34,7 +34,7 @@ class CreateBucket extends Component {
             <i className='fa fa-long-arrow-left'/>
           </Button>
 
-          <h1>New Bucket</h1>
+          <h1>New Bill</h1>
         </div>
 
         <BucketForm
@@ -47,7 +47,7 @@ class CreateBucket extends Component {
   }
 }
 
-CreateBucket = Relay.createContainer(CreateBucket, {
+CreateBill = Relay.createContainer(CreateBill, {
   initialVariables: {
     filters: [],
     count: 50,
@@ -62,4 +62,4 @@ CreateBucket = Relay.createContainer(CreateBucket, {
   },
 });
 
-export default CreateBucket;
+export default CreateBill;

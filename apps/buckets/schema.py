@@ -22,6 +22,7 @@ class BucketNode(SWNode):
             'months',
             'transactions',
             'filters',
+            'type',
         )
 
     def resolve_transactions(self, args, info):
@@ -43,6 +44,7 @@ class BucketMonthNode(SWNode):
             'amount',
             'avg_amount',
             'bucket',
+            'type',
         )
 
     def resolve_name(self, args, info):

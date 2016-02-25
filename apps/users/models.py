@@ -68,6 +68,10 @@ class User(AbstractBaseUser):
         return self.as_serializer().as_json()
 
 
+def get_beta_code():
+    return uuid4().hex
+
+
 class BetaCode(models.Model):
-    key = models.CharField(max_length=255, default=lambda: uuid4().hex)
+    key = models.CharField(max_length=255, default=get_beta_code)
     used_by = models.OneToOneField(User, blank=True, null=True)
