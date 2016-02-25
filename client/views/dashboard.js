@@ -152,34 +152,34 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        <CardList>
-          <Card className='card-list-headings'>
-            <div></div>
-            <div className='amount'>Target</div>
-            <div className='amount'>Saved</div>
-          </Card>
+        {goalMonths.edges.length > 0 ?
+          <CardList>
+            <Card className='card-list-headings'>
+              <div></div>
+              <div className='amount'>Target</div>
+              <div className='amount'>Saved</div>
+            </Card>
 
-          {goalMonths.edges.map(({ node })=>
-            <GoalMonth
-              key={node.id}
-              goalMonth={node}
-              month={periods.current}
-              selected={selected === node.id}
-              onClick={this.select.bind(this, node.id)}
-            >
-              <Button to={`/app/goals/${node.id}`}>Edit</Button>
-            </GoalMonth>
-          )}
-        </CardList>
+            {goalMonths.edges.map(({ node })=>
+              <GoalMonth
+                key={node.id}
+                goalMonth={node}
+                month={periods.current}
+                selected={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+              >
+                <Button to={`/app/goals/${node.id}`}>Edit</Button>
+              </GoalMonth>
+            )}
+          </CardList>
+        : null}
 
-        <CardList>
-          <SpentFromSavings
-            summary={summary}
-            month={periods.current}
-            selected={selected === 'spentFromSavings'}
-            onClick={this.select.bind(this, 'spentFromSavings')}
-          />
-        </CardList>
+        <SpentFromSavings
+          summary={summary}
+          month={periods.current}
+          selected={selected === 'spentFromSavings'}
+          onClick={this.select.bind(this, 'spentFromSavings')}
+        />
 
         <div className='heading'>
           <h2>Bills</h2>
@@ -204,24 +204,27 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        <CardList>
-          <Card className='card-list-headings'>
-            <div></div>
-            <div className='amount'>Average</div>
-            <div className='amount'>Spent</div>
-          </Card>
-          {bucketMonths.edges.map(({ node })=>
-            <BucketMonth
-              key={node.id}
-              bucketMonth={node}
-              month={periods.current}
-              selected={selected === node.id}
-              onClick={this.select.bind(this, node.id)}
-            >
-              <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
-            </BucketMonth>
-          )}
-        </CardList>
+        {bucketMonths.edges.length > 0 ?
+          <CardList>
+            <Card className='card-list-headings'>
+              <div></div>
+              <div className='amount'>Average</div>
+              <div className='amount'>Spent</div>
+            </Card>
+            {bucketMonths.edges.map(({ node })=>
+              <BucketMonth
+                key={node.id}
+                bucketMonth={node}
+                month={periods.current}
+                selected={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+              >
+                <Button to={`/app/buckets/${node.bucket.id}`}>Edit</Button>
+              </BucketMonth>
+            )}
+          </CardList>
+        : null}
+
         <CardList>
           {spent !== 0 ?
             <Card className='card-list-headings'>

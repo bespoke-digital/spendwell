@@ -65,7 +65,7 @@ class ListTransaction extends Component {
         <ul className='list-unstyled'>
           <li>
             <strong>{'ID: '}</strong>
-            {transaction.id}
+            {transaction.djid}
           </li>
           <li>
             <strong>{'Date: '}</strong>
@@ -119,6 +119,7 @@ ListTransaction = Relay.createContainer(ListTransaction, {
       fragment on TransactionNode {
         ${MarkTransactionAsFromSavings.getFragment('transaction')}
         id
+        djid
         description
         amount
         date

@@ -22,6 +22,9 @@ class SpentFromSavings extends Component {
   render() {
     const { summary, onClick, selected } = this.props;
 
+    if (summary.spentFromSavings === 0)
+      return <span/>;
+
     return (
       <SuperCard expanded={selected} summary={
         <Card expanded={selected} onSummaryClick={onClick} summary={
