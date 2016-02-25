@@ -68,6 +68,7 @@ export class CreateBucketMutation extends Relay.Mutation {
           buckets
           summary {
             bucketMonths
+            billMonths
           }
         }
       }

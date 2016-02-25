@@ -44,6 +44,15 @@ class MonthSummary(object):
                 goal__owner=self.user,
                 month_start=self.month_start,
             ).sum('filled_amount')
+
+            for bill_month in BucketMonth.objects.filter(
+                bucket__owner=self.user,
+                bucket__type='bill',
+                month_start=self.month_start,
+            ):
+                if bill_month.amount < bill_month.avg_amount:
+                    self._allocated += bill_month.avg_amount - bill_month.amount
+
         return self._allocated
 
     @property

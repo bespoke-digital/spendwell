@@ -1,6 +1,5 @@
 
 from dateutil.relativedelta import relativedelta
-import delorean
 
 from django.db import models
 from django.db.models.signals import post_save
@@ -9,6 +8,7 @@ from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWManager, SWQuerySet
 from apps.core.utils import this_month
+from apps.core.signals import month_start
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -107,3 +107,9 @@ class BucketMonth(SWModel):
 def bucket_month_post_save(sender, instance, created, raw, **kwargs):
     if created and not raw:
         instance.assign_transactions()
+
+
+@receiver(month_start)
+def month_start(month, **kwargs):
+    for bucket in Bucket.objects.all():
+        BucketMonth.objects.get_or_create(bucket=bucket, month_start=month)
