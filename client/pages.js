@@ -7,6 +7,7 @@ const landingCta = document.getElementById('landing-cta');
 if (landingCta) {
   landingCta.onclick = function(event) {
     window.mixpanel.track('Landing: CTA Clicked');
+    window.fbq('track', 'Lead');
 
     event.preventDefault();
 
@@ -17,6 +18,9 @@ if (landingCta) {
 
     formContainer.onclick = ()=> formContainer.style.display = 'none';
     form.onclick = (event)=> event.stopPropagation();
-    form.onsubmit = ()=> window.mixpanel.track('Landing: Email Submitted');
+    form.onsubmit = ()=> {
+      window.mixpanel.track('Landing: Email Submitted');
+      window.fbq('track', 'CompleteRegistration');
+    };
   };
 }
