@@ -61,7 +61,7 @@ class TransactionList extends Component {
       );
 
     const monthlyTransactions = transactions.edges.reduce((monthly, { node })=> {
-      const monthKey = moment(node.date).format('YYYY/MM');
+      const monthKey = moment(node.date).asUtc().format('YYYY/MM');
       if (_.isUndefined(monthly[monthKey]))
         monthly[monthKey] = [];
       monthly[monthKey].push(node);
