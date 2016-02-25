@@ -7,7 +7,6 @@ const landingCta = document.getElementById('landing-cta');
 if (landingCta) {
   landingCta.onclick = function(event) {
     window.mixpanel.track('Landing: CTA Clicked');
-    console.log('click');
 
     event.preventDefault();
 
@@ -18,5 +17,6 @@ if (landingCta) {
 
     formContainer.onclick = ()=> formContainer.style.display = 'none';
     form.onclick = (event)=> event.stopPropagation();
+    form.onsubmit = ()=> window.mixpanel.track('Landing: Email Submitted');
   };
 }

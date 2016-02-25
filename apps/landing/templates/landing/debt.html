@@ -1,11 +1,14 @@
 {% extends "landing/base.html" %}
 
+{% block body_class %}{{ block.super }} landing-dept{% endblock %}
+
 {% block hero_heading %}
-  Set up a payment plan
+  Set up a<br class="hidden-xs">
+  payment plan
 {% endblock %}
 
 {% block hero_graph %}
-  Connect your accounts and we'll customize a plan to help you crush your debt.
+  Connect your accounts and we'll customize a plan that will help you crush your debt.
 {% endblock %}
 
 {% block body %}

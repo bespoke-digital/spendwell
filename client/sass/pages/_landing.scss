@@ -6,8 +6,8 @@ body.landing {
     width: 100%;
 
     color: white;
-    background-image: url('~img/landing/home/cover.jpg');
-    background-position: center;
+    background-image: url('~img/landing/dad-cover.jpg');
+    background-position: 75% center;
 
     @media (max-width: $screen-xs-max) {
       position: inherit;
@@ -18,9 +18,9 @@ body.landing {
     .hero-content {
       width: 100%;
 
-      background-color: rgba(black, 0.3);
+      background-color: rgba(black, 0.4);
       text-align: center;
-      line-height: 1.1;
+      line-height: 1.2;
 
       @media (max-width: $screen-xs-max) {
         padding: 20px 10px;
@@ -32,16 +32,16 @@ body.landing {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 30px 20px;
+        padding: 30px 20px 40px;
         max-width: 560px;
         border-radius: 4px;
       }
 
       .logo {
-        height: 60px;
-        margin-bottom: 30px;
+        height: 65px;
+        margin-bottom: 20px;
 
-        background-image: url('~img/logo-white.svg');
+        background-image: url('~img/logo-icon-white.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -49,14 +49,14 @@ body.landing {
 
       h1 {
         margin-bottom: 10px;
-        font-size: 44px;
-        font-weight: 600;
+        font-size: 48px;
+        font-weight: 500;
       }
 
       p {
         display: inline-block;
         font-size: 20px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
       }
 
       .cta {
@@ -79,10 +79,12 @@ body.landing {
       position: absolute;
       top: 50%;
       left: 50%;
-      max-height: 100%;
-      max-width: 100%;
       transform: translate(-50%, -50%);
       padding: 20px;
+
+      @media (max-width: $screen-xs-max) {
+        width: 90vw;
+      }
 
       background-color: white;
 
@@ -104,5 +106,11 @@ body.landing {
         text-align: center;
       }
     }
+  }
+}
+
+body.landing-dept {
+  .hero .hero-content p {
+    max-width: 400px;
   }
 }

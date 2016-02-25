@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 
-{% block body_class %}{{ super }} landing{% endblock %}
+{% block body_class %}{{ block.super }} landing{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
@@ -32,9 +32,8 @@
       novalidate
     >
       <p>
-        We're very excited to help you out, however our product isn't quite
-        ready to launch. Leave your email below and we'll let you know as soon
-        as we can.
+        <strong>We're launching soon.</strong><br>
+        Leave your email and we'll notify you.
       </p>
       <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
       <div class="form-fields">
