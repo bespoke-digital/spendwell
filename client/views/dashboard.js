@@ -25,7 +25,7 @@ class Dashboard extends Component {
 
   constructor() {
     super();
-    this.state = {};
+    this.state = { statusOpen: null };
   }
 
   syncBuckets(month) {
@@ -52,6 +52,14 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
+  handleStatusClick(type) {
+    const { statusOpen } = this.state;
+    if (statusOpen === type)
+      this.setState({ statusOpen: null });
+    else
+      this.setState({ statusOpen: type });
+  }
+
   render() {
     if (!this.props.viewer.summary) {
       console.log('fuck this shit', this.props);
@@ -69,7 +77,7 @@ class Dashboard extends Component {
       transactions,
     } = summary;
 
-    const { selected } = this.state;
+    const { selected, statusOpen } = this.state;
 
     const now = moment().startOf('month');
     const current = year && month ? moment(`${year}-${month}-0`) : now;
@@ -85,35 +93,54 @@ class Dashboard extends Component {
         className={`container ${styles.root}`}
         onTrigger={::this.loadTransactions}
       >
-        <Card className='month'>
-          <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
-            <i className='fa fa-backward'/>
-          </Button>
+        <CardList className='overview'>
+          <Card className='month'>
+            <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
+              <i className='fa fa-backward'/>
+            </Button>
 
-          <div className='current'>{periods.current.format('MMMM YYYY')}</div>
+            <div className='current'>{periods.current.format('MMMM YYYY')}</div>
 
-          <Button
-            to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
-            disabled={periods.next.isAfter(periods.now)}
-          >
-            <i className='fa fa-forward'/>
-          </Button>
-        </Card>
+            <Button
+              to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
+              disabled={periods.next.isAfter(periods.now)}
+            >
+              <i className='fa fa-forward'/>
+            </Button>
+          </Card>
 
-        <Card className='status'>
-          <div className='number'>
-            In
-            <div className='amount'><Money amount={income}/></div>
-          </div>
-          <div className='number'>
-            Out
-            <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
-          </div>
-          <div className='number'>
-            Net
-            <div className='amount'><Money amount={net}/></div>
-          </div>
-        </Card>
+          <Card className={`status ${statusOpen ? 'open' : ''}`}>
+            <a
+              className={`number ${statusOpen === 'in' ? 'open' : ''}`}
+              onClick={this.handleStatusClick.bind(this, 'in')}
+              href='#'
+            >
+              In
+              <div className='amount'><Money amount={income}/></div>
+            </a>
+            <a
+              className={`number ${statusOpen === 'out' ? 'open' : ''}`}
+              onClick={this.handleStatusClick.bind(this, 'out')}
+              href='#'
+            >
+              Out
+              <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
+            </a>
+            <a
+              className={`number ${statusOpen === 'net' ? 'open' : ''}`}
+              onClick={this.handleStatusClick.bind(this, 'net')}
+              href='#'
+            >
+              Net
+              <div className='amount'><Money amount={net}/></div>
+            </a>
+          </Card>
+          {statusOpen ?
+            <Card className='status-details'>
+              Details on {statusOpen}
+            </Card>
+          : null}
+        </CardList>
 
         <div className='heading'>
           <h2>Goals</h2>

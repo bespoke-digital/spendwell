@@ -18,8 +18,9 @@
   .status {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 40px;
     flex-direction: column;
+    padding: 0;
+    border-bottom: 0;
 
     @media (min-width: $screen-sm-min) {
       flex-direction: row;
@@ -28,7 +29,8 @@
     .number {
       text-align: center;
       font-size: 16px;
-      margin-bottom: 20px;
+      text-align: center;
+      padding: 20px;
 
       @media (min-width: $screen-sm-min) {
         margin-bottom: 0;
@@ -36,6 +38,10 @@
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      &.open {
+        font-weight: bold;
       }
 
       .amount {
