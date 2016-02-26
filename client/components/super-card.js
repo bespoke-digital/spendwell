@@ -23,7 +23,7 @@ export default (props)=> {
       ${className ? className : ''}
     `}>
       <div className='summary' onClick={onSummaryClick}>{summary}</div>
-      <Transition name='children'>
+      <Transition name='fade'>
         {expanded ? children : null}
       </Transition>
     </div>
