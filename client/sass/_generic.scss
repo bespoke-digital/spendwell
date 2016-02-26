@@ -1,4 +1,6 @@
 
+@import 'generic/buttons';
+
 body, html {
   background-color: $gray-lightest;
 }
@@ -18,6 +20,10 @@ div.checkbox {
 
 label {
   transition: 0.15s ease-out;
+}
+
+a:focus {
+  text-decoration: none;
 }
 
 .form-control:focus {
@@ -69,10 +75,6 @@ label {
   .back {
     margin-right: 10px;
   }
-}
-
-.mui-btn {
-  margin: 0;
 }
 
 .money {

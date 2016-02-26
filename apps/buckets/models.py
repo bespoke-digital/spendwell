@@ -1,4 +1,5 @@
 
+from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
 from django.db import models
@@ -84,15 +85,17 @@ class BucketMonth(SWModel):
             furthest_back = self.bucket.transactions().order_by('date').values_list('date', flat=True)[1]
             months_ago = relativedelta(self.month_start, furthest_back).months
 
-            if months_ago > 3:
+            if months_ago >= 2:
                 months_ago = 3
-            elif months_ago < 3:
-                months_ago += 1
+            elif months_ago == 1:
+                months_ago = 2
+            else:
+                months_ago = 1
 
-            self._avg_amount = self.bucket.transactions(
+            self._avg_amount = Decimal(self.bucket.transactions(
                 date__gte=self.month_start - relativedelta(months=months_ago),
                 date__lt=self.month_start,
-            ).sum() / months_ago
+            ).sum()) / Decimal(months_ago)
 
         return self._avg_amount
 
