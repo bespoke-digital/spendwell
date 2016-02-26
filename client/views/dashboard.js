@@ -165,12 +165,9 @@ class Dashboard extends Component {
               <GoalMonth
                 key={node.id}
                 goalMonth={node}
-                month={periods.current}
                 selected={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
-              >
-                <Button to={`/app/goals/${node.id}`}>View</Button>
-              </GoalMonth>
+              />
             )}
           </CardList>
         : null}
