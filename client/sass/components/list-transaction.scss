@@ -3,7 +3,6 @@
 
 :local(.root) {
   .buckets {
-    color: mui-color('grey', '600');
 
     > span:after {
       content: ', ';
@@ -12,6 +11,10 @@
     > span:last-child:after {
       content: '';
     }
+  }
+
+  .summary .buckets {
+    color: mui-color('grey', '600');
   }
 
   .date {
@@ -23,5 +26,9 @@
   .amount {
     width: 60px;
     text-align: right;
+  }
+
+  .spend-from-savings {
+    margin-top: 20px;
   }
 }

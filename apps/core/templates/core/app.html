@@ -15,8 +15,8 @@
       PLAID_PUBLIC_KEY: '{{ PLAID_PUBLIC_KEY }}',
     };
   </script>
+  <script src="{% static 'dist/app.js' %}"></script>
   {% if REACT_HOT_LOADING %}
     <script src="{% static 'dist/hotLoader.js' %}"></script>
   {% endif %}
-  <script src="{% static 'dist/app.js' %}"></script>
 {% endblock %}

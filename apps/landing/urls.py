@@ -9,7 +9,7 @@ from .views import (
 
 
 urlpatterns = [
-    url(r'^/?$', home_view, name='home'),
+    url(r'^$', home_view, name='home'),
     url(r'^financial-freedom/$', freedom_view, name='freedom'),
     url(r'^crush-your-debt/$', debt_view, name='debt'),
 ]

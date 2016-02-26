@@ -132,13 +132,16 @@
         float: right;
       }
     }
+  }
 
-    .bottom-load-button {
-      padding-bottom: 0;
-    }
+  .bottom-load-button {
+    position: relative;
+    padding-bottom: 0;
+    min-height: 46px;
 
-    .bottom-load-button--text {
-
+    .bottom-load-button-right {
+      position: absolute;
+      right: 0;
     }
   }
 }

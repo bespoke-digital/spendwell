@@ -16,13 +16,11 @@ class Accounts extends Component {
       <div className={`container ${styles.root}`}>
         <div className='heading'>
           <h1>Accounts</h1>
-          <Button to='/app/accounts/add/plaid'>
-            <i className='fa fa-plus'/>
-            Add w/ Plaid
+          <Button to='/app/accounts/add/upload' flat variant='primary'>
+            New CSV
           </Button>
-          <Button to='/app/accounts/add/upload'>
-            <i className='fa fa-plus'/>
-            Add w/ CSV
+          <Button to='/app/accounts/add/plaid' flat variant='primary'>
+            New Bank
           </Button>
         </div>
 

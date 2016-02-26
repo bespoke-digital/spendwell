@@ -70,21 +70,26 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
-
-          <Button to={`/app/buckets/${bucketMonth.bucket.id}`}>View</Button>
         </Card>
       }>
         {bucketMonth.transactions ?
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
         : null}
 
-        <div className='bottom-load-button bottom-load-button--text'>
-          {/*{bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?*/}
+        <div className='bottom-load-button'>
+          {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
             <Button onClick={relay.setVariables.bind(relay, {
               transactionCount: transactionCount + 20,
-            })}>Load More</Button>
-          {/*: null}*/}
-          <div><a>All Months</a></div>
+            })} flat>Load More</Button>
+          : null}
+          <Button
+            to={`/app/buckets/${bucketMonth.bucket.id}`}
+            flat
+            variant='primary'
+            className='bottom-load-button-right'
+          >
+            View All
+          </Button>
         </div>
 
       </SuperCard>

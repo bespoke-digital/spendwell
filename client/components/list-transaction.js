@@ -1,6 +1,8 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 
 import Card from 'components/card';
 import Money from 'components/money';
@@ -45,9 +47,6 @@ class ListTransaction extends Component {
             <div className='name'>
               {transaction.description}
             </div>
-            {/*<div className='category'>
-              {transaction.category ? transaction.category.name : null}
-            </div>*/}
             <div className='buckets'>
               {transaction.buckets.edges.map(({ node })=>
                 <span key={node.id}>{node.name}</span>
@@ -62,50 +61,44 @@ class ListTransaction extends Component {
           </div>
         }
       >
-        <ul className='list-unstyled'>
-          <li>
-            <strong>{'ID: '}</strong>
-            {transaction.djid}
-          </li>
-          <li>
-            <strong>{'Date: '}</strong>
-            <DateTime value={transaction.date}/>
-          </li>
-          <li>
-            <strong>{'Amount: '}</strong>
-            <Money amount={transaction.amount}/>
-          </li>
-          <li>
-            <strong>{'Account: '}</strong>
-            {transaction.account.name}
-            {` (${transaction.account.id})`}
-          </li>
-          <li>
-            <strong>{'Institution: '}</strong>
-            {transaction.account.institution.name}
-            {` (${transaction.account.institution.id})`}
-          </li>
-          {transaction.buckets.edges.length ?
-            <li>
-              <strong>{'Buckets: '}</strong>
-              <div className='buckets'>
-                {transaction.buckets.edges.map(({ node })=>
-                  <span key={node.id}>{node.name}</span>
-                )}
-              </div>
-            </li>
-          : null}
-          {transaction.transferPair ?
-            <li>
-              <strong>{'Transfer Pair: '}</strong>
-              {transaction.transferPair.description}
-              {' - '}
-              <Money amount={transaction.transferPair.amount}/>
-            </li>
-          : null}
-        </ul>
+        <Row>
+          <Col md='6'>
+            <strong>{'Date: '}</strong><DateTime value={transaction.date}/><br/>
+            <strong>{'Amount: '}</strong><Money amount={transaction.amount}/>
+          </Col>
+          <Col md='6'>
+            <strong>{'Account: '}</strong>{transaction.account.name}<br/>
+            <strong>{'Institution: '}</strong>{transaction.account.institution.name}
+          </Col>
+        </Row>
 
-        <Button onClick={::this.markAsFromSavings} variant='primary'>
+        {transaction.buckets.edges.length ?
+          <div className='section'>
+            <hr/>
+            <strong>{'Buckets: '}</strong>
+            <span className='buckets'>
+              {transaction.buckets.edges.map(({ node })=>
+                <span key={node.id}>{node.name}</span>
+              )}
+            </span>
+          </div>
+        : null}
+
+        {transaction.transferPair ?
+          <div className='section'>
+            <hr/>
+            <strong>{'Transfer Pair: '}</strong>
+            {transaction.transferPair.description}
+            {' - '}
+            <Money amount={transaction.transferPair.amount}/>
+          </div>
+        : null}
+
+        <Button
+          onClick={::this.markAsFromSavings}
+          variant='primary'
+          className='spend-from-savings'
+        >
           Mark As Spend From Savings
         </Button>
       </Card>
