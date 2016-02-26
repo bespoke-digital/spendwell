@@ -81,7 +81,6 @@ class BucketMonth(SWModel):
     @property
     def avg_amount(self):
         if not hasattr(self, '_avg_amount'):
-            # import pdb; pdb.set_trace()
             furthest_back = self.bucket.transactions().order_by('date').values_list('date', flat=True)[1]
             months_ago = relativedelta(self.month_start, furthest_back).months
 

@@ -54,7 +54,9 @@ class BillMonth extends Component {
               </div>
             </div>
           }
-        />
+        >
+          * Average is based on the last 3 months activity
+        </Card>
       }>
         {bucketMonth.transactions ?
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
