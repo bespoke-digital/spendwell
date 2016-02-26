@@ -11,7 +11,7 @@ import TransactionList from 'components/transaction-list';
 import Button from 'components/button';
 
 
-class BucketMonth extends Component {
+class BillMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
     onClick: PropTypes.func,
@@ -56,7 +56,9 @@ class BucketMonth extends Component {
                   <Money amount={bucketMonth.avgAmount} abs={true}/>
                 : 'N/A'}
               </div>
-              <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
+              <div className='amount'>
+                <Money amount={bucketMonth.amount} abs={true}/>
+              </div>
             </div>
           }
         >
@@ -67,32 +69,34 @@ class BucketMonth extends Component {
             color={progress > 100 ? 'danger' : progress > monthProgress ? 'warn' : 'success'}
           />
           <div className='progress-numbers'>
-            <div><Money amount={bucketMonth.amount} abs={true}/></div>
+            <div>
+              <Money amount={bucketMonth.amount} abs={true}/>
+            </div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
 
-          <Button to={`/app/buckets/${bucketMonth.bucket.id}`}>View</Button>
+          {bucketMonth.bucket ?
+            <Button to={`/app/buckets/${bucketMonth.bucket.id}`}>View</Button>
+          : null}
         </Card>
       }>
         {bucketMonth.transactions ?
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
         : null}
 
-        <div className='bottom-load-button bottom-load-button--text'>
-          {/*{bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?*/}
+        {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
+          <div className='bottom-load-button'>
             <Button onClick={relay.setVariables.bind(relay, {
               transactionCount: transactionCount + 20,
             })}>Load More</Button>
-          {/*: null}*/}
-          <div><a>All Months</a></div>
-        </div>
-
+          </div>
+        : null}
       </SuperCard>
     );
   }
 }
 
-BucketMonth = Relay.createContainer(BucketMonth, {
+BillMonth = Relay.createContainer(BillMonth, {
   initialVariables: {
     selected: true,
     transactionCount: 20,
@@ -121,4 +125,4 @@ BucketMonth = Relay.createContainer(BucketMonth, {
   },
 });
 
-export default BucketMonth;
+export default BillMonth;

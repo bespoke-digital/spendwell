@@ -9,16 +9,15 @@
     padding: 10px;
 
     .current {
-      margin: 8px 12px;
-      width: 120px;
+      margin: 0px 12px;
+      width: 200px;
       text-align: center;
+      font-size: 24px;
+      font-weight: 600;
     }
   }
 
   .status {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
     padding: 0;
     border-bottom: 0;
 
@@ -27,10 +26,12 @@
     }
 
     .number {
-      text-align: center;
-      font-size: 16px;
-      text-align: center;
+      display: inline-block;
+      width: calc(100% / 3);
       padding: 20px;
+
+      text-align: center;
+      font-size: 22px;
 
       @media (min-width: $screen-sm-min) {
         margin-bottom: 0;
@@ -41,11 +42,21 @@
       }
 
       &.open {
-        font-weight: bold;
+        background-color: $gray-lightest;
+        border-right: 1px solid $gray-lighter;
+        border-left: 1px solid $gray-lighter;
+
+        &:first-child {
+          border-left: none;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
       }
 
       .amount {
-        font-size: 22px;
+        font-weight: 600;
         text-align: center;
       }
     }
@@ -60,7 +71,7 @@
   }
 
   .super-card.expanded > .summary {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .card {
@@ -120,6 +131,14 @@
       > :last-child {
         float: right;
       }
+    }
+
+    .bottom-load-button {
+      padding-bottom: 0;
+    }
+
+    .bottom-load-button--text {
+
     }
   }
 }

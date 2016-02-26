@@ -9,6 +9,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
 import BucketMonth from 'components/bucket-month';
+import BillMonth from 'components/bill-month';
 import SpentFromSavings from 'components/spent-from-savings';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
@@ -97,7 +98,7 @@ class Dashboard extends Component {
         <CardList className='overview'>
           <Card className='month'>
             <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
-              <i className='fa fa-backward'/>
+              <i className='fa fa-chevron-left'/>
             </Button>
 
             <div className='current'>{periods.current.format('MMMM YYYY')}</div>
@@ -106,7 +107,7 @@ class Dashboard extends Component {
               to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
               disabled={periods.next.isAfter(periods.now)}
             >
-              <i className='fa fa-forward'/>
+              <i className='fa fa-chevron-right'/>
             </Button>
           </Card>
 
@@ -116,7 +117,7 @@ class Dashboard extends Component {
               onClick={this.handleStatusClick.bind(this, 'in')}
               href='#'
             >
-              In
+              <span className='title'>In</span>
               <div className='amount'><Money amount={income}/></div>
             </a>
             <a
@@ -124,7 +125,7 @@ class Dashboard extends Component {
               onClick={this.handleStatusClick.bind(this, 'out')}
               href='#'
             >
-              Out
+              <span className='title'>Out</span>
               <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
             </a>
             <a
@@ -132,7 +133,7 @@ class Dashboard extends Component {
               onClick={this.handleStatusClick.bind(this, 'net')}
               href='#'
             >
-              Net
+              <span className='title'>Net</span>
               <div className='amount'><Money amount={net}/></div>
             </a>
           </Card>
@@ -146,8 +147,7 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Goals</h2>
           <div>
-            <Button to='/app/goals/new' raised>
-              <i className='fa fa-plus'/>
+            <Button to='/app/goals/new' flat={true} variant='primary'>
               {' New Goal'}
             </Button>
           </div>
@@ -158,7 +158,7 @@ class Dashboard extends Component {
             <Card className='card-list-headings'>
               <div></div>
               <div className='amount'>Target</div>
-              <div className='amount'>Saved</div>
+              <div className='amount'>Funded</div>
             </Card>
 
             {goalMonths.edges.map(({ node })=>
@@ -169,7 +169,7 @@ class Dashboard extends Component {
                 selected={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
               >
-                <Button to={`/app/goals/${node.id}`}>Edit</Button>
+                <Button to={`/app/goals/${node.id}`}>View</Button>
               </GoalMonth>
             )}
           </CardList>
@@ -185,8 +185,7 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Bills</h2>
           <div>
-            <Button to='/app/bills/new' raised>
-              <i className='fa fa-plus'/>
+            <Button to='/app/bills/new' flat={true} variant='primary'>
               {' New Bill'}
             </Button>
           </div>
@@ -200,7 +199,7 @@ class Dashboard extends Component {
               <div className='amount'>Spent</div>
             </Card>
             {billMonths.edges.map(({ node })=>
-              <BucketMonth
+              <BillMonth
                 key={node.id}
                 bucketMonth={node}
                 month={periods.current}
@@ -214,8 +213,7 @@ class Dashboard extends Component {
         <div className='heading'>
           <h2>Expenses</h2>
           <div>
-            <Button to='/app/buckets/new' raised>
-              <i className='fa fa-plus'/>
+            <Button to='/app/buckets/new' flat={true} variant='primary'>
               {' New Bucket'}
             </Button>
           </div>
@@ -306,7 +304,7 @@ Dashboard = Relay.createContainer(Dashboard, {
           billMonths(first: 1000) {
             edges {
               node {
-                ${BucketMonth.getFragment('bucketMonth')}
+                ${BillMonth.getFragment('bucketMonth')}
                 id
               }
             }
