@@ -135,13 +135,15 @@
   }
 
   .bottom-load-button {
-    position: relative;
     padding-bottom: 0;
     min-height: 46px;
 
-    .bottom-load-button-right {
-      position: absolute;
-      right: 0;
+    .mui-btn {
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
     }
   }
 }
