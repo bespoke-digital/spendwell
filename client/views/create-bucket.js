@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router';
 
 import Button from 'components/button';
 import BucketForm from 'components/bucket-form';
+import App from 'components/app';
 
 import { CreateBucketMutation } from 'mutations/buckets';
 
@@ -28,21 +29,23 @@ class CreateBucket extends Component {
     const { viewer } = this.props;
 
     return (
-      <div className={`container ${styles.root}`}>
-        <div className='heading'>
-          <Button onClick={()=> browserHistory.push('/app/dashboard')} className='back'>
-            <i className='fa fa-long-arrow-left'/>
-          </Button>
+      <App viewer={viewer}>
+        <div className={`container ${styles.root}`}>
+          <div className='heading'>
+            <Button onClick={()=> browserHistory.push('/app/dashboard')} className='back'>
+              <i className='fa fa-long-arrow-left'/>
+            </Button>
 
-          <h1>New Bucket</h1>
+            <h1>New Bucket</h1>
+          </div>
+
+          <BucketForm
+            onSubmit={::this.handleSubmit}
+            viewer={viewer}
+            bucket={null}
+          />
         </div>
-
-        <BucketForm
-          onSubmit={::this.handleSubmit}
-          viewer={viewer}
-          bucket={null}
-        />
-      </div>
+      </App>
     );
   }
 }
@@ -55,6 +58,7 @@ CreateBucket = Relay.createContainer(CreateBucket, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         ${CreateBucketMutation.getFragment('viewer')}
         ${BucketForm.getFragment('viewer')}
       }

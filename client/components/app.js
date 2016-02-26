@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Transition from 'components/transition';
 import Header from 'components/header';
 import Nav from 'components/nav';
-import style from 'sass/views/app';
+import style from 'sass/components/app';
 
 
 class App extends Component {
@@ -43,7 +43,7 @@ class App extends Component {
 
         <Nav open={navOpen} toggleNav={::this.toggleNav}/>
 
-        <Transition transitionName='overlay'>
+        <Transition name='overlay'>
           {overlayOpen ?
             <div className='overlay' key='overlay' onClick={::this.closeOverlay}/>
           : null}

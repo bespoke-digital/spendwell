@@ -8,7 +8,6 @@ import Accounts from 'views/accounts';
 import AddPlaid from 'views/add-plaid';
 import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
-import App from 'views/app';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
 import CreateBill from 'views/create-bill';
@@ -20,7 +19,7 @@ const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
 export default (
   <RelayRouter history={browserHistory}>
-    <Route path='app' component={App} queries={rootQuery}>
+    <Route path='app'>
       <IndexRedirect to='dashboard'/>
       <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>

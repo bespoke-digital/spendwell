@@ -13,6 +13,8 @@ import BillMonth from 'components/bill-month';
 import SpentFromSavings from 'components/spent-from-savings';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
+import Transition from 'components/transition';
+import App from 'components/app';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
@@ -67,7 +69,7 @@ class Dashboard extends Component {
       return <div className='container'>No Summary</div>;
     }
 
-    const { params: { year, month }, viewer: { summary } } = this.props;
+    const { params: { year, month }, viewer } = this.props;
     const {
       income,
       allocated,
@@ -77,7 +79,7 @@ class Dashboard extends Component {
       bucketMonths,
       billMonths,
       transactions,
-    } = summary;
+    } = viewer.summary;
 
     const { selected, statusOpen } = this.state;
 
@@ -91,169 +93,173 @@ class Dashboard extends Component {
     };
 
     return (
-      <ScrollTrigger
-        className={`container ${styles.root}`}
-        onTrigger={::this.loadTransactions}
-      >
-        <CardList className='overview'>
-          <Card className='month'>
-            <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
-              <i className='fa fa-chevron-left'/>
-            </Button>
+      <App viewer={viewer}>
+        <ScrollTrigger
+          className={`container ${styles.root}`}
+          onTrigger={::this.loadTransactions}
+        >
+          <CardList className='overview'>
+            <Card className='month'>
+              <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
+                <i className='fa fa-chevron-left'/>
+              </Button>
 
-            <div className='current'>{periods.current.format('MMMM YYYY')}</div>
+              <div className='current'>{periods.current.format('MMMM YYYY')}</div>
 
-            <Button
-              to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
-              disabled={periods.next.isAfter(periods.now)}
-            >
-              <i className='fa fa-chevron-right'/>
-            </Button>
-          </Card>
-
-          <Card className={`status ${statusOpen ? 'open' : ''}`}>
-            <a
-              className={`number ${statusOpen === 'in' ? 'open' : ''}`}
-              onClick={this.handleStatusClick.bind(this, 'in')}
-              href='#'
-            >
-              <span className='title'>In</span>
-              <div className='amount'><Money amount={income}/></div>
-            </a>
-            <a
-              className={`number ${statusOpen === 'out' ? 'open' : ''}`}
-              onClick={this.handleStatusClick.bind(this, 'out')}
-              href='#'
-            >
-              <span className='title'>Out</span>
-              <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
-            </a>
-            <a
-              className={`number ${statusOpen === 'net' ? 'open' : ''}`}
-              onClick={this.handleStatusClick.bind(this, 'net')}
-              href='#'
-            >
-              <span className='title'>Net</span>
-              <div className='amount'><Money amount={net}/></div>
-            </a>
-          </Card>
-          {statusOpen ?
-            <Card className='status-details'>
-              Details on {statusOpen}
-            </Card>
-          : null}
-        </CardList>
-
-        <div className='heading'>
-          <h2>Goals</h2>
-          <div>
-            <Button to='/app/goals/new' flat={true} variant='primary'>
-              {' New Goal'}
-            </Button>
-          </div>
-        </div>
-
-        {goalMonths.edges.length > 0 ?
-          <CardList>
-            <Card className='card-list-headings'>
-              <div></div>
-              <div className='amount'>Target</div>
-              <div className='amount'>Funded</div>
+              <Button
+                to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
+                disabled={periods.next.isAfter(periods.now)}
+              >
+                <i className='fa fa-chevron-right'/>
+              </Button>
             </Card>
 
-            {goalMonths.edges.map(({ node })=>
-              <GoalMonth
-                key={node.id}
-                goalMonth={node}
-                selected={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-              />
-            )}
+            <Card className={`status ${statusOpen ? 'open' : ''}`}>
+              <a
+                className={`number ${statusOpen === 'in' ? 'open' : ''}`}
+                onClick={this.handleStatusClick.bind(this, 'in')}
+                href='#'
+              >
+                <span className='title'>In</span>
+                <div className='amount'><Money amount={income}/></div>
+              </a>
+              <a
+                className={`number ${statusOpen === 'out' ? 'open' : ''}`}
+                onClick={this.handleStatusClick.bind(this, 'out')}
+                href='#'
+              >
+                <span className='title'>Out</span>
+                <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
+              </a>
+              <a
+                className={`number ${statusOpen === 'net' ? 'open' : ''}`}
+                onClick={this.handleStatusClick.bind(this, 'net')}
+                href='#'
+              >
+                <span className='title'>Net</span>
+                <div className='amount'><Money amount={net}/></div>
+              </a>
+            </Card>
+            <Transition name='fade'>
+              {statusOpen ?
+                <Card className='status-details'>
+                  Details on {statusOpen}
+                </Card>
+              : null}
+            </Transition>
           </CardList>
-        : null}
 
-        <SpentFromSavings
-          summary={summary}
-          month={periods.current}
-          selected={selected === 'spentFromSavings'}
-          onClick={this.select.bind(this, 'spentFromSavings')}
-        />
-
-        <div className='heading'>
-          <h2>Bills</h2>
-          <div>
-            <Button to='/app/bills/new' flat={true} variant='primary'>
-              {' New Bill'}
-            </Button>
-          </div>
-        </div>
-
-        {billMonths.edges.length > 0 ?
-          <CardList>
-            <Card className='card-list-headings'>
-              <div></div>
-              <div className='amount'>Average</div>
-              <div className='amount'>Spent</div>
-            </Card>
-            {billMonths.edges.map(({ node })=>
-              <BillMonth
-                key={node.id}
-                bucketMonth={node}
-                month={periods.current}
-                selected={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-              />
-            )}
-          </CardList>
-        : null}
-
-        <div className='heading'>
-          <h2>Expenses</h2>
-          <div>
-            <Button to='/app/buckets/new' flat={true} variant='primary'>
-              {' New Bucket'}
-            </Button>
-          </div>
-        </div>
-
-        {bucketMonths.edges.length > 0 ?
-          <CardList>
-            <Card className='card-list-headings'>
-              <div></div>
-              <div className='amount'>Average</div>
-              <div className='amount'>Spent</div>
-            </Card>
-            {bucketMonths.edges.map(({ node })=>
-              <BucketMonth
-                key={node.id}
-                bucketMonth={node}
-                month={periods.current}
-                selected={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-              />
-            )}
-          </CardList>
-        : null}
-
-        <CardList>
-          {spent !== 0 ?
-            <Card className='card-list-headings'>
-              <div>All Expenses</div>
-              <div className='amount'>
-                <Money amount={spent} abs/>
-              </div>
-            </Card>
-          : null}
-
-          <TransactionList transactions={transactions} monthHeaders={false}/>
-
-          {transactions && transactions.pageInfo.hasNextPage ?
-            <div className='bottom-load-button'>
-              <Button onClick={::this.loadTransactions} raised>Load More</Button>
+          <div className='heading'>
+            <h2>Goals</h2>
+            <div>
+              <Button to='/app/goals/new' flat={true} variant='primary'>
+                {' New Goal'}
+              </Button>
             </div>
+          </div>
+
+          {goalMonths.edges.length > 0 ?
+            <CardList>
+              <Card className='card-list-headings'>
+                <div></div>
+                <div className='amount'>Target</div>
+                <div className='amount'>Funded</div>
+              </Card>
+
+              {goalMonths.edges.map(({ node })=>
+                <GoalMonth
+                  key={node.id}
+                  goalMonth={node}
+                  selected={selected === node.id}
+                  onClick={this.select.bind(this, node.id)}
+                />
+              )}
+            </CardList>
           : null}
-        </CardList>
-      </ScrollTrigger>
+
+          <SpentFromSavings
+            summary={viewer.summary}
+            month={periods.current}
+            selected={selected === 'spentFromSavings'}
+            onClick={this.select.bind(this, 'spentFromSavings')}
+          />
+
+          <div className='heading'>
+            <h2>Bills</h2>
+            <div>
+              <Button to='/app/bills/new' flat={true} variant='primary'>
+                {' New Bill'}
+              </Button>
+            </div>
+          </div>
+
+          {billMonths.edges.length > 0 ?
+            <CardList>
+              <Card className='card-list-headings'>
+                <div></div>
+                <div className='amount'>Average</div>
+                <div className='amount'>Spent</div>
+              </Card>
+              {billMonths.edges.map(({ node })=>
+                <BillMonth
+                  key={node.id}
+                  bucketMonth={node}
+                  month={periods.current}
+                  open={selected === node.id}
+                  onClick={this.select.bind(this, node.id)}
+                />
+              )}
+            </CardList>
+          : null}
+
+          <div className='heading'>
+            <h2>Expenses</h2>
+            <div>
+              <Button to='/app/buckets/new' flat={true} variant='primary'>
+                {' New Bucket'}
+              </Button>
+            </div>
+          </div>
+
+          {bucketMonths.edges.length > 0 ?
+            <CardList>
+              <Card className='card-list-headings'>
+                <div></div>
+                <div className='amount'>Average</div>
+                <div className='amount'>Spent</div>
+              </Card>
+              {bucketMonths.edges.map(({ node })=>
+                <BucketMonth
+                  key={node.id}
+                  bucketMonth={node}
+                  month={periods.current}
+                  open={selected === node.id}
+                  onClick={this.select.bind(this, node.id)}
+                />
+              )}
+            </CardList>
+          : null}
+
+          <CardList>
+            {spent !== 0 ?
+              <Card className='card-list-headings'>
+                <div>All Expenses</div>
+                <div className='amount'>
+                  <Money amount={spent} abs/>
+                </div>
+              </Card>
+            : null}
+
+            <TransactionList transactions={transactions} monthHeaders={false}/>
+
+            {transactions && transactions.pageInfo.hasNextPage ?
+              <div className='bottom-load-button'>
+                <Button onClick={::this.loadTransactions} raised>Load More</Button>
+              </div>
+            : null}
+          </CardList>
+        </ScrollTrigger>
+      </App>
     );
   }
 }
@@ -275,6 +281,7 @@ Dashboard = Relay.createContainer(Dashboard, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         ${AssignTransactionsMutation.getFragment('viewer')}
         summary(month: $date) {
           ${SpentFromSavings.getFragment('summary')}

@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router';
 
 import Button from 'components/button';
 import BucketForm from 'components/bucket-form';
+import App from 'components/app';
 
 import { UpdateBucketMutation } from 'mutations/buckets';
 
@@ -27,21 +28,23 @@ class UpdateBucket extends Component {
   render() {
     const { viewer } = this.props;
     return (
-      <div className={`container ${styles.root}`}>
-        <div className='heading'>
-          <Button onClick={()=> browserHistory.goBack()} className='back'>
-            <i className='fa fa-long-arrow-left'/>
-          </Button>
+      <App viewer={viewer}>
+        <div className={`container ${styles.root}`}>
+          <div className='heading'>
+            <Button onClick={()=> browserHistory.goBack()} className='back'>
+              <i className='fa fa-long-arrow-left'/>
+            </Button>
 
-          <h1>Edit Bucket</h1>
+            <h1>Edit Bucket</h1>
+          </div>
+
+          <BucketForm
+            onSubmit={::this.handleSubmit}
+            viewer={viewer}
+            bucket={viewer.bucket}
+          />
         </div>
-
-        <BucketForm
-          onSubmit={::this.handleSubmit}
-          viewer={viewer}
-          bucket={viewer.bucket}
-        />
-      </div>
+      </App>
     );
   }
 }
@@ -53,6 +56,7 @@ UpdateBucket = Relay.createContainer(UpdateBucket, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         ${UpdateBucketMutation.getFragment('viewer')}
         ${BucketForm.getFragment('viewer')}
 

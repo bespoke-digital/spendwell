@@ -15,23 +15,11 @@ class BucketMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    selected: PropTypes.bool,
   };
-
-  static defaultProps = {
-    selected: false,
-  };
-
-  // componentWillReceiveProps(props) {
-  //   const { selected, bucketMonth } = props;
-  //   console.log('componentWillReceiveProps', selected, bucketMonth.name);
-  //   // if (relay.variables.loadTransactions !== selected)
-  //   //   relay.setVariables({ loadTransactions: selected });
-  // }
 
   render() {
-    const { bucketMonth, month, onClick, selected, relay } = this.props;
-    const { transactionCount } = relay.variables;
+    const { bucketMonth, month, onClick, relay } = this.props;
+    const { transactionCount, open } = relay.variables;
 
     const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
     const monthProgress = month.isBefore(moment().subtract(1, 'month')) ? 100 : (
@@ -39,10 +27,10 @@ class BucketMonth extends Component {
     );
 
     return (
-      <SuperCard expanded={selected} summary={
+      <SuperCard expanded={open} summary={
         <Card
           onSummaryClick={onClick}
-          expanded={selected}
+          expanded={open}
           className={` bucket ${
             progress > 100 ? 'bucket-danger' :
             progress > monthProgress ? 'bucket-warn' :
@@ -91,7 +79,6 @@ class BucketMonth extends Component {
             View All
           </Button>
         </div>
-
       </SuperCard>
     );
   }
@@ -99,12 +86,8 @@ class BucketMonth extends Component {
 
 BucketMonth = Relay.createContainer(BucketMonth, {
   initialVariables: {
-    selected: true,
     transactionCount: 20,
-  },
-  prepareVariables(vars) {
-    // console.log('prepareVariables', vars);
-    return vars;
+    open: false,
   },
   fragments: {
     bucketMonth: ()=> Relay.QL`
@@ -112,7 +95,7 @@ BucketMonth = Relay.createContainer(BucketMonth, {
         name
         amount
         avgAmount
-        transactions(first: $transactionCount) @include(if: $selected) {
+        transactions(first: 20) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
           pageInfo {
             hasNextPage

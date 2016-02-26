@@ -4,7 +4,7 @@ import Relay from 'react-relay';
 
 import Header from 'components/header';
 
-import style from 'sass/views/app';
+import style from 'sass/components/app';
 
 
 class Onboarding extends Component {

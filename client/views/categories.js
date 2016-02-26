@@ -2,6 +2,8 @@
 import Relay from 'react-relay';
 import { Component } from 'react';
 
+import App from 'components/app';
+
 
 class Category extends Component {
   render() {
@@ -43,13 +45,15 @@ export default class CategoriesView extends Component {
   render() {
     const { viewer } = this.props;
     return (
-      <div className='container'>
-        <ul>
-          {viewer.categories.edges.map((edge, index)=>
-            <li key={index}><Category category={edge.node}/></li>
-          )}
-        </ul>
-      </div>
+      <App viewer={viewer}>
+        <div className='container'>
+          <ul>
+            {viewer.categories.edges.map((edge, index)=>
+              <li key={index}><Category category={edge.node}/></li>
+            )}
+          </ul>
+        </div>
+      </App>
     );
   }
 }
@@ -58,6 +62,7 @@ CategoriesView = Relay.createContainer(CategoriesView, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         categories(topLevel: true, first: 1000) {
           edges {
             node {

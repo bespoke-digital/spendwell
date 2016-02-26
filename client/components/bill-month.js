@@ -13,29 +13,24 @@ class BillMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    selected: PropTypes.bool,
   };
 
-  static defaultProps = {
-    selected: false,
-  };
-
-  // componentWillReceiveProps(props) {
-  //   const { selected, bucketMonth } = props;
-  //   console.log('componentWillReceiveProps', selected, bucketMonth.name);
-  //   if (relay.variables.loadTransactions !== selected)
-  //     relay.setVariables({ loadTransactions: selected });
-  // }
-
-  render() {
-    const { bucketMonth, onClick, selected, relay } = this.props;
+  loadTransactions() {
+    const { relay } = this.props;
     const { transactionCount } = relay.variables;
 
+    relay.setVariables({ transactionCount: transactionCount + 20 });
+  }
+
+  render() {
+    const { bucketMonth, onClick, relay } = this.props;
+    const { open } = relay.variables;
+
     return (
-      <SuperCard expanded={selected} summary={
+      <SuperCard expanded={open} summary={
         <Card
           onSummaryClick={onClick}
-          expanded={selected}
+          expanded={open}
           className={` bucket ${
             bucketMonth.avgAmount < bucketMonth.amount ?
               'bucket-warn' :
@@ -65,9 +60,7 @@ class BillMonth extends Component {
         <div className='bottom-load-button'>
           {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
             <div>
-              <Button onClick={relay.setVariables.bind(relay, {
-                transactionCount: transactionCount + 20,
-              })}>Load More</Button>
+              <Button onClick={::this.loadTransactions}>Load More</Button>
             </div>
           : null}
           <div>
@@ -88,12 +81,8 @@ class BillMonth extends Component {
 
 BillMonth = Relay.createContainer(BillMonth, {
   initialVariables: {
-    selected: true,
+    open: false,
     transactionCount: 20,
-  },
-  prepareVariables(vars) {
-    // console.log('prepareVariables', vars);
-    return vars;
   },
   fragments: {
     bucketMonth: ()=> Relay.QL`
@@ -101,14 +90,12 @@ BillMonth = Relay.createContainer(BillMonth, {
         name
         amount
         avgAmount
-        transactions(first: $transactionCount) @include(if: $selected) {
+        bucket { id }
+        transactions(first: $transactionCount) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
           pageInfo {
             hasNextPage
           }
-        }
-        bucket {
-          id
         }
       }
     `,

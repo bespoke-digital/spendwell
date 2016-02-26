@@ -1,6 +1,5 @@
 
 import _ from 'lodash';
-import Transition from 'components/transition';
 import styles from 'sass/components/super-card.scss';
 
 
@@ -23,9 +22,7 @@ export default (props)=> {
       ${className ? className : ''}
     `}>
       <div className='summary' onClick={onSummaryClick}>{summary}</div>
-      <Transition name='fade'>
-        {expanded ? children : null}
-      </Transition>
+      {expanded ? children : null}
     </div>
   );
 };

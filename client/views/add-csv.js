@@ -8,6 +8,7 @@ import Dropdown from 'components/dropdown';
 import Button from 'components/button';
 import CreateAccount from 'components/create-account';
 import CreateInstitution from 'components/create-institution';
+import App from 'components/app';
 
 import { UploadCsvMutation } from 'mutations/transactions';
 
@@ -41,76 +42,78 @@ class AddCsv extends Component {
     const { institution, account, newAccount, newInstitution } = this.state;
 
     return (
-      <div className={`container ${style.root}`}>
-        <div className='heading'>
-          <Button onClick={()=> this.context.history.goBack()} className='back'>
-            <i className='fa fa-long-arrow-left'/>
-          </Button>
+      <App viewer={viewer}>
+        <div className={`container ${style.root}`}>
+          <div className='heading'>
+            <Button onClick={()=> this.context.history.goBack()} className='back'>
+              <i className='fa fa-long-arrow-left'/>
+            </Button>
 
-          <h1>Upload Account</h1>
-        </div>
-
-        <Card>
-          <div>
-            <Dropdown label={institution ? institution.name : 'Institution'}>
-              <a
-                href='#'
-                onClick={this.setState.bind(this, { institution: null }, null)}
-                onClick={this.setState.bind(this, { newInstitution: true, account: null }, null)}
-              >New</a>
-              {viewer.institutions.edges.map(({ node })=>
-                <a
-                  key={node.id}
-                  href='#'
-                  onClick={this.setState.bind(this, { institution: node }, null)}
-                >{node.name}</a>
-              )}
-            </Dropdown>
+            <h1>Upload Account</h1>
           </div>
 
-          {viewer ?
-            <CreateInstitution
-              viewer={viewer}
-              open={!!newInstitution}
-              onClose={this.setState.bind(this, { newInstitution: false }, null)}
-            />
-          : null}
-
-          <div>
-            {institution && institution.accounts ? (
-              <Dropdown label={account ? account.name : 'Account'}>
+          <Card>
+            <div>
+              <Dropdown label={institution ? institution.name : 'Institution'}>
                 <a
                   href='#'
-                  onClick={this.setState.bind(this, { newAccount: true, account: null }, null)}
+                  onClick={this.setState.bind(this, { institution: null }, null)}
+                  onClick={this.setState.bind(this, { newInstitution: true, account: null }, null)}
                 >New</a>
-                {institution.accounts.edges.map(({ node })=>
+                {viewer.institutions.edges.map(({ node })=>
                   <a
                     key={node.id}
                     href='#'
-                    onClick={this.setState.bind(this, { account: node }, null)}
+                    onClick={this.setState.bind(this, { institution: node }, null)}
                   >{node.name}</a>
                 )}
               </Dropdown>
-            ) : null}
-          </div>
+            </div>
 
-          {institution ?
-            <CreateAccount
-              institution={institution}
-              open={!!newAccount}
-              onClose={this.setState.bind(this, { newAccount: false }, null)}
-            />
-          : null}
+            {viewer ?
+              <CreateInstitution
+                viewer={viewer}
+                open={!!newInstitution}
+                onClose={this.setState.bind(this, { newInstitution: false }, null)}
+              />
+            : null}
 
-          <FileInput label='CSV' onChange={(files)=> this.setState({ csvFile: files[0] })}/>
+            <div>
+              {institution && institution.accounts ? (
+                <Dropdown label={account ? account.name : 'Account'}>
+                  <a
+                    href='#'
+                    onClick={this.setState.bind(this, { newAccount: true, account: null }, null)}
+                  >New</a>
+                  {institution.accounts.edges.map(({ node })=>
+                    <a
+                      key={node.id}
+                      href='#'
+                      onClick={this.setState.bind(this, { account: node }, null)}
+                    >{node.name}</a>
+                  )}
+                </Dropdown>
+              ) : null}
+            </div>
 
-          <Button
-            type='submit'
-            variant='primary'
-            onClick={::this.submit}
-          >Upload</Button>
-        </Card>
-      </div>
+            {institution ?
+              <CreateAccount
+                institution={institution}
+                open={!!newAccount}
+                onClose={this.setState.bind(this, { newAccount: false }, null)}
+              />
+            : null}
+
+            <FileInput label='CSV' onChange={(files)=> this.setState({ csvFile: files[0] })}/>
+
+            <Button
+              type='submit'
+              variant='primary'
+              onClick={::this.submit}
+            >Upload</Button>
+          </Card>
+        </div>
+      </App>
     );
   }
 }
@@ -119,6 +122,7 @@ AddCsv = Relay.createContainer(AddCsv, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         ${CreateInstitution.getFragment('viewer')}
         institutions(first: 100) {
           edges {

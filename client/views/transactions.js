@@ -9,6 +9,7 @@ import ScrollTrigger from 'components/scroll-trigger';
 import Checkbox from 'components/checkbox';
 import Select from 'components/select';
 import TextInput from 'components/text-input';
+import App from 'components/app';
 
 import styles from 'sass/views/bucket.scss';
 
@@ -48,65 +49,67 @@ class Transactions extends Component {
     const { viewer } = this.props;
     const { amountGt, amountLt, fromSavings, isTransfer, description } = this.props.relay.variables;
     return (
-      <ScrollTrigger
-        className={`container ${styles.root}`}
-        onTrigger={::this.handleScroll}
-      >
-        <div className='heading'>
-          <h1>Transactions</h1>
-        </div>
+      <App viewer={viewer}>
+        <ScrollTrigger
+          className={`container ${styles.root}`}
+          onTrigger={::this.handleScroll}
+        >
+          <div className='heading'>
+            <h1>Transactions</h1>
+          </div>
 
-        <CardList>
-          <Card className='card-list-headings'>Filters</Card>
-          <Card>
-            <Checkbox
-              label='Outgoing'
-              checked={amountGt === null}
-              onChange={::this.handleOutgoingChange}
-            />
-          </Card>
-          <Card>
-            <Checkbox
-              label='Incoming'
-              checked={amountLt === null}
-              onChange={::this.handleIncomingChange}
-            />
-          </Card>
-          <Card>
-            <Select
-              label='From Savings'
-              onChange={::this.handleFromSavingsChange}
-              value={fromSavings}
-              options={[
-                { value: null, label: 'All' },
-                { value: true, label: 'Only' },
-                { value: false, label: 'None' },
-              ]}
-            />
-          </Card>
-          <Card>
-            <Select
-              label='Transfers'
-              onChange={::this.handleTransfersChange}
-              value={isTransfer}
-              options={[
-                { value: null, label: 'All' },
-                { value: true, label: 'Only' },
-                { value: false, label: 'None' },
-              ]}
-            />
-          </Card>
-          <Card>
-            <TextInput
-              label='Search'
-              onChange={::this.handleSearchChange}
-              value={description || ''}
-            />
-          </Card>
-        </CardList>
+          <CardList>
+            <Card className='card-list-headings'>Filters</Card>
+            <Card>
+              <Checkbox
+                label='Outgoing'
+                checked={amountGt === null}
+                onChange={::this.handleOutgoingChange}
+              />
+            </Card>
+            <Card>
+              <Checkbox
+                label='Incoming'
+                checked={amountLt === null}
+                onChange={::this.handleIncomingChange}
+              />
+            </Card>
+            <Card>
+              <Select
+                label='From Savings'
+                onChange={::this.handleFromSavingsChange}
+                value={fromSavings}
+                options={[
+                  { value: null, label: 'All' },
+                  { value: true, label: 'Only' },
+                  { value: false, label: 'None' },
+                ]}
+              />
+            </Card>
+            <Card>
+              <Select
+                label='Transfers'
+                onChange={::this.handleTransfersChange}
+                value={isTransfer}
+                options={[
+                  { value: null, label: 'All' },
+                  { value: true, label: 'Only' },
+                  { value: false, label: 'None' },
+                ]}
+              />
+            </Card>
+            <Card>
+              <TextInput
+                label='Search'
+                onChange={::this.handleSearchChange}
+                value={description || ''}
+              />
+            </Card>
+          </CardList>
 
-        <TransactionList transactions={viewer.transactions} abs={false}/>
-      </ScrollTrigger>
+          <TransactionList transactions={viewer.transactions} abs={false}/>
+        </ScrollTrigger>
+      </App>
     );
   }
 }
@@ -123,6 +126,7 @@ Transactions = Relay.createContainer(Transactions, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         transactions(
           first: $count,
           amountGt: $amountGt,

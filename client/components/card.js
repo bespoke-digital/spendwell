@@ -1,6 +1,5 @@
 
 import _ from 'lodash';
-import Transition from 'components/transition';
 import styles from 'sass/components/card.scss';
 
 
@@ -25,15 +24,13 @@ export default (props)=> {
       {summary ?
         <div className='summary' onClick={onSummaryClick}>{summary}</div>
       : null}
-      {canExpand && children ?
-        <Transition name='fade'>{expanded ? (
-          <div className='expanded-content'>
-            {children}
-          </div>
-        ) : null}</Transition>
-      :
+      {canExpand && expanded ?
+        <div className='expanded-content'>
+          {children}
+        </div>
+      : !canExpand && children ?
         children
-      }
+      : null}
     </div>
   );
 };

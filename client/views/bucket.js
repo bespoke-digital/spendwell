@@ -8,6 +8,7 @@ import CardList from 'components/card-list';
 import Card from 'components/card';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
+import App from 'components/app';
 
 import { GenerateBucketMonthMutation } from 'mutations/buckets';
 
@@ -30,37 +31,39 @@ class Bucket extends Component {
   }
 
   render() {
-    const { viewer: { bucket } } = this.props;
+    const { viewer } = this.props;
 
-    if (!bucket)
+    if (!viewer.bucket)
       return this.render404();
 
     return (
-      <div className={`container ${styles.root}`}>
+      <App viewer={viewer}>
+        <div className={`container ${styles.root}`}>
 
-        <div className='heading'>
-          <Button onClick={()=> browserHistory.goBack()} className='back'>
-            <i className='fa fa-long-arrow-left'/>
-          </Button>
+          <div className='heading'>
+            <Button onClick={()=> browserHistory.goBack()} className='back'>
+              <i className='fa fa-long-arrow-left'/>
+            </Button>
 
-          <h1>{bucket.name}</h1>
+            <h1>{viewer.bucket.name}</h1>
+          </div>
+
+          {viewer.bucket.months.edges.map(({ node })=>
+            <CardList key={node.id}>
+              <Card className='card-list-headings'>
+                {moment(node.monthStart).asUtc().format('MMMM YYYY')}
+              </Card>
+              <TransactionList transactions={node.transactions} monthHeaders={false}/>
+            </CardList>
+          )}
+
+          <div className='bottom-load-button'>
+            <Button onClick={::this.generateBucketMonth} raised>
+              <i className='fa fa-plus'/>{' Next Month'}
+            </Button>
+          </div>
         </div>
-
-        {bucket.months.edges.map(({ node })=>
-          <CardList key={node.id}>
-            <Card className='card-list-headings'>
-              {moment(node.monthStart).asUtc().format('MMMM YYYY')}
-            </Card>
-            <TransactionList transactions={node.transactions} monthHeaders={false}/>
-          </CardList>
-        )}
-
-        <div className='bottom-load-button'>
-          <Button onClick={::this.generateBucketMonth} raised>
-            <i className='fa fa-plus'/>{' Next Month'}
-          </Button>
-        </div>
-      </div>
+      </App>
     );
   }
 
@@ -83,6 +86,7 @@ Bucket = Relay.createContainer(Bucket, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         bucket(id: $id) {
           ${GenerateBucketMonthMutation.getFragment('bucket')}
           name

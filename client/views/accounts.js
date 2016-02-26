@@ -4,30 +4,33 @@ import Relay from 'react-relay';
 
 import Button from 'components/button';
 import Institution from 'components/institution';
+import App from 'components/app';
 
 import styles from 'sass/views/accounts';
 
 
 class Accounts extends Component {
   render() {
-    const { viewer: { institutions } } = this.props;
+    const { viewer } = this.props;
 
     return (
-      <div className={`container ${styles.root}`}>
-        <div className='heading'>
-          <h1>Accounts</h1>
-          <Button to='/app/accounts/add/upload' flat variant='primary'>
-            New CSV
-          </Button>
-          <Button to='/app/accounts/add/plaid' flat variant='primary'>
-            New Bank
-          </Button>
-        </div>
+      <App viewer={viewer}>
+        <div className={`container ${styles.root}`}>
+          <div className='heading'>
+            <h1>Accounts</h1>
+            <Button to='/app/accounts/add/upload' flat variant='primary'>
+              New CSV
+            </Button>
+            <Button to='/app/accounts/add/plaid' flat variant='primary'>
+              New Bank
+            </Button>
+          </div>
 
-        {institutions.edges.map(({ node })=>
-          <Institution key={node.id} institution={node}/>
-        )}
-      </div>
+          {viewer.institutions.edges.map(({ node })=>
+            <Institution key={node.id} institution={node}/>
+          )}
+        </div>
+      </App>
     );
   }
 }
@@ -36,6 +39,7 @@ Accounts = Relay.createContainer(Accounts, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${App.getFragment('viewer')}
         institutions(first: 10) {
           edges {
             node {

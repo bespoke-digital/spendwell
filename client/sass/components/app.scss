@@ -22,20 +22,19 @@
     opacity: 0.5;
   }
 
-  .overlay-enter {
+  .overlay-transition-enter {
     opacity: 0.01;
   }
 
-  .overlay-enter.overlay-enter-active {
+  .overlay-transition-enter.overlay-transition-enter-active {
     opacity: 0.5;
   }
 
-  .overlay-leave {
+  .overlay-transition-leave {
     opacity: 0.5;
   }
 
-  .overlay-leave.overlay-leave-active {
+  .overlay-transition-leave.overlay-transition-leave-active {
     opacity: 0.01;
   }
-
 }
