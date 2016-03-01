@@ -1,4 +1,5 @@
 
+from collections import namedtuple
 import graphene
 
 from apps.core.fields import SWNode, SWConnectionField
@@ -27,6 +28,12 @@ class BucketNode(SWNode):
 
     def resolve_transactions(self, args, info):
         return self.instance.transactions()
+
+    def resolve_filters(self, args, info):
+        return [
+            namedtuple('Filter', filter.keys())(**filter)
+            for filter in self.instance.filters
+        ]
 
 
 class BucketMonthNode(SWNode):
