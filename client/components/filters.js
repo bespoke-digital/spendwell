@@ -1,7 +1,6 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
 
 import SuperCard from 'components/super-card';
 import Card from 'components/card';
@@ -71,15 +70,5 @@ class Filters extends Component {
     );
   }
 }
-
-Filters = Relay.createContainer(Filters, {
-  fragments: {
-    filters: ()=> Relay.QL`
-      fragment on BucketFilters @relay(plural: true) {
-        ${Filter.getFragment('filter')}
-      }
-    `,
-  },
-});
 
 export default Filters;

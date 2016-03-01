@@ -1,7 +1,6 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Button from 'components/button';
@@ -23,15 +22,13 @@ class Filter extends Component {
     );
   }
 
-  replaceField(oldField, newField) {
+  replaceField(oldField, newField, event) {
+    if (event) event.preventDefault();
+
     const filter = _.cloneDeep(this.props.filter);
 
-    if (oldField === null)
-      this.setState({ addNew: false });
-    else
-      delete filter[oldField];
-
-    filter[newField] = null;
+    filter[newField] = filter[oldField];
+    delete filter[oldField];
 
     this.props.onChange(filter);
   }
@@ -76,7 +73,11 @@ class Filter extends Component {
           <a
             href='#'
             key={label}
-            onClick={this.addField.bind(this, value)}
+            onClick={selected ?
+              this.replaceField.bind(this, selected, value)
+            :
+              this.addField.bind(this, value)
+            }
           >
             {label}
           </a>
@@ -88,8 +89,7 @@ class Filter extends Component {
   render() {
     const { filter } = this.props;
 
-    const fields = Object.keys(filter).filter((k)=> filter[k] !== null && k.indexOf('__') !== 0);
-    console.log('fields', fields);
+    const fields = Object.keys(filter).filter((k)=> k.indexOf('__') !== 0);
 
     return (
       <Card className={style.root}>
@@ -97,12 +97,10 @@ class Filter extends Component {
           <div key={field} className='field'>
             {this.renderDropdown(fields, field)}
 
-            {field === 'description' ?
-              <TextInput
-                value={filter[field]}
-                onChange={(fieldValue)=> this.set({ [field]: fieldValue })}
-              />
-            : null}
+            <TextInput
+              value={filter[field]}
+              onChange={(fieldValue)=> this.set({ [field]: fieldValue })}
+            />
 
             <Button onClick={()=> this.removeField(field)}>
               Remove Field
@@ -115,22 +113,5 @@ class Filter extends Component {
     );
   }
 }
-
-Filter = Relay.createContainer(Filter, {
-  fragments: {
-    filter: ()=> Relay.QL`
-      fragment on BucketFilters {
-        amountGt
-        amountLt
-        category
-        dateGte
-        dateLte
-        description
-        fromSavings
-        isTransfer
-      }
-    `,
-  },
-});
 
 export default Filter;

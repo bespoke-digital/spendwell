@@ -37,8 +37,8 @@ class BucketForm extends Component {
   }
 
   handleFilterChange(filters) {
-    this.props.relay.setVariables({ filters });
     this.setState({ filters });
+    this.props.relay.setVariables({ filters });
   }
 
   handleScroll() {
@@ -98,7 +98,14 @@ BucketForm = Relay.createContainer(BucketForm, {
       fragment on BucketNode {
         name
         filters {
-          ${Filters.getFragment('filters')}
+          amountGt
+          amountLt
+          category
+          dateGte
+          dateLte
+          description
+          fromSavings
+          isTransfer
         }
       }
     `,
