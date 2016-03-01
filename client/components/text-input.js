@@ -2,8 +2,6 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 
-import style from 'sass/components/forms/input';
-
 
 export default class TextInput extends Component {
   static propTypes = {
@@ -41,9 +39,8 @@ export default class TextInput extends Component {
     return (
       <div className={`
         mui-textfield
-        mui-textfield--float-label
+        ${label ? 'mui-textfield--float-label' : ''}
         ${error ? 'mui-textfield--invalid' : ''}
-        ${style.root}
         ${className}
       `}>
         <input

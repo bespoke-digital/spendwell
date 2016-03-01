@@ -1,63 +1,62 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
+import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Button from 'components/button';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
 
+import style from 'sass/components/filter';
 
-export default class Filter extends Component {
+
+class Filter extends Component {
   static propTypes = {
-    value: PropTypes.object.isRequired,
+    filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
   };
 
   set(fields) {
     this.props.onChange(
-      _.defaultsDeep(fields, this.props.value),
+      _.defaultsDeep(fields, this.props.filter),
     );
   }
 
   replaceField(oldField, newField) {
-    const value = _.cloneDeep(this.props.value);
+    const filter = _.cloneDeep(this.props.filter);
 
     if (oldField === null)
       this.setState({ addNew: false });
     else
-      delete value[oldField];
+      delete filter[oldField];
 
-    value[newField] = null;
+    filter[newField] = null;
 
-    this.props.onChange(value);
+    this.props.onChange(filter);
   }
 
   removeField(field) {
-    const value = _.cloneDeep(this.props.value);
+    const filter = _.cloneDeep(this.props.filter);
 
-    delete value[field];
+    delete filter[field];
 
-    this.props.onChange(value);
+    this.props.onChange(filter);
   }
 
   addField(field, event) {
     if (event) event.preventDefault();
 
-    if (!this.props.value[field]) {
-      const value = _.cloneDeep(this.props.value);
+    if (!this.props.filter[field]) {
+      const filter = _.cloneDeep(this.props.filter);
 
-      value[field] = null;
+      filter[field] = null;
 
-      this.props.onChange(value);
+      this.props.onChange(filter);
     }
   }
 
-  renderDropdown(selected) {
-    const { value } = this.props;
-
-    const fields = Object.keys(value);
-
+  renderDropdown(usedFields, selected) {
     const fieldOptions = _.filter([
       { label: 'Description', value: 'description' },
       { label: 'Category', value: 'category' },
@@ -66,11 +65,10 @@ export default class Filter extends Component {
       { label: 'Date Greater Than', value: 'dateGt' },
       { label: 'Date Less Than', value: 'dateLt' },
       { label: 'Account', value: 'accountId' },
-    ], ({ value })=> fields.indexOf(value) === -1 || value === selected);
+    ], ({ value })=> usedFields.indexOf(value) === -1 || value === selected);
 
-    const label = selected ?
-      _.find(fieldOptions, (o)=> o.value === selected).label
-    : 'Field';
+    const selectedOption = selected ? _.find(fieldOptions, (o)=> o.value === selected) : null;
+    const label = selectedOption ? selectedOption.label : 'Field';
 
     return (
       <Dropdown disabled={fieldOptions.length === 0} label={label}>
@@ -88,19 +86,20 @@ export default class Filter extends Component {
   }
 
   render() {
-    const { value } = this.props;
+    const { filter } = this.props;
 
-    const fields = Object.keys(value);
+    const fields = Object.keys(filter).filter((k)=> filter[k] !== null && k.indexOf('__') !== 0);
+    console.log('fields', fields);
 
     return (
-      <Card>
+      <Card className={style.root}>
         {fields.map((field)=>
-          <div key={field}>
+          <div key={field} className='field'>
+            {this.renderDropdown(fields, field)}
 
             {field === 'description' ?
               <TextInput
-                label='Description'
-                value={value[field]}
+                value={filter[field]}
                 onChange={(fieldValue)=> this.set({ [field]: fieldValue })}
               />
             : null}
@@ -111,8 +110,27 @@ export default class Filter extends Component {
           </div>
         )}
 
-        {this.renderDropdown()}
+        {this.renderDropdown(fields)}
       </Card>
     );
   }
 }
+
+Filter = Relay.createContainer(Filter, {
+  fragments: {
+    filter: ()=> Relay.QL`
+      fragment on BucketFilters {
+        amountGt
+        amountLt
+        category
+        dateGte
+        dateLte
+        description
+        fromSavings
+        isTransfer
+      }
+    `,
+  },
+});
+
+export default Filter;

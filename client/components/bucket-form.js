@@ -57,7 +57,7 @@ class BucketForm extends Component {
           <TextInput label='Name' value={name} onChange={(name)=> this.setState({ name })}/>
         </Card>
 
-        <Filters value={filters} onChange={::this.handleFilterChange}/>
+        <Filters filters={filters} onChange={::this.handleFilterChange}/>
 
         <Card>
           <Button
@@ -98,14 +98,7 @@ BucketForm = Relay.createContainer(BucketForm, {
       fragment on BucketNode {
         name
         filters {
-          amountGt
-          amountLt
-          category
-          dateGte
-          dateLte
-          description
-          fromSavings
-          isTransfer
+          ${Filters.getFragment('filters')}
         }
       }
     `,
