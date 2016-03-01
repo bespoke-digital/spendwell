@@ -30,6 +30,10 @@ class Bucket extends Component {
     });
   }
 
+  toggleSettings() {
+
+  }
+
   render() {
     const { viewer } = this.props;
 
@@ -37,15 +41,15 @@ class Bucket extends Component {
       return this.render404();
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
 
           <div className='heading'>
-            <Button onClick={()=> browserHistory.goBack()} className='back'>
-              <i className='fa fa-long-arrow-left'/>
-            </Button>
-
             <h1>{viewer.bucket.name}</h1>
+
+            <Button onClick={::this.toggleSettings} flat>
+              <i className='fa fa-cog'/>
+            </Button>
           </div>
 
           {viewer.bucket.months.edges.map(({ node })=>
@@ -58,7 +62,7 @@ class Bucket extends Component {
           )}
 
           <div className='bottom-load-button'>
-            <Button onClick={::this.generateBucketMonth} raised>
+            <Button onClick={::this.generateBucketMonth} flat>
               <i className='fa fa-plus'/>{' Next Month'}
             </Button>
           </div>

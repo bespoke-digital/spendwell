@@ -1,6 +1,7 @@
 
 import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
+import { browserHistory } from 'react-router';
 
 import Money from 'components/money';
 import logoWhite from 'img/logo-white.svg';
@@ -12,12 +13,14 @@ class Header extends Component {
   static propTypes = {
     navHandle: PropTypes.bool,
     showSafeToSpend: PropTypes.bool,
+    back: PropTypes.bool,
     toggleNav: PropTypes.func,
   };
 
   static defaultProps = {
     navHandle: true,
     showSafeToSpend: true,
+    back: false,
   };
 
   handleHandleClick(event) {
@@ -26,19 +29,27 @@ class Header extends Component {
       this.props.toggleNav();
   }
 
+  handleBackClick(event) {
+    event.preventDefault();
+    browserHistory.goBack();
+  }
+
   render() {
-    const { showSafeToSpend, navHandle, viewer: { safeToSpend } } = this.props;
+    const { showSafeToSpend, navHandle, back, viewer: { safeToSpend } } = this.props;
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
-        {navHandle ? (
-          <a
-            className='hamburger mui--appbar-height mui--appbar-line-height'
-            href='#'
-            onClick={::this.handleHandleClick}
-          >
-            <i className='fa fa-bars'/>
-          </a>
-        ) : null}
+        <div className='left mui--appbar-height mui--appbar-line-height'>
+          {navHandle ? (
+            <a href='#' onClick={::this.handleHandleClick}>
+              <i className='fa fa-bars'/>
+            </a>
+          ) : null}
+          {back ? (
+            <a href='#' onClick={::this.handleBackClick}>
+              <i className='fa fa-long-arrow-left'/>
+            </a>
+          ) : null}
+        </div>
         <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
           <img src={logoWhite} alt='Spendwell' className='logo'/>
           <img src={logoIconWhite} alt='Spendwell' className='icon'/>

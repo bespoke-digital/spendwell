@@ -8,18 +8,25 @@
   text-align: center;
   color: white;
 
-  .hamburger {
+  .left {
     position: absolute;
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
     display: block;
 
-    color: white;
-    font-size: 20px;
+    a {
+      color: white;
+      font-size: 20px;
+      margin-right: 20px;
 
-    &:hover, &:active, &:focus {
-      text-decoration: none;
+      &:hover, &:active, &:focus {
+        text-decoration: none;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 

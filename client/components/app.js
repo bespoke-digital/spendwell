@@ -13,7 +13,7 @@ class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     overlayOpen: PropTypes.bool.isRequired,
-    nav: PropTypes.object,
+    back: PropTypes.bool,
   };
 
   constructor() {
@@ -34,12 +34,12 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, overlayOpen } = this.props;
+    const { children, viewer, overlayOpen, back } = this.props;
     const { navOpen } = this.state;
 
     return (
       <div className={style.root}>
-        <Header toggleNav={::this.toggleNav} viewer={viewer}/>
+        <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>
 
         <Nav open={navOpen} toggleNav={::this.toggleNav}/>
 
