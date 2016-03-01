@@ -23,7 +23,7 @@ class BucketForm extends Component {
 
   componentWillMount() {
     if (this.props.bucket)
-      this.state.setState({
+      this.setState({
         filters: this.props.bucket.filters,
         name: this.props.bucket.name,
       });
@@ -101,7 +101,16 @@ BucketForm = Relay.createContainer(BucketForm, {
     bucket: ()=> Relay.QL`
       fragment on BucketNode {
         name
-        filters
+        filters {
+          amountGt
+          amountLt
+          category
+          dateGte
+          dateLte
+          description
+          fromSavings
+          isTransfer
+        }
       }
     `,
   },

@@ -100,8 +100,7 @@ class UsersTestCase(SWTestCase):
         current_month_start = delorean.now().truncate('month').datetime
         last_month_start = current_month_start - relativedelta(months=1)
         owner = UserFactory.create(estimated_income=Decimal('2000'))
-        query = '''
-        query {{
+        query = '''{{
             viewer {{
                 summary(month: "{month:%Y/%m}") {{
                     allocated
@@ -114,8 +113,7 @@ class UsersTestCase(SWTestCase):
                     }}
                 }}
             }}
-        }}
-        '''
+        }}'''
 
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
@@ -134,7 +132,7 @@ class UsersTestCase(SWTestCase):
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
 
-        GoalMonth.objects.generate(goal, last_month_start)
+        goal.generate_month(last_month_start)
 
         result = self.graph_query(query.format(month=last_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)

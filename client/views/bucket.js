@@ -9,6 +9,7 @@ import Card from 'components/card';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import App from 'components/app';
+import BucketForm from 'components/bucket-form';
 
 import { GenerateBucketMonthMutation } from 'mutations/buckets';
 
@@ -16,6 +17,11 @@ import styles from 'sass/views/bucket.scss';
 
 
 class Bucket extends Component {
+  constructor() {
+    super();
+    this.state = { showSettings: false };
+  }
+
   generateBucketMonth() {
     const { viewer: { bucket } } = this.props;
 
@@ -31,11 +37,17 @@ class Bucket extends Component {
   }
 
   toggleSettings() {
+    const { showSettings } = this.state;
+    this.setState({ showSettings: !showSettings });
+  }
 
+  handleSubmit(data) {
+    console.log('submit', data);
   }
 
   render() {
     const { viewer } = this.props;
+    const { showSettings } = this.state;
 
     if (!viewer.bucket)
       return this.render404();
@@ -52,6 +64,14 @@ class Bucket extends Component {
             </Button>
           </div>
 
+          {showSettings ?
+            <BucketForm
+              onSubmit={::this.handleSubmit}
+              viewer={viewer}
+              bucket={viewer.bucket}
+            />
+          : null}
+
           {viewer.bucket.months.edges.map(({ node })=>
             <CardList key={node.id}>
               <Card className='card-list-headings'>
@@ -63,7 +83,7 @@ class Bucket extends Component {
 
           <div className='bottom-load-button'>
             <Button onClick={::this.generateBucketMonth} flat>
-              <i className='fa fa-plus'/>{' Next Month'}
+              <i className='fa fa-plus'/>{' Add Month'}
             </Button>
           </div>
         </div>
@@ -91,8 +111,10 @@ Bucket = Relay.createContainer(Bucket, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+        ${BucketForm.getFragment('viewer')}
         bucket(id: $id) {
           ${GenerateBucketMonthMutation.getFragment('bucket')}
+          ${BucketForm.getFragment('bucket')}
           name
           months(first: 100) {
             edges {
