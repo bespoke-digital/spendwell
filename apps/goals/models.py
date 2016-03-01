@@ -1,8 +1,10 @@
 
-import delorean
 from django.db import models
+from django.dispatch import receiver
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
+from apps.core.signals import month_start
+from apps.core.utils import this_month
 
 
 class GoalsQuerySet(SWQuerySet):
@@ -15,7 +17,7 @@ class GoalManager(SWManager):
 
     def create(self, **fields):
         goal = super(GoalManager, self).create(**fields)
-        GoalMonth.objects.generate(goal, delorean.now().truncate('month').datetime)
+        goal.generate_month()
         return goal
 
 
@@ -29,6 +31,29 @@ class Goal(SWModel):
     def __str__(self):
         return self.name
 
+    def generate_month(self, month_start=None):
+        from apps.users.summary import MonthSummary
+
+        if month_start is None:
+            month_start = this_month()
+
+        available_amount = MonthSummary(self.owner, month_start).net
+        if available_amount < self.monthly_amount:
+            filled_amount = -available_amount
+        else:
+            filled_amount = self.monthly_amount
+
+        goal_month, created = GoalMonth.objects.get_or_create(
+            goal=self,
+            month_start=month_start,
+            defaults={
+                'target_amount': self.monthly_amount,
+                'filled_amount': filled_amount,
+            },
+        )
+
+        return goal_month
+
 
 class GoalMonthQueryset(SWQuerySet):
     def owned_by(self, user):
@@ -37,21 +62,6 @@ class GoalMonthQueryset(SWQuerySet):
 
 class GoalMonthManager(SWManager):
     queryset_class = GoalMonthQueryset
-
-    def generate(self, goal, month_start):
-        from apps.users.summary import MonthSummary
-        available_amount = MonthSummary(goal.owner, month_start).net
-        if available_amount < goal.monthly_amount:
-            filled_amount = -available_amount
-        else:
-            filled_amount = goal.monthly_amount
-
-        return self.model.objects.create(
-            goal=goal,
-            month_start=month_start,
-            target_amount=goal.monthly_amount,
-            filled_amount=filled_amount,
-        )
 
 
 class GoalMonth(SWModel):
@@ -64,3 +74,9 @@ class GoalMonth(SWModel):
 
     class Meta:
         unique_together = ('goal', 'month_start')
+
+
+@receiver(month_start)
+def on_month_start(sender, month, **kwargs):
+    for goal in Goal.objects.all():
+        goal.generate_month(month_start=month)

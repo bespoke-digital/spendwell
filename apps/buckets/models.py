@@ -39,6 +39,15 @@ class Bucket(SWModel):
             TransactionFilter,
         )
 
+    def generate_month(self, month_start=None):
+        if month_start is None:
+            month_start = this_month()
+        bucket_month, created = BucketMonth.objects.get_or_create(
+            bucket=self,
+            month_start=month_start,
+        )
+        return bucket_month
+
 
 @receiver(post_save, sender=Bucket)
 def bucket_post_save(sender, instance, created, raw, **kwargs):
@@ -121,6 +130,6 @@ def bucket_month_post_save(sender, instance, created, raw, **kwargs):
 
 
 @receiver(month_start)
-def month_start(month, **kwargs):
+def on_month_start(sender, month, **kwargs):
     for bucket in Bucket.objects.all():
-        BucketMonth.objects.get_or_create(bucket=bucket, month_start=month)
+        bucket.generate_month(month_start=month)
