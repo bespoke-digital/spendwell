@@ -57,10 +57,6 @@ class BucketForm extends Component {
           <TextInput label='Name' value={name} onChange={(name)=> this.setState({ name })}/>
         </Card>
 
-        <Card>
-          <h3>Filters</h3>
-        </Card>
-
         <Filters value={filters} onChange={::this.handleFilterChange}/>
 
         <Card>

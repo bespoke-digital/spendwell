@@ -57,7 +57,7 @@ class BillMonth extends Component {
           <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
         : null}
 
-        <div className='bottom-load-button'>
+        <div className='bottom-buttons'>
           {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
             <div>
               <Button onClick={::this.loadTransactions}>Load More</Button>

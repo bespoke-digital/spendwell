@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 
+import Card from 'components/card';
 import Button from 'components/button';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
@@ -52,7 +53,7 @@ export default class Filter extends Component {
     }
   }
 
-  render() {
+  renderDropdown(selected) {
     const { value } = this.props;
 
     const fields = Object.keys(value);
@@ -68,7 +69,29 @@ export default class Filter extends Component {
     ], ({ value })=> fields.indexOf(value) === -1);
 
     return (
-      <div>
+      <Dropdown disabled={fieldOptions.length === 0} label={
+        <span><i className='fa fa-plus'/>{' Field'}</span>
+      }>
+        {fieldOptions.map(({ value, label })=>
+          <a
+            href='#'
+            key={label}
+            onClick={this.addField.bind(this, value)}
+          >
+            {label}
+          </a>
+        )}
+      </Dropdown>
+    );
+  }
+
+  render() {
+    const { value } = this.props;
+
+    const fields = Object.keys(value);
+
+    return (
+      <Card>
         {fields.map((field)=>
           <div key={field}>
             <Button onClick={()=> this.removeField(field)}>
@@ -85,20 +108,8 @@ export default class Filter extends Component {
           </div>
         )}
 
-        <Dropdown disabled={fieldOptions.length === 0} label={
-          <span><i className='fa fa-plus'/>{' Field'}</span>
-        }>
-          {fieldOptions.map(({ value, label })=>
-            <a
-              href='#'
-              key={label}
-              onClick={this.addField.bind(this, value)}
-            >
-              {label}
-            </a>
-          )}
-        </Dropdown>
-      </div>
+        {this.renderDropdown()}
+      </Card>
     );
   }
 }

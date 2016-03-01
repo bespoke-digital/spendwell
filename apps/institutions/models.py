@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from plaid import Client
+from plaid.errors import ResourceNotFoundError
 
 from apps.core.models import SWModel
 from apps.core.signals import day_start
@@ -51,14 +52,23 @@ class Institution(SWModel):
     @property
     def plaid_data(self):
         if not hasattr(self, '_plaid_data'):
-            self._plaid_data = self.plaid_client.connect_get().json()
+            try:
+                self._plaid_data = self.plaid_client.connect_get().json()
+            except ResourceNotFoundError:
+                self._plaid_data = None
         return self._plaid_data
 
     def sync_accounts(self):
+        if not self.plaid_data:
+            return
+
         for account_data in self.plaid_data['accounts']:
             Account.objects.create_from_plaid(self, account_data)
 
     def sync(self):
+        if not self.plaid_data:
+            return
+
         self.sync_accounts()
 
         for transaction_data in self.plaid_data['transactions']:

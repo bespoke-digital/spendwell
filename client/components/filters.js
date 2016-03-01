@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 
+import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import Button from 'components/button';
 import Filter from 'components/filter';
@@ -43,28 +44,29 @@ export default class Filters extends Component {
     const { value } = this.props;
 
     return (
-      <span>
+      <SuperCard expanded summary={
+        <Card><h3>Filters</h3></Card>
+      }>
         {value.map((filter, index)=>
-          <Card key={index}>
-            <Button
-              onClick={()=> this.removeFilter(index)}
-              disabled={value.length === 1}
-            >
-              <i className='fa fa-times'/>{' Remove Filter'}
-            </Button>
-
-            <Filter
-              value={filter}
-              onChange={(filter)=> this.updateFilter(index, filter)}
-            />
-          </Card>
+          <Filter
+            key={index}
+            value={filter}
+            onChange={(filter)=> this.updateFilter(index, filter)}
+            onRemove={()=> this.removeFilter(index)}
+          />
         )}
-        <Card>
-          <Button onClick={::this.addFilter} disabled={_.isEmpty(value[value.length - 1])}>
-            <i className='fa fa-plus'/>{' OR'}
+
+        <div className='bottom-buttons'>
+          <Button
+            onClick={::this.addFilter}
+            disabled={_.isEmpty(value[value.length - 1])}
+            flat
+            variant='primary'
+          >
+            new filter
           </Button>
-        </Card>
-      </span>
+        </div>
+      </SuperCard>
     );
   }
 }
