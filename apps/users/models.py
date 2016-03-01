@@ -95,4 +95,3 @@ def on_month_start(sender, month, **kwargs):
     for user in User.objects.all():
         user.estimate_income()
         user.save()
-        print('estimated_income', user.estimated_income)
