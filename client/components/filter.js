@@ -94,9 +94,6 @@ export default class Filter extends Component {
       <Card>
         {fields.map((field)=>
           <div key={field}>
-            <Button onClick={()=> this.removeField(field)}>
-              <i className='fa fa-times'/>{' Remove Field'}
-            </Button>
 
             {field === 'description' ?
               <TextInput
@@ -105,6 +102,10 @@ export default class Filter extends Component {
                 onChange={(fieldValue)=> this.set({ [field]: fieldValue })}
               />
             : null}
+
+            <Button onClick={()=> this.removeField(field)}>
+              Remove Field
+            </Button>
           </div>
         )}
 

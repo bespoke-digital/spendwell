@@ -46,7 +46,10 @@ def months_avg(queryset, months=3, month_start=None, date_field='date'):
     if month_start is None:
         month_start = this_month()
 
-    furthest_back = queryset.order_by(date_field).values_list(date_field, flat=True)[1]
+    furthest_back = queryset.order_by(date_field).values_list(date_field, flat=True).first()
+    if furthest_back is None:
+        return 0
+
     months_ago = relativedelta(month_start, furthest_back).months + 1
 
     if months_ago <= 0:
