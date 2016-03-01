@@ -2,7 +2,11 @@
 from uuid import uuid4
 
 from django.db import models
+from django.dispatch import receiver
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
+from apps.core.signals import month_start
+from apps.core.utils import months_avg
 
 
 class UserManager(BaseUserManager):
@@ -67,6 +71,15 @@ class User(AbstractBaseUser):
     def as_json(self):
         return self.as_serializer().as_json()
 
+    def estimate_income(self):
+        self.estimated_income = months_avg(
+            self.transactions
+            .filter(amount__gt=0)
+            .filter(account__disabled=False)
+            .is_transfer(False),
+            date_field='date',
+        )
+
 
 def get_beta_code():
     return uuid4().hex
@@ -75,3 +88,11 @@ def get_beta_code():
 class BetaCode(models.Model):
     key = models.CharField(max_length=255, default=get_beta_code)
     used_by = models.OneToOneField(User, blank=True, null=True)
+
+
+@receiver(month_start)
+def on_month_start(sender, month, **kwargs):
+    for user in User.objects.all():
+        user.estimate_income()
+        user.save()
+        print('estimated_income', user.estimated_income)

@@ -1,5 +1,8 @@
 
+from decimal import Decimal
+
 import delorean
+from dateutil.relativedelta import relativedelta
 import graphene
 from graphql_relay.node.node import from_global_id
 from graphql_relay.connection.arrayconnection import cursor_for_object_in_connection
@@ -37,3 +40,24 @@ def get_core_type(graphene_type):
 
 def this_month():
     return delorean.now().truncate('month').datetime
+
+
+def months_avg(queryset, months=3, month_start=None, date_field='date'):
+    if month_start is None:
+        month_start = this_month()
+
+    furthest_back = queryset.order_by(date_field).values_list(date_field, flat=True)[1]
+    months_ago = relativedelta(month_start, furthest_back).months + 1
+
+    if months_ago <= 0:
+        return 0
+
+    if months_ago > months:
+        months_ago = months
+
+    total = Decimal(queryset.filter(
+        date__gte=month_start - relativedelta(months=months_ago),
+        date__lt=month_start,
+    ).sum())
+
+    return total / Decimal(months_ago)

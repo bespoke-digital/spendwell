@@ -1,5 +1,4 @@
 
-from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
 from django.db import models
@@ -8,7 +7,7 @@ from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWManager, SWQuerySet
-from apps.core.utils import this_month
+from apps.core.utils import this_month, months_avg
 from apps.core.signals import month_start
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
@@ -91,20 +90,24 @@ class BucketMonth(SWModel):
     @property
     def avg_amount(self):
         if not hasattr(self, '_avg_amount'):
-            furthest_back = self.bucket.transactions().order_by('date').values_list('date', flat=True)[1]
-            months_ago = relativedelta(self.month_start, furthest_back).months
+            self._avg_amount = months_avg(
+                self.bucket.transactions(),
+                month_start=self.month_start,
+            )
+            # furthest_back = self.bucket.transactions().order_by('date').values_list('date', flat=True)[1]
+            # months_ago = relativedelta(self.month_start, furthest_back).months
 
-            if months_ago >= 2:
-                months_ago = 3
-            elif months_ago == 1:
-                months_ago = 2
-            else:
-                months_ago = 1
+            # if months_ago >= 2:
+            #     months_ago = 3
+            # elif months_ago == 1:
+            #     months_ago = 2
+            # else:
+            #     months_ago = 1
 
-            self._avg_amount = Decimal(self.bucket.transactions(
-                date__gte=self.month_start - relativedelta(months=months_ago),
-                date__lt=self.month_start,
-            ).sum()) / Decimal(months_ago)
+            # self._avg_amount = Decimal(self.bucket.transactions(
+            #     date__gte=self.month_start - relativedelta(months=months_ago),
+            #     date__lt=self.month_start,
+            # ).sum()) / Decimal(months_ago)
 
         return self._avg_amount
 
