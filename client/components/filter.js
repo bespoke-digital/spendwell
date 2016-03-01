@@ -66,12 +66,14 @@ export default class Filter extends Component {
       { label: 'Date Greater Than', value: 'dateGt' },
       { label: 'Date Less Than', value: 'dateLt' },
       { label: 'Account', value: 'accountId' },
-    ], ({ value })=> fields.indexOf(value) === -1);
+    ], ({ value })=> fields.indexOf(value) === -1 || value === selected);
+
+    const label = selected ?
+      _.find(fieldOptions, (o)=> o.value === selected).label
+    : 'Field';
 
     return (
-      <Dropdown disabled={fieldOptions.length === 0} label={
-        <span><i className='fa fa-plus'/>{' Field'}</span>
-      }>
+      <Dropdown disabled={fieldOptions.length === 0} label={label}>
         {fieldOptions.map(({ value, label })=>
           <a
             href='#'
