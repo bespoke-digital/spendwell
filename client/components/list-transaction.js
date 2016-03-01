@@ -53,7 +53,7 @@ class ListTransaction extends Component {
               )}
             </div>
             <div className='date'>
-              <DateTime value={transaction.date} format='Do'/>
+              <DateTime value={transaction.date} format='ddd Do'/>
             </div>
             <div className='amount'>
               <Money amount={transaction.amount} abs={abs}/>

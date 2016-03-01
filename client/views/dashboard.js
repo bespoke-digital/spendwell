@@ -4,6 +4,7 @@ import Relay from 'react-relay';
 import moment from 'moment';
 
 import Card from 'components/card';
+import SuperCard from 'components/super-card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
@@ -72,13 +73,15 @@ class Dashboard extends Component {
     const { params: { year, month }, viewer } = this.props;
     const {
       income,
+      incomeEstimated,
       allocated,
       spent,
       net,
       goalMonths,
       bucketMonths,
       billMonths,
-      transactions,
+      incomeTransactions,
+      expenseTransactions,
     } = viewer.summary;
 
     const { selected, statusOpen } = this.state;
@@ -121,7 +124,10 @@ class Dashboard extends Component {
                 href='#'
               >
                 <span className='title'>In</span>
-                <div className='amount'><Money amount={income}/></div>
+                <div className='amount'>
+                  <Money amount={income}/>
+                  {incomeEstimated ? '*' : ''}
+                </div>
               </a>
               <a
                 className={`number ${statusOpen === 'out' ? 'open' : ''}`}
@@ -141,7 +147,20 @@ class Dashboard extends Component {
               </a>
             </Card>
             <Transition name='fade'>
-              {statusOpen ?
+              {statusOpen === 'in' ?
+                <SuperCard className='status-details' expanded={true} summary={
+                  <Card>
+                    {incomeEstimated ?
+                      <span>
+                        <strong>*</strong>
+                        Estimated based on 3-month average income
+                      </span>
+                    : null}
+                  </Card>
+                }>
+                  <TransactionList transactions={incomeTransactions}/>
+                </SuperCard>
+              : statusOpen ?
                 <Card className='status-details'>
                   Details on {statusOpen}
                 </Card>
@@ -250,9 +269,9 @@ class Dashboard extends Component {
               </Card>
             : null}
 
-            <TransactionList transactions={transactions} monthHeaders={false}/>
+            <TransactionList transactions={expenseTransactions} monthHeaders={false}/>
 
-            {transactions && transactions.pageInfo.hasNextPage ?
+            {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
               <div className='bottom-load-button'>
                 <Button onClick={::this.loadTransactions} raised>Load More</Button>
               </div>
@@ -286,6 +305,7 @@ Dashboard = Relay.createContainer(Dashboard, {
         summary(month: $date) {
           ${SpentFromSavings.getFragment('summary')}
           income
+          incomeEstimated
           allocated
           spent
           net
@@ -313,7 +333,10 @@ Dashboard = Relay.createContainer(Dashboard, {
               }
             }
           }
-          transactions(first: $transactionCount, amountLt: 0) {
+          incomeTransactions: transactions(first: 100, amountGt: 0) {
+            ${TransactionList.getFragment('transactions')}
+          }
+          expenseTransactions: transactions(first: $transactionCount, amountLt: 0) {
             ${TransactionList.getFragment('transactions')}
             pageInfo {
               hasNextPage

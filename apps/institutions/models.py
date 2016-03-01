@@ -1,11 +1,13 @@
 
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
 from django.utils import timezone
 
 from plaid import Client
 
 from apps.core.models import SWModel
+from apps.core.signals import day_start
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 
@@ -66,3 +68,12 @@ class Institution(SWModel):
 
         self.last_sync = timezone.now()
         self.save()
+
+
+@receiver(day_start)
+def on_day_start(*args, **kwargs):
+    for institution in Institution.objects.filter(
+        access_token__isnull=False,
+        plaid_id__isnull=False,
+    ):
+        institution.sync()

@@ -40,13 +40,20 @@ class TransactionManager(SWManager):
         return self.get_queryset().is_transfer(*args, **kwargs)
 
     def create_from_plaid(self, institution, json_data):
+        account = Account.objects.get(
+            institution=institution,
+            plaid_id=json_data['_account'],
+        )
+        if account.disabled:
+            return None
+
         try:
             transaction = Transaction.objects.get(plaid_id=json_data['_id'])
         except Transaction.DoesNotExist:
             transaction = Transaction()
             transaction.plaid_id = json_data['_id']
 
-        transaction.account = Account.objects.get(plaid_id=json_data['_account'])
+        transaction.account = account
         transaction.owner = institution.owner
 
         if json_data.get('category_id'):

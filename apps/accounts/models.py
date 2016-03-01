@@ -71,11 +71,11 @@ class Account(SWModel):
 
         self.disabled = True
         self.save()
+        self.transactions.all().delete()
         Transaction.objects.detect_transfers(owner=self.owner)
 
     def enable(self):
-        from apps.transactions.models import Transaction
-
         self.disabled = False
         self.save()
-        Transaction.objects.detect_transfers(owner=self.owner)
+
+        self.institution.sync()

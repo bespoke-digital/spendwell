@@ -35,7 +35,16 @@ class MonthSummary(object):
                 self._income < self.user.estimated_income
             ):
                 self._income = self.user.estimated_income
+                self._income_estimated = True
+            else:
+                self._income_estimated = False
         return self._income
+
+    @property
+    def income_estimated(self):
+        if not hasattr(self, '_income_estimated'):
+            self.income
+        return self._income_estimated
 
     @property
     def allocated(self):
