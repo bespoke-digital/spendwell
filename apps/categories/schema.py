@@ -20,7 +20,7 @@ class CategoryFilter(django_filters.FilterSet):
 
 
 class CategoryNode(DjangoNode):
-    child_count = graphene.IntField()
+    child_count = graphene.Int()
 
     class Meta:
         model = Category
