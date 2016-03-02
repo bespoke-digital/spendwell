@@ -34,7 +34,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
     class Input:
         name = graphene.String()
         type = graphene.String()
-        filters = filter_list_schema(TransactionFilter, 'BucketFilterSet')
+        filters = filter_list_schema(TransactionFilter, 'CreateBucketFilterSet')
 
     viewer = graphene.Field('Viewer')
 
@@ -56,12 +56,15 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
     class Input:
         bucket_id = graphene.ID()
         name = graphene.String()
-        filters = filter_list_schema(TransactionFilter, 'BucketFilterSet')
+        filters = filter_list_schema(TransactionFilter, 'UpdateBucketFilterSet')
 
+    viewer = graphene.Field('Viewer')
     bucket = graphene.Field(BucketNode)
 
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
         bucket = instance_for_node_id(input['bucket_id'], info)
 
         if 'name' in input and input['name']:
@@ -72,7 +75,23 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
 
         bucket.save()
 
-        return Cls(bucket=bucket)
+        return Cls(bucket=bucket, viewer=Viewer())
+
+
+class DeleteBucketMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        bucket_id = graphene.ID()
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
+        bucket = instance_for_node_id(input['bucket_id'], info)
+        bucket.delete()
+
+        return Cls(viewer=Viewer())
 
 
 class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
@@ -90,8 +109,10 @@ class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
 
 
 class BucketsMutations(graphene.ObjectType):
-    assign_transactions = graphene.Field(AssignTransactionsMutation)
     create_bucket = graphene.Field(CreateBucketMutation)
+    delete_bucket = graphene.Field(DeleteBucketMutation)
+    update_bucket = graphene.Field(UpdateBucketMutation)
+    assign_transactions = graphene.Field(AssignTransactionsMutation)
     generate_bucket_month = graphene.Field(GenerateBucketMonthMutation)
 
     class Meta:

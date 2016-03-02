@@ -10,16 +10,29 @@ import Dropdown from 'components/dropdown';
 import style from 'sass/components/filter';
 
 
+const FIELDS = {
+  description: { label: 'Description', type: 'string' },
+  category: { label: 'Category', type: 'string' },
+  amountGt: { label: 'Amount Greater Than', type: 'number' },
+  amountLt: { label: 'Amount Less Than', type: 'number' },
+  dateGt: { label: 'Date Greater Than', type: 'date' },
+  dateLt: { label: 'Date Less Than', type: 'date' },
+  accountId: { label: 'Account', type: 'account' },
+};
+
+
 class Filter extends Component {
   static propTypes = {
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
   };
 
-  set(fields) {
-    this.props.onChange(
-      _.defaultsDeep(fields, this.props.filter),
-    );
+  updateField(field, value) {
+    const filter = _.cloneDeep(this.props.filter);
+
+    filter[field] = this.toData(field, value);
+
+    this.props.onChange(filter);
   }
 
   replaceField(oldField, newField, event) {
@@ -53,33 +66,42 @@ class Filter extends Component {
     }
   }
 
-  renderDropdown(usedFields, selected) {
-    const fieldOptions = _.filter([
-      { label: 'Description', value: 'description' },
-      { label: 'Category', value: 'category' },
-      { label: 'Amount Greater Than', value: 'amountGt' },
-      { label: 'Amount Less Than', value: 'amountLt' },
-      { label: 'Date Greater Than', value: 'dateGt' },
-      { label: 'Date Less Than', value: 'dateLt' },
-      { label: 'Account', value: 'accountId' },
-    ], ({ value })=> usedFields.indexOf(value) === -1 || value === selected);
+  toInput(field, value) {
+    if (FIELDS[field].type === 'number' && _.isNumber(value))
+      value = (value / 100).toString();
+    return value;
+  }
 
-    const selectedOption = selected ? _.find(fieldOptions, (o)=> o.value === selected) : null;
-    const label = selectedOption ? selectedOption.label : 'Field';
+  toData(field, value) {
+    if (FIELDS[field].type === 'number' && _.isNumber(value))
+      value = parseInt(parseFloat(value) * 100);
+    return value;
+  }
+
+  renderDropdown(usedFields, selected) {
+    const fields = _.filter(
+      Object.keys(FIELDS),
+      (field)=> usedFields.indexOf(field) === -1 || field === selected
+    );
+
+    if (fields.length === 0)
+      return null;
+
+    const label = selected ? FIELDS[selected].label : 'Field';
 
     return (
-      <Dropdown disabled={fieldOptions.length === 0} label={label}>
-        {fieldOptions.map(({ value, label })=>
+      <Dropdown label={label}>
+        {fields.map((field)=>
           <a
             href='#'
-            key={label}
+            key={FIELDS[field].label}
             onClick={selected ?
-              this.replaceField.bind(this, selected, value)
+              this.replaceField.bind(this, selected, field)
             :
-              this.addField.bind(this, value)
+              this.addField.bind(this, field)
             }
           >
-            {label}
+            {FIELDS[field].label}
           </a>
         )}
       </Dropdown>
@@ -88,8 +110,7 @@ class Filter extends Component {
 
   render() {
     const { filter } = this.props;
-
-    const fields = Object.keys(filter).filter((k)=> k.indexOf('__') !== 0);
+    const fields = Object.keys(filter);
 
     return (
       <Card className={style.root}>
@@ -98,8 +119,8 @@ class Filter extends Component {
             {this.renderDropdown(fields, field)}
 
             <TextInput
-              value={filter[field]}
-              onChange={(fieldValue)=> this.set({ [field]: fieldValue })}
+              value={this.toInput(field, filter[field])}
+              onChange={this.updateField.bind(this, field)}
             />
 
             <Button onClick={()=> this.removeField(field)}>

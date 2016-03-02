@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
@@ -22,11 +23,14 @@ class BucketForm extends Component {
   }
 
   componentWillMount() {
-    if (this.props.bucket)
-      this.setState({
-        filters: this.props.bucket.filters,
-        name: this.props.bucket.name,
-      });
+    if (this.props.bucket) {
+      const { name, filters } = this.props.bucket;
+
+      const cleanFilters = _.cloneDeep(filters);
+      cleanFilters.forEach((f)=> delete f.__dataID__);
+
+      this.setState({ name, filters: cleanFilters });
+    }
   }
 
   handleSubmit() {
@@ -104,8 +108,6 @@ BucketForm = Relay.createContainer(BucketForm, {
           dateGte
           dateLte
           description
-          fromSavings
-          isTransfer
         }
       }
     `,

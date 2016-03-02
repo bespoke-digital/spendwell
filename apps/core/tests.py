@@ -1,14 +1,18 @@
 
+from datetime import timedelta
 from decimal import Decimal
 
 from django.test import TestCase
 from django.test.client import RequestFactory
+from dateutil.relativedelta import relativedelta
 import graphene
 
 from spendwell.schema import schema as default_schema
 from apps.users.factories import UserFactory
+from apps.transactions.factories import TransactionFactory
 
 from .types import Money
+from .utils import months_avg, this_month
 
 
 class SWTestCase(TestCase):
@@ -51,3 +55,26 @@ class TypesTestCase(SWTestCase):
         result = self.graph_query('{ moneyField }', schema=schema)
 
         self.assertEqual(result.data['moneyField'], 2243)
+
+    def test_months_avg(self):
+        owner = UserFactory.create()
+
+        now_date = this_month() + timedelta(days=1)
+
+        TransactionFactory.create(
+            owner=owner,
+            date=now_date - relativedelta(months=1),
+            amount=111,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            date=now_date - relativedelta(months=2),
+            amount=111,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            date=now_date - relativedelta(months=3),
+            amount=111,
+        )
+
+        self.assertEqual(months_avg(owner.transactions.all()), 111)

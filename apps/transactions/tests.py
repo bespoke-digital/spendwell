@@ -102,3 +102,45 @@ class BucktsTestCase(SWTestCase):
             result.data['viewer']['transactions']['edges'][0]['node']['amount'],
             -10100,
         )
+
+    def test_amount_filter(self):
+        owner = UserFactory.create()
+
+        TransactionFactory.create(owner=owner, amount=100)
+        TransactionFactory.create(owner=owner, amount=200)
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(amountGt: 15000) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            -20000,
+        )
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(filters: [{ amountGt: 15000 }]) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            -20000,
+        )

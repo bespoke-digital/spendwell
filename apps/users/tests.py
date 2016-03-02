@@ -1,4 +1,5 @@
 
+from datetime import timedelta
 from decimal import Decimal
 
 from django.utils import timezone
@@ -6,10 +7,11 @@ from dateutil.relativedelta import relativedelta
 import delorean
 
 from apps.core.tests import SWTestCase
+from apps.core.utils import this_month
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
 from apps.goals.factories import GoalFactory
-from apps.goals.models import GoalMonth
+from apps.buckets.factories import BucketFactory
 
 from .factories import UserFactory
 
@@ -137,3 +139,40 @@ class UsersTestCase(SWTestCase):
         result = self.graph_query(query.format(month=last_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
         self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
+
+    def test_summary_bills(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        BucketFactory.create(
+            owner=owner,
+            type='bill',
+            filters=[{'description': 'phone'}],
+        )
+
+        last_month = this_month() - relativedelta(months=1)
+        TransactionFactory.create(
+            owner=owner,
+            date=last_month + timedelta(days=2),
+            amount=-111,
+            description='phone'
+        )
+        TransactionFactory.create(
+            owner=owner,
+            date=last_month - timedelta(days=2),
+            amount=-111,
+            description='phone'
+        )
+
+        result = self.graph_query('''{{
+            viewer {{
+                summary(month: "{month:%Y/%m}") {{
+                    allocated
+                    spent
+                }}
+            }}
+        }}'''.format(month=this_month()), user=owner)
+
+        self.assertEqual(
+            result.data['viewer']['summary']['allocated'],
+            -11100,
+        )

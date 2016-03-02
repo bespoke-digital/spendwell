@@ -11,7 +11,11 @@ import TransactionList from 'components/transaction-list';
 import App from 'components/app';
 import BucketForm from 'components/bucket-form';
 
-import { GenerateBucketMonthMutation } from 'mutations/buckets';
+import {
+  GenerateBucketMonthMutation,
+  DeleteBucketMutation,
+  UpdateBucketMutation,
+} from 'mutations/buckets';
 
 import styles from 'sass/views/bucket.scss';
 
@@ -36,13 +40,40 @@ class Bucket extends Component {
     });
   }
 
+  deleteBucket() {
+    const { viewer } = this.props;
+    const { bucket } = viewer;
+
+    console.log('DeleteBucketMutation', { viewer, bucket });
+    Relay.Store.commitUpdate(new DeleteBucketMutation({ viewer, bucket }), {
+      onFailure: ()=> console.log('Failure: DeleteBucketMutation'),
+      onSuccess: ()=> {
+        console.log('Success: DeleteBucketMutation');
+        browserHistory.push('/app/dashboard');
+      },
+    });
+  }
+
   toggleSettings() {
     const { showSettings } = this.state;
     this.setState({ showSettings: !showSettings });
   }
 
   handleSubmit(data) {
-    console.log('submit', data);
+    const { viewer } = this.props;
+
+    const args = {
+      viewer,
+      bucket: viewer.bucket,
+      name: data.name,
+      filters: data.filters,
+    };
+
+    console.log('UpdateBucketMutation', args);
+    Relay.Store.commitUpdate(new UpdateBucketMutation(args), {
+      onFailure: ()=> console.log('Failure: UpdateBucketMutation'),
+      onSuccess: ()=> console.log('Success: UpdateBucketMutation'),
+    });
   }
 
   render() {
@@ -61,6 +92,9 @@ class Bucket extends Component {
 
             <Button onClick={::this.toggleSettings} flat>
               <i className='fa fa-cog'/>
+            </Button>
+            <Button onClick={::this.deleteBucket} flat variant='danger'>
+              <i className='fa fa-times'/>
             </Button>
           </div>
 
@@ -112,9 +146,15 @@ Bucket = Relay.createContainer(Bucket, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${BucketForm.getFragment('viewer')}
+        ${DeleteBucketMutation.getFragment('viewer')}
+        ${UpdateBucketMutation.getFragment('viewer')}
+
         bucket(id: $id) {
           ${GenerateBucketMonthMutation.getFragment('bucket')}
+          ${DeleteBucketMutation.getFragment('bucket')}
+          ${UpdateBucketMutation.getFragment('bucket')}
           ${BucketForm.getFragment('bucket')}
+
           name
           months(first: 100) {
             edges {

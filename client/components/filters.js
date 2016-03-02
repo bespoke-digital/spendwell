@@ -45,7 +45,7 @@ class Filters extends Component {
 
     return (
       <SuperCard expanded summary={
-        <Card><h3>Filters</h3></Card>
+        <Card><strong>Filters</strong></Card>
       }>
         {filters.map((filter, index)=>
           <Filter

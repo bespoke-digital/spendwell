@@ -1,6 +1,8 @@
 
+from difflib import SequenceMatcher
+
+from django import forms
 import graphene
-from graphene.utils import to_camel_case
 from graphene.contrib.django.form_converter import convert_form_field
 from graphql.core.type import (
     GraphQLInputObjectType,
@@ -9,8 +11,7 @@ from graphql.core.type import (
     GraphQLField,
 )
 
-from apps.core.utils import get_core_type
-from difflib import SequenceMatcher
+from apps.core.types import Money
 
 
 def similarity(a, b):
@@ -33,18 +34,27 @@ def apply_filter_list(base_queryset, filter_list, filter_class):
     return queryset
 
 
+def form_field_to_scalar(field):
+    if isinstance(field, (forms.DecimalField, forms.FloatField)):
+        return Money
+    else:
+        return convert_form_field(field)
+
+
 def filter_list_schema(filterset_class, name=None, input=True):
     if name is None:
         name = filterset_class.__name__
 
     if input:
-        ObjectType = GraphQLInputObjectType
-        ObjectField = GraphQLInputObjectField
+        ObjectType = graphene.InputObjectType
+        ObjectField = graphene.InputField
     else:
-        ObjectType = GraphQLObjectType
-        ObjectField = GraphQLField
+        ObjectType = graphene.ObjectType
+        ObjectField = graphene.Field
 
-    return graphene.List(ObjectType(name, {
-        to_camel_case(key): ObjectField(get_core_type(convert_form_field(value.field)))
+    Filter = type(name, (ObjectType,), {
+        key: ObjectField(form_field_to_scalar(value.field))
         for key, value in filterset_class.base_filters.items()
-    }))
+    })
+
+    return graphene.List(Filter)

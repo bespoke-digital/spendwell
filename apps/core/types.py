@@ -15,7 +15,7 @@ class Money(Scalar):
     @staticmethod
     def parse_literal(node):
         if isinstance(node, ast.IntValue):
-            return Decimal(node) / Decimal(100)
+            return Decimal(node.value) / Decimal(100)
 
     @staticmethod
     def parse_value(value):

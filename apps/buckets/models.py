@@ -94,20 +94,6 @@ class BucketMonth(SWModel):
                 self.bucket.transactions(),
                 month_start=self.month_start,
             )
-            # furthest_back = self.bucket.transactions().order_by('date').values_list('date', flat=True)[1]
-            # months_ago = relativedelta(self.month_start, furthest_back).months
-
-            # if months_ago >= 2:
-            #     months_ago = 3
-            # elif months_ago == 1:
-            #     months_ago = 2
-            # else:
-            #     months_ago = 1
-
-            # self._avg_amount = Decimal(self.bucket.transactions(
-            #     date__gte=self.month_start - relativedelta(months=months_ago),
-            #     date__lt=self.month_start,
-            # ).sum()) / Decimal(months_ago)
 
         return self._avg_amount
 
