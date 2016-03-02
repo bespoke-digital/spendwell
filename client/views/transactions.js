@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
 
@@ -15,6 +16,11 @@ import styles from 'sass/views/bucket.scss';
 
 
 class Transactions extends Component {
+  constructor() {
+    super();
+    this.handleSearchChange = _.debounce(::this.handleSearchChange, 300);
+  }
+
   handleScroll() {
     this.props.relay.setVariables({ count: this.props.relay.variables.count + 50 });
   }
@@ -101,7 +107,7 @@ class Transactions extends Component {
             <Card>
               <TextInput
                 label='Search'
-                onChange={::this.handleSearchChange}
+                onChange={this.handleSearchChange}
                 value={description || ''}
               />
             </Card>
