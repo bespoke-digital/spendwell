@@ -53,6 +53,8 @@ class TransactionList extends Component {
   render() {
     const { transactions, monthHeaders } = this.props;
 
+    if (_.isNull(transactions) || _.isUndefined(transactions)) return null;
+
     if (!monthHeaders)
       return (
         <div>

@@ -14,6 +14,11 @@ import { SyncInstitutionMutation } from 'mutations/institutions';
 
 
 class Institution extends Component {
+  constructor() {
+    super();
+    this.state = { selected: null };
+  }
+
   selectAccount({ id }) {
     browserHistory.push({ pathname: `/accounts/${id}` });
   }
@@ -28,6 +33,7 @@ class Institution extends Component {
 
   render() {
     const { institution } = this.props;
+    const { selected } = this.state;
 
     return (
       <CardList className='institution'>
@@ -45,7 +51,14 @@ class Institution extends Component {
           </div>
         }/>
         {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
-          <ListAccount key={node.id} account={node}/>
+          <ListAccount
+            key={node.id}
+            account={node}
+            expanded={selected === node.id}
+            onClick={()=> selected === node.id ?
+              this.setState({ selected: null }) :
+              this.setState({ selected: node.id })}
+          />
         )}
       </CardList>
     );

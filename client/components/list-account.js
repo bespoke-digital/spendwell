@@ -1,5 +1,5 @@
 
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
 import Card from 'components/card';
@@ -11,24 +11,38 @@ import { DisableAccountMutation, EnableAccountMutation } from 'mutations/account
 
 
 export default class Account extends Component {
-  toggleOpen() {
-    const { open } = this.props.relay.variables;
-    this.props.relay.setVariables({ open: !open });
+  static propTypes = {
+    expanded: PropTypes.bool,
+    onClick: PropTypes.func,
+  };
+
+  static defaultProps = {
+    expanded: true,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.expanded !== this.props.expanded)
+      this.props.relay.setVariables({ open: nextProps.expanded });
   }
+
+  // toggleOpen() {
+  //   const { expanded } = this.props.relay.variables;
+  //   this.props.relay.setVariables({ expanded: !expanded });
+  // }
 
   disable() {
     const { account } = this.props;
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
-      onSuccess: console.log.bind(console, 'onSuccess'),
-      onFailure: console.log.bind(console, 'onFailure'),
+      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
+      onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
   }
 
   enable() {
     const { account } = this.props;
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
-      onSuccess: console.log.bind(console, 'onSuccess'),
-      onFailure: console.log.bind(console, 'onFailure'),
+      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
+      onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
   }
 
@@ -40,7 +54,7 @@ export default class Account extends Component {
   }
 
   render() {
-    const { account, relay } = this.props;
+    const { account, relay, onClick } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -48,7 +62,7 @@ export default class Account extends Component {
         className={`account ${account.disabled ? 'disabled' : ''}`}
         expanded={open}
         summary={
-          <Card onSummaryClick={::this.toggleOpen} summary={
+          <Card onSummaryClick={onClick} summary={
             <div>
               <div>{account.name}</div>
               <div>
