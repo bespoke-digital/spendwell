@@ -39,14 +39,13 @@ class Header extends Component {
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
         <div className='left mui--appbar-height mui--appbar-line-height'>
-          {navHandle ? (
-            <a href='#' onClick={::this.handleHandleClick}>
-              <i className='fa fa-bars'/>
-            </a>
-          ) : null}
           {back ? (
             <a href='#' onClick={::this.handleBackClick}>
               <i className='fa fa-long-arrow-left'/>
+            </a>
+          ) : navHandle ? (
+            <a href='#' onClick={::this.handleHandleClick}>
+              <i className='fa fa-bars'/>
             </a>
           ) : null}
         </div>

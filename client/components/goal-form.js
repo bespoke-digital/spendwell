@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
@@ -21,10 +22,7 @@ class GoalForm extends Component {
   componentWillMount() {
     if (this.props.goal) {
       const { name, monthlyAmount } = this.props.goal;
-      this.setState({
-        name,
-        monthlyAmount: monthlyAmount / 100,
-      });
+      this.setState({ name, monthlyAmount });
     }
   }
 
@@ -33,6 +31,12 @@ class GoalForm extends Component {
     const { name, monthlyAmount } = this.state;
 
     onSubmit({ name, monthlyAmount });
+  }
+
+  handleMonthlyAmountChange(monthlyAmount) {
+    monthlyAmount = -parseInt(monthlyAmount * 100);
+    if (!_.isNaN(monthlyAmount))
+      this.setState({ monthlyAmount });
   }
 
   render() {
@@ -48,8 +52,8 @@ class GoalForm extends Component {
         />
         <TextInput
           label='Monthly Amount'
-          value={monthlyAmount}
-          onChange={(monthlyAmount)=> this.setState({ monthlyAmount })}
+          value={_.isNumber(monthlyAmount) ? (Math.abs(monthlyAmount) / 100).toString() : ''}
+          onChange={::this.handleMonthlyAmountChange}
         />
 
         <Button onClick={::this.handleSubmit} variant='primary'>Save</Button>

@@ -19,8 +19,6 @@ class CreateGoal extends Component {
   handleSubmit({ name, monthlyAmount }) {
     const { viewer } = this.props;
 
-    monthlyAmount = parseInt(parseFloat(monthlyAmount) * 100);
-
     Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, name, monthlyAmount }), {
       onFailure: ()=> console.log('Failure: CreateGoalMutation'),
       onSuccess: ()=> {
@@ -43,6 +41,7 @@ class CreateGoal extends Component {
           <GoalForm
             onSubmit={::this.handleSubmit}
             onCancel={()=> browserHistory.goBack()}
+            goal={null}
           />
         </div>
       </App>

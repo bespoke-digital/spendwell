@@ -1,12 +1,15 @@
 
 import { Component } from 'react';
-import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
+import Relay from 'react-relay';
+import moment from 'moment';
 
 import Button from 'components/button';
 import App from 'components/app';
 import GoalForm from 'components/goal-form';
-// import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
+import Card from 'components/card';
+import CardList from 'components/card-list';
+import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
 
 
 class CreateGoal extends Component {
@@ -17,28 +20,45 @@ class CreateGoal extends Component {
 
   updateGoal({ name, monthlyAmount }) {
     const { viewer } = this.props;
+    const { goal } = viewer;
 
-    monthlyAmount = parseInt(monthlyAmount * 100);
-
-    // Relay.Store.commitUpdate(new UpdateGoalMutation({ viewer, name, monthlyAmount }), {
-    //   onFailure: ()=> console.log('Failure: UpdateGoalMutation'),
-    //   onSuccess: ()=> {
-    //     console.log('Success: UpdateGoalMutation');
-    //     browserHistory.push('/app/dashboard');
-    //   },
-    // });
+    Relay.Store.commitUpdate(new UpdateGoalMutation({
+      viewer,
+      goal,
+      name,
+      monthlyAmount,
+    }), {
+      onFailure: ()=> console.log('Failure: UpdateGoalMutation'),
+      onSuccess: ()=> {
+        console.log('Success: UpdateGoalMutation');
+        this.setState({ showSettings: false });
+      },
+    });
   }
 
   deleteGoal() {
     const { viewer } = this.props;
-    const { bucket } = viewer;
+    const { goal } = viewer;
 
-    // console.log('DeleteGoalMutation', { viewer, bucket });
-    // Relay.Store.commitUpdate(new DeleteGoalMutation({ viewer, bucket }), {
-    //   onFailure: ()=> console.log('Failure: DeleteGoalMutation'),
+    console.log('DeleteGoalMutation', { viewer, goal });
+    Relay.Store.commitUpdate(new DeleteGoalMutation({ viewer, goal }), {
+      onFailure: ()=> console.log('Failure: DeleteGoalMutation'),
+      onSuccess: ()=> {
+        console.log('Success: DeleteGoalMutation');
+        browserHistory.push('/app/dashboard');
+      },
+    });
+  }
+
+  generateMonth() {
+    const { viewer } = this.props;
+    const { goal } = viewer;
+
+    // console.log('GenerateGoalMonthMutation', { viewer, goal });
+    // Relay.Store.commitUpdate(new GenerateGoalMonthMutation({ viewer, goal }), {
+    //   onFailure: ()=> console.log('Failure: GenerateGoalMonthMutation'),
     //   onSuccess: ()=> {
-    //     console.log('Success: DeleteGoalMutation');
-    //     browserHistory.push('/app/dashboard');
+    //     console.log('Success: GenerateGoalMonthMutation');
     //   },
     // });
   }
@@ -67,12 +87,28 @@ class CreateGoal extends Component {
           </div>
 
           {showSettings ?
-            <GoalForm
-              goal={viewer.goal}
-              onSubmit={::this.updateGoal}
-              onCancel={()=> browserHistory.goBack()}
-            />
+            <CardList>
+              <GoalForm
+                goal={viewer.goal}
+                onSubmit={::this.updateGoal}
+                onCancel={::this.toggleSettings}
+              />
+            </CardList>
           : null}
+
+          {viewer.goal.months.edges.map(({ node })=>
+            <Card key={node.id}>
+              <div><strong>{moment(node.monthStart).asUtc().format('MMMM YYYY')}</strong></div>
+              <div><strong>{'target: '}</strong>{node.targetAmount}</div>
+              <div><strong>{'filled: '}</strong>{node.filledAmount}</div>
+            </Card>
+          )}
+
+          <div className='bottom-load-button'>
+            <Button onClick={::this.generateMonth} flat>
+              <i className='fa fa-plus'/>{' Add Month'}
+            </Button>
+          </div>
         </div>
       </App>
     );
@@ -85,17 +121,30 @@ CreateGoal = Relay.createContainer(CreateGoal, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+        ${DeleteGoalMutation.getFragment('viewer')}
+        ${UpdateGoalMutation.getFragment('viewer')}
 
         goal(id: $id) {
           ${GoalForm.getFragment('goal')}
+          ${DeleteGoalMutation.getFragment('goal')}
+          ${UpdateGoalMutation.getFragment('goal')}
 
           name
+
+          months(first: 100) {
+            edges {
+              node {
+                id
+                monthStart
+                targetAmount
+                filledAmount
+              }
+            }
+          }
         }
       }
     `,
   },
 });
-          // ${DeleteGoalMutation.getFragment('goal')}
-          // ${UpdateGoalMutation.getFragment('goal')}
 
 export default CreateGoal;
