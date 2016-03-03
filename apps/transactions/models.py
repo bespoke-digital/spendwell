@@ -39,7 +39,7 @@ class TransactionManager(SWManager):
     def is_transfer(self, *args, **kwargs):
         return self.get_queryset().is_transfer(*args, **kwargs)
 
-    def create_from_plaid(self, institution, json_data):
+    def from_plaid(self, institution, json_data):
         account = Account.objects.get(
             institution=institution,
             plaid_id=json_data['_account'],

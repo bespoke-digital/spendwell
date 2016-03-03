@@ -63,7 +63,7 @@ class Institution(SWModel):
             return
 
         for account_data in self.plaid_data['accounts']:
-            Account.objects.create_from_plaid(self, account_data)
+            Account.objects.from_plaid(self, account_data)
 
     def sync(self):
         if not self.plaid_data:
@@ -72,7 +72,7 @@ class Institution(SWModel):
         self.sync_accounts()
 
         for transaction_data in self.plaid_data['transactions']:
-            Transaction.objects.create_from_plaid(self, transaction_data)
+            Transaction.objects.from_plaid(self, transaction_data)
 
         Transaction.objects.detect_transfers(owner=self.owner)
 

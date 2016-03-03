@@ -5,7 +5,7 @@ from apps.core.models import SWModel, SWManager
 
 
 class AccountManager(SWManager):
-    def create_from_plaid(self, institution, json_data):
+    def from_plaid(self, institution, json_data):
         try:
             account = Account.objects.get(
                 owner=institution.owner,
@@ -22,8 +22,8 @@ class AccountManager(SWManager):
         account.subtype = json_data.get('subtype')
         account.name = json_data['meta']['name']
         account.number_snippet = json_data['meta']['number']
-        account.balance_current = json_data['balance']['current']
-        account.balance_available = json_data['balance']['available']
+        account.current_balance = json_data['balance']['current']
+        account.available_balance = json_data['balance']['available']
 
         account.save()
         return account

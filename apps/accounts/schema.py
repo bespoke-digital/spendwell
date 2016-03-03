@@ -11,7 +11,6 @@ from .models import Account
 
 class AccountNode(SWNode):
     current_balance = graphene.Field(Money)
-    available_balance = graphene.Field(Money)
     transactions = TransactionConnectionField(TransactionNode)
 
     class Meta:
@@ -22,7 +21,6 @@ class AccountNode(SWNode):
             'type',
             'subtype',
             'current_balance',
-            'available_balance',
             'number_snippet',
             'transactions',
             'disabled',
