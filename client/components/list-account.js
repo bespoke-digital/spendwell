@@ -17,7 +17,7 @@ export default class Account extends Component {
   };
 
   static defaultProps = {
-    expanded: true,
+    expanded: false,
   };
 
   componentWillReceiveProps(nextProps) {

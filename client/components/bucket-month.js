@@ -14,8 +14,18 @@ import Button from 'components/button';
 class BucketMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
+    expanded: PropTypes.bool,
     onClick: PropTypes.func,
   };
+
+  static defaultProps = {
+    expanded: false,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.expanded !== this.props.expanded)
+      this.props.relay.setVariables({ open: nextProps.expanded });
+  }
 
   render() {
     const { bucketMonth, month, onClick, relay } = this.props;

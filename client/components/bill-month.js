@@ -12,8 +12,18 @@ import Button from 'components/button';
 class BillMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
+    expanded: PropTypes.bool,
     onClick: PropTypes.func,
   };
+
+  static defaultProps = {
+    expanded: false,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.expanded !== this.props.expanded)
+      this.props.relay.setVariables({ open: nextProps.expanded });
+  }
 
   loadTransactions() {
     const { relay } = this.props;

@@ -77,6 +77,7 @@ class Dashboard extends Component {
       allocated,
       spent,
       net,
+      spentFromSavings,
       goalMonths,
       bucketMonths,
       billMonths,
@@ -196,12 +197,16 @@ class Dashboard extends Component {
             </CardList>
           : null}
 
-          <SpentFromSavings
-            summary={viewer.summary}
-            month={periods.current}
-            selected={selected === 'spentFromSavings'}
-            onClick={this.select.bind(this, 'spentFromSavings')}
-          />
+          {spentFromSavings > 0 ?
+            <CardList>
+              <SpentFromSavings
+                summary={viewer.summary}
+                month={periods.current}
+                selected={selected === 'spentFromSavings'}
+                onClick={this.select.bind(this, 'spentFromSavings')}
+              />
+            </CardList>
+          : null}
 
           <div className='heading'>
             <h2>Bills</h2>
@@ -224,7 +229,7 @@ class Dashboard extends Component {
                   key={node.id}
                   bucketMonth={node}
                   month={periods.current}
-                  open={selected === node.id}
+                  expanded={selected === node.id}
                   onClick={this.select.bind(this, node.id)}
                 />
               )}
@@ -252,7 +257,7 @@ class Dashboard extends Component {
                   key={node.id}
                   bucketMonth={node}
                   month={periods.current}
-                  open={selected === node.id}
+                  expanded={selected === node.id}
                   onClick={this.select.bind(this, node.id)}
                 />
               )}
@@ -309,6 +314,7 @@ Dashboard = Relay.createContainer(Dashboard, {
           allocated
           spent
           net
+          spentFromSavings
           goalMonths(first: 1000) {
             edges {
               node {
