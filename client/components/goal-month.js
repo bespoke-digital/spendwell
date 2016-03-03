@@ -4,6 +4,7 @@ import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Money from 'components/money';
+import Button from 'components/button';
 
 
 class GoalMonth extends Component {
@@ -37,6 +38,10 @@ class GoalMonth extends Component {
         <strong>Projected annual amount:</strong>
         {' '}
         <Money abs={true} amount={goalMonth.targetAmount * 12}/>
+
+        <div>
+          <Button to={`/app/goals/${goalMonth.goal.id}`}>View/Edit</Button>
+        </div>
       </Card>
     );
   }
@@ -49,6 +54,9 @@ GoalMonth = Relay.createContainer(GoalMonth, {
         name
         targetAmount
         filledAmount
+        goal {
+          id
+        }
       }
     `,
   },

@@ -7,9 +7,15 @@ from .models import Goal, GoalMonth
 
 
 class GoalNode(SWNode):
+    monthly_amount = graphene.Field(Money)
+
     class Meta:
         model = Goal
-        only_fields = ('name', 'months')
+        only_fields = (
+            'name',
+            'months',
+            'monthly_amount',
+        )
 
 
 class GoalMonthNode(SWNode):
@@ -24,6 +30,7 @@ class GoalMonthNode(SWNode):
             'month_start',
             'target_amount',
             'filled_amount',
+            'goal',
         )
 
     def resolve_name(self, args, info):

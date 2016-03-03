@@ -4,6 +4,8 @@ from decimal import Decimal
 import graphene
 from graphene.relay.types import Edge
 
+from apps.core.utils import instance_for_node_id
+from apps.core.types import Money
 from .models import Goal
 from .schema import GoalNode
 
@@ -40,8 +42,40 @@ class CreateGoalMutation(graphene.relay.ClientIDMutation):
         )
 
 
+class UpdateGoalMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        goal_id = graphene.ID()
+        name = graphene.String()
+        monthly_amount = graphene.InputField(Money)
+
+    goal = graphene.Field(GoalNode)
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        goal = instance_for_node_id(input['goal_id'], info)
+        goal.monthly_amount = input['monthly_amount']
+        goal.name = input['name']
+        goal.save()
+
+        return UpdateGoalMutation(goal=goal)
+
+
+class DeleteGoalMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        goal_id = graphene.ID()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        goal = instance_for_node_id(input['goal_id'], info)
+        goal.delete()
+
+        return UpdateGoalMutation()
+
+
 class GoalsMutations(graphene.ObjectType):
     create_goal = graphene.Field(CreateGoalMutation)
+    update_goal = graphene.Field(UpdateGoalMutation)
+    delete_goal = graphene.Field(DeleteGoalMutation)
 
     class Meta:
         abstract = True
