@@ -5,7 +5,6 @@
 {% block body_class %}{{ super }} home{% endblock %}
 
 {% block head %}
-  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
 {% endblock %}
 
@@ -24,6 +23,7 @@
         method="post"
         target="_blank"
         class="form-inline"
+        id="landing-form"
         novalidate
       >
         <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
@@ -39,4 +39,9 @@
       <p>Leave your email to get early access and start managing money like a boss.</p>
     </div>
   </div>
+
+  <script src="{% static 'dist/pages.js' %}"></script>
+  <script>
+    window.mixpanel.track('Landing: Home');
+  </script>
 {% endblock %}
