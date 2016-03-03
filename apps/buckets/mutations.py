@@ -104,7 +104,7 @@ class GenerateBucketMonthMutation(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
         bucket = instance_for_node_id(input['bucket_id'], info)
-        BucketMonth.objects.create(bucket=bucket, month_start=input['month'])
+        bucket.generate_month(month_start=input['month'])
         return Cls(bucket=bucket)
 
 

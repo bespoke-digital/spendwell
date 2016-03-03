@@ -75,6 +75,7 @@ export class UpdateGoalMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on UpdateGoalMutation {
+        goal
         viewer {
           goals
           summary {
@@ -83,7 +84,6 @@ export class UpdateGoalMutation extends Relay.Mutation {
             goalMonths
           }
         }
-        goal
       }
     `;
   }
@@ -144,6 +144,60 @@ export class DeleteGoalMutation extends Relay.Mutation {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}
+
+
+export class GenerateGoalMonthMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+    goal: ()=> Relay.QL`
+      fragment on GoalNode {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { generateGoalMonth }`;
+  }
+
+  getVariables() {
+    return {
+      goalId: this.props.goal.id,
+      month: this.props.month,
+    };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on GenerateGoalMonthMutation {
+        goal {
+          months
+        }
+        viewer {
+          summary {
+            allocated
+            net
+            goalMonths
+          }
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+        goal: this.props.goal.id,
       },
     }];
   }

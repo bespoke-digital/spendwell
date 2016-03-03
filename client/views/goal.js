@@ -40,7 +40,6 @@ class CreateGoal extends Component {
     const { viewer } = this.props;
     const { goal } = viewer;
 
-    console.log('DeleteGoalMutation', { viewer, goal });
     Relay.Store.commitUpdate(new DeleteGoalMutation({ viewer, goal }), {
       onFailure: ()=> console.log('Failure: DeleteGoalMutation'),
       onSuccess: ()=> {
@@ -48,19 +47,6 @@ class CreateGoal extends Component {
         browserHistory.push('/app/dashboard');
       },
     });
-  }
-
-  generateMonth() {
-    const { viewer } = this.props;
-    const { goal } = viewer;
-
-    // console.log('GenerateGoalMonthMutation', { viewer, goal });
-    // Relay.Store.commitUpdate(new GenerateGoalMonthMutation({ viewer, goal }), {
-    //   onFailure: ()=> console.log('Failure: GenerateGoalMonthMutation'),
-    //   onSuccess: ()=> {
-    //     console.log('Success: GenerateGoalMonthMutation');
-    //   },
-    // });
   }
 
   toggleSettings() {
@@ -103,12 +89,6 @@ class CreateGoal extends Component {
               <div><strong>{'filled: '}</strong>{node.filledAmount}</div>
             </Card>
           )}
-
-          <div className='bottom-load-button'>
-            <Button onClick={::this.generateMonth} flat>
-              <i className='fa fa-plus'/>{' Add Month'}
-            </Button>
-          </div>
         </div>
       </App>
     );
