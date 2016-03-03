@@ -1,12 +1,13 @@
 
 import graphene
 
-from apps.core.fields import SWNode, SWConnectionField
+from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.types import Money
 from apps.transactions.schema import TransactionNode
 from apps.transactions.fields import TransactionConnectionField
 
 from .models import Account
+from .filters import AccountFilter
 
 
 class AccountNode(SWNode):
@@ -30,7 +31,7 @@ class AccountNode(SWNode):
 
 class AccountsQuery(graphene.ObjectType):
     account = graphene.relay.NodeField(AccountNode)
-    accounts = SWConnectionField(AccountNode)
+    accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
 
     class Meta:
         abstract = True

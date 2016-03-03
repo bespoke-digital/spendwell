@@ -1,5 +1,4 @@
 
-import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
@@ -7,16 +6,18 @@ import moment from 'moment';
 
 import CardList from 'components/card-list';
 import Card from 'components/card';
+import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import ListAccount from 'components/list-account';
 
 import { SyncInstitutionMutation } from 'mutations/institutions';
+import { EnableAccountMutation } from 'mutations/accounts';
 
 
 class Institution extends Component {
   constructor() {
     super();
-    this.state = { selected: null };
+    this.state = { selected: null, showDisabled: false };
   }
 
   selectAccount({ id }) {
@@ -31,9 +32,16 @@ class Institution extends Component {
     });
   }
 
+  enableAccount(account) {
+    Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
+      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
+      onSuccess: ()=> console.log('Success: EnableAccountMutation'),
+    });
+  }
+
   render() {
     const { institution } = this.props;
-    const { selected } = this.state;
+    const { selected, showDisabled } = this.state;
 
     return (
       <CardList className='institution'>
@@ -50,7 +58,8 @@ class Institution extends Component {
             : null}
           </div>
         }/>
-        {_.sortBy(institution.accounts.edges, ({ node })=> node.disabled).map(({ node })=>
+
+        {institution.accounts.edges.map(({ node })=>
           <ListAccount
             key={node.id}
             account={node}
@@ -60,6 +69,26 @@ class Institution extends Component {
               this.setState({ selected: node.id })}
           />
         )}
+
+        {institution.disabledAccounts && institution.disabledAccounts.edges.length ?
+          <SuperCard
+            onSummaryClick={()=> this.setState({ showDisabled: !showDisabled })}
+            expanded={showDisabled}
+            summary={<Card>Disabled Accounts</Card>}
+            className='disabled'
+          >
+            {institution.disabledAccounts.edges.map(({ node })=>
+              <Card key={node.id} className='account' summary={
+                <div>
+                  <div>{node.name}</div>
+                  <Button onClick={this.enableAccount.bind(this, node)}>
+                    Enable
+                  </Button>
+                </div>
+              }/>
+            )}
+          </SuperCard>
+        : null}
       </CardList>
     );
   }
@@ -70,15 +99,28 @@ Institution = Relay.createContainer(Institution, {
     institution: ()=> Relay.QL`
       fragment on InstitutionNode {
         ${SyncInstitutionMutation.getFragment('institution')}
+
         name
         canSync
         lastSync
-        accounts(first: 100) {
+
+        accounts(first: 100, disabled: false) {
           edges {
             node {
               ${ListAccount.getFragment('account')}
+
               id
-              disabled
+            }
+          }
+        }
+
+        disabledAccounts: accounts(first: 100, disabled: true) {
+          edges {
+            node {
+              ${EnableAccountMutation.getFragment('account')}
+
+              id
+              name
             }
           }
         }

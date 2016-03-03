@@ -7,7 +7,7 @@ import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
-import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
+import { DisableAccountMutation } from 'mutations/accounts';
 
 
 export default class Account extends Component {
@@ -25,24 +25,11 @@ export default class Account extends Component {
       this.props.relay.setVariables({ open: nextProps.expanded });
   }
 
-  // toggleOpen() {
-  //   const { expanded } = this.props.relay.variables;
-  //   this.props.relay.setVariables({ expanded: !expanded });
-  // }
-
   disable() {
     const { account } = this.props;
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
       onFailure: ()=> console.log('Failure: DisableAccountMutation'),
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
-    });
-  }
-
-  enable() {
-    const { account } = this.props;
-    Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
-      onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
   }
 
@@ -59,26 +46,20 @@ export default class Account extends Component {
 
     return (
       <SuperCard
-        className={`account ${account.disabled ? 'disabled' : ''}`}
+        className='account'
         expanded={open}
         summary={
           <Card onSummaryClick={onClick} summary={
             <div>
               <div>{account.name}</div>
               <div>
-                {account.currentBalance && !account.disabled ?
+                {account.currentBalance ?
                   <Money amount={account.currentBalance}/>
                 : null}
               </div>
-              {!account.disabled ?
-                <Button onClick={::this.disable} propagateClick={false}>
-                  Disable
-                </Button>
-              :
-                <Button onClick={::this.enable} propagateClick={false}>
-                  Enable
-                </Button>
-              }
+              <Button onClick={::this.disable} propagateClick={false}>
+                Disable
+              </Button>
             </div>
           }/>
         }
@@ -104,13 +85,14 @@ Account = Relay.createContainer(Account, {
     account: ()=> Relay.QL`
       fragment on AccountNode {
         ${DisableAccountMutation.getFragment('account')}
-        ${EnableAccountMutation.getFragment('account')}
+
         id
         name
         currentBalance
-        disabled
+
         transactions(first: $transactionCount) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
+
           pageInfo {
             hasNextPage
           }

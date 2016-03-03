@@ -1,12 +1,16 @@
 
 import graphene
-from apps.core.fields import SWNode, SWConnectionField
+
+from apps.core.fields import SWNode, SWConnectionField, SWFilterConnectionField
+from apps.accounts.schema import AccountNode
+from apps.accounts.filters import AccountFilter
 
 from .models import Institution
 
 
 class InstitutionNode(SWNode):
     can_sync = graphene.Field(graphene.Boolean())
+    accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
 
     class Meta:
         model = Institution
