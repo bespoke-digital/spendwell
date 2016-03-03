@@ -66,7 +66,7 @@ export default class Account extends Component {
             <div>
               <div>{account.name}</div>
               <div>
-                {account.currentBalance ?
+                {account.currentBalance && !account.disabled ?
                   <Money amount={account.currentBalance}/>
                 : null}
               </div>
