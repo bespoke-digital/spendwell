@@ -57,9 +57,11 @@ export default class Account extends Component {
                   <Money amount={account.currentBalance}/>
                 : null}
               </div>
-              <Button onClick={::this.disable} propagateClick={false}>
-                Disable
-              </Button>
+              <div>
+                <Button onClick={::this.disable} propagateClick={false}>
+                  Disable
+                </Button>
+              </div>
             </div>
           }/>
         }

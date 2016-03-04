@@ -46,16 +46,45 @@
 
   &.card-list-headings,
   .summary > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
 
-    > :first-child {
-      flex: 1;
+    @media (min-width: $screen-sm-min) {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      > :first-child {
+        flex: 1;
+      }
+
+      > :not(:first-child) {
+        margin-left: 20px;
+      }
     }
 
-    > :not(:first-child) {
-      margin-left: 20px;
+    @media (max-width: $screen-xs-max) {
+      > * {
+        margin-bottom: 5px;
+      }
+
+      > :first-child {
+        width: 100%;
+      }
+
+      > :not(:first-child) {
+        width: 50%;
+        float: left;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      &:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+      }
     }
   }
 

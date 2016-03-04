@@ -48,18 +48,19 @@ class Institution extends Component {
         <Card summary={
           <div>
             <h3>{institution.name}</h3>
-            { institution.canSync ?
-              <div>
-                <span className='last-sync'>
-                  {moment(institution.lastSync).fromNow()}
-                </span>
+
+            { institution.canSync ? [
+              <div key='last-sync' className='last-sync'>
+                {moment(institution.lastSync).fromNow()}
+              </div>,
+              <div key='sync'>
                 <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
-              </div>
-            : null}
+              </div>,
+            ] : null}
           </div>
         }/>
 
-        <Card className='card-list-headings'>
+        <Card className='card-list-headings hidden-xs'>
           <div></div>
           <div>Balance</div>
           <div>Disable</div>
