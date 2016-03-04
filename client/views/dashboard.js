@@ -4,7 +4,6 @@ import Relay from 'react-relay';
 import moment from 'moment';
 
 import Card from 'components/card';
-import SuperCard from 'components/super-card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
@@ -14,7 +13,6 @@ import BillMonth from 'components/bill-month';
 import SpentFromSavings from 'components/spent-from-savings';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
-import Transition from 'components/transition';
 import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
 

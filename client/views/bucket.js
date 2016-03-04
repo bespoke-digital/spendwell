@@ -1,5 +1,4 @@
 
-import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
@@ -11,12 +10,9 @@ import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import App from 'components/app';
 import BucketForm from 'components/bucket-form';
+import ScrollTrigger from 'components/scroll-trigger';
 
-import {
-  GenerateBucketMonthMutation,
-  DeleteBucketMutation,
-  UpdateBucketMutation,
-} from 'mutations/buckets';
+import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/bucket.scss';
 
@@ -25,20 +21,6 @@ class Bucket extends Component {
   constructor() {
     super();
     this.state = { showSettings: false };
-  }
-
-  generateBucketMonth() {
-    const { viewer: { bucket } } = this.props;
-
-    const lastMonth = bucket.months.edges[bucket.months.edges.length - 1].node;
-    const month = moment(lastMonth.monthStart).subtract('1 month');
-
-    console.log('GenerateBucketMonthMutation', { bucket, month });
-
-    Relay.Store.commitUpdate(new GenerateBucketMonthMutation({ bucket, month }), {
-      onSuccess: ()=> console.log('Success: GenerateBucketMonthMutation'),
-      onFailure: ()=> console.log('Failure: GenerateBucketMonthMutation'),
-    });
   }
 
   deleteBucket() {
@@ -77,6 +59,13 @@ class Bucket extends Component {
     this.setState({ showSettings: !showSettings });
   }
 
+  loadTransactions() {
+    const { relay } = this.props;
+    const { transactionCount } = relay.variables;
+
+    relay.setVariables({ transactionCount: transactionCount + 20 });
+  }
+
   render() {
     const { viewer } = this.props;
     const { showSettings } = this.state;
@@ -86,7 +75,10 @@ class Bucket extends Component {
 
     return (
       <App viewer={viewer} back={true}>
-        <div className={`container ${styles.root}`}>
+        <ScrollTrigger
+          className={`container ${styles.root}`}
+          onTrigger={::this.loadTransactions}
+        >
 
           <div className='heading'>
             <h1>{viewer.bucket.name}</h1>
@@ -108,21 +100,11 @@ class Bucket extends Component {
             />
           : null}
 
-          {viewer.bucket.months.edges.map(({ node })=>
-            <CardList key={node.id}>
-              <Card className='card-list-headings'>
-                {moment(node.monthStart).asUtc().format('MMMM YYYY')}
-              </Card>
-              <TransactionList transactions={node.transactions} monthHeaders={false}/>
-            </CardList>
-          )}
-
-          <div className='bottom-load-button'>
-            <Button onClick={::this.generateBucketMonth} flat>
-              <i className='fa fa-plus'/>{' Add Month'}
-            </Button>
-          </div>
-        </div>
+          <TransactionList
+            transactions={viewer.bucket.transactions}
+            monthHeaders={true}
+          />
+        </ScrollTrigger>
       </App>
     );
   }
@@ -142,7 +124,10 @@ class Bucket extends Component {
 }
 
 Bucket = Relay.createContainer(Bucket, {
-  initialVariables: { id: null },
+  initialVariables: {
+    id: null,
+    transactionsCount: 20,
+  },
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
@@ -152,22 +137,13 @@ Bucket = Relay.createContainer(Bucket, {
         ${UpdateBucketMutation.getFragment('viewer')}
 
         bucket(id: $id) {
-          ${GenerateBucketMonthMutation.getFragment('bucket')}
           ${DeleteBucketMutation.getFragment('bucket')}
           ${UpdateBucketMutation.getFragment('bucket')}
           ${BucketForm.getFragment('bucket')}
 
           name
-          months(first: 100) {
-            edges {
-              node {
-                id
-                monthStart
-                transactions(first: 1000) {
-                  ${TransactionList.getFragment('transactions')}
-                }
-              }
-            }
+          transactions(first: $transactionsCount) {
+            ${TransactionList.getFragment('transactions')}
           }
         }
       }
