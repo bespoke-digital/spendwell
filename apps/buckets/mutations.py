@@ -14,6 +14,17 @@ from .schema import BucketNode
 BucketEdge = Edge.for_node(BucketNode)
 
 
+def clean_filters(filters):
+    return [
+        {
+            key: val
+            for key, val in filter.items()
+            if val is not None and val is not ''
+        }
+        for filter in filters
+    ]
+
+
 class AssignTransactionsMutation(ClientIDMutation):
     class Input:
         month = graphene.InputField(Month())
@@ -45,7 +56,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         Bucket.objects.create(
             owner=info.request_context.user,
             name=input['name'],
-            filters=input['filters'],
+            filters=clean_filters(input['filters']),
             type=input['type'],
         )
 
@@ -71,7 +82,7 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
             bucket.name = input['name']
 
         if 'filters' in input and input['filters']:
-            bucket.filters = input['filters']
+            bucket.filters = clean_filters(input['filters'])
 
         bucket.save()
 

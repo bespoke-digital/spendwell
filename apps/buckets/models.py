@@ -53,6 +53,11 @@ def bucket_post_save(sender, instance, created, raw, **kwargs):
     if created and not raw:
         BucketMonth.objects.create(bucket=instance, month_start=this_month())
 
+    elif not raw:
+        BucketTransaction.objects.filter(bucket_month__bucket=instance).delete()
+        for month in instance.months.all():
+            month.assign_transactions()
+
 
 class BucketMonthQueryset(SWQuerySet):
     def owned_by(self, user):
@@ -80,6 +85,7 @@ class BucketMonth(SWModel):
 
     class Meta:
         unique_together = ('bucket', 'month_start')
+        ordering = ('-month_start',)
 
     @property
     def amount(self):

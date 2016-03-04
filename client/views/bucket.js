@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
@@ -54,12 +55,7 @@ class Bucket extends Component {
     });
   }
 
-  toggleSettings() {
-    const { showSettings } = this.state;
-    this.setState({ showSettings: !showSettings });
-  }
-
-  handleSubmit(data) {
+  updateBucket(data) {
     const { viewer } = this.props;
 
     const args = {
@@ -74,6 +70,11 @@ class Bucket extends Component {
       onFailure: ()=> console.log('Failure: UpdateBucketMutation'),
       onSuccess: ()=> console.log('Success: UpdateBucketMutation'),
     });
+  }
+
+  toggleSettings() {
+    const { showSettings } = this.state;
+    this.setState({ showSettings: !showSettings });
   }
 
   render() {
@@ -100,9 +101,10 @@ class Bucket extends Component {
 
           {showSettings ?
             <BucketForm
-              onSubmit={::this.handleSubmit}
               viewer={viewer}
               bucket={viewer.bucket}
+              onSubmit={::this.updateBucket}
+              onCancel={::this.toggleSettings}
             />
           : null}
 

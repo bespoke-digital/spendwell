@@ -15,6 +15,7 @@ import ScrollTrigger from 'components/scroll-trigger';
 class BucketForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -26,8 +27,9 @@ class BucketForm extends Component {
     if (this.props.bucket) {
       const { name, filters } = this.props.bucket;
 
-      const cleanFilters = _.cloneDeep(filters);
-      cleanFilters.forEach((f)=> delete f.__dataID__);
+      const cleanFilters = filters.map(
+        (f)=> _.pickBy(f, (v, k)=> !_.isNull(v) && k !== '__dataID__')
+      );
 
       this.setState({ name, filters: cleanFilters });
     }
@@ -50,7 +52,7 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { viewer: { transactions }, bucket } = this.props;
+    const { onCancel, viewer: { transactions }, bucket } = this.props;
     const { name, filters } = this.state;
 
     const valid = name.length && filters.length;
@@ -71,7 +73,7 @@ class BucketForm extends Component {
           >
             {bucket ? 'Create' : 'Save'}
           </Button>
-          <Button onClick={()=> browserHistory.goBack()}>Cancel</Button>
+          <Button onClick={onCancel}>Cancel</Button>
         </Card>
 
         <TransactionList transactions={transactions}/>

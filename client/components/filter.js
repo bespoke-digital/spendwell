@@ -12,12 +12,12 @@ import style from 'sass/components/filter';
 
 const FIELDS = {
   description: { label: 'Description', type: 'string' },
-  category: { label: 'Category', type: 'string' },
   amountGt: { label: 'Amount Greater Than', type: 'number' },
   amountLt: { label: 'Amount Less Than', type: 'number' },
-  dateGt: { label: 'Date Greater Than', type: 'date' },
-  dateLt: { label: 'Date Less Than', type: 'date' },
-  accountId: { label: 'Account', type: 'account' },
+  // category: { label: 'Category', type: 'string' },
+  // dateGt: { label: 'Date Greater Than', type: 'date' },
+  // dateLt: { label: 'Date Less Than', type: 'date' },
+  // accountId: { label: 'Account', type: 'account' },
 };
 
 
@@ -114,7 +114,7 @@ class Filter extends Component {
 
     return (
       <Card className={style.root}>
-        {fields.map((field)=>
+        {fields.map((field)=> FIELDS[field] ?
           <div key={field} className='field'>
             {this.renderDropdown(fields, field)}
 
@@ -127,7 +127,7 @@ class Filter extends Component {
               Remove Field
             </Button>
           </div>
-        )}
+        : null)}
 
         {this.renderDropdown(fields)}
       </Card>
