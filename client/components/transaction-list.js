@@ -19,7 +19,7 @@ class TransactionList extends Component {
   };
 
   static defaultProps = {
-    monthHeaders: true,
+    monthHeaders: false,
     expand: true,
     abs: true,
   };

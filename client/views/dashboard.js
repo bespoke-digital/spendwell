@@ -16,6 +16,7 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import Transition from 'components/transition';
 import App from 'components/app';
+import DashboardSummary from 'components/dashboard-summary';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
@@ -29,7 +30,7 @@ class Dashboard extends Component {
 
   constructor() {
     super();
-    this.state = { statusOpen: null };
+    this.state = { selected: null };
   }
 
   syncBuckets(month) {
@@ -56,14 +57,6 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
-  handleStatusClick(type) {
-    const { statusOpen } = this.state;
-    if (statusOpen === type)
-      this.setState({ statusOpen: null });
-    else
-      this.setState({ statusOpen: type });
-  }
-
   render() {
     if (!this.props.viewer.summary) {
       console.log('fuck this shit', this.props);
@@ -72,20 +65,15 @@ class Dashboard extends Component {
 
     const { params: { year, month }, viewer } = this.props;
     const {
-      income,
-      incomeEstimated,
-      allocated,
       spent,
-      net,
       spentFromSavings,
       goalMonths,
       bucketMonths,
       billMonths,
-      incomeTransactions,
       expenseTransactions,
     } = viewer.summary;
 
-    const { selected, statusOpen } = this.state;
+    const { selected } = this.state;
 
     const now = moment().startOf('month');
     const current = year && month ? moment(`${year}-${month}-0`) : now;
@@ -102,72 +90,7 @@ class Dashboard extends Component {
           className={`container ${styles.root}`}
           onTrigger={::this.loadTransactions}
         >
-          <CardList className='overview'>
-            <Card className='month'>
-              <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
-                <i className='fa fa-chevron-left'/>
-              </Button>
-
-              <div className='current'>{periods.current.format('MMMM YYYY')}</div>
-
-              <Button
-                to={`/app/dashboard/${periods.next.format('YYYY/MM')}`}
-                disabled={periods.next.isAfter(periods.now)}
-              >
-                <i className='fa fa-chevron-right'/>
-              </Button>
-            </Card>
-
-            <Card className={`status ${statusOpen ? 'open' : ''}`}>
-              <a
-                className={`number ${statusOpen === 'in' ? 'open' : ''}`}
-                onClick={this.handleStatusClick.bind(this, 'in')}
-                href='#'
-              >
-                <span className='title'>In</span>
-                <div className='amount'>
-                  <Money amount={income}/>
-                  {incomeEstimated ? '*' : ''}
-                </div>
-              </a>
-              <a
-                className={`number ${statusOpen === 'out' ? 'open' : ''}`}
-                onClick={this.handleStatusClick.bind(this, 'out')}
-                href='#'
-              >
-                <span className='title'>Out</span>
-                <div className='amount'><Money amount={spent + allocated} abs={true}/></div>
-              </a>
-              <a
-                className={`number ${statusOpen === 'net' ? 'open' : ''}`}
-                onClick={this.handleStatusClick.bind(this, 'net')}
-                href='#'
-              >
-                <span className='title'>Net</span>
-                <div className='amount'><Money amount={net}/></div>
-              </a>
-            </Card>
-            <Transition name='fade'>
-              {statusOpen === 'in' ?
-                <SuperCard className='status-details' expanded={true} summary={
-                  <Card>
-                    {incomeEstimated ?
-                      <span>
-                        <strong>*</strong>
-                        Estimated based on 3-month average income
-                      </span>
-                    : null}
-                  </Card>
-                }>
-                  <TransactionList transactions={incomeTransactions}/>
-                </SuperCard>
-              : statusOpen ?
-                <Card className='status-details'>
-                  Details on {statusOpen}
-                </Card>
-              : null}
-            </Transition>
-          </CardList>
+          <DashboardSummary summary={viewer.summary} periods={periods}/>
 
           <div className='heading'>
             <h2>Goals</h2>
@@ -307,13 +230,12 @@ Dashboard = Relay.createContainer(Dashboard, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${AssignTransactionsMutation.getFragment('viewer')}
+
         summary(month: $date) {
           ${SpentFromSavings.getFragment('summary')}
-          income
-          incomeEstimated
-          allocated
+          ${DashboardSummary.getFragment('summary')}
+
           spent
-          net
           spentFromSavings
           goalMonths(first: 1000) {
             edges {

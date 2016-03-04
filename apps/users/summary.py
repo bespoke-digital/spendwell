@@ -26,17 +26,23 @@ class MonthSummary(object):
         ).is_transfer(False)
 
     @property
+    def true_income(self):
+        if not hasattr(self, '_true_income'):
+            self._true_income = self.source_transactions().filter(amount__gt=0).sum()
+        return self._true_income
+
+    @property
+    def estimated_income(self):
+        return self.user.estimated_income
+
+    @property
     def income(self):
         if not hasattr(self, '_income'):
-            self._income = self.source_transactions().filter(amount__gt=0).sum()
-
-            if (
-                relativedelta(self.month_start, delorean.now().datetime).months == 0 and
-                self._income < self.user.estimated_income
-            ):
-                self._income = self.user.estimated_income
+            if self.true_income < self.estimated_income:
+                self._income = self.estimated_income
                 self._income_estimated = True
             else:
+                self._income = self.true_income
                 self._income_estimated = False
         return self._income
 
@@ -47,12 +53,18 @@ class MonthSummary(object):
         return self._income_estimated
 
     @property
-    def allocated(self):
-        if not hasattr(self, '_allocated'):
-            self._allocated = GoalMonth.objects.filter(
+    def goals_total(self):
+        if not hasattr(self, '_goals_total'):
+            self._goals_total = GoalMonth.objects.filter(
                 goal__owner=self.user,
                 month_start=self.month_start,
             ).sum('filled_amount')
+        return self._goals_total
+
+    @property
+    def bills_total(self):
+        if not hasattr(self, '_bills_total'):
+            self._bills_total = 0
 
             for bill_month in BucketMonth.objects.filter(
                 bucket__owner=self.user,
@@ -60,8 +72,14 @@ class MonthSummary(object):
                 month_start=self.month_start,
             ):
                 if bill_month.amount > bill_month.avg_amount:
-                    self._allocated -= abs(bill_month.avg_amount) - abs(bill_month.amount)
+                    self._bills_total -= abs(bill_month.avg_amount) - abs(bill_month.amount)
 
+        return self._bills_total
+
+    @property
+    def allocated(self):
+        if not hasattr(self, '_allocated'):
+            self._allocated = self.bills_total + self.goals_total
         return self._allocated
 
     @property
@@ -84,7 +102,12 @@ class MonthSummary(object):
     @property
     def net(self):
         if not hasattr(self, '_net'):
-            self._net = sum([self.income, self.allocated, self.spent])
+            self._net = sum([
+                self.income,
+                self.goals_total,
+                self.bills_total,
+                self.spent,
+            ])
         return self._net
 
     @property

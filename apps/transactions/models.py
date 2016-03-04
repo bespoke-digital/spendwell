@@ -85,32 +85,7 @@ class TransactionManager(SWManager):
             transactions.transfer_pair = None
 
         for transaction in transactions:
-            if transaction.transfer_pair:
-                continue
-
-            potential_transfers = (
-                Transaction.objects
-                .exclude(account=transaction.account)
-                .filter(owner=transaction.owner)
-                .filter(account__disabled=False)
-                .filter(amount=(-transaction.amount))
-                .is_transfer(False)
-            )
-
-            if len(potential_transfers) == 0:
-                continue
-            elif len(potential_transfers) == 1:
-                transfer = potential_transfers[0]
-            else:
-                # Fall back on similarity of description. This may miss many cases.
-                # TODO: find a better algo for this.
-                transfer = sorted(
-                    potential_transfers,
-                    key=lambda t: similarity(t.description, transaction.description),
-                )[-1]
-
-            transaction.transfer_pair = transfer
-            transaction.save()
+            transaction.detect_transfer()
 
 
 class Transaction(SWModel):
@@ -172,6 +147,9 @@ class Transaction(SWModel):
     def assign_to_buckets(self):
         from apps.buckets.models import BucketMonth
 
+        if self.transfer_pair:
+            return
+
         month_start = Delorean(datetime=self.date).truncate('month').datetime
 
         for bucket_month in BucketMonth.objects.filter(month_start=month_start):
@@ -194,10 +172,40 @@ class Transaction(SWModel):
 
     transfer_pair = property(get_transfer_pair, set_transfer_pair)
 
+    def detect_transfer(self):
+        if self.transfer_pair:
+            return
+
+        potential_transfers = (
+            Transaction.objects
+            .exclude(account=self.account)
+            .filter(owner=self.owner)
+            .filter(amount=(-self.amount))
+            .is_transfer(False)
+        )
+
+        if len(potential_transfers) == 0:
+            return
+
+        elif len(potential_transfers) == 1:
+            transfer = potential_transfers[0]
+
+        else:
+            # Fall back on similarity of description. This may miss many cases.
+            # TODO: find a better algo for this.
+            transfer = sorted(
+                potential_transfers,
+                key=lambda t: similarity(t.description, self.description),
+            )[-1]
+
+        self.transfer_pair = transfer
+        self.save()
+
 
 @receiver(post_save, sender=Transaction)
 def transaction_post_save(sender, instance, created, raw, **kwargs):
     if created and not raw:
+        instance.detect_transfer()
         instance.assign_to_buckets()
 
 

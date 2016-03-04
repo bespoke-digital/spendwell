@@ -12,10 +12,16 @@ from .summary import MonthSummary
 
 
 class Summary(graphene.ObjectType):
+    true_income = graphene.Field(Money())
+    estimated_income = graphene.Field(Money())
     income = graphene.Field(Money())
-    income_estimated = graphene.Field(graphene.Boolean())
-    allocated = graphene.Field(Money())
+    income_estimated = graphene.Field(Money())
+
+    goals_total = graphene.Field(Money())
+    bills_total = graphene.Field(Money())
     spent = graphene.Field(Money())
+    allocated = graphene.Field(Money())
+
     net = graphene.Field(Money())
     spent_from_savings = graphene.Field(Money())
 
