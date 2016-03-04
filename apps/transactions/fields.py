@@ -1,5 +1,6 @@
 
 from graphene.contrib.django.filter import DjangoFilterConnectionField
+from graphene.utils import to_snake_case
 
 from apps.core.fields import SWConnectionMixin
 from .filters import TransactionFilter
@@ -23,7 +24,11 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
         ).qs
 
         if args.get('filters'):
-            queryset = apply_filter_list(queryset, args['filters'], self.filterset_class)
+            filters = [
+                {to_snake_case(k): v for k, v in f.items()}
+                for f in args['filters']
+            ]
+            queryset = apply_filter_list(queryset, filters, self.filterset_class)
 
         queryset = queryset.order_by(args.get('order_by', '-date'))
         queryset = queryset.distinct()

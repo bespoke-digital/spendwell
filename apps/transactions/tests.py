@@ -177,3 +177,31 @@ class BucktsTestCase(SWTestCase):
         }''', user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(filters: [{descriptionExact: "qwerty"}]) {
+                    edges {
+                        node {
+                            description
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(filters: [{descriptionContains: "qwerty"}]) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
