@@ -39,13 +39,18 @@ class UsersTestCase(SWTestCase):
     def test_month_summary(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
         now = timezone.now()
-        query = '{{ viewer {{ summary(month: "{}/{}") {{ income }} }} }}'
+        query = '{{ viewer {{ summary(month: "{}/{}") {{ income, incomeEstimated }} }} }}'
 
         result = self.graph_query(query.format(now.year, now.month), user=owner)
 
         self.assertTrue('viewer' in result.data)
         self.assertTrue('summary' in result.data['viewer'])
         self.assertTrue('income' in result.data['viewer']['summary'])
+
+        self.assertTrue(
+            result.data['viewer']['summary']['incomeEstimated'],
+            msg='Income should be estimated'
+        )
 
         self.assertEqual(
             result.data['viewer']['summary']['income'],
@@ -58,6 +63,11 @@ class UsersTestCase(SWTestCase):
         TransactionFactory.create(amount=Decimal('4000'), account=account, owner=owner)
 
         result = self.graph_query(query.format(now.year, now.month), user=owner)
+
+        self.assertFalse(
+            result.data['viewer']['summary']['incomeEstimated'],
+            msg='Income should not be estimated'
+        )
 
         self.assertEqual(
             result.data['viewer']['summary']['income'],
@@ -83,6 +93,11 @@ class UsersTestCase(SWTestCase):
             result.data['viewer']['summary']['income'],
             100000,
             msg='Should return transaction-based number for old months',
+        )
+
+        self.assertFalse(
+            result.data['viewer']['summary']['incomeEstimated'],
+            msg='Income should not be estimated'
         )
 
     def test_summary_goals(self):

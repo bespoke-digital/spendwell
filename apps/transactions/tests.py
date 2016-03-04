@@ -14,12 +14,6 @@ class BucktsTestCase(SWTestCase):
         self.assertIsNone(transfer_to.transfer_pair)
 
         transfer_from = TransactionFactory.create(owner=owner, amount=-100)
-        self.assertIsNone(transfer_from.transfer_pair)
-
-        Transaction.objects.detect_transfers(owner=owner)
-
-        transfer_from.refresh_from_db()
-        transfer_to.refresh_from_db()
 
         self.assertEqual(transfer_to.transfer_pair, transfer_from)
         self.assertEqual(transfer_from.transfer_pair, transfer_to)
@@ -144,3 +138,42 @@ class BucktsTestCase(SWTestCase):
             result.data['viewer']['transactions']['edges'][0]['node']['amount'],
             -20000,
         )
+
+    def test_description_filter(self):
+        owner = UserFactory.create()
+
+        TransactionFactory.create(owner=owner, description='qwerty')
+        TransactionFactory.create(owner=owner, description='qwertyuiop')
+        TransactionFactory.create(owner=owner, description='asdfghjkl')
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(descriptionExact: "qwerty") {
+                    edges {
+                        node {
+                            description
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['description'],
+            'qwerty',
+        )
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(descriptionContains: "qwerty") {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)

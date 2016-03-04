@@ -14,7 +14,7 @@ class BucktsTestCase(SWTestCase):
     def test_transaction_assignment(self):
         owner = UserFactory.create()
 
-        bucket = BucketFactory.create(owner=owner, filters=[{'description': 'desc'}])
+        bucket = BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
 
         transaction = TransactionFactory.create(
             owner=owner,
@@ -35,7 +35,7 @@ class BucktsTestCase(SWTestCase):
 
     def test_filters_query(self):
         owner = UserFactory.create()
-        BucketFactory.create(owner=owner, filters=[{'description': 'desc'}])
+        BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
 
         result = self.graph_query('''{
             viewer {
@@ -43,7 +43,7 @@ class BucktsTestCase(SWTestCase):
                 edges {
                     node {
                         filters {
-                            description
+                            descriptionContains
                         }
                     }
                 }
@@ -57,7 +57,7 @@ class BucktsTestCase(SWTestCase):
             1,
         )
         self.assertEqual(
-            result.data['viewer']['buckets']['edges'][0]['node']['filters'][0]['description'],
+            result.data['viewer']['buckets']['edges'][0]['node']['filters'][0]['descriptionContains'],
             'desc',
         )
 
@@ -67,7 +67,7 @@ class BucktsTestCase(SWTestCase):
         bill = BucketFactory.create(
             owner=owner,
             type='bill',
-            filters=[{'description': 'phone'}],
+            filters=[{'description_exact': 'phone'}],
         )
 
         last_month = this_month() - relativedelta(months=1)

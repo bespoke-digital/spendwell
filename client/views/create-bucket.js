@@ -3,7 +3,6 @@ import Relay from 'react-relay';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 
-import Button from 'components/button';
 import BucketForm from 'components/bucket-form';
 import App from 'components/app';
 
@@ -29,18 +28,15 @@ class CreateBucket extends Component {
     const { viewer } = this.props;
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <Button onClick={()=> browserHistory.push('/app/dashboard')} className='back'>
-              <i className='fa fa-long-arrow-left'/>
-            </Button>
-
             <h1>New Bucket</h1>
           </div>
 
           <BucketForm
             onSubmit={::this.handleSubmit}
+            onCancel={()=> browserHistory.goBack()}
             viewer={viewer}
             bucket={null}
           />

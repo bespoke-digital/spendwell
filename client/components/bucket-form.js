@@ -2,10 +2,10 @@
 import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router';
 
 import Button from 'components/button';
 import Card from 'components/card';
+import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 import Filters from 'components/filters';
 import TransactionList from 'components/transaction-list';
@@ -44,6 +44,7 @@ class BucketForm extends Component {
 
   handleFilterChange(filters) {
     this.setState({ filters });
+    console.log('setVariables', { filters });
     this.props.relay.setVariables({ filters });
   }
 
@@ -59,22 +60,24 @@ class BucketForm extends Component {
 
     return (
       <ScrollTrigger onTrigger={::this.handleScroll}>
-        <Card>
-          <TextInput label='Name' value={name} onChange={(name)=> this.setState({ name })}/>
-        </Card>
+        <CardList>
+          <Card>
+            <TextInput label='Name' value={name} onChange={(name)=> this.setState({ name })}/>
+          </Card>
 
-        <Filters filters={filters} onChange={::this.handleFilterChange}/>
+          <Filters filters={filters} onChange={::this.handleFilterChange}/>
 
-        <Card>
-          <Button
-            variant='primary'
-            disabled={!valid}
-            onClick={::this.handleSubmit}
-          >
-            {bucket ? 'Create' : 'Save'}
-          </Button>
-          <Button onClick={onCancel}>Cancel</Button>
-        </Card>
+          <Card>
+            <Button
+              variant='primary'
+              disabled={!valid}
+              onClick={::this.handleSubmit}
+            >
+              {bucket ? 'Create' : 'Save'}
+            </Button>
+            <Button onClick={onCancel}>Cancel</Button>
+          </Card>
+        </CardList>
 
         <TransactionList transactions={transactions}/>
       </ScrollTrigger>
@@ -109,7 +112,8 @@ BucketForm = Relay.createContainer(BucketForm, {
           category
           dateGte
           dateLte
-          description
+          descriptionContains
+          descriptionExact
         }
       }
     `,

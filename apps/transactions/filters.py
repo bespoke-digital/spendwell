@@ -12,23 +12,25 @@ class BooleanMethodFilter(filters.MethodFilter):
 
 
 class TransactionFilter(filters.FilterSet):
-    description = filters.CharFilter(lookup_type='icontains')
+    description_exact = filters.CharFilter(name='description', lookup_type='iexact')
+    description_contains = filters.CharFilter(name='description', lookup_type='icontains')
+    amount_lt = filters.NumberFilter(name='amount', lookup_type='lt')
+    amount_gt = filters.NumberFilter(name='amount', lookup_type='gt')
     category = filters.MethodFilter()
     date_lte = filters.DateTimeFilter(name='date', lookup_type='lte')
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
-    amount_lt = filters.NumberFilter(name='amount', lookup_type='lt')
-    amount_gt = filters.NumberFilter(name='amount', lookup_type='gt')
     is_transfer = BooleanMethodFilter()
 
     class Meta:
         model = Transaction
         fields = (
-            'description',
+            'description_exact',
+            'description_contains',
+            'amount_gt',
+            'amount_lt',
             'category',
             'date_lte',
             'date_gte',
-            'amount_gt',
-            'amount_lt',
             'from_savings',
             'is_transfer',
         )

@@ -43,6 +43,8 @@ class Filters extends Component {
   render() {
     const { filters } = this.props;
 
+    const canAddFilter = _.some(_.map(filters, (f)=> _.some(_.values(f).map((v)=> !!v))));
+
     return (
       <SuperCard expanded summary={
         <Card><strong>Filters</strong></Card>
@@ -59,7 +61,7 @@ class Filters extends Component {
         <div className='bottom-buttons'>
           <Button
             onClick={::this.addFilter}
-            disabled={_.isEmpty(filters[filters.length - 1])}
+            disabled={!canAddFilter}
             flat
             variant='primary'
           >

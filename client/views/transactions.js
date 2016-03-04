@@ -139,7 +139,7 @@ Transactions = Relay.createContainer(Transactions, {
           amountLt: $amountLt,
           fromSavings: $fromSavings,
           isTransfer: $isTransfer,
-          description: $description,
+          descriptionContains: $description,
         ) {
           ${TransactionList.getFragment('transactions')}
         }

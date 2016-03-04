@@ -38,7 +38,8 @@ class MonthSummary(object):
     @property
     def income(self):
         if not hasattr(self, '_income'):
-            if self.true_income < self.estimated_income:
+            current_month = relativedelta(self.month_start, delorean.now().datetime).months == 0
+            if current_month and self.true_income < self.estimated_income:
                 self._income = self.estimated_income
                 self._income_estimated = True
             else:
