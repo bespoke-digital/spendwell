@@ -22,8 +22,11 @@ class AccountManager(SWManager):
         account.subtype = json_data.get('subtype')
         account.name = json_data['meta']['name']
         account.number_snippet = json_data['meta']['number']
-        account.current_balance = json_data['balance']['current']
-        account.available_balance = json_data['balance']['available']
+
+        if account.type == 'credit':
+            account.current_balance = -(json_data['balance']['current'] or 0)
+        else:
+            account.current_balance = json_data['balance']['current']
 
         account.save()
         return account

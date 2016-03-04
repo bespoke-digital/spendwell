@@ -16,6 +16,10 @@
     }
   }
 
+  .card-list-headings > div {
+    min-width: 80px;
+  }
+
   .super-card.disabled > .summary .card {
     background-color: $gray-lightest;
     font-weight: 600;

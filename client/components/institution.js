@@ -59,6 +59,12 @@ class Institution extends Component {
           </div>
         }/>
 
+        <Card className='card-list-headings'>
+          <div></div>
+          <div>Balance</div>
+          <div>Disable</div>
+        </Card>
+
         {institution.accounts.edges.map(({ node })=>
           <ListAccount
             key={node.id}
