@@ -136,13 +136,16 @@ class Transaction(SWModel):
     def __str__(self):
         return '{} - ${}'.format(self.description, self.amount)
 
-    def mark_as_from_savings(self):
+    def toggle_from_savings(self):
         if self.amount > 0:
             raise ValueError('only outgoing transactions can be "from savings".')
 
         self.bucket_months.clear()
-        self.from_savings = True
+        self.from_savings = not self.from_savings
         self.save()
+
+        if not self.from_savings:
+            self.assign_to_buckets()
 
     def assign_to_buckets(self):
         from apps.buckets.models import BucketMonth

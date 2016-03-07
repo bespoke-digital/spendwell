@@ -30,6 +30,7 @@ class TransactionNode(SWNode):
             'buckets',
             'savings',
             'balance',
+            'from_savings',
         )
 
     @staticmethod

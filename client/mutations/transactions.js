@@ -80,11 +80,12 @@ export class DetectTransfersMutation extends Relay.Mutation {
 }
 
 
-export class MarkTransactionAsFromSavings extends Relay.Mutation {
+export class ToggleTransactionFromSavings extends Relay.Mutation {
   static fragments = {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
         id,
+        fromSavings,
       }
     `,
   };
@@ -94,13 +95,15 @@ export class MarkTransactionAsFromSavings extends Relay.Mutation {
   }
 
   getMutation() {
-    return Relay.QL`mutation { markTransactionAsFromSavings }`;
+    return Relay.QL`mutation { toggleTransactionFromSavings }`;
   }
 
   getFatQuery() {
     return Relay.QL`
-      fragment on MarkTransactionAsFromSavings {
-        transaction
+      fragment on ToggleTransactionFromSavings {
+        transaction {
+          fromSavings
+        }
       }
     `;
   }
@@ -112,5 +115,14 @@ export class MarkTransactionAsFromSavings extends Relay.Mutation {
         transaction: this.props.transaction.id,
       },
     }];
+  }
+
+  getOptimisticResponse() {
+    return {
+      transaction: {
+        id: this.props.transaction.id,
+        fromSavings: !this.props.transaction.fromSavings,
+      },
+    };
   }
 }
