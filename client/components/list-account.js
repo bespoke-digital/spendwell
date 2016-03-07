@@ -49,7 +49,7 @@ export default class Account extends Component {
         className='account'
         expanded={open}
         summary={
-          <Card onSummaryClick={onClick} summary={
+          <Card onSummaryClick={onClick} expanded={open} summary={
             <div>
               <div>{account.name}</div>
               <div>
@@ -57,13 +57,14 @@ export default class Account extends Component {
                   <Money amount={account.currentBalance}/>
                 : null}
               </div>
-              <div>
-                <Button onClick={::this.disable} propagateClick={false}>
-                  Disable
-                </Button>
-              </div>
             </div>
-          }/>
+          }>
+            <div className='disable'>
+              <Button onClick={::this.disable} propagateClick={false}>
+                Disable
+              </Button>
+            </div>
+          </Card>
         }
       >
         <TransactionList transactions={account.transactions} abs={false}/>

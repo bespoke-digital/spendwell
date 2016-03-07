@@ -57,7 +57,7 @@ class ListTransaction extends Component {
               )}
             </div>
             <div className='date'>
-              <DateTime value={transaction.date} format='Do • ddd'/>
+              <DateTime value={transaction.date} format='ddd • Do'/>
             </div>
             <div className='amount'>
               <Money amount={transaction.amount} abs={abs}/>
@@ -101,8 +101,20 @@ class ListTransaction extends Component {
             : null}
 
             <div className='from-savings-toggle' onClick={::this.markAsFromSavings}>
-              <i className={`fa fa-${transaction.fromSavings ? 'check-' : ''}square-o`}/>
-              {' Spent From Savings'}
+              <div className='from-savings-check'>
+                <i className={`fa fa-${transaction.fromSavings ? 'check-' : ''}square-o`}/>
+              </div>
+              <div className='from-savings-copy'>
+                <div><strong>
+                  {'Remove from '}
+                  <DateTime value={transaction.date} format='MMMM'/>
+                  {' expenses'}
+                </strong></div>
+                <div>
+                  Only use if this money was saved before
+                  {' '}<DateTime value={transaction.date} format='MMMM'/>.
+                </div>
+              </div>
             </div>
           </div>
         : null}

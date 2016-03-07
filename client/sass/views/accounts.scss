@@ -34,9 +34,9 @@
       }
     }
 
-    > .summary {
-      .mui-btn {
-        margin: -10px 0 -10px 20px;
+    .summary {
+      > div > .mui-btn {
+        margin: -10px 0;
       }
     }
   }

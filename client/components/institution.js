@@ -1,9 +1,11 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import moment from 'moment';
 
+import Money from 'components/money';
 import CardList from 'components/card-list';
 import Card from 'components/card';
 import SuperCard from 'components/super-card';
@@ -60,12 +62,6 @@ class Institution extends Component {
           </div>
         }/>
 
-        <Card className='card-list-headings hidden-xs'>
-          <div></div>
-          <div>Balance</div>
-          <div>Disable</div>
-        </Card>
-
         {institution.accounts.edges.map(({ node })=>
           <ListAccount
             key={node.id}
@@ -76,6 +72,13 @@ class Institution extends Component {
               this.setState({ selected: node.id })}
           />
         )}
+
+        <Card summary={
+          <div>
+            <div><strong>Subtotal</strong></div>
+            <div><Money amount={_.sumBy(institution.accounts.edges, ({ node })=> node.currentBalance)}/></div>
+          </div>
+        }/>
 
         {institution.disabledAccounts && institution.disabledAccounts.edges.length ?
           <SuperCard
@@ -117,6 +120,7 @@ Institution = Relay.createContainer(Institution, {
               ${ListAccount.getFragment('account')}
 
               id
+              currentBalance
             }
           }
         }

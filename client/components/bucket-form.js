@@ -62,7 +62,12 @@ class BucketForm extends Component {
       <ScrollTrigger onTrigger={::this.handleScroll}>
         <CardList>
           <Card>
-            <TextInput label='Name' value={name} onChange={(name)=> this.setState({ name })}/>
+            <TextInput
+              label='Name'
+              value={name}
+              onChange={(name)=> this.setState({ name })}
+              autofocus
+            />
           </Card>
 
           <Filters filters={filters} onChange={::this.handleFilterChange}/>

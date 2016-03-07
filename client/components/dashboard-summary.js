@@ -53,7 +53,6 @@ class DashboardSummary extends Component {
     } = summary;
 
     const allocated = goalsTotal + billsTotal + spent;
-    const actualIncome = _.sum(transactions.edges, ({ node })=> node.amount);
 
     return (
       <CardList className='overview'>
@@ -81,7 +80,7 @@ class DashboardSummary extends Component {
             <span className='title'>In</span>
             <div className='amount'>
               <Money amount={income}/>
-              {incomeEstimated ? '*' : ''}
+              <span className='asterisk'>{incomeEstimated ? '*' : ''}</span>
             </div>
           </a>
           <a
@@ -90,7 +89,10 @@ class DashboardSummary extends Component {
             href='#'
           >
             <span className='title'>Out</span>
-            <div className='amount'><Money amount={allocated} abs={true}/></div>
+            <div className='amount'>
+              <Money amount={allocated} abs={true}/>
+              <span className='asterisk'>{billsTotal !== 0 ? '*' : ''}</span>
+            </div>
           </a>
           <a
             className={`number ${statusOpen === 'net' ? 'open' : ''}`}
@@ -120,9 +122,16 @@ class DashboardSummary extends Component {
                 </div>
               }/>
             </SuperCard>
-          : statusOpen == 'out' ?
+          : statusOpen === 'out' ?
             <SuperCard className='status-details' expanded={true} summary={
-              <Card></Card>
+              <Card>
+                {billsTotal !== 0 ?
+                  <div>
+                    <strong>*</strong>
+                    Includes estimates for unpaid bills.
+                  </div>
+                : null}
+              </Card>
             }>
               <Card summary={
                 <div>
@@ -132,13 +141,19 @@ class DashboardSummary extends Component {
               }/>
               <Card summary={
                 <div>
-                  <div>Bills</div>
+                  <div>Bills (Unpaid)</div>
                   <div><Money amount={billsTotal} abs={true}/></div>
                 </div>
               }/>
               <Card summary={
                 <div>
-                  <div>Expenses</div>
+                  <div>Bills (Paid)</div>
+                  <div><Money amount={0} abs={true}/></div>
+                </div>
+              }/>
+              <Card summary={
+                <div>
+                  <div>Other Expenses</div>
                   <div><Money amount={spent} abs={true}/></div>
                 </div>
               }/>
@@ -150,17 +165,34 @@ class DashboardSummary extends Component {
               }/>
             </SuperCard>
           : statusOpen ?
-            <Card className='status-details'>
-              Details on {statusOpen}
-            </Card>
+            <SuperCard className='status-details' expanded={true} summary={
+              <Card></Card>
+            }>
+              <Card summary={
+                <div>
+                  <div>In</div>
+                  <div><Money amount={income}/></div>
+                </div>
+              }/>
+              <Card summary={
+                <div>
+                  <div>Out</div>
+                  <div><Money amount={allocated}/></div>
+                </div>
+              }/>
+              <Card summary={
+                <div>
+                  <div><strong>Total</strong></div>
+                  <div><strong><Money amount={income + allocated}/></strong></div>
+                </div>
+              }/>
+            </SuperCard>
           : null}
         </Transition>
       </CardList>
     );
   }
 }
-
-const now = moment();
 
 DashboardSummary = Relay.createContainer(DashboardSummary, {
   fragments: {

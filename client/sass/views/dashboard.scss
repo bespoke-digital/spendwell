@@ -58,6 +58,10 @@
       .amount {
         font-weight: 600;
         text-align: center;
+
+        .asterisk {
+          color: $gray-lightish;
+        }
       }
     }
 
@@ -71,7 +75,7 @@
   }
 
   .super-card.expanded > .summary {
-    font-weight: 600;
+
   }
 
   .card {

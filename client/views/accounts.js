@@ -2,6 +2,9 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
+import CardList from 'components/card-list';
+import Card from 'components/card';
+import Money from 'components/money';
 import Button from 'components/button';
 import Institution from 'components/institution';
 import App from 'components/app';
@@ -29,6 +32,15 @@ class Accounts extends Component {
           {viewer.institutions.edges.map(({ node })=>
             <Institution key={node.id} institution={node}/>
           )}
+
+          <CardList>
+            <Card summary={
+              <div>
+                <div><strong>Total</strong></div>
+                <div><Money amount={1000}/></div>
+              </div>
+            }/>
+          </CardList>
         </div>
       </App>
     );

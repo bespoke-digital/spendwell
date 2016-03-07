@@ -91,7 +91,7 @@ class Dashboard extends Component {
           <DashboardSummary summary={viewer.summary} periods={periods}/>
 
           <div className='heading'>
-            <h2>Goals</h2>
+            <h2>Goals <small>for long and short term savings</small></h2>
             <div>
               <Button to='/app/goals/new' flat={true} variant='primary'>
                 {' New Goal'}
@@ -130,7 +130,7 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Bills</h2>
+            <h2>Bills <small>for monthly recurring expenses</small></h2>
             <div>
               <Button to='/app/bills/new' flat={true} variant='primary'>
                 {' New Bill'}
@@ -158,10 +158,10 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Expenses</h2>
+            <h2>Labels <small>for all non-recurring expenses</small></h2>
             <div>
               <Button to='/app/buckets/new' flat={true} variant='primary'>
-                {' New Bucket'}
+                {' New label'}
               </Button>
             </div>
           </div>
@@ -185,10 +185,14 @@ class Dashboard extends Component {
             </CardList>
           : null}
 
+          <div className='heading'>
+            <h2>All Expenses</h2>
+          </div>
+
           <CardList>
             {spent !== 0 ?
               <Card className='card-list-headings'>
-                <div>All Expenses</div>
+                <div>Total</div>
                 <div className='amount'>
                   <Money amount={spent} abs/>
                 </div>

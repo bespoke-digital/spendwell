@@ -49,6 +49,7 @@ class GoalForm extends Component {
           label='Name'
           value={name}
           onChange={(name)=> this.setState({ name })}
+          autofocus
         />
         <TextInput
           label='Monthly Amount'
