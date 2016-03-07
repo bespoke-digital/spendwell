@@ -18,7 +18,8 @@ class Summary(graphene.ObjectType):
     income_estimated = graphene.Field(graphene.Boolean())
 
     goals_total = graphene.Field(Money())
-    bills_total = graphene.Field(Money())
+    bills_paid_total = graphene.Field(Money())
+    bills_unpaid_total = graphene.Field(Money())
     spent = graphene.Field(Money())
     allocated = graphene.Field(Money())
 

@@ -1,26 +1,14 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import Relay from 'react-relay';
-import moment from 'moment';
 
 import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import Money from 'components/money';
-import GoalMonth from 'components/goal-month';
-import BucketMonth from 'components/bucket-month';
-import BillMonth from 'components/bill-month';
-import SpentFromSavings from 'components/spent-from-savings';
 import TransactionList from 'components/transaction-list';
-import ScrollTrigger from 'components/scroll-trigger';
 import Transition from 'components/transition';
-import App from 'components/app';
-
-import { AssignTransactionsMutation } from 'mutations/buckets';
-
-import styles from 'sass/views/dashboard.scss';
 
 
 class DashboardSummary extends Component {
@@ -46,13 +34,14 @@ class DashboardSummary extends Component {
       trueIncome,
       incomeEstimated,
       goalsTotal,
-      billsTotal,
+      billsUnpaidTotal,
+      billsPaidTotal,
       spent,
       net,
       transactions,
     } = summary;
 
-    const allocated = goalsTotal + billsTotal + spent;
+    const allocated = goalsTotal + billsUnpaidTotal + spent;
 
     return (
       <CardList className='overview'>
@@ -91,7 +80,7 @@ class DashboardSummary extends Component {
             <span className='title'>Out</span>
             <div className='amount'>
               <Money amount={allocated} abs={true}/>
-              <span className='asterisk'>{billsTotal !== 0 ? '*' : ''}</span>
+              <span className='asterisk'>{billsUnpaidTotal !== 0 ? '*' : ''}</span>
             </div>
           </a>
           <a
@@ -125,7 +114,7 @@ class DashboardSummary extends Component {
           : statusOpen === 'out' ?
             <SuperCard className='status-details' expanded={true} summary={
               <Card>
-                {billsTotal !== 0 ?
+                {billsUnpaidTotal !== 0 ?
                   <div>
                     <strong>*</strong>
                     Includes estimates for unpaid bills.
@@ -142,19 +131,19 @@ class DashboardSummary extends Component {
               <Card summary={
                 <div>
                   <div>Bills (Unpaid)</div>
-                  <div><Money amount={billsTotal} abs={true}/></div>
+                  <div><Money amount={billsUnpaidTotal} abs={true}/></div>
                 </div>
               }/>
               <Card summary={
                 <div>
                   <div>Bills (Paid)</div>
-                  <div><Money amount={0} abs={true}/></div>
+                  <div><Money amount={billsPaidTotal} abs={true}/></div>
                 </div>
               }/>
               <Card summary={
                 <div>
                   <div>Other Expenses</div>
-                  <div><Money amount={spent} abs={true}/></div>
+                  <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
                 </div>
               }/>
               <Card summary={
@@ -202,7 +191,8 @@ DashboardSummary = Relay.createContainer(DashboardSummary, {
         trueIncome
         incomeEstimated
         goalsTotal
-        billsTotal
+        billsPaidTotal
+        billsUnpaidTotal
         spent
         net
         transactions(first: 100, amountGt: 0) {

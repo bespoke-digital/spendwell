@@ -63,24 +63,33 @@ class MonthSummary(object):
         return self._goals_total
 
     @property
-    def bills_total(self):
-        if not hasattr(self, '_bills_total'):
-            self._bills_total = 0
+    def bills_unpaid_total(self):
+        if not hasattr(self, '_bills_unpaid_total'):
+            self._bills_unpaid_total = 0
+            self._bills_paid_total = 0
 
             for bill_month in BucketMonth.objects.filter(
                 bucket__owner=self.user,
                 bucket__type='bill',
                 month_start=self.month_start,
             ):
-                if bill_month.amount > bill_month.avg_amount:
-                    self._bills_total -= abs(bill_month.avg_amount) - abs(bill_month.amount)
+                self._bills_paid_total += bill_month.amount
 
-        return self._bills_total
+                if bill_month.amount > bill_month.avg_amount:
+                    self._bills_unpaid_total -= abs(bill_month.avg_amount) - abs(bill_month.amount)
+
+        return self._bills_unpaid_total
+
+    @property
+    def bills_paid_total(self):
+        if not hasattr(self, '_bills_paid_total'):
+            self.bills_unpaid_total
+        return self._bills_paid_total
 
     @property
     def allocated(self):
         if not hasattr(self, '_allocated'):
-            self._allocated = self.bills_total + self.goals_total
+            self._allocated = self.bills_unpaid_total + self.goals_total
         return self._allocated
 
     @property
@@ -106,7 +115,7 @@ class MonthSummary(object):
             self._net = sum([
                 self.income,
                 self.goals_total,
-                self.bills_total,
+                self.bills_unpaid_total,
                 self.spent,
             ])
         return self._net
