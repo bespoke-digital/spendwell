@@ -19,7 +19,10 @@ import Transactions from 'views/transactions';
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
 export default (
-  <RelayRouter history={browserHistory} renderFetched={()=> window.scrollTo(0, 0)}>
+  <RelayRouter
+    history={browserHistory}
+    renderFetched={()=> setTimeout(window.scrollTo.bind(window, 0, 0), 10)}
+  >
     <Route path='app'>
       <IndexRedirect to='dashboard'/>
       <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
