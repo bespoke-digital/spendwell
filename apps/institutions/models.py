@@ -58,6 +58,15 @@ class Institution(SWModel):
                 self._plaid_data = None
         return self._plaid_data
 
+    @property
+    def current_balance(self):
+        return (
+            self.accounts
+            .filter(disabled=False)
+            .aggregate(models.Sum('current_balance'))
+            ['current_balance__sum']
+        ) or 0
+
     def sync_accounts(self):
         if not self.plaid_data:
             return

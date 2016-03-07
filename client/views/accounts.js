@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
 
@@ -37,7 +38,10 @@ class Accounts extends Component {
             <Card summary={
               <div>
                 <div><strong>Total</strong></div>
-                <div><Money amount={1000}/></div>
+                <div><Money amount={_.sumBy(
+                  viewer.institutions.edges,
+                  ({ node })=> node.currentBalance
+                )}/></div>
               </div>
             }/>
           </CardList>
@@ -58,6 +62,7 @@ Accounts = Relay.createContainer(Accounts, {
               ${Institution.getFragment('institution')}
               id
               name
+              currentBalance
             }
           }
         }

@@ -76,7 +76,7 @@ class Institution extends Component {
         <Card summary={
           <div>
             <div><strong>Subtotal</strong></div>
-            <div><Money amount={_.sumBy(institution.accounts.edges, ({ node })=> node.currentBalance)}/></div>
+            <div><Money amount={institution.currentBalance}/></div>
           </div>
         }/>
 
@@ -113,6 +113,7 @@ Institution = Relay.createContainer(Institution, {
         name
         canSync
         lastSync
+        currentBalance
 
         accounts(first: 100, disabled: false) {
           edges {
@@ -120,7 +121,6 @@ Institution = Relay.createContainer(Institution, {
               ${ListAccount.getFragment('account')}
 
               id
-              currentBalance
             }
           }
         }

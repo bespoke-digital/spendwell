@@ -11,7 +11,7 @@ from .models import Institution
 
 class InstitutionNode(SWNode):
     can_sync = graphene.Field(graphene.Boolean())
-    can_sync = graphene.Field(Money)
+    current_balance = graphene.Field(Money)
     accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
 
     class Meta:
@@ -27,9 +27,6 @@ class InstitutionNode(SWNode):
 
     def resolve_can_sync(self, args, info):
         return bool(self.instance.plaid_id)
-
-    def resolve_current_balance(self, args, info):
-        return 0
 
 
 class InstitutionsQuery(graphene.ObjectType):
