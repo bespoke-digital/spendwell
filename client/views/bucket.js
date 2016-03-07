@@ -2,10 +2,7 @@
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
-import moment from 'moment';
 
-import CardList from 'components/card-list';
-import Card from 'components/card';
 import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 import App from 'components/app';

@@ -80,7 +80,7 @@ class BillMonth extends Component {
               variant='primary'
               className='bottom-load-button-right'
             >
-              View All
+              View All Months
             </Button>
           </div>
         </div>
