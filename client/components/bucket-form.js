@@ -66,7 +66,7 @@ class BucketForm extends Component {
               label='Name'
               value={name}
               onChange={(name)=> this.setState({ name })}
-              autofocus
+              autoFocus={true}
             />
           </Card>
 
