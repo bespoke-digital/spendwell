@@ -6,6 +6,7 @@ import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import Button from 'components/button';
 import Filter from 'components/filter';
+import FIELDS from 'constants/filter-fields';
 
 
 class Filters extends Component {
@@ -13,6 +14,11 @@ class Filters extends Component {
     filters: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
   };
+
+  constructor() {
+    super();
+    this.state = { selectedFilter: null };
+  }
 
   updateFilter(index, filter) {
     const filters = _.cloneDeep(this.props.filters);
@@ -26,6 +32,7 @@ class Filters extends Component {
     const filters = _.cloneDeep(this.props.filters);
 
     filters.push({});
+    this.setState({ selectedFilter: filters.length - 1 });
 
     this.props.onChange(filters);
   }
@@ -40,35 +47,51 @@ class Filters extends Component {
     this.props.onChange(filters);
   }
 
+  selectFilter(index) {
+    const { selectedFilter } = this.state;
+
+    if (selectedFilter === index) index = null;
+
+    this.setState({ selectedFilter: index });
+  }
+
   render() {
     const { filters } = this.props;
+    const { selectedFilter } = this.state;
 
     const canAddFilter = _.some(_.map(filters, (f)=> _.some(_.values(f).map((v)=> !!v))));
 
     return (
-      <SuperCard expanded summary={
-        <Card><strong>Filters</strong></Card>
-      }>
-        {filters.map((filter, index)=>
-          <Filter
+      <div>
+        {filters.map((filter, index)=> (
+          <SuperCard
             key={index}
-            filter={filter}
-            onChange={(filter)=> this.updateFilter(index, filter)}
-            onRemove={()=> this.removeFilter(index)}
-          />
-        )}
+            expanded={selectedFilter === index}
+            onSummaryClick={this.selectFilter.bind(this, index)}
+            summary={
+              <Card summary={
+                <div>
+                  <div>
+                    {_.map(filter, (value, key)=> `${FIELDS[key].label}: ${value}`).join(', ')}
+                  </div>
+                  <Button onClick={this.removeFilter.bind(this, index)}>Remove</Button>
+                </div>
+              }/>
+            }
+          >
+            <Filter filter={filter} onChange={this.updateFilter.bind(this, index)}/>
+          </SuperCard>
+        ))}
 
-        <div className='bottom-buttons'>
+        <Card>
           <Button
             onClick={::this.addFilter}
             disabled={!canAddFilter}
-            flat
-            variant='primary'
           >
-            new filter
+            add filter
           </Button>
-        </div>
-      </SuperCard>
+        </Card>
+      </div>
     );
   }
 }
