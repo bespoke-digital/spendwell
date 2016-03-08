@@ -1,0 +1,19 @@
+
+:local(.root) {
+  position: fixed;
+  z-index: 101;
+  top: 50px;
+  left: 50%;
+  width: 500px;
+  max-width: 90%;
+  transform: translateX(-50%);
+
+  border-radius: 4px;
+
+  .body {}
+
+  .actions {
+    margin-top: 10px;
+    text-align: right;
+  }
+}

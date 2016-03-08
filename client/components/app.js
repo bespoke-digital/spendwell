@@ -13,6 +13,7 @@ class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     overlayOpen: PropTypes.bool.isRequired,
+    onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
   };
 
@@ -28,25 +29,29 @@ class App extends Component {
   }
 
   closeOverlay() {
-    if (this.state.navOpen)
-      this.setState({ navOpen: false });
-    this.props.dispatch({ type: 'OVERLAY', open: false });
+    const { navOpen } = this.state;
+    const { dispatch, onOverlayClose } = this.props;
+
+    if (navOpen) this.setState({ navOpen: false });
+
+    dispatch({ type: 'OVERLAY', open: false });
+
+    if (onOverlayClose) onOverlayClose();
   }
 
   render() {
     const { children, viewer, overlayOpen, back } = this.props;
     const { navOpen } = this.state;
 
+    console.log('app render overlayOpen', overlayOpen);
     return (
       <div className={style.root}>
         <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>
 
         <Nav open={navOpen} toggleNav={::this.toggleNav}/>
 
-        <Transition name='overlay'>
-          {overlayOpen ?
-            <div className='overlay' key='overlay' onClick={::this.closeOverlay}/>
-          : null}
+        <Transition name='overlay' show={overlayOpen}>
+          <div className='overlay' onClick={::this.closeOverlay}/>
         </Transition>
 
         {children}

@@ -75,7 +75,7 @@ class BillMonth extends Component {
           : null}
           <div>
             <Button
-              to={`/app/buckets/${bucketMonth.bucket.id}`}
+              to={`/app/labels/${bucketMonth.bucket.id}`}
               flat
               variant='primary'
               className='bottom-load-button-right'

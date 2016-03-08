@@ -93,90 +93,92 @@ class DashboardSummary extends Component {
           </a>
         </Card>
 
-        <Transition name='fade'>
-          {statusOpen === 'in' ?
-            <SuperCard className='status-details' expanded={true} summary={
-              <Card summary={incomeEstimated ?
-                <span>
+        <Transition name='fade' show={statusOpen === 'in'}>
+          <SuperCard className='status-details' expanded={true} summary={
+            <Card summary={incomeEstimated ?
+              <span>
+                <strong>*</strong>
+                Estimated based on 3-month average income
+              </span>
+            : null}/>
+          }>
+            <TransactionList transactions={transactions}/>
+            <Card summary={
+              <div>
+                <div><strong>Total</strong></div>
+                <div><strong><Money amount={trueIncome}/></strong></div>
+              </div>
+            }/>
+          </SuperCard>
+        </Transition>
+
+        <Transition name='fade' show={statusOpen === 'out'}>
+          <SuperCard className='status-details' expanded={true} summary={
+            <Card>
+              {billsUnpaidTotal !== 0 ?
+                <div>
                   <strong>*</strong>
-                  Estimated based on 3-month average income
-                </span>
-              : null}/>
-            }>
-              <TransactionList transactions={transactions}/>
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div><strong><Money amount={trueIncome}/></strong></div>
+                  Includes estimates for unpaid bills.
                 </div>
-              }/>
-            </SuperCard>
-          : statusOpen === 'out' ?
-            <SuperCard className='status-details' expanded={true} summary={
-              <Card>
-                {billsUnpaidTotal !== 0 ?
-                  <div>
-                    <strong>*</strong>
-                    Includes estimates for unpaid bills.
-                  </div>
-                : null}
-              </Card>
-            }>
-              <Card summary={
-                <div>
-                  <div>Goals</div>
-                  <div><Money amount={goalsTotal} abs={true}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div>Bills (Unpaid)</div>
-                  <div><Money amount={billsUnpaidTotal} abs={true}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div>Bills (Paid)</div>
-                  <div><Money amount={billsPaidTotal} abs={true}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div>Other Expenses</div>
-                  <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div><strong><Money amount={allocated} abs={true}/></strong></div>
-                </div>
-              }/>
-            </SuperCard>
-          : statusOpen ?
-            <SuperCard className='status-details' expanded={true} summary={
-              <Card></Card>
-            }>
-              <Card summary={
-                <div>
-                  <div>In</div>
-                  <div><Money amount={income}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div>Out</div>
-                  <div><Money amount={allocated}/></div>
-                </div>
-              }/>
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div><strong><Money amount={income + allocated}/></strong></div>
-                </div>
-              }/>
-            </SuperCard>
-          : null}
+              : null}
+            </Card>
+          }>
+            <Card summary={
+              <div>
+                <div>Goals</div>
+                <div><Money amount={goalsTotal} abs={true}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div>Bills (Unpaid)</div>
+                <div><Money amount={billsUnpaidTotal} abs={true}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div>Bills (Paid)</div>
+                <div><Money amount={billsPaidTotal} abs={true}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div>Other Expenses</div>
+                <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div><strong>Total</strong></div>
+                <div><strong><Money amount={allocated} abs={true}/></strong></div>
+              </div>
+            }/>
+          </SuperCard>
+        </Transition>
+
+        <Transition name='fade' show={statusOpen === 'net'}>
+          <SuperCard className='status-details' expanded={true} summary={
+            <Card></Card>
+          }>
+            <Card summary={
+              <div>
+                <div>In</div>
+                <div><Money amount={income}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div>Out</div>
+                <div><Money amount={allocated}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div><strong>Total</strong></div>
+                <div><strong><Money amount={income + allocated}/></strong></div>
+              </div>
+            }/>
+          </SuperCard>
         </Transition>
       </CardList>
     );

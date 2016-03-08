@@ -68,6 +68,9 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
+          <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>
+            Edit
+          </Button>
         </Card>
       }>
         {bucketMonth.transactions ?
@@ -81,7 +84,7 @@ class BucketMonth extends Component {
             })} flat>Load More</Button>
           : null}
           <Button
-            to={`/app/buckets/${bucketMonth.bucket.id}`}
+            to={`/app/labels/${bucketMonth.bucket.id}`}
             flat
             variant='primary'
             className='bottom-load-button-right'

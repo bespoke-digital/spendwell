@@ -34,9 +34,9 @@ class Modal extends Component {
   render() {
     const { children, open } = this.props;
     return (
-      <Transition transitionName='modal'>{open ?
+      <Transition transitionName='modal' show={open}>
         <Card className={style.root}>{children}</Card>
-      : null}</Transition>
+      </Transition>
     );
   }
 }

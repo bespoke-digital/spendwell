@@ -3,15 +3,19 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 
 export default (props)=> {
-  const { name, ...childProps } = props;
+  const { name, show, children, ..._props } = props;
 
-  childProps.transitionName = `${name}-transition`;
+  _props.transitionName = `${name}-transition`;
 
-  childProps.className = childProps.className || '';
-  childProps.className += ` ${name}-transition`;
+  _props.className = _props.className || '';
+  _props.className += ` ${name}-transition`;
 
-  childProps.transitionEnterTimeout = 500;
-  childProps.transitionLeaveTimeout = 500;
+  _props.transitionEnterTimeout = 500;
+  _props.transitionLeaveTimeout = 500;
 
-  return <ReactCSSTransitionGroup {...childProps}/>;
+  return (
+    <ReactCSSTransitionGroup {..._props}>
+      {show ? children : null}
+    </ReactCSSTransitionGroup>
+  );
 };
