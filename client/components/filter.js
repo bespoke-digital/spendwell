@@ -133,7 +133,10 @@ class Filter extends Component {
                 onChange={this.updateField.bind(this, field)}
               />
 
-              <Button onClick={()=> this.removeField(field)}>
+              <Button
+                onClick={()=> this.removeField(field)}
+                disabled={fields.length === 1}
+              >
                 Remove Field
               </Button>
             </Card>
