@@ -13,13 +13,23 @@ import styles from 'sass/views/create-bucket.scss';
 
 
 class CreateBill extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
+
   handleSubmit({ filters, name }) {
     const { viewer } = this.props;
 
+    this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type: 'bill' }), {
-      onFailure: ()=> console.log('Failure: CreateBucketMutation'),
+      onFailure: ()=> {
+        console.log('Failure: CreateBucketMutation');
+        this.setState({ loading: false });
+      },
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
+        this.setState({ loading: false });
         browserHistory.push('/app/dashboard');
       },
     });
@@ -27,6 +37,7 @@ class CreateBill extends Component {
 
   render() {
     const { viewer } = this.props;
+    const { loading } = this.state;
 
     return (
       <App viewer={viewer}>
@@ -41,8 +52,10 @@ class CreateBill extends Component {
 
           <BucketForm
             onSubmit={::this.handleSubmit}
+            onCancel={()=> browserHistory.goBack()}
             viewer={viewer}
             bucket={null}
+            loading={loading}
           />
         </div>
       </App>

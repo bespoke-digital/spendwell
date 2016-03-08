@@ -6,7 +6,7 @@ from .models import Transaction
 from .factories import TransactionFactory
 
 
-class BucktsTestCase(SWTestCase):
+class TransactionsTestCase(SWTestCase):
     def test_transfer_detection(self):
         owner = UserFactory.create()
 
@@ -76,8 +76,8 @@ class BucktsTestCase(SWTestCase):
 
         TransactionFactory.create(owner=owner, amount=-100)
         TransactionFactory.create(owner=owner, amount=-100)
-        TransactionFactory.create(owner=owner, amount=-101).mark_as_from_savings()
-        TransactionFactory.create(owner=owner, amount=-101).mark_as_from_savings()
+        TransactionFactory.create(owner=owner, amount=-101).toggle_from_savings()
+        TransactionFactory.create(owner=owner, amount=-101).toggle_from_savings()
 
         result = self.graph_query('''{
             viewer {

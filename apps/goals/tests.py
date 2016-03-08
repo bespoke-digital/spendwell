@@ -1,3 +1,6 @@
-from django.test import TestCase
 
-# Create your tests here.
+from apps.core.tests import SWTestCase
+
+
+class GoalsTestCase(SWTestCase):
+    pass

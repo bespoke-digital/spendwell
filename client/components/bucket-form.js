@@ -45,7 +45,6 @@ class BucketForm extends Component {
 
   handleFilterChange(filters) {
     this.setState({ filters });
-    console.log('setVariables', { filters });
     this.props.relay.setVariables({ filters });
   }
 

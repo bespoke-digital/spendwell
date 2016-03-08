@@ -2,6 +2,7 @@
 import graphene
 from graphene.relay import ClientIDMutation
 from graphene.relay.types import Edge
+from graphene.utils import to_snake_case
 
 from apps.core.types import Month
 from apps.core.utils import instance_for_node_id
@@ -17,7 +18,7 @@ BucketEdge = Edge.for_node(BucketNode)
 def clean_filters(filters):
     return [
         {
-            key: val
+            to_snake_case(key): val
             for key, val in filter.items()
             if val is not None and val is not ''
         }
