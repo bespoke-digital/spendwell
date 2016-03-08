@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
@@ -82,6 +83,9 @@ class Dashboard extends Component {
       next: current.clone().add(1, 'month'),
     };
 
+    const billAvgTotal = _.sum(billMonths.edges, ({ node })=> node.avgAmount);
+    const billTotal = _.sum(billMonths.edges, ({ node })=> node.amount);
+
     return (
       <App viewer={viewer}>
         <ScrollTrigger
@@ -154,6 +158,17 @@ class Dashboard extends Component {
                   onClick={this.select.bind(this, node.id)}
                 />
               )}
+              <Card summary={
+                <div>
+                  <div><strong>Total</strong></div>
+                  <div className='amount avg'>
+                    <Money amount={billAvgTotal} abs={true}/>
+                  </div>
+                  <div className='amount'>
+                    <Money amount={billTotal} abs={true}/>
+                  </div>
+                </div>
+              }/>
             </CardList>
           : null}
 
@@ -260,6 +275,8 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 ${BillMonth.getFragment('bucketMonth')}
                 id
+                avgAmount
+                amount
               }
             }
           }

@@ -75,7 +75,7 @@ class Filters extends Component {
                   </div>
                   <Button
                     onClick={this.removeFilter.bind(this, index)}
-                    disabled={filters.length > 1}
+                    disabled={filters.length === 1}
                   >Remove</Button>
                 </div>
               }/>
