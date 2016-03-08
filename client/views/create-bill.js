@@ -51,6 +51,7 @@ class CreateBill extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
+            type='bill'
           />
         </div>
       </App>

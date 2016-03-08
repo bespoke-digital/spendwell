@@ -17,6 +17,11 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
+    type: PropTypes.oneOf(['bill', 'bucket']),
+  };
+
+  static defaultProps = {
+    type: 'bucket',
   };
 
   constructor() {
@@ -55,7 +60,7 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { onCancel, viewer, bucket, loading } = this.props;
+    const { onCancel, viewer, bucket, loading, type } = this.props;
     const { name, filters } = this.state;
 
     const valid = name.length && filters.length;
@@ -85,7 +90,7 @@ class BucketForm extends Component {
               onClick={::this.handleSubmit}
               loading={loading}
             >
-              {bucket ? 'Save' : 'Create'}
+              {bucket ? 'Save ' : 'Create '}{type}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Card>
