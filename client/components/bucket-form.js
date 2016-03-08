@@ -21,7 +21,7 @@ class BucketForm extends Component {
 
   constructor() {
     super();
-    this.state = { filters: [{}], name: '' };
+    this.state = { filters: [], name: '' };
   }
 
   componentWillMount() {
@@ -85,7 +85,7 @@ class BucketForm extends Component {
               onClick={::this.handleSubmit}
               loading={loading}
             >
-              {bucket ? 'Create' : 'Save'}
+              {bucket ? 'Save' : 'Create'}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Card>

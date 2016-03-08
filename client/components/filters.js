@@ -60,8 +60,6 @@ class Filters extends Component {
     const { filters, viewer } = this.props;
     const { selectedFilter } = this.state;
 
-    const canAddFilter = _.some(_.map(filters, (f)=> _.some(_.values(f).map((v)=> !!v))));
-
     return (
       <div>
         {filters.map((filter, index)=> (
@@ -73,9 +71,12 @@ class Filters extends Component {
               <Card summary={
                 <div>
                   <div>
-                    {_.map(filter, (value, key)=> `${FIELDS[key].label}: ${value}`).join(', ')}
+                    {_.map(filter, (value, key)=> `${FIELDS[key].label}: ${value}`).join(', ') || 'New Filter'}
                   </div>
-                  <Button onClick={this.removeFilter.bind(this, index)}>Remove</Button>
+                  <Button
+                    onClick={this.removeFilter.bind(this, index)}
+                    disabled={filters.length > 1}
+                  >Remove</Button>
                 </div>
               }/>
             }
@@ -89,10 +90,7 @@ class Filters extends Component {
         ))}
 
         <Card>
-          <Button
-            onClick={::this.addFilter}
-            disabled={!canAddFilter}
-          >
+          <Button onClick={::this.addFilter}>
             add filter
           </Button>
         </Card>
