@@ -1,59 +1,53 @@
 
-import Relay from 'react-relay';
 import { Component } from 'react';
+import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
 import App from 'components/app';
-import BucketForm from 'components/bucket-form';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
+import GoalForm from 'components/goal-form';
 
-import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
-
-import styles from 'sass/views/create-bucket.scss';
+import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
 
 
-class UpdateBucket extends Component {
+class UpdateGoal extends Component {
   constructor() {
     super();
     this.state = { loading: false, confirmDelete: false };
   }
 
-  deleteBucket() {
+  deleteGoal() {
     const { viewer } = this.props;
-    const { bucket } = viewer;
+    const { goal } = viewer;
 
-    Relay.Store.commitUpdate(new DeleteBucketMutation({ viewer, bucket }), {
+    Relay.Store.commitUpdate(new DeleteGoalMutation({ viewer, goal }), {
       onFailure: ()=> {
-        console.log('Failure: DeleteBucketMutation');
+        console.log('Failure: DeleteGoalMutation');
         this.setState({ confirmDelete: false });
       },
       onSuccess: ()=> {
-        console.log('Success: DeleteBucketMutation');
+        console.log('Success: DeleteGoalMutation');
         this.setState({ confirmDelete: false });
         browserHistory.push('/app/dashboard');
       },
     });
   }
 
-  updateBucket({ filters, name }) {
+  updateGoal({ name, monthlyAmount }) {
     const { viewer } = this.props;
+    const { goal } = viewer;
 
-    const args = {
-      viewer,
-      bucket: viewer.bucket,
-      name,
-      filters,
-    };
+    const args = { viewer, goal, name, monthlyAmount };
 
     this.setState({ loading: true });
-    Relay.Store.commitUpdate(new UpdateBucketMutation(args), {
+    Relay.Store.commitUpdate(new UpdateGoalMutation(args), {
       onFailure: ()=> {
-        console.log('Failure: UpdateBucketMutation');
+        console.log('Failure: UpdateGoalMutation');
         this.setState({ loading: false });
       },
       onSuccess: ()=> {
-        console.log('Success: UpdateBucketMutation');
+        console.log('Success: UpdateGoalMutation');
         this.setState({ loading: false });
         browserHistory.push('/app/dashboard');
       },
@@ -65,14 +59,10 @@ class UpdateBucket extends Component {
     const { loading, confirmDelete } = this.state;
 
     return (
-      <App
-        viewer={viewer}
-        back={true}
-        onOverlayClose={()=> this.setState({ confirmDelete: false })}
-      >
-        <div className={`container ${styles.root}`}>
+      <App viewer={viewer} back={true}>
+        <div className='container'>
           <div className='heading'>
-            <h1>Edit {viewer.bucket.name}</h1>
+            <h1>Edit {viewer.goal.name}</h1>
 
             <Button
               onClick={()=> this.setState({ confirmDelete: true })}
@@ -90,14 +80,15 @@ class UpdateBucket extends Component {
             </div>
             <div className='actions'>
               <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
-              <Button onClick={::this.deleteBucket} variant='danger'>Delete</Button>
+              <Button onClick={::this.deleteGoal} variant='danger'>Delete</Button>
             </div>
           </Dialog>
 
-          <BucketForm
+
+          <GoalForm
             viewer={viewer}
-            bucket={viewer.bucket}
-            onSubmit={::this.updateBucket}
+            goal={viewer.goal}
+            onSubmit={::this.updateGoal}
             onCancel={()=> browserHistory.goBack()}
             loading={loading}
           />
@@ -107,20 +98,19 @@ class UpdateBucket extends Component {
   }
 }
 
-UpdateBucket = Relay.createContainer(UpdateBucket, {
+UpdateGoal = Relay.createContainer(UpdateGoal, {
   initialVariables: { id: null },
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
-        ${BucketForm.getFragment('viewer')}
-        ${UpdateBucketMutation.getFragment('viewer')}
-        ${DeleteBucketMutation.getFragment('viewer')}
+        ${DeleteGoalMutation.getFragment('viewer')}
+        ${UpdateGoalMutation.getFragment('viewer')}
 
-        bucket(id: $id) {
-          ${BucketForm.getFragment('bucket')}
-          ${UpdateBucketMutation.getFragment('bucket')}
-          ${DeleteBucketMutation.getFragment('bucket')}
+        goal(id: $id) {
+          ${GoalForm.getFragment('goal')}
+          ${DeleteGoalMutation.getFragment('goal')}
+          ${UpdateGoalMutation.getFragment('goal')}
 
           name
         }
@@ -129,4 +119,4 @@ UpdateBucket = Relay.createContainer(UpdateBucket, {
   },
 });
 
-export default UpdateBucket;
+export default UpdateGoal;

@@ -60,7 +60,8 @@ class BillMonth extends Component {
             </div>
           }
         >
-          * Average is based on the last 3 months activity
+          <div>Average is based on the last 3 months activity</div>
+          <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
         </Card>
       }>
         {bucketMonth.transactions ?

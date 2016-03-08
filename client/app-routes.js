@@ -12,6 +12,7 @@ import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
 import CreateBill from 'views/create-bill';
 import UpdateBucket from 'views/update-bucket';
+import UpdateGoal from 'views/update-goal';
 import Bucket from 'views/bucket';
 import Goal from 'views/goal';
 import Transactions from 'views/transactions';
@@ -30,11 +31,14 @@ export default (
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
       <Route path='goals/new' component={CreateGoal} queries={rootQuery}/>
+      <Route path='goals/:id' component={Goal} queries={rootQuery}/>
+      <Route path='goals/:id/edit' component={UpdateGoal} queries={rootQuery}/>
+
       <Route path='labels/new' component={CreateBucket} queries={rootQuery}/>
       <Route path='labels/:id' component={Bucket} queries={rootQuery}/>
       <Route path='labels/:id/edit' component={UpdateBucket} queries={rootQuery}/>
+
       <Route path='bills/new' component={CreateBill} queries={rootQuery}/>
-      <Route path='goals/:id' component={Goal} queries={rootQuery}/>
 
       <Route path='transactions' component={Transactions} queries={rootQuery}/>
 

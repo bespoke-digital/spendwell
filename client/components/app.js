@@ -43,7 +43,6 @@ class App extends Component {
     const { children, viewer, overlayOpen, back } = this.props;
     const { navOpen } = this.state;
 
-    console.log('app render overlayOpen', overlayOpen);
     return (
       <div className={style.root}>
         <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>

@@ -19,10 +19,8 @@ class Dialog extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.visible !== this.props.visible) {
+    if (nextProps.visible !== this.props.visible)
       this.props.dispatch({ type: 'OVERLAY', open: nextProps.visible });
-      console.log('dispatch');
-    }
   }
 
   render() {
