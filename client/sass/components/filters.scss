@@ -1,0 +1,24 @@
+
+@import '../variables';
+
+:local(.root) {
+
+  .filter-name {
+    .subtitle {
+      font-size: 12px;
+      color: $gray-lightish;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    .field:after {
+      content: ', ';
+    }
+
+    .field:last-child:after {
+      content: '';
+    }
+  }
+}

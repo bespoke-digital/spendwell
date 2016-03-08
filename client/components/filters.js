@@ -9,6 +9,8 @@ import Button from 'components/button';
 import Filter from 'components/filter';
 import FIELDS from 'constants/filter-fields';
 
+import style from 'sass/components/filters';
+
 
 class Filters extends Component {
   static propTypes = {
@@ -59,9 +61,14 @@ class Filters extends Component {
   filterName(filter) {
     const fields = _.filter(_.keys(filter), (key)=> filter[key]);
     if (fields.length === 0)
-      return 'New Filter';
-    else
-      return _.map(fields, (key)=> `${FIELDS[key].label}: ${filter[key]}`).join(', ');
+      return 'New';
+
+    return _.map(fields, (key)=> (
+      <span className='field'>
+        <strong>{FIELDS[key].label}{':'}</strong>
+        {' '}{filter[key]}
+      </span>
+    ));
   }
 
   render() {
@@ -69,7 +76,7 @@ class Filters extends Component {
     const { selectedFilter } = this.state;
 
     return (
-      <div>
+      <div className={style.root}>
         {filters.map((filter, index)=> (
           <SuperCard
             key={index}
@@ -78,8 +85,9 @@ class Filters extends Component {
             summary={
               <Card summary={
                 <div>
-                  <div>
-                    {this.filterName(filter)}
+                  <div className='filter-name'>
+                    <div className='subtitle'>Filter</div>
+                    <div>{this.filterName(filter)}</div>
                   </div>
                   <Button
                     onClick={this.removeFilter.bind(this, index)}
