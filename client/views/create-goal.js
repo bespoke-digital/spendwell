@@ -13,16 +13,21 @@ import styles from 'sass/views/create-bucket.scss';
 class CreateGoal extends Component {
   constructor() {
     super();
-    this.state = { valid: false };
+    this.state = { loading: false };
   }
 
   handleSubmit({ name, monthlyAmount }) {
     const { viewer } = this.props;
 
+    this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, name, monthlyAmount }), {
-      onFailure: ()=> console.log('Failure: CreateGoalMutation'),
+      onFailure: ()=> {
+        console.log('Failure: CreateGoalMutation');
+        this.setState({ loading: false });
+      },
       onSuccess: ()=> {
         console.log('Success: CreateGoalMutation');
+        this.setState({ loading: false });
         browserHistory.push('/app/dashboard');
       },
     });
@@ -30,6 +35,7 @@ class CreateGoal extends Component {
 
   render() {
     const { viewer } = this.props;
+    const { loading } = this.state;
 
     return (
       <App viewer={viewer} back={true}>
@@ -41,6 +47,7 @@ class CreateGoal extends Component {
           <GoalForm
             onSubmit={::this.handleSubmit}
             onCancel={()=> browserHistory.goBack()}
+            loading={loading}
             goal={null}
           />
         </div>

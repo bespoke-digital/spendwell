@@ -12,6 +12,7 @@ class GoalForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    loading: PropTypes.bool,
   };
 
   constructor() {
@@ -40,7 +41,7 @@ class GoalForm extends Component {
   }
 
   render() {
-    const { onCancel } = this.props;
+    const { onCancel, loading } = this.props;
     const { name, monthlyAmount } = this.state;
 
     return (
@@ -57,7 +58,11 @@ class GoalForm extends Component {
           onChange={::this.handleMonthlyAmountChange}
         />
 
-        <Button onClick={::this.handleSubmit} variant='primary'>Save</Button>
+        <Button
+          onClick={::this.handleSubmit}
+          loading={loading}
+          variant='primary'
+        >Save</Button>
         <Button onClick={onCancel}>Cancel</Button>
       </Card>
     );

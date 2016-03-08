@@ -12,13 +12,23 @@ import styles from 'sass/views/create-bucket.scss';
 
 
 class CreateBucket extends Component {
+  constructor() {
+    super();
+    this.state = { loading: false };
+  }
+
   handleSubmit({ filters, name }) {
     const { viewer } = this.props;
 
+    this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type: 'expense' }), {
-      onFailure: ()=> console.log('Failure: CreateBucketMutation'),
+      onFailure: ()=> {
+        console.log('Failure: CreateBucketMutation');
+        this.setState({ loading: false });
+      },
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
+        this.setState({ loading: false });
         browserHistory.push('/app/dashboard');
       },
     });
@@ -26,12 +36,13 @@ class CreateBucket extends Component {
 
   render() {
     const { viewer } = this.props;
+    const { loading } = this.state;
 
     return (
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>New Bucket</h1>
+            <h1>New Label</h1>
           </div>
 
           <BucketForm
@@ -39,6 +50,7 @@ class CreateBucket extends Component {
             onCancel={()=> browserHistory.goBack()}
             viewer={viewer}
             bucket={null}
+            loading={loading}
           />
         </div>
       </App>
