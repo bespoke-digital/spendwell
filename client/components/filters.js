@@ -1,6 +1,7 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
+import Relay from 'react-relay';
 
 import SuperCard from 'components/super-card';
 import Card from 'components/card';
@@ -56,7 +57,7 @@ class Filters extends Component {
   }
 
   render() {
-    const { filters } = this.props;
+    const { filters, viewer } = this.props;
     const { selectedFilter } = this.state;
 
     const canAddFilter = _.some(_.map(filters, (f)=> _.some(_.values(f).map((v)=> !!v))));
@@ -79,7 +80,11 @@ class Filters extends Component {
               }/>
             }
           >
-            <Filter filter={filter} onChange={this.updateFilter.bind(this, index)}/>
+            <Filter
+              viewer={viewer}
+              filter={filter}
+              onChange={this.updateFilter.bind(this, index)}
+            />
           </SuperCard>
         ))}
 
@@ -95,5 +100,15 @@ class Filters extends Component {
     );
   }
 }
+
+Filters = Relay.createContainer(Filters, {
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${Filter.getFragment('viewer')}
+      }
+    `,
+  },
+});
 
 export default Filters;

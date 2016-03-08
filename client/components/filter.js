@@ -1,11 +1,15 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
+import Relay from 'react-relay';
 
 import Card from 'components/card';
+import CardList from 'components/card-list';
 import Button from 'components/button';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
+import TransactionList from 'components/transaction-list';
+
 import FIELDS from 'constants/filter-fields';
 
 import style from 'sass/components/filter';
@@ -16,6 +20,15 @@ class Filter extends Component {
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
   };
+
+  componentDidMount() {
+    this.props.relay.setVariables({ filters: [this.props.filter] });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.filter !== this.props.filter)
+      this.props.relay.setVariables({ filters: [nextProps.filter] });
+  }
 
   updateField(field, value) {
     const filter = _.cloneDeep(this.props.filter);
@@ -54,6 +67,11 @@ class Filter extends Component {
 
       this.props.onChange(filter);
     }
+  }
+
+  loadTransactions() {
+    const { relay } = this.props;
+    relay.setVariables({ count: relay.variables.count + 10 });
   }
 
   toInput(field, value) {
@@ -99,30 +117,65 @@ class Filter extends Component {
   }
 
   render() {
-    const { filter } = this.props;
+    const { filter, viewer } = this.props;
     const fields = Object.keys(filter);
 
     return (
-      <Card className={style.root}>
-        {fields.map((field)=> FIELDS[field] ?
-          <div key={field} className='field'>
-            {this.renderDropdown(fields, field)}
+      <div className={style.root}>
+        <CardList>
+          {fields.map((field)=> FIELDS[field] ?
+            <Card key={field} className='field'>
+              {this.renderDropdown(fields, field)}
 
-            <TextInput
-              value={this.toInput(field, filter[field])}
-              onChange={this.updateField.bind(this, field)}
-            />
+              <TextInput
+                value={this.toInput(field, filter[field])}
+                onChange={this.updateField.bind(this, field)}
+              />
 
-            <Button onClick={()=> this.removeField(field)}>
-              Remove Field
-            </Button>
+              <Button onClick={()=> this.removeField(field)}>
+                Remove Field
+              </Button>
+            </Card>
+          : null)}
+
+          <Card>{this.renderDropdown(fields)}</Card>
+        </CardList>
+
+        <TransactionList transactions={viewer.transactions}/>
+
+        {viewer.transactions.pageInfo.hasNextPage ?
+          <div className='bottom-buttons'>
+            <Button flat variant='primary' onClick={::this.loadTransactions}>Load More</Button>
           </div>
-        : null)}
-
-        {this.renderDropdown(fields)}
-      </Card>
+        : null}
+      </div>
     );
   }
 }
+
+Filter = Relay.createContainer(Filter, {
+  initialVariables: {
+    filters: [],
+    count: 10,
+  },
+  fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        transactions(
+          first: $count,
+          filters: $filters,
+          isTransfer: false,
+          fromSavings: false,
+        ) {
+          ${TransactionList.getFragment('transactions')}
+
+          pageInfo {
+            hasNextPage
+          }
+        }
+      }
+    `,
+  },
+});
 
 export default Filter;

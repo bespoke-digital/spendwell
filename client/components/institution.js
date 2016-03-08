@@ -1,5 +1,4 @@
 
-import _ from 'lodash';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';

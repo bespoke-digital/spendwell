@@ -55,7 +55,7 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { onCancel, viewer: { transactions }, bucket, loading } = this.props;
+    const { onCancel, viewer, bucket, loading } = this.props;
     const { name, filters } = this.state;
 
     const valid = name.length && filters.length;
@@ -72,7 +72,11 @@ class BucketForm extends Component {
             />
           </Card>
 
-          <Filters filters={filters} onChange={::this.handleFilterChange}/>
+          <Filters
+            filters={filters}
+            onChange={::this.handleFilterChange}
+            viewer={viewer}
+          />
 
           <Card>
             <Button
@@ -87,7 +91,7 @@ class BucketForm extends Component {
           </Card>
         </CardList>
 
-        <TransactionList transactions={transactions}/>
+        <TransactionList transactions={viewer.transactions}/>
       </ScrollTrigger>
     );
   }
@@ -101,6 +105,8 @@ BucketForm = Relay.createContainer(BucketForm, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${Filters.getFragment('viewer')}
+
         transactions(
           first: $count,
           filters: $filters,
