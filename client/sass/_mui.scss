@@ -2,29 +2,34 @@
 @import 'variables';
 
 // Normalizer
-@import '~muicss/lib/sass/normalize-3.0.2';
+@import "~muicss/lib/sass/normalize-3.0.3";
 
 // Core variables and mixins
-@import '~muicss/lib/sass/mui/colors';
-@import '~muicss/lib/sass/mui/variables';
-@import '~muicss/lib/sass/mui/mixins';
+@import "~muicss/lib/sass/mui/colors";
+@import "~muicss/lib/sass/mui/variables";
+@import "~muicss/lib/sass/mui/mixins";
 
-// Core css
-@import '~muicss/lib/sass/mui/appbar';
-@import '~muicss/lib/sass/mui/helpers';
+// CSS Reboot
+@import "~muicss/lib/sass/mui/reboot";
 
-@import '~muicss/lib/sass/mui/forms';
-@import '~muicss/lib/sass/mui/buttons';
-@import '~muicss/lib/sass/mui/dropdowns';
-@import '~muicss/lib/sass/mui/dividers';
-@import '~muicss/lib/sass/mui/tables';
-@import '~muicss/lib/sass/mui/grid';
-@import '~muicss/lib/sass/mui/ripple';
-@import '~muicss/lib/sass/mui/semantic-markup';
-@import '~muicss/lib/sass/mui/typography';
+// Components
+@import "~muicss/lib/sass/mui/appbar";
+@import "~muicss/lib/sass/mui/buttons";
+@import "~muicss/lib/sass/mui/checkbox-and-radio";
+@import "~muicss/lib/sass/mui/containers";
+@import "~muicss/lib/sass/mui/divider";
+@import "~muicss/lib/sass/mui/dropdown";
+@import "~muicss/lib/sass/mui/form";
+@import "~muicss/lib/sass/mui/grid";
+@import "~muicss/lib/sass/mui/select";
+@import "~muicss/lib/sass/mui/table";
+@import "~muicss/lib/sass/mui/textfield";
 
-// @import '~muicss/lib/sass/mui/overlay';
-// @import '~muicss/lib/sass/mui/scaffolding';
-// @import '~muicss/lib/sass/mui/layout';
-// @import '~muicss/lib/sass/mui/panel';
-// @import '~muicss/lib/sass/mui/tabs';
+// Miscellaneous
+@import "~muicss/lib/sass/mui/helpers";
+@import "~muicss/lib/sass/mui/ripple";
+@import "~muicss/lib/sass/mui/typography";
+
+// @import "~muicss/lib/sass/mui/panel";
+// @import "~muicss/lib/sass/mui/tabs";
+// @import "~muicss/lib/sass/mui/overlay";
