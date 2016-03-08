@@ -1,6 +1,6 @@
 
+import _ from 'lodash';
 import { Link } from 'react-router';
-import Transition from 'components/transition';
 
 
 export default (props)=> {
@@ -15,10 +15,11 @@ export default (props)=> {
     propagateClick,
     loading,
     children,
+    onClick,
     ...extraProps,
   } = props;
 
-  const _disabled = disabled || loading;
+  const _disabled = disabled;
   const _children = children;
 
   let classes = className || '';
@@ -33,18 +34,23 @@ export default (props)=> {
     classes += ' mui-btn--fab';
   if (_disabled)
     classes += ' mui--is-disabled';
+  if (!_.isUndefined(loading))
+    classes += ' mui-btn--can-load';
   if (loading)
     classes += ' mui-btn--is-loading';
 
-  if (propagateClick === false && extraProps.onClick) {
-    const onClick = extraProps.onClick;
-    extraProps.onClick = function(event, ...args) {
+  extraProps.onClick = function(event, ...args) {
+    if (propagateClick === false)
       event.stopPropagation();
+
+    if (loading) {
+      event.preventDefault();
+      return;
+    }
+
+    if (onClick)
       onClick(event, ...args);
-    };
-  } else if (propagateClick === false && extraProps.to) {
-    extraProps.onClick = (event)=> event.stopPropagation();
-  }
+  };
 
   if (props.to)
     return <Link className={classes} {...extraProps}>{_children}</Link>;
