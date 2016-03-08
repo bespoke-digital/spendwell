@@ -91,6 +91,9 @@ class BucketForm extends Component {
           </Card>
         </CardList>
 
+        <div className='heading'>
+          <h2>All Transactions</h2>
+        </div>
         <TransactionList transactions={viewer.transactions}/>
       </ScrollTrigger>
     );

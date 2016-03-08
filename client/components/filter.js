@@ -19,6 +19,7 @@ class Filter extends Component {
   static propTypes = {
     filter: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
+    onCollapse: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -95,7 +96,7 @@ class Filter extends Component {
     if (fields.length === 0)
       return null;
 
-    const label = selected ? FIELDS[selected].label : 'Field';
+    const label = selected ? FIELDS[selected].label : 'Add Field';
 
     return (
       <Dropdown label={label}>
@@ -117,7 +118,7 @@ class Filter extends Component {
   }
 
   render() {
-    const { filter, viewer } = this.props;
+    const { filter, viewer, onCollapse } = this.props;
     const fields = Object.keys(filter);
 
     return (
@@ -138,7 +139,10 @@ class Filter extends Component {
             </Card>
           : null)}
 
-          <Card>{this.renderDropdown(fields)}</Card>
+          <Card className='save-card'>
+            <Button onClick={onCollapse} variant='primary'>Save</Button>
+            {this.renderDropdown(fields)}
+          </Card>
         </CardList>
 
         <TransactionList transactions={viewer.transactions}/>

@@ -32,7 +32,7 @@ class Filters extends Component {
   addFilter() {
     const filters = _.cloneDeep(this.props.filters);
 
-    filters.push({});
+    filters.push({ descriptionContains: '' });
     this.setState({ selectedFilter: filters.length - 1 });
 
     this.props.onChange(filters);
@@ -56,6 +56,14 @@ class Filters extends Component {
     this.setState({ selectedFilter: index });
   }
 
+  filterName(filter) {
+    const fields = _.filter(_.keys(filter), (key)=> filter[key]);
+    if (fields.length === 0)
+      return 'New Filter';
+    else
+      return _.map(fields, (key)=> `${FIELDS[key].label}: ${filter[key]}`).join(', ');
+  }
+
   render() {
     const { filters, viewer } = this.props;
     const { selectedFilter } = this.state;
@@ -71,7 +79,7 @@ class Filters extends Component {
               <Card summary={
                 <div>
                   <div>
-                    {_.map(filter, (value, key)=> `${FIELDS[key].label}: ${value}`).join(', ') || 'New Filter'}
+                    {this.filterName(filter)}
                   </div>
                   <Button
                     onClick={this.removeFilter.bind(this, index)}
@@ -85,6 +93,7 @@ class Filters extends Component {
               viewer={viewer}
               filter={filter}
               onChange={this.updateFilter.bind(this, index)}
+              onCollapse={this.selectFilter.bind(this, null)}
             />
           </SuperCard>
         ))}
