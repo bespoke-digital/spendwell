@@ -28,7 +28,7 @@ class BucketForm extends Component {
       const { name, filters } = this.props.bucket;
 
       const cleanFilters = filters.map(
-        (f)=> _.pickBy(f, (v, k)=> !_.isNull(v) && k !== '__dataID__')
+        (f)=> _.pick(f, (v, k)=> !_.isNull(v) && k !== '__dataID__')
       );
 
       this.setState({ name, filters: cleanFilters });

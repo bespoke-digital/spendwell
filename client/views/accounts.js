@@ -38,7 +38,7 @@ class Accounts extends Component {
             <Card summary={
               <div>
                 <div><strong>Total</strong></div>
-                <div><Money amount={_.sumBy(
+                <div><Money amount={_.sum(
                   viewer.institutions.edges,
                   ({ node })=> node.currentBalance
                 )}/></div>

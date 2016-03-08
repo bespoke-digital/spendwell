@@ -59,6 +59,7 @@ class GoalForm extends Component {
 
         <Button onClick={::this.handleSubmit} variant='primary'>Save</Button>
         <Button onClick={onCancel}>Cancel</Button>
+
       </Card>
     );
   }

@@ -86,7 +86,7 @@ class TransactionList extends Component {
             <div>
               <div><strong>Total</strong></div>
               <div><strong>
-                <Money amount={_.sumBy(transactions, 'amount')} abs={true}/>
+                <Money amount={_.sum(transactions, 'amount')} abs={true}/>
               </strong></div>
             </div>
           }/>
