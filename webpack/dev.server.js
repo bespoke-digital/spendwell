@@ -35,24 +35,3 @@ app.listen(3000, 'localhost', function(err) {
   console.log('Proxying to http://localhost:8000');
   console.log('https://dev.spendwell.co');
 });
-
-// var WebpackDevServer = require('webpack-dev-server');
-// var server = new WebpackDevServer(webpack(config), {
-//   publicPath: config.output.publicPath,
-//   hot: true,
-//   proxy: { '*': 'http://localhost:8000' },
-//   stats: {
-//     colors: true,
-//     assets: false,
-//     children: false,
-//     chunks: false,
-//     modules: false,
-//   },
-// });
-
-// server.listen(3000, 'localhost', function(err) {
-//   if (err) throw err;
-//   console.log('Listening on http://localhost:3000');
-//   console.log('Proxying to http://localhost:8000');
-//   console.log('https://dev.spendwell.co');
-// });

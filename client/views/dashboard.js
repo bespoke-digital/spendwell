@@ -73,7 +73,9 @@ class Dashboard extends Component {
 
     const now = moment().startOf('month');
     const current = year && month ? moment(`${year}-${month}-0`) : now;
+    const first = moment(viewer.firstMonth, 'YYYY/MM');
     const periods = {
+      first,
       now,
       current,
       previous: current.clone().subtract(1, 'month'),
@@ -277,6 +279,8 @@ Dashboard = Relay.createContainer(Dashboard, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${AssignTransactionsMutation.getFragment('viewer')}
+
+        firstMonth
 
         summary(month: $date) {
           ${SpentFromSavings.getFragment('summary')}

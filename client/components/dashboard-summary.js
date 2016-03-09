@@ -37,7 +37,6 @@ class DashboardSummary extends Component {
       incomeEstimated,
       goalsTotal,
       billsUnpaidTotal,
-      billsPaidTotal,
       spent,
       net,
       transactions,
@@ -48,7 +47,10 @@ class DashboardSummary extends Component {
     return (
       <CardList className={styles.root}>
         <Card className='month'>
-          <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
+          <Button
+            to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}
+            disabled={periods.previous.isSame(periods.first)}
+          >
             <i className='fa fa-chevron-left'/>
           </Button>
 
@@ -189,7 +191,6 @@ DashboardSummary = Relay.createContainer(DashboardSummary, {
         trueIncome
         incomeEstimated
         goalsTotal
-        billsPaidTotal
         billsUnpaidTotal
         spent
         net
