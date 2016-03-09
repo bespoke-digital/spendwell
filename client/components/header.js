@@ -1,7 +1,7 @@
 
 import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import Money from 'components/money';
 import logoWhite from 'img/logo-white.svg';
@@ -49,10 +49,10 @@ class Header extends Component {
             </a>
           ) : null}
         </div>
-        <a className='brand mui--appbar-height mui--appbar-line-height' href='/app'>
+        <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
           <img src={logoWhite} alt='Spendwell' className='logo'/>
           <img src={logoIconWhite} alt='Spendwell' className='icon'/>
-        </a>
+        </Link>
         {showSafeToSpend ?
           <div className='safe-to-spend'>
             <small>Safe To Spend</small>

@@ -8,5 +8,6 @@ from .models import Transaction
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('description', 'amount', 'date', 'account', 'owner')
+    search_fields = ('description',)
 
 admin_site.register(Transaction, TransactionAdmin)
