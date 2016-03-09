@@ -42,7 +42,7 @@ class CreateBucket extends Component {
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>New Label</h1>
+            <h1>New Category</h1>
           </div>
 
           <BucketForm
