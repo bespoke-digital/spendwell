@@ -120,7 +120,7 @@ class DashboardSummary extends Component {
               {billsUnpaidTotal !== 0 ?
                 <div>
                   <strong>*</strong>
-                  Includes estimates for unpaid bills.
+                  Includes estimates for unpaid bills based on 3-month average.
                 </div>
               : null}
             </Card>
