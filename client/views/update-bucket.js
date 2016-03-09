@@ -16,20 +16,27 @@ import styles from 'sass/views/create-bucket.scss';
 class UpdateBucket extends Component {
   constructor() {
     super();
-    this.state = { loading: false, confirmDelete: false };
+    this.state = {
+      updateLoading: false,
+      deleteLoading: false,
+      confirmDelete: false,
+    };
   }
 
   deleteBucket() {
     const { viewer } = this.props;
     const { bucket } = viewer;
 
+    this.setState({ deleteLoading: true });
     Relay.Store.commitUpdate(new DeleteBucketMutation({ viewer, bucket }), {
       onFailure: ()=> {
         console.log('Failure: DeleteBucketMutation');
+        this.setState({ deleteLoading: false });
         this.setState({ confirmDelete: false });
       },
       onSuccess: ()=> {
         console.log('Success: DeleteBucketMutation');
+        this.setState({ deleteLoading: false });
         this.setState({ confirmDelete: false });
         browserHistory.push('/app/dashboard');
       },
@@ -46,15 +53,15 @@ class UpdateBucket extends Component {
       filters,
     };
 
-    this.setState({ loading: true });
+    this.setState({ updateLoading: true });
     Relay.Store.commitUpdate(new UpdateBucketMutation(args), {
       onFailure: ()=> {
         console.log('Failure: UpdateBucketMutation');
-        this.setState({ loading: false });
+        this.setState({ updateLoading: false });
       },
       onSuccess: ()=> {
         console.log('Success: UpdateBucketMutation');
-        this.setState({ loading: false });
+        this.setState({ updateLoading: false });
         browserHistory.push('/app/dashboard');
       },
     });
@@ -62,7 +69,7 @@ class UpdateBucket extends Component {
 
   render() {
     const { viewer } = this.props;
-    const { loading, confirmDelete } = this.state;
+    const { updateLoading, deleteLoading, confirmDelete } = this.state;
 
     return (
       <App
@@ -89,8 +96,14 @@ class UpdateBucket extends Component {
               Are you sure? You can't take it back.
             </div>
             <div className='actions'>
-              <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
-              <Button onClick={::this.deleteBucket} variant='danger'>Delete</Button>
+              <Button
+                onClick={()=> this.setState({ confirmDelete: false })}
+              >Cancel</Button>
+              <Button
+                onClick={::this.deleteBucket}
+                variant='danger'
+                loading={deleteLoading}
+              >Delete</Button>
             </div>
           </Dialog>
 
@@ -99,7 +112,7 @@ class UpdateBucket extends Component {
             bucket={viewer.bucket}
             onSubmit={::this.updateBucket}
             onCancel={()=> browserHistory.goBack()}
-            loading={loading}
+            loading={updateLoading}
           />
         </div>
       </App>

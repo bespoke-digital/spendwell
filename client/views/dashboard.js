@@ -84,8 +84,14 @@ class Dashboard extends Component {
     const billMonths = _.sortBy(viewer.summary.billMonths.edges.map((e)=> e.node), 'name');
     const bucketMonths = _.sortBy(viewer.summary.bucketMonths.edges.map((e)=> e.node), 'name');
 
+    const goalTargetTotal = _.sum(goalMonths, 'targetAmount');
+    const goalFilledTotal = _.sum(goalMonths, 'filledAmount');
+
     const billAvgTotal = _.sum(billMonths, 'avgAmount');
     const billTotal = _.sum(billMonths, 'amount');
+
+    const bucketAvgTotal = _.sum(bucketMonths, 'avgAmount');
+    const bucketTotal = _.sum(bucketMonths, 'amount');
 
     return (
       <App viewer={viewer}>
@@ -120,6 +126,18 @@ class Dashboard extends Component {
                   onClick={this.select.bind(this, node.id)}
                 />
               )}
+
+              <Card summary={
+                <div>
+                  <div><strong>Total</strong></div>
+                  <div className='amount avg'>
+                    <Money amount={goalTargetTotal} abs={true}/>
+                  </div>
+                  <div className='amount'>
+                    <Money amount={goalFilledTotal} abs={true}/>
+                  </div>
+                </div>
+              }/>
             </CardList>
           : null}
 
@@ -198,6 +216,17 @@ class Dashboard extends Component {
                   onClick={this.select.bind(this, node.id)}
                 />
               )}
+              <Card summary={
+                <div>
+                  <div><strong>Total</strong></div>
+                  <div className='amount avg'>
+                    <Money amount={bucketAvgTotal} abs={true}/>
+                  </div>
+                  <div className='amount'>
+                    <Money amount={bucketTotal} abs={true}/>
+                  </div>
+                </div>
+              }/>
             </CardList>
           : null}
 
@@ -261,6 +290,8 @@ Dashboard = Relay.createContainer(Dashboard, {
                 ${GoalMonth.getFragment('goalMonth')}
                 id
                 name
+                targetAmount
+                filledAmount
               }
             }
           }
@@ -270,6 +301,8 @@ Dashboard = Relay.createContainer(Dashboard, {
                 ${BucketMonth.getFragment('bucketMonth')}
                 id
                 name
+                avgAmount
+                amount
               }
             }
           }
