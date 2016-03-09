@@ -99,7 +99,11 @@ class BucketForm extends Component {
         <div className='heading'>
           <h2>All Transactions</h2>
         </div>
-        <TransactionList transactions={viewer.transactions}/>
+
+        <CardList>
+          <TransactionList transactions={viewer.transactions}/>
+        </CardList>
+
       </ScrollTrigger>
     );
   }
