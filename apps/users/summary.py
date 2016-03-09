@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from apps.goals.models import GoalMonth
 from apps.buckets.models import BucketMonth
 from apps.transactions.models import Transaction
+from apps.core.utils import this_month
 
 
 class MonthSummary(object):
@@ -68,6 +69,8 @@ class MonthSummary(object):
             self._bills_unpaid_total = 0
             self._bills_paid_total = 0
 
+            unpaid_month = this_month()
+
             for bill_month in BucketMonth.objects.filter(
                 bucket__owner=self.user,
                 bucket__type='bill',
@@ -75,7 +78,7 @@ class MonthSummary(object):
             ):
                 self._bills_paid_total += bill_month.amount
 
-                if bill_month.amount > bill_month.avg_amount:
+                if bill_month.month_start == unpaid_month and bill_month.amount > bill_month.avg_amount:
                     self._bills_unpaid_total -= abs(bill_month.avg_amount) - abs(bill_month.amount)
 
         return self._bills_unpaid_total
