@@ -58,7 +58,9 @@ class GoalForm extends Component {
         <Card>
           <TextInput
             label='Monthly Amount'
-            value={_.isNumber(monthlyAmount) ? (Math.abs(monthlyAmount) / 100).toString() : ''}
+            value={_.isNumber(monthlyAmount) && monthlyAmount !== 0 ?
+              (Math.abs(monthlyAmount) / 100).toString()
+            : ''}
             onChange={::this.handleMonthlyAmountChange}
           />
         </Card>
