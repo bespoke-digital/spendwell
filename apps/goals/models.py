@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
@@ -37,13 +38,19 @@ class Goal(SWModel):
         if month_start is None:
             month_start = this_month()
 
-        available_amount = MonthSummary(self.owner, month_start).net
+        month_simmary = MonthSummary(self.owner, month_start)
+        available_amount = sum([
+            month_simmary.income,
+            month_simmary.bills_unpaid_total,
+            month_simmary.spent,
+        ])
+
         if available_amount < self.monthly_amount:
             filled_amount = -available_amount
         else:
             filled_amount = self.monthly_amount
 
-        goal_month, created = GoalMonth.objects.get_or_create(
+        goal_month, created = GoalMonth.objects.update_or_create(
             goal=self,
             month_start=month_start,
             defaults={
@@ -53,6 +60,12 @@ class Goal(SWModel):
         )
 
         return goal_month
+
+
+@receiver(post_save, sender=Goal)
+def goal_post_save(sender, instance, created, raw, **kwargs):
+    if not raw:
+        instance.generate_month()
 
 
 class GoalMonthQueryset(SWQuerySet):

@@ -77,9 +77,8 @@ export class UpdateGoalMutation extends Relay.Mutation {
       fragment on UpdateGoalMutation {
         goal
         viewer {
-          goals
           summary {
-            allocated
+            goalsTotal
             net
             goalMonths
           }
