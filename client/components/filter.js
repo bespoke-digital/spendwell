@@ -144,7 +144,7 @@ class Filter extends Component {
 
           <Card className='save-card'>
             <Button onClick={onCollapse} variant='primary'>Save</Button>
-            {this.renderDropdown(fields)}
+            {/*this.renderDropdown(fields)  TODO: bring back once to have an amount filter */}
           </Card>
         </CardList>
 
