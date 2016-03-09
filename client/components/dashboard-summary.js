@@ -133,12 +133,14 @@ class DashboardSummary extends Component {
                 <div><Money amount={goalsTotal} abs={true}/></div>
               </div>
             }/>
-            <Card summary={
-              <div>
-                <div>Unpaid Bills</div>
-                <div><Money amount={billsUnpaidTotal} abs={true}/></div>
-              </div>
-            }/>
+            {billsUnpaidTotal < 0 ?
+              <Card summary={
+                <div>
+                  <div>Unpaid Bills</div>
+                  <div><Money amount={billsUnpaidTotal} abs={true}/></div>
+                </div>
+              }/>
+            : null}
             <Card summary={
               <div>
                 <div>Money Spent</div>
