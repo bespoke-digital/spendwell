@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 
 from apps.core.signals import day_start, month_start
 from apps.core.utils import this_month
+from apps.core.management.commands.import_demo_data import import_demo_data
 
 
 class Command(BaseCommand):
@@ -15,3 +16,5 @@ class Command(BaseCommand):
 
         if now().datetime.day == 1:
             month_start.send(sender=None, month=this_month())
+
+        import_demo_data()
