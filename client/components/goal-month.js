@@ -39,7 +39,7 @@ class GoalMonth extends Component {
         {' '}
         <Money abs={true} amount={goalMonth.targetAmount * 12}/>
 
-        <div>
+        <div className='actions'>
           <Button to={`/app/goals/${goalMonth.goal.id}`}>View</Button>
           <Button to={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</Button>
         </div>

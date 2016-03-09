@@ -68,7 +68,9 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
-          <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
+          <div className='actions'>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
+          </div>
         </Card>
       }>
         {bucketMonth.transactions ?
