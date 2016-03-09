@@ -65,7 +65,7 @@ class Transactions extends Component {
           </div>
 
           <CardList>
-            <Card className='card-list-headings'>Filters</Card>
+            <Card className='card-list-heading'>Filters</Card>
             <Card>
               <Checkbox
                 label='Outgoing'

@@ -78,7 +78,7 @@ class TransactionList extends Component {
       if (!transactions || transactions.length === 0) return;
       months.push(
         <CardList key={month}>
-          <Card className='card-list-headings'>
+          <Card className='card-list-heading'>
             {moment(month, 'YYYY/MM').format('MMMM YYYY')}
           </Card>
           {_.sortBy(transactions, (t)=> t.date).reverse().map(::this.renderTransaction)}

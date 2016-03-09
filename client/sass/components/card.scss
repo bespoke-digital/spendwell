@@ -15,22 +15,15 @@
   }
 
   &.can-expand {
-    transition: 0.5s ease, max-height 0.2s ease;
-    max-height: 60px;
-    overflow: hidden;
-
-    .summary {
-      height: 60px;
-    }
+    transition: 0.5s ease;
   }
 
   &.can-expand.expanded {
     @extend .depth-z2;
     margin: 20px -10px;
-    max-height: none;
   }
 
-  &.card-list-headings {
+  &.card-list-heading {
     font-weight: 600;
   }
 
@@ -40,12 +33,14 @@
     padding: 20px;
 
     .mui-btn {
-      margin-top: -10px;
-      margin-bottom: -10px;
+      @media (min-width: $screen-sm-min) {
+        margin-top: -10px;
+        margin-bottom: -10px;
+      }
     }
   }
 
-  &.card-list-headings,
+  &.card-list-heading,
   .summary > div {
 
     @media (min-width: $screen-sm-min) {
@@ -59,6 +54,7 @@
 
       > :not(:first-child) {
         margin-left: 20px;
+        text-align: right;
       }
     }
 
@@ -76,6 +72,11 @@
         float: left;
         margin-left: 0;
         margin-right: 0;
+        text-align: right;
+      }
+
+      > :nth-child(even) {
+        text-align: left;
       }
 
       &:after {

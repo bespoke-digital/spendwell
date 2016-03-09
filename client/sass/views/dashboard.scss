@@ -2,83 +2,19 @@
 @import '../variables';
 
 :local(.root) {
-  .month {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding: 10px;
+  .heading h2 {
+    line-height: 1;
 
-    .current {
-      margin: 0px 12px;
-      width: 200px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-    }
-  }
 
-  .status {
-    padding: 0;
-    border-bottom: 0;
-
-    @media (min-width: $screen-sm-min) {
-      flex-direction: row;
-    }
-
-    .number {
-      display: inline-block;
-      width: calc(100% / 3);
-      padding: 20px;
-
-      text-align: center;
-      font-size: 22px;
-
-      @media (min-width: $screen-sm-min) {
-        margin-bottom: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      &.open {
-        background-color: $gray-lightest;
-        border-right: 1px solid $gray-lighter;
-        border-left: 1px solid $gray-lighter;
-
-        &:first-child {
-          border-left: none;
-        }
-
-        &:last-child {
-          border-right: none;
-        }
-      }
-
-      .amount {
-        font-weight: 600;
-        text-align: center;
-
-        .asterisk {
-          color: $gray-lightish;
-        }
-      }
-    }
-
-    > a {
-      color: $gray-dark;
-
-      &:hover {
-        text-decoration: none;
+    @media (max-width: $screen-xs-max) {
+      small {
+        display: block;
+        margin-top: 5px;
       }
     }
   }
 
-  .super-card.expanded > .summary {
-
-  }
-
-  .card {
+  .month-list .card {
     position: relative;
 
     &.bucket, &.goal {
@@ -95,9 +31,14 @@
       border-right-color: $brand-warn;
     }
 
+    &.card-list-heading {
+      .amount.avg {
+        color: $gray-dark;
+      }
+    }
+
     .amount {
       min-width: 80px;
-      text-align: right;
 
       &.avg {
         color: $gray-light;
@@ -138,16 +79,8 @@
     }
   }
 
-  .bottom-load-button {
-    padding-bottom: 0;
-    min-height: 46px;
-
-    .mui-btn {
-      margin-top: 10px;
-
-      &:first-child {
-        margin-top: 0;
-      }
-    }
+  .bottom-buttons {
+    margin-top: 10px;
+    text-align: center;
   }
 }

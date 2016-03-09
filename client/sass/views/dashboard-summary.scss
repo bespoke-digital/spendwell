@@ -1,0 +1,81 @@
+
+@import '../variables';
+
+:local(.root) {
+  .month {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 10px;
+
+    .current {
+      margin: 0px 12px;
+      width: 200px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .status {
+    padding: 0;
+    border-bottom: 0;
+
+    @media (min-width: $screen-sm-min) {
+      flex-direction: row;
+    }
+
+    .number {
+      padding: 20px;
+
+      text-align: center;
+      font-size: 22px;
+
+      @media (min-width: $screen-sm-min) {
+        display: inline-block;
+        width: calc(100% / 3);
+        margin-bottom: 0;
+      }
+
+      @media (max-width: $screen-xs-max) {
+        display: block;
+        text-align: center;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.open {
+        background-color: $gray-lightest;
+        border-right: 1px solid $gray-lighter;
+        border-left: 1px solid $gray-lighter;
+
+        &:first-child {
+          border-left: none;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+      .amount {
+        font-weight: 600;
+        text-align: center;
+
+        .asterisk {
+          color: $gray-lightish;
+        }
+      }
+    }
+
+    > a {
+      color: $gray-dark;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}

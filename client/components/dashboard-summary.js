@@ -10,6 +10,8 @@ import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 import Transition from 'components/transition';
 
+import styles from 'sass/views/dashboard-summary.scss';
+
 
 class DashboardSummary extends Component {
   constructor() {
@@ -44,7 +46,7 @@ class DashboardSummary extends Component {
     const allocated = goalsTotal + billsUnpaidTotal + spent;
 
     return (
-      <CardList className='overview'>
+      <CardList className={styles.root}>
         <Card className='month'>
           <Button to={`/app/dashboard/${periods.previous.format('YYYY/MM')}`}>
             <i className='fa fa-chevron-left'/>
@@ -66,7 +68,7 @@ class DashboardSummary extends Component {
             onClick={this.handleStatusClick.bind(this, 'in')}
             href='#'
           >
-            <span className='title'>In</span>
+            <div className='title'>In</div>
             <div className='amount'>
               <Money amount={income}/>
               <span className='asterisk'>{incomeEstimated ? '*' : ''}</span>
@@ -77,7 +79,7 @@ class DashboardSummary extends Component {
             onClick={this.handleStatusClick.bind(this, 'out')}
             href='#'
           >
-            <span className='title'>Out</span>
+            <div className='title'>Out</div>
             <div className='amount'>
               <Money amount={allocated} abs={true}/>
               <span className='asterisk'>{billsUnpaidTotal !== 0 ? '*' : ''}</span>
@@ -88,7 +90,7 @@ class DashboardSummary extends Component {
             onClick={this.handleStatusClick.bind(this, 'net')}
             href='#'
           >
-            <span className='title'>Net</span>
+            <div className='title'>Net</div>
             <div className='amount'><Money amount={net}/></div>
           </a>
         </Card>

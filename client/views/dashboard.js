@@ -105,10 +105,10 @@ class Dashboard extends Component {
           </div>
 
           {goalMonths.length > 0 ?
-            <CardList>
-              <Card className='card-list-headings'>
+            <CardList className='month-list'>
+              <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount'>Target</div>
+                <div className='amount avg'>Target</div>
                 <div className='amount'>Funded</div>
               </Card>
 
@@ -144,10 +144,10 @@ class Dashboard extends Component {
           </div>
 
           {billMonths.length > 0 ?
-            <CardList>
-              <Card className='card-list-headings'>
+            <CardList className='month-list'>
+              <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount'>Average</div>
+                <div className='amount avg'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
               {billMonths.map((node)=>
@@ -174,7 +174,7 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Categories <small>for all non-recurring expenses</small></h2>
+            <h2>Categories <small>for non-recurring expenses</small></h2>
             <div>
               <Button to='/app/labels/new' flat={true} variant='primary'>
                 {' New Category'}
@@ -183,10 +183,10 @@ class Dashboard extends Component {
           </div>
 
           {bucketMonths.length > 0 ?
-            <CardList>
-              <Card className='card-list-headings'>
+            <CardList className='month-list'>
+              <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount'>Average</div>
+                <div className='amount avg'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
               {bucketMonths.map((node)=>
@@ -207,7 +207,7 @@ class Dashboard extends Component {
 
           <CardList>
             {spent !== 0 ?
-              <Card className='card-list-headings'>
+              <Card className='card-list-heading'>
                 <div>Total</div>
                 <div className='amount'>
                   <Money amount={spent} abs/>
@@ -218,7 +218,7 @@ class Dashboard extends Component {
             <TransactionList transactions={expenseTransactions} monthHeaders={false}/>
 
             {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
-              <div className='bottom-load-button'>
+              <div className='bottom-buttons'>
                 <Button onClick={::this.loadTransactions} raised>Load More</Button>
               </div>
             : null}
