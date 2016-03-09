@@ -5,6 +5,7 @@ import Relay from 'react-relay';
 
 import Button from 'components/button';
 import Card from 'components/card';
+import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 
 
@@ -45,26 +46,31 @@ class GoalForm extends Component {
     const { name, monthlyAmount } = this.state;
 
     return (
-      <Card>
-        <TextInput
-          label='Name'
-          value={name}
-          onChange={(name)=> this.setState({ name })}
-          autoFocus={true}
-        />
-        <TextInput
-          label='Monthly Amount'
-          value={_.isNumber(monthlyAmount) ? (Math.abs(monthlyAmount) / 100).toString() : ''}
-          onChange={::this.handleMonthlyAmountChange}
-        />
-
-        <Button
-          onClick={::this.handleSubmit}
-          loading={loading}
-          variant='primary'
-        >Save</Button>
-        <Button onClick={onCancel}>Cancel</Button>
-      </Card>
+      <CardList>
+        <Card>
+          <TextInput
+            label='Name'
+            value={name}
+            onChange={(name)=> this.setState({ name })}
+            autoFocus={true}
+          />
+        </Card>
+        <Card>
+          <TextInput
+            label='Monthly Amount'
+            value={_.isNumber(monthlyAmount) ? (Math.abs(monthlyAmount) / 100).toString() : ''}
+            onChange={::this.handleMonthlyAmountChange}
+          />
+        </Card>
+        <Card>
+          <Button
+            onClick={::this.handleSubmit}
+            loading={loading}
+            variant='primary'
+          >Save</Button>
+          <Button onClick={onCancel}>Cancel</Button>
+        </Card>
+      </CardList>
     );
   }
 }
