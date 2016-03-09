@@ -66,9 +66,6 @@ class Dashboard extends Component {
     const {
       spent,
       spentFromSavings,
-      goalMonths,
-      bucketMonths,
-      billMonths,
       expenseTransactions,
     } = viewer.summary;
 
@@ -83,8 +80,12 @@ class Dashboard extends Component {
       next: current.clone().add(1, 'month'),
     };
 
-    const billAvgTotal = _.sum(billMonths.edges, ({ node })=> node.avgAmount);
-    const billTotal = _.sum(billMonths.edges, ({ node })=> node.amount);
+    const goalMonths = _.sortBy(viewer.summary.goalMonths.edges.map((e)=> e.node), 'name');
+    const billMonths = _.sortBy(viewer.summary.billMonths.edges.map((e)=> e.node), 'name');
+    const bucketMonths = _.sortBy(viewer.summary.bucketMonths.edges.map((e)=> e.node), 'name');
+
+    const billAvgTotal = _.sum(billMonths, 'avgAmount');
+    const billTotal = _.sum(billMonths, 'amount');
 
     return (
       <App viewer={viewer}>
@@ -103,7 +104,7 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          {goalMonths.edges.length > 0 ?
+          {goalMonths.length > 0 ?
             <CardList>
               <Card className='card-list-headings'>
                 <div></div>
@@ -111,7 +112,7 @@ class Dashboard extends Component {
                 <div className='amount'>Funded</div>
               </Card>
 
-              {goalMonths.edges.map(({ node })=>
+              {goalMonths.map((node)=>
                 <GoalMonth
                   key={node.id}
                   goalMonth={node}
@@ -142,14 +143,14 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          {billMonths.edges.length > 0 ?
+          {billMonths.length > 0 ?
             <CardList>
               <Card className='card-list-headings'>
                 <div></div>
                 <div className='amount'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
-              {billMonths.edges.map(({ node })=>
+              {billMonths.map((node)=>
                 <BillMonth
                   key={node.id}
                   bucketMonth={node}
@@ -181,14 +182,14 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          {bucketMonths.edges.length > 0 ?
+          {bucketMonths.length > 0 ?
             <CardList>
               <Card className='card-list-headings'>
                 <div></div>
                 <div className='amount'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
-              {bucketMonths.edges.map(({ node })=>
+              {bucketMonths.map((node)=>
                 <BucketMonth
                   key={node.id}
                   bucketMonth={node}
@@ -259,6 +260,7 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 ${GoalMonth.getFragment('goalMonth')}
                 id
+                name
               }
             }
           }
@@ -267,6 +269,7 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 ${BucketMonth.getFragment('bucketMonth')}
                 id
+                name
               }
             }
           }
@@ -275,6 +278,7 @@ Dashboard = Relay.createContainer(Dashboard, {
               node {
                 ${BillMonth.getFragment('bucketMonth')}
                 id
+                name
                 avgAmount
                 amount
               }
