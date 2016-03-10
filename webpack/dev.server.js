@@ -1,37 +1,35 @@
 /*eslint no-var: 0*/
 
-const express = require('express');
+process.env.NODE_ENV = 'development';
+
 const webpack = require('webpack');
-const proxyMiddleware = require('http-proxy-middleware');
+const webpackDevServer = require('webpack-dev-server');
 
 const config = require('./dev.config');
 
-process.env.NODE_ENV = 'development';
 
-config.entry.hotLoader = 'webpack-hot-middleware/client';
+config.entry.app = [
+  config.entry.app,
+  'webpack-dev-server/client?https://dev.spendwell.co/',
+  'webpack/hot/dev-server',
+];
 
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoErrorsPlugin(),
 ]);
 
-
-const app = express();
-const compiler = webpack(config);
-
-app.use(require('webpack-dev-middleware')(compiler, {
+var compiler = webpack(config);
+var server = new webpackDevServer(compiler, {
+  hot: true,
   noInfo: true,
+  port: 3000,
   publicPath: config.output.publicPath,
-}));
-
-app.use(require('webpack-hot-middleware')(compiler));
-
-app.use(proxyMiddleware('http://localhost:8000/'));
-
-app.listen(3000, 'localhost', function(err) {
-  if (err) throw err;
-
-  console.log('Listening on http://localhost:3000');
-  console.log('Proxying to http://localhost:8000');
-  console.log('https://dev.spendwell.co');
+  proxy: {
+    '*': {
+      target: 'http://localhost:8000',
+      secure: false,
+    },
+  },
 });
+
+server.listen(3000, ()=> console.log('ready'));

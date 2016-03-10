@@ -4,5 +4,10 @@
     "./webpack/babel-relay-plugin",
     "transform-class-properties",
     "transform-decorators-legacy"
-  ]
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
 }

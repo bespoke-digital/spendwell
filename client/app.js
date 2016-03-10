@@ -8,24 +8,13 @@ import { Provider } from 'react-redux';
 
 import store from 'store';
 import networkLayer from 'utils/network-layer';
-import appRoutes from './app-routes';
+import routes from 'app-routes';
 
 
 Relay.injectNetworkLayer(networkLayer);
 
 
-const renderRoutes = (routes)=> render(
+window.onload = ()=> render(
   <Provider store={store}>{routes}</Provider>,
   document.getElementById('root'),
 );
-
-
-window.onload = ()=> renderRoutes(appRoutes);
-
-if (module.hot) {
-  console.log('setting up hot reloading');
-  module.hot.accept('./app-routes', ()=> {
-    console.log('hot reload');
-    renderRoutes(require('./app-routes'));
-  });
-}
