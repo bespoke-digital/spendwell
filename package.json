@@ -6,7 +6,7 @@
   "author": "defrex",
   "license": "All Rights Reserved",
   "scripts": {
-    "start": "node ./webpack/dev.server.js",
+    "start": "concurrently --kill-others --no-color --raw 'caddy' 'node ./webpack/dev.server.js' 'python ./manage.py runserver'",
     "build-dev": "./node_modules/.bin/webpack --config=./webpack/dev.config.js",
     "build-prod": "./node_modules/.bin/webpack --config=./webpack/prod.config.js"
   },
@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "babel-preset-react-hmre": "^1.1.1",
+    "concurrently": "^2.0.0",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^4.0.0",
     "eslint-plugin-react": "^3.16.1",

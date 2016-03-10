@@ -1,0 +1,7 @@
+https://dev.spendwell.co
+
+tls /home/defrex/.ssl/dev_spendwell_co.crt /home/defrex/.ssl/dev_spendwell_co.key
+
+proxy / localhost:3000 {
+    websocket
+}
