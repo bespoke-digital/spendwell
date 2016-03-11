@@ -23,8 +23,9 @@
     min-height: 100px;
 
     color: white;
-    background-color: $brand-primary;
     border-bottom: $gray;
+
+    background-color: $brand-primary;
 
     .account-email {
       position: absolute;
@@ -35,20 +36,21 @@
 
   > ul {
     margin: 0;
+    padding-top: 8px;
 
     li > a {
       display: block;
-      padding: 10px 16px;
+      padding: 14px 16px;
 
-      border-bottom: 1px solid $gray-lighter;
       color: $gray-dark;
 
       .fa {
-        margin-right: 16px;
+        margin-right: 32px;
       }
     }
 
     li.active > a {
+      background-color: $gray-lightest;
       color: $brand-primary;
     }
   }
