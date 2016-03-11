@@ -25,7 +25,7 @@
     color: white;
     border-bottom: $gray;
 
-    background-color: $brand-primary;
+    background-color: darken($brand-primary, 10%);
 
     .account-email {
       position: absolute;
