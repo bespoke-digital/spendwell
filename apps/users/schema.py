@@ -36,6 +36,7 @@ class UsersQuery(graphene.ObjectType):
     safe_to_spend = graphene.Field(Money())
     summary = graphene.Field(Summary, month=Month())
     first_month = graphene.Field(Month())
+    email = graphene.Field(graphene.String())
 
     class Meta:
         abstract = True
@@ -48,3 +49,6 @@ class UsersQuery(graphene.ObjectType):
 
     def resolve_first_month(self, args, info):
         return info.request_context.user.transactions.order_by('date').first().date
+
+    def resolve_email(self, args, info):
+        return info.request_context.user.email

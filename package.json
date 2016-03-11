@@ -6,7 +6,7 @@
   "author": "defrex",
   "license": "All Rights Reserved",
   "scripts": {
-    "start": "concurrently --kill-others --no-color --raw 'caddy' 'node ./webpack/dev.server.js' 'python ./manage.py runserver'",
+    "start": "concurrently --kill-others --no-color 'caddy' 'node ./webpack/dev.server.js'",
     "build-dev": "./node_modules/.bin/webpack --config=./webpack/dev.config.js",
     "build-prod": "./node_modules/.bin/webpack --config=./webpack/prod.config.js"
   },

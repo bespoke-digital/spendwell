@@ -47,7 +47,7 @@ class App extends Component {
       <div className={style.root}>
         <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>
 
-        <Nav open={navOpen} toggleNav={::this.toggleNav}/>
+        <Nav open={navOpen} toggleNav={::this.toggleNav} viewer={viewer}/>
 
         <Transition name='overlay' show={overlayOpen}>
           <div className='overlay' onClick={::this.closeOverlay}/>
@@ -69,6 +69,7 @@ App = Relay.createContainer(App, {
       return Relay.QL`
         fragment on Viewer {
           ${Header.getFragment('viewer')}
+          ${Nav.getFragment('viewer')}
         }
       `;
     },
