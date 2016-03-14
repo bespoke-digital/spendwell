@@ -16,7 +16,7 @@ class Command(BaseCommand):
     help = 'Exports the GraphQL schema in JSON format.'
 
     def handle(self, *args, **options):
-        owner = User.objects.get(email='aron@spendwell.co')
+        owner = User.objects.get(email='demo@spendwell.co')
 
         today = delorean.now().truncate('day').datetime
 
@@ -43,11 +43,7 @@ class Command(BaseCommand):
                 'current_balance': account.current_balance,
             })
 
-        for transaction in owner.transactions.filter(
-            account__disabled=False,
-            date__lt=today,
-            date__gte=today - relativedelta(months=4),
-        ):
+        for transaction in owner.transactions.filter(account__disabled=False):
             export['transactions'].append({
                 'id': transaction.id,
                 'account': transaction.account.id,
