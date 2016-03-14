@@ -82,9 +82,18 @@ class Dashboard extends Component {
       next: current.clone().add(1, 'month'),
     };
 
-    const goalMonths = _.sortBy(viewer.summary.goalMonths.edges.map((e)=> e.node), 'name');
-    const billMonths = _.sortBy(viewer.summary.billMonths.edges.map((e)=> e.node), 'name');
-    const bucketMonths = _.sortBy(viewer.summary.bucketMonths.edges.map((e)=> e.node), 'name');
+    const goalMonths = _.sortBy(
+      viewer.summary.goalMonths.edges.map((e)=> e.node),
+      (n)=> n.name.toLowerCase()
+    );
+    const billMonths = _.sortBy(
+      viewer.summary.billMonths.edges.map((e)=> e.node),
+      (n)=> n.name.toLowerCase()
+    );
+    const bucketMonths = _.sortBy(
+      viewer.summary.bucketMonths.edges.map((e)=> e.node),
+      (n)=> n.name.toLowerCase()
+    );
 
     const goalTargetTotal = _.sum(goalMonths, 'targetAmount');
     const goalFilledTotal = _.sum(goalMonths, 'filledAmount');
