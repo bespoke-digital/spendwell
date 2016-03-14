@@ -46,7 +46,7 @@ class Command(BaseCommand):
         for transaction in owner.transactions.filter(
             account__disabled=False,
             date__lt=today,
-            date__gte=today - relativedelta(months=3),
+            date__gte=today - relativedelta(months=4),
         ):
             export['transactions'].append({
                 'id': transaction.id,
