@@ -6,7 +6,6 @@ import { RelayRouter } from 'react-router-relay';
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
 import AddPlaid from 'views/add-plaid';
-import AddCsv from 'views/add-csv';
 import Categories from 'views/categories';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
@@ -44,7 +43,6 @@ export default (
 
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/add/plaid' component={AddPlaid} queries={rootQuery}/>
-      <Route path='accounts/add/upload' component={AddCsv} queries={rootQuery}/>
       <Route path='accounts/:accountId' component={Accounts} queries={rootQuery}/>
 
       <Route path='categories' component={Categories} queries={rootQuery}/>
