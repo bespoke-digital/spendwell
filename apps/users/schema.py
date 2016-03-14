@@ -37,6 +37,7 @@ class UsersQuery(graphene.ObjectType):
     summary = graphene.Field(Summary, month=Month())
     first_month = graphene.Field(Month())
     email = graphene.Field(graphene.String())
+    is_admin = graphene.Field(graphene.Boolean())
 
     class Meta:
         abstract = True
@@ -52,3 +53,6 @@ class UsersQuery(graphene.ObjectType):
 
     def resolve_email(self, args, info):
         return info.request_context.user.email
+
+    def resolve_is_admin(self, args, info):
+        return info.request_context.user.is_admin

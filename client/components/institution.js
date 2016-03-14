@@ -1,5 +1,5 @@
 
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import moment from 'moment';
@@ -16,6 +16,14 @@ import { EnableAccountMutation } from 'mutations/accounts';
 
 
 class Institution extends Component {
+  static propTypes = {
+    isAdmin: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    isAdmin: false,
+  };
+
   constructor() {
     super();
     this.state = { selected: null, showDisabled: false };
@@ -41,7 +49,7 @@ class Institution extends Component {
   }
 
   render() {
-    const { institution } = this.props;
+    const { institution, isAdmin } = this.props;
     const { selected, showDisabled } = this.state;
 
     return (
@@ -50,7 +58,7 @@ class Institution extends Component {
           <div>
             <h3>{institution.name}</h3>
 
-            { institution.canSync ? [
+            { institution.canSync && isAdmin ? [
               <div key='last-sync' className='last-sync'>
                 {moment(institution.lastSync).fromNow()}
               </div>,

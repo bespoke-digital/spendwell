@@ -28,7 +28,7 @@ class Accounts extends Component {
           </div>
 
           {viewer.institutions.edges.map(({ node })=>
-            <Institution key={node.id} institution={node}/>
+            <Institution key={node.id} institution={node} isAdmin={viewer.isAdmin}/>
           )}
 
           <CardList>
@@ -53,6 +53,9 @@ Accounts = Relay.createContainer(Accounts, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+
+        isAdmin
+
         institutions(first: 10) {
           edges {
             node {
