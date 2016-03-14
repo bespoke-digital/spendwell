@@ -73,23 +73,9 @@ class DetectTransfersMutation(ClientIDMutation):
         return Cls(viewer=Viewer())
 
 
-class ToggleTransactionFromSavings(ClientIDMutation):
-    class Input:
-        transaction_id = graphene.ID()
-
-    transaction = graphene.Field(TransactionNode)
-
-    @classmethod
-    def mutate_and_get_payload(Cls, input, info):
-        transaction = instance_for_node_id(input.get('transaction_id'), info)
-        transaction.toggle_from_savings()
-        return Cls(transaction=transaction)
-
-
 class TransactionsMutations(graphene.ObjectType):
     upload_csv_mutation = graphene.Field(UploadCsvMutation)
     detect_transfers = graphene.Field(DetectTransfersMutation)
-    toggle_transaction_from_savings = graphene.Field(ToggleTransactionFromSavings)
 
     class Meta:
         abstract = True

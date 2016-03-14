@@ -28,25 +28,25 @@ class Nav extends Component {
         <ul className='list-unstyled'>
           <li className={isActive('/app/dashboard') ? 'active' : ''}>
             <Link onClick={toggleNav} to='/app/dashboard'>
-              <i className='fa fa-tachometer'/>
+              <i className='fa fa-fw fa-tachometer'/>
               Dashboard
             </Link>
           </li>
           <li className={isActive('/app/transactions') ? 'active' : ''}>
             <Link onClick={toggleNav} to='/app/transactions'>
-              <i className='fa fa-list'/>
+              <i className='fa fa-fw fa-list'/>
               Transactions
             </Link>
           </li>
           <li className={isActive('/app/accounts') ? 'active' : ''}>
             <Link onClick={toggleNav} to='/app/accounts'>
-              <i className='fa fa-university'/>
+              <i className='fa fa-fw fa-university'/>
               Accounts
             </Link>
           </li>
           <li>
             <a href='/logout?next=/login'>
-              <i className='fa fa-power-off'/>
+              <i className='fa fa-fw fa-power-off'/>
               Logout
             </a>
           </li>

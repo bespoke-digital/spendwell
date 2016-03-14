@@ -28,7 +28,11 @@ class Accounts extends Component {
           </div>
 
           {viewer.institutions.edges.map(({ node })=>
-            <Institution key={node.id} institution={node} isAdmin={viewer.isAdmin}/>
+            <Institution
+              key={node.id}
+              institution={node}
+              isAdmin={viewer.isAdmin}
+            />
           )}
 
           <CardList>

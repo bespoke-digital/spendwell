@@ -8,8 +8,6 @@ import Card from 'components/card';
 import Money from 'components/money';
 import DateTime from 'components/date-time';
 
-import { ToggleTransactionFromSavings } from 'mutations/transactions';
-
 import styles from 'sass/components/list-transaction';
 
 
@@ -27,15 +25,6 @@ class ListTransaction extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.expanded !== this.props.expanded)
       this.props.relay.setVariables({ open: nextProps.expanded });
-  }
-
-  markAsFromSavings() {
-    const { transaction } = this.props;
-
-    Relay.Store.commitUpdate(new ToggleTransactionFromSavings({ transaction }), {
-      onSuccess: ()=> console.log('ToggleTransactionFromSavings Success'),
-      onFailure: ()=> console.log('ToggleTransactionFromSavings Failure'),
-    });
   }
 
   render() {
@@ -99,25 +88,6 @@ class ListTransaction extends Component {
                 <Money amount={transaction.transferPair.amount}/>
               </div>
             : null}
-
-            {transaction.amount < 0 ?
-              <div className='from-savings-toggle' onClick={::this.markAsFromSavings}>
-                <div className='from-savings-check'>
-                  <i className={`fa fa-${transaction.fromSavings ? 'check-' : ''}square-o`}/>
-                </div>
-                <div className='from-savings-copy'>
-                  <div><strong>
-                    {'Remove from '}
-                    <DateTime value={transaction.date} format='MMMM'/>
-                    {' expenses'}
-                  </strong></div>
-                  <div>
-                    Only use if this money was saved before
-                    {' '}<DateTime value={transaction.date} format='MMMM'/>.
-                  </div>
-                </div>
-              </div>
-            : null}
           </div>
         : null}
       </Card>
@@ -132,8 +102,6 @@ ListTransaction = Relay.createContainer(ListTransaction, {
   fragments: {
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
-        ${ToggleTransactionFromSavings.getFragment('transaction')}
-
         description
         amount
         date
