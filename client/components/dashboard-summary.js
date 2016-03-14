@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
 
@@ -9,6 +10,10 @@ import Button from 'components/button';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 import Transition from 'components/transition';
+import MoneyInput from 'components/money-input';
+import Dialog from 'components/dialog';
+
+import { SetIncomeFromSavingsMutation } from 'mutations/transactions';
 
 import styles from 'sass/views/dashboard-summary.scss';
 
@@ -16,7 +21,13 @@ import styles from 'sass/views/dashboard-summary.scss';
 class DashboardSummary extends Component {
   constructor() {
     super();
-    this.state = { statusOpen: null };
+    this.state = {
+      statusOpen: null,
+      inFromSavings: {
+        dialog: false,
+        loading: false,
+      },
+    };
   }
 
   handleStatusClick(type) {
@@ -27,13 +38,48 @@ class DashboardSummary extends Component {
       this.setState({ statusOpen: type });
   }
 
+  handleAddFromSavings() {
+    this.setState({
+      inFromSavings: _.extend(this.state.inFromSavings, { dialog: true }),
+    });
+  }
+
+  handleAddFromSavingsSubmit() {
+    const { viewer, summary } = this.props;
+    const { inFromSavings } = this.state;
+
+    this.setState({
+      inFromSavings: _.extend(inFromSavings, { loading: true }),
+    });
+
+    Relay.Store.commitUpdate(new SetIncomeFromSavingsMutation({
+      viewer,
+      month: summary.monthStart,
+      amount: inFromSavings.amount,
+    }), {
+      onFailure: ()=> {
+        console.log('AssignTransactionsMutation Failure');
+        this.setState({
+          inFromSavings: _.extend(inFromSavings, { loading: false }),
+        });
+      },
+      onSuccess: ()=> {
+        console.log('AssignTransactionsMutation Success');
+        this.setState({
+          inFromSavings: _.extend(inFromSavings, { loading: false, dialog: false }),
+        });
+      },
+    });
+  }
+
   render() {
     const { summary, periods } = this.props;
-    const { statusOpen } = this.state;
+    const { statusOpen, inFromSavings } = this.state;
 
     const {
       income,
       trueIncome,
+      fromSavingsIncome,
       incomeEstimated,
       goalsTotal,
       billsUnpaidTotal,
@@ -97,15 +143,56 @@ class DashboardSummary extends Component {
           </a>
         </Card>
 
+        <Dialog visible={inFromSavings.dialog}>
+          <div className='body'>
+            <p>
+              <strong>This will add extra money to this month's income.</strong><br/>
+              It can be helpful to do if you're going to spend some saved money.
+            </p>
+            <MoneyInput
+              label='Amount'
+              value={!_.isUndefined(inFromSavings.amount) ? inFromSavings.amount : fromSavingsIncome}
+              onChange={(amount)=> this.setState({
+                inFromSavings: _.extend(inFromSavings, { amount }),
+              })}
+              autoFocus={true}
+            />
+          </div>
+          <div className='actions'>
+            <Button
+              onClick={()=> this.setState({
+                inFromSavings: _.extend(inFromSavings, { dialog: false }),
+              })}
+            >Cancel</Button>
+            <Button
+              onClick={::this.handleAddFromSavingsSubmit}
+              variant='primary'
+              loading={inFromSavings.loading}
+            >Add</Button>
+          </div>
+        </Dialog>
+
         <Transition name='fade' show={statusOpen === 'in'}>
           <SuperCard className='status-details' expanded={true} summary={
-            <Card summary={incomeEstimated ?
-              <span>
-                <strong>*</strong>
-                Estimated based on 3-month average income
-              </span>
-            : null}/>
+            <Card summary={
+              <div>
+                {incomeEstimated ? <div><strong>*</strong>Estimate</div> : <div/>}
+                <Button>Update Income Estimate</Button>
+                <Button onClick={::this.handleAddFromSavings}>
+                  <i className='fa fa-plus'/>
+                  {' From Savings'}
+                </Button>
+              </div>
+            }/>
           }>
+            {fromSavingsIncome ?
+              <Card summary={
+                <div>
+                  <div>From Savings</div>
+                  <div><Money amount={fromSavingsIncome}/></div>
+                </div>
+              }/>
+            : null}
             <TransactionList transactions={transactions}/>
             <Card summary={
               <div>
@@ -120,10 +207,7 @@ class DashboardSummary extends Component {
           <SuperCard className='status-details' expanded={true} summary={
             <Card>
               {billsUnpaidTotal !== 0 ?
-                <div>
-                  <strong>*</strong>
-                  Includes estimates for unpaid bills based on 3-month average.
-                </div>
+                <div><strong>*</strong>Includes estimates for unpaid bills</div>
               : null}
             </Card>
           }>
@@ -187,15 +271,24 @@ class DashboardSummary extends Component {
 
 DashboardSummary = Relay.createContainer(DashboardSummary, {
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${SetIncomeFromSavingsMutation.getFragment('viewer')}
+      }
+    `,
     summary: ()=> Relay.QL`
       fragment on Summary {
+
+        monthStart
         income
         trueIncome
+        fromSavingsIncome
         incomeEstimated
         goalsTotal
         billsUnpaidTotal
         spent
         net
+
         transactions(first: 100, amountGt: 0) {
           ${TransactionList.getFragment('transactions')}
         }

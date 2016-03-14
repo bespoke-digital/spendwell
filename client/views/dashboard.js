@@ -110,7 +110,11 @@ class Dashboard extends Component {
           className={`container ${styles.root}`}
           onTrigger={::this.loadTransactions}
         >
-          <DashboardSummary summary={viewer.summary} periods={periods}/>
+          <DashboardSummary
+            viewer={viewer}
+            summary={viewer.summary}
+            periods={periods}
+          />
 
           <div className='heading'>
             <h2>Goals <small>for long and short term savings</small></h2>
@@ -288,6 +292,7 @@ Dashboard = Relay.createContainer(Dashboard, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${AssignTransactionsMutation.getFragment('viewer')}
+        ${DashboardSummary.getFragment('viewer')}
 
         firstMonth
 

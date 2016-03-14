@@ -12,7 +12,10 @@ from .summary import MonthSummary
 
 
 class Summary(graphene.ObjectType):
+    month_start = graphene.Field(Month())
+
     true_income = graphene.Field(Money())
+    from_savings_income = graphene.Field(Money())
     estimated_income = graphene.Field(Money())
     income = graphene.Field(Money())
     income_estimated = graphene.Field(graphene.Boolean())

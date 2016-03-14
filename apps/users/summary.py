@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from apps.goals.models import GoalMonth
 from apps.buckets.models import BucketMonth
-from apps.transactions.models import Transaction
+from apps.transactions.models import Transaction, IncomeFromSavings
 from apps.core.utils import this_month
 
 
@@ -33,19 +33,32 @@ class MonthSummary(object):
         return self._true_income
 
     @property
+    def from_savings_income(self):
+        if not hasattr(self, '_from_savings_income'):
+            self._from_savings_income = (
+                IncomeFromSavings.objects
+                .filter(owner=self.user, month_start=self.month_start)
+                .sum('amount')
+            )
+
+        return self._from_savings_income
+
+    @property
     def estimated_income(self):
         return self.user.estimated_income
 
     @property
     def income(self):
         if not hasattr(self, '_income'):
+            self._income = self.true_income + self.from_savings_income
+
             current_month = relativedelta(self.month_start, delorean.now().datetime).months == 0
-            if current_month and self.true_income < self.estimated_income:
+            if current_month and self._income < self.estimated_income:
                 self._income = self.estimated_income
                 self._income_estimated = True
             else:
-                self._income = self.true_income
                 self._income_estimated = False
+
         return self._income
 
     @property

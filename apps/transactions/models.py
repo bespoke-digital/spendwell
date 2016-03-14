@@ -215,3 +215,13 @@ def transaction_post_save(sender, instance, created, raw, **kwargs):
 class BucketTransaction(models.Model):
     bucket_month = models.ForeignKey('buckets.BucketMonth')
     transaction = models.ForeignKey('transactions.Transaction')
+
+
+class IncomeFromSavings(SWModel):
+    owner = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
+        related_name='income_from_savings',
+    )
+    month_start = models.DateTimeField(unique=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=12)

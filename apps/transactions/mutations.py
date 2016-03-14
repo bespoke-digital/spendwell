@@ -6,11 +6,12 @@ from datetime import datetime
 import graphene
 from graphene.relay import ClientIDMutation
 
+from apps.core.types import Month, Money
 from apps.core.fields import SWConnectionField
 from apps.core.utils import instance_for_node_id
 from apps.accounts.schema import AccountNode
 
-from .models import Transaction
+from .models import Transaction, IncomeFromSavings
 from .schema import TransactionNode
 
 
@@ -73,9 +74,30 @@ class DetectTransfersMutation(ClientIDMutation):
         return Cls(viewer=Viewer())
 
 
+class SetIncomeFromSavingsMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        month = graphene.InputField(Month)
+        amount = graphene.InputField(Money)
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
+        IncomeFromSavings.objects.update_or_create(
+            owner=info.request_context.user,
+            month_start=input['month'],
+            defaults={'amount': input['amount']}
+        )
+
+        return Cls(viewer=Viewer())
+
+
 class TransactionsMutations(graphene.ObjectType):
     upload_csv_mutation = graphene.Field(UploadCsvMutation)
     detect_transfers = graphene.Field(DetectTransfersMutation)
+    set_income_from_savings = graphene.Field(SetIncomeFromSavingsMutation)
 
     class Meta:
         abstract = True

@@ -78,3 +78,49 @@ export class DetectTransfersMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class SetIncomeFromSavingsMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id,
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { setIncomeFromSavings }`;
+  }
+
+  getVariables() {
+    return {
+      month: this.props.month,
+      amount: this.props.amount,
+    };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on SetIncomeFromSavingsMutation {
+        viewer {
+          summary {
+            income
+            fromSavingsIncome
+            incomeEstimated
+            net
+          }
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}

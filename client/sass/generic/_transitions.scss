@@ -21,19 +21,23 @@
 }
 
 .height-transition-enter {
+  transition: max-height 300ms ease;
   max-height: 1px;
   overflow: hidden;
 }
 
 .height-transition-enter.height-transition-enter-active {
+  transition: max-height 300ms ease;
   max-height: 200px;
 }
 
 .height-transition-leave {
+  transition: max-height 300ms ease;
   max-height: 200px;
   overflow: hidden;
 }
 
 .height-transition-leave.height-transition-leave-active {
+  transition: max-height 300ms ease;
   max-height: 1px;
 }

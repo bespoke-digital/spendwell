@@ -1,5 +1,5 @@
 
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 
 export default (props)=> {
@@ -14,8 +14,13 @@ export default (props)=> {
   _props.transitionLeaveTimeout = 500;
 
   return (
-    <ReactCSSTransitionGroup {..._props}>
+    <div {..._props}>
       {show ? children : null}
-    </ReactCSSTransitionGroup>
+    </div>
   );
+  // return (
+  //   <ReactCSSTransitionGroup {..._props}>
+  //     {show ? children : null}
+  //   </ReactCSSTransitionGroup>
+  // );
 };
