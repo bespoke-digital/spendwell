@@ -58,8 +58,8 @@ def import_demo_data():
     for transaction_data in export['transactions']:
         exported_date = delorean.parse(transaction_data['date']).datetime
         date = exported_date - relativedelta(months=months_offset)
-        if relativedelta(today, date).months == 3 and date.day <= today.day:
-            date = exported_date + relativedelta(months=3)
+        if relativedelta(today, date).months == 4 and date.day <= today.day:
+            date = exported_date + relativedelta(months=4)
 
         Transaction.objects.create(
             owner=owner,
