@@ -10,6 +10,7 @@ import Categories from 'views/categories';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
 import CreateBill from 'views/create-bill';
+import CreateExternalAccount from 'views/create-external-account';
 import UpdateBucket from 'views/update-bucket';
 import UpdateGoal from 'views/update-goal';
 import Bucket from 'views/bucket';
@@ -43,6 +44,7 @@ export default (
 
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/add/plaid' component={AddPlaid} queries={rootQuery}/>
+      <Route path='accounts/add/external' component={CreateExternalAccount} queries={rootQuery}/>
       <Route path='accounts/:accountId' component={Accounts} queries={rootQuery}/>
 
       <Route path='categories' component={Categories} queries={rootQuery}/>

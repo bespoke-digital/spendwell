@@ -4,12 +4,6 @@ from difflib import SequenceMatcher
 from django import forms
 import graphene
 from graphene.contrib.django.form_converter import convert_form_field
-from graphql.core.type import (
-    GraphQLInputObjectType,
-    GraphQLInputObjectField,
-    GraphQLObjectType,
-    GraphQLField,
-)
 
 from apps.core.types import Money
 

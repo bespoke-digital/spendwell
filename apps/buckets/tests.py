@@ -88,3 +88,21 @@ class BucktsTestCase(SWTestCase):
         self.assertTrue(transaction in bill.transactions())
 
         self.assertEqual(bill.months.first().avg_amount, -111)
+
+    def test_external_accounts(self):
+        owner = UserFactory.create()
+
+        account = BucketFactory.create(
+            owner=owner,
+            type='account',
+            filters=[{'description_exact': 'trnsfr'}],
+        )
+
+        transaction = TransactionFactory.create(owner=owner, description='trnsfr')
+        self.assertTrue(transaction in account.transactions())
+
+        transaction = TransactionFactory.create(owner=owner, description='trnsfr')
+        self.assertTrue(transaction in account.transactions())
+
+        transaction = TransactionFactory.create(owner=owner, description='transfer')
+        self.assertTrue(transaction not in account.transactions())

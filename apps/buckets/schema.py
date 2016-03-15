@@ -2,7 +2,7 @@
 from collections import namedtuple
 import graphene
 
-from apps.core.fields import SWNode, SWConnectionField
+from apps.core.fields import SWNode, SWConnectionField, SWFilterConnectionField
 from apps.core.types import Money
 from apps.transactions.schema import TransactionNode
 from apps.transactions.utils import filter_list_schema
@@ -25,6 +25,7 @@ class BucketNode(SWNode):
             'filters',
             'type',
         )
+        filter_fields = ('type',)
 
     def resolve_transactions(self, args, info):
         return self.instance.transactions()
@@ -60,7 +61,7 @@ class BucketMonthNode(SWNode):
 
 class BucketsQuery(graphene.ObjectType):
     bucket = graphene.relay.NodeField(BucketNode)
-    buckets = SWConnectionField(BucketNode)
+    buckets = SWFilterConnectionField(BucketNode)
 
     bucket_month = graphene.relay.NodeField(BucketMonthNode)
     bucket_months = SWConnectionField(BucketMonthNode)

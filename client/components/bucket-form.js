@@ -17,7 +17,7 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
-    type: PropTypes.oneOf(['bill', 'bucket']),
+    type: PropTypes.oneOf(['bill', 'bucket', 'account']),
   };
 
   static defaultProps = {
@@ -119,12 +119,7 @@ BucketForm = Relay.createContainer(BucketForm, {
       fragment on Viewer {
         ${Filters.getFragment('viewer')}
 
-        transactions(
-          first: $count,
-          filters: $filters,
-          isTransfer: false,
-          fromSavings: false,
-        ) {
+        transactions(first: $count, filters: $filters, isTransfer: false) {
           ${TransactionList.getFragment('transactions')}
         }
       }

@@ -8,7 +8,7 @@ from .models import Transaction
 
 
 class BooleanMethodFilter(filters.MethodFilter):
-    field_class = forms.BooleanField
+    field_class = forms.NullBooleanField
 
 
 class TransactionFilter(filters.FilterSet):

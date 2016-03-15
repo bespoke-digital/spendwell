@@ -9,6 +9,7 @@ import Money from 'components/money';
 import Button from 'components/button';
 import Institution from 'components/institution';
 import App from 'components/app';
+import ExternalAccounts from 'components/external-accounts';
 
 import styles from 'sass/views/accounts';
 
@@ -22,6 +23,9 @@ class Accounts extends Component {
         <div className={`container ${styles.root}`}>
           <div className='heading'>
             <h1>Accounts</h1>
+            <Button to='/app/accounts/add/external' flat variant='primary'>
+              Ext Acct
+            </Button>
             <Button to='/app/accounts/add/plaid' flat variant='primary'>
               New Bank
             </Button>
@@ -46,6 +50,8 @@ class Accounts extends Component {
               </div>
             }/>
           </CardList>
+
+          <ExternalAccounts viewer={viewer}/>
         </div>
       </App>
     );
@@ -57,6 +63,7 @@ Accounts = Relay.createContainer(Accounts, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+        ${ExternalAccounts.getFragment('viewer')}
 
         isAdmin
 

@@ -24,10 +24,16 @@ class TransactionsQuerySet(SWQuerySet):
 
     def is_transfer(self, has_transfer):
         queryset = self.annotate(models.Count('_transfer_pair'))
+
         if has_transfer:
-            return queryset.filter(_transfer_pair__count__gt=0)
+            method = 'filter'
         else:
-            return queryset.filter(_transfer_pair__count=0)
+            method = 'exclude'
+
+        return getattr(queryset, method)(
+            models.Q(_transfer_pair__count__gt=0)
+            | models.Q(bucket_months__bucket__type='account')
+        )
 
 
 class TransactionManager(SWManager):
@@ -112,8 +118,8 @@ class Transaction(SWModel):
     )
     _transfer_pair = models.ManyToManyField('self')
 
-    description = models.CharField(max_length=255)
-    amount = models.DecimalField(decimal_places=2, max_digits=12)
+    description = models.CharField(max_length=255, db_index=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=12, db_index=True)
     date = models.DateTimeField()
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 

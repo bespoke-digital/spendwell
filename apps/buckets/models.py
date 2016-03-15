@@ -19,21 +19,23 @@ class Bucket(SWModel):
     name = models.CharField(max_length=255)
     filters = JSONField(default=list)
     type = models.CharField(max_length=10, default='expense', choices=(
-        ('expense', 'Expense'),
+        ('expense', 'Expense Category'),
         ('bill', 'Bill'),
+        ('account', 'External Account'),
     ))
 
     def __str__(self):
         return self.name
 
     def transactions(self, **filters):
+        filters['owner'] = self.owner
+        filters['account__disabled'] = False
+
+        if self.type in ('expense', 'bill'):
+            filters['amount__lt'] = 0
+
         return apply_filter_list(
-            Transaction.objects.filter(
-                owner=self.owner,
-                account__disabled=False,
-                amount__lt=0,
-                **filters
-            ),
+            Transaction.objects.filter(**filters),
             self.filters,
             TransactionFilter,
         )
