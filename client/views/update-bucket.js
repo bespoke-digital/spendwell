@@ -91,21 +91,23 @@ class UpdateBucket extends Component {
             </Button>
           </div>
 
-          <Dialog visible={confirmDelete}>
-            <div className='body'>
-              Are you sure? You can't take it back.
-            </div>
-            <div className='actions'>
-              <Button
-                onClick={()=> this.setState({ confirmDelete: false })}
-              >Cancel</Button>
-              <Button
-                onClick={::this.deleteBucket}
-                variant='danger'
-                loading={deleteLoading}
-              >Delete</Button>
-            </div>
-          </Dialog>
+          {confirmDelete ?
+            <Dialog size='sm'>
+              <div className='body'>
+                Are you sure? You can't take it back.
+              </div>
+              <div className='actions'>
+                <Button
+                  onClick={()=> this.setState({ confirmDelete: false })}
+                >Cancel</Button>
+                <Button
+                  onClick={::this.deleteBucket}
+                  variant='danger'
+                  loading={deleteLoading}
+                >Delete</Button>
+              </div>
+            </Dialog>
+          : null}
 
           <BucketForm
             viewer={viewer}

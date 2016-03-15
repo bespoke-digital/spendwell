@@ -74,16 +74,17 @@ class UpdateGoal extends Component {
             </Button>
           </div>
 
-          <Dialog visible={confirmDelete}>
-            <div className='body'>
-              Are you sure? You can't take it back.
-            </div>
-            <div className='actions'>
-              <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
-              <Button onClick={::this.deleteGoal} variant='danger'>Delete</Button>
-            </div>
-          </Dialog>
-
+          {confirmDelete ?
+            <Dialog size='sm'>
+              <div className='body'>
+                Are you sure? You can't take it back.
+              </div>
+              <div className='actions'>
+                <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
+                <Button onClick={::this.deleteGoal} variant='danger'>Delete</Button>
+              </div>
+            </Dialog>
+          : null}
 
           <GoalForm
             viewer={viewer}
