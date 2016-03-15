@@ -68,10 +68,7 @@ class UpdateGoal extends Component {
               onClick={()=> this.setState({ confirmDelete: true })}
               variant='danger'
               flat
-            >
-              <i className='fa fa-times'/>
-              {' Delete'}
-            </Button>
+            >Delete</Button>
           </div>
 
           {confirmDelete ?
