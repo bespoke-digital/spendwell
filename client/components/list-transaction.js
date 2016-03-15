@@ -59,7 +59,9 @@ class ListTransaction extends Component {
             <Row>
               <Col md='6'>
                 <strong>{'Date: '}</strong><DateTime value={transaction.date}/><br/>
-                <strong>{'Amount: '}</strong><Money amount={transaction.amount}/>
+                <strong>{'Amount: '}</strong><Money amount={transaction.amount}/><br/>
+                <strong>{'Type: '}</strong>
+                {transaction.category ? transaction.category.name : 'Unknown'}
               </Col>
               <Col md='6'>
                 <strong>{'Account: '}</strong>{transaction.account.name}<br/>

@@ -1,0 +1,13 @@
+
+:local(.root) {
+  &.fade-transition {
+    .fade {
+      transition: opacity 200ms ease-in;
+      opacity: 0;
+
+      &.in {
+        opacity: 1;
+      }
+    }
+  }
+}

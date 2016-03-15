@@ -12,8 +12,7 @@ import { SetIncomeFromSavingsMutation } from 'mutations/transactions';
 
 class IncomeFromSavingsDialog extends Component {
   static propTypes = {
-    visible: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
+    onRequestClose: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -22,7 +21,7 @@ class IncomeFromSavingsDialog extends Component {
   }
 
   handleAddFromSavingsSubmit() {
-    const { viewer, summary, onClose } = this.props;
+    const { viewer, summary, onRequestClose } = this.props;
     const { amount } = this.state;
 
     this.setState({ loading: true });
@@ -39,17 +38,17 @@ class IncomeFromSavingsDialog extends Component {
       onSuccess: ()=> {
         console.log('AssignTransactionsMutation Success');
         this.setState({ loading: false });
-        onClose();
+        onRequestClose();
       },
     });
   }
 
   render() {
-    const { summary, visible, onClose } = this.props;
+    const { summary, onRequestClose } = this.props;
     const { loading } = this.state;
 
     return (
-      <Dialog visible={visible} size='sm'>
+      <Dialog size='sm' onRequestClose={onRequestClose}>
         <div className='body'>
           <h3>Add money to this month's in</h3>
           <p>
@@ -64,7 +63,7 @@ class IncomeFromSavingsDialog extends Component {
           />
         </div>
         <div className='actions'>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onRequestClose}>Cancel</Button>
           <Button
             onClick={::this.handleAddFromSavingsSubmit}
             variant='primary'

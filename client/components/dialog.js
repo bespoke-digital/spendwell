@@ -1,8 +1,7 @@
 
 import { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 
-import Transition from 'components/transition';
 import Card from 'components/card';
 
 import style from 'sass/components/dialog';
@@ -10,8 +9,7 @@ import style from 'sass/components/dialog';
 
 class Dialog extends Component {
   static propTypes = {
-    visible: PropTypes.bool.isRequired,
-    dispatch: PropTypes.func.isRequired,
+    onRequestClose: PropTypes.func.isRequired,
     size: PropTypes.oneOf(['sm', 'md', 'lg']),
   };
 
@@ -21,25 +19,41 @@ class Dialog extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.visible !== this.props.visible)
-      this.props.dispatch({ type: 'OVERLAY', open: nextProps.visible });
+    this.insert(this.renderDialog(nextProps));
   }
 
-  render() {
-    const { visible, children, size } = this.props;
+  componentDidMount() {
+    this.node = document.createElement('div');
+    document.body.appendChild(this.node);
+
+    this.insert(this.renderDialog(this.props));
+  }
+
+  componentWillUnmount() {
+    ReactDOM.unmountComponentAtNode(this.node);
+    document.body.removeChild(this.node);
+  }
+
+  insert(element) {
+    ReactDOM.render(element, this.node);
+  }
+
+  renderDialog() {
+    const { size, onRequestClose, children } = this.props;
 
     return (
-      <Transition name='fade' show={visible}>
+      <div>
         <Card className={`${style.root} ${size}`}>
           {children}
         </Card>
-      </Transition>
+        <div className='overlay' onClick={onRequestClose}/>
+      </div>
     );
   }
-}
 
-Dialog = connect(function(state) {
-  return { overlayOpen: state.overlayOpen };
-})(Dialog);
+  render() {
+    return null;
+  }
+}
 
 export default Dialog;

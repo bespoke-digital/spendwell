@@ -9,6 +9,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 import IncomeFromSavingsDialog from 'components/income-from-savings-dialog';
+import Transition from 'components/transition';
 
 
 const LineItem = ({ name, value, bold, children })=> (
@@ -86,12 +87,13 @@ class IncomingSummary extends Component {
           }/>
         </CardList>
 
-        <IncomeFromSavingsDialog
-          summary={summary}
-          viewer={viewer}
-          visible={showInFromSavings}
-          onClose={()=> this.setState({ showInFromSavings: false })}
-        />
+        <Transition show={showInFromSavings}>
+          <IncomeFromSavingsDialog
+            summary={summary}
+            viewer={viewer}
+            onRequestClose={()=> this.setState({ showInFromSavings: false })}
+          />
+        </Transition>
       </SuperCard>
     );
   }

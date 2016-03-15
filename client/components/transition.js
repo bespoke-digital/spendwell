@@ -1,26 +1,41 @@
 
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { Component, PropTypes } from 'react';
+
+import style from 'sass/components/transition';
 
 
-export default (props)=> {
-  const { name, show, children, ..._props } = props;
+export default class Transition extends Component {
+  static propTypes = {
+    show: PropTypes.bool.isRequired,
+    name: PropTypes.string,
+  };
 
-  _props.transitionName = `${name}-transition`;
+  static defaultProps = {
+    name: 'fade',
+  };
 
-  _props.className = _props.className || '';
-  _props.className += ` ${name}-transition`;
+  constructor() {
+    super();
+    this.state = { visible: false };
+  }
 
-  _props.transitionEnterTimeout = 500;
-  _props.transitionLeaveTimeout = 500;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.show !== this.props.show)
+      setTimeout(()=> this.setState({ visible: nextProps.show }), 1);
+  }
 
-  return (
-    <div {..._props}>
-      {show ? children : null}
-    </div>
-  );
-  // return (
-  //   <ReactCSSTransitionGroup {..._props}>
-  //     {show ? children : null}
-  //   </ReactCSSTransitionGroup>
-  // );
-};
+  render() {
+    const { name, show, children, ..._props } = this.props;
+    const { visible } = this.state;
+
+    return (
+      <div className={`${style.root} ${name}-transition`} {..._props}>
+        {show ?
+          <div className={`${name} ${visible ? 'in' : ''}`}>
+            {children}
+          </div>
+        : null}
+      </div>
+    );
+  }
+}
