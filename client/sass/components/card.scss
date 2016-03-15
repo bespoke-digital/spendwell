@@ -42,6 +42,9 @@
 
   &.card-list-heading,
   .summary > div {
+    &.bold {
+      font-weight: 600;
+    }
 
     @media (min-width: $screen-sm-min) {
       display: flex;

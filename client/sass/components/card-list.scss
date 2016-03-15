@@ -3,4 +3,8 @@
 
 :local(.root) {
   margin-bottom: 40px;
+
+  &.last {
+    margin-bottom: 10px;
+  }
 }

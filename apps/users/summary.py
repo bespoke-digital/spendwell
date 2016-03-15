@@ -54,7 +54,7 @@ class MonthSummary(object):
 
             current_month = relativedelta(self.month_start, delorean.now().datetime).months == 0
             if current_month and self._income < self.estimated_income:
-                self._income = self.estimated_income
+                self._income = self.estimated_income + self.from_savings_income
                 self._income_estimated = True
             else:
                 self._income_estimated = False

@@ -9,12 +9,13 @@ export default class TextInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string,
-    error: PropTypes.string,
+    error: PropTypes.any,
     className: PropTypes.string,
     type: PropTypes.string,
   };
 
   static defaultProps = {
+    error: false,
     className: '',
     type: 'text',
   };
@@ -55,7 +56,7 @@ export default class TextInput extends Component {
           {..._props}
         />
         {label ? <label>{label}</label> : null}
-        {error ? <span className='mui-textfield__help-text'>{error}</span> : null}
+        {_.isString(error) ? <span className='mui-textfield__help-text'>{error}</span> : null}
       </div>
     );
   }

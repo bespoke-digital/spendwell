@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 
 import TextInput from 'components/text-input';
@@ -7,7 +8,7 @@ import TextInput from 'components/text-input';
 export default class MoneyInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.number,
+    initialValue: PropTypes.number,
   };
 
   constructor() {
@@ -16,29 +17,23 @@ export default class MoneyInput extends Component {
   }
 
   onChange(value) {
-    this.setState({ addDecimal: value[value.length - 1] === '.' });
+    this.setState({ value });
 
     value = parseInt(parseFloat(value) * 100);
 
-    if (this.props.onChange)
+    if (!_.isNaN(value) && this.props.onChange)
       this.props.onChange(value);
   }
 
   render() {
-    const { onChange, value, ..._props } = this.props;
-    const { addDecimal } = this.state;
-
-    let _value = value || 0;
-    _value /= 100;
-    _value = _value.toString();
-
-    if (addDecimal)
-      _value += '.';
+    const { onChange, initialValue, ..._props } = this.props;
+    const { value } = this.state;
 
     return (
       <TextInput
         onChange={::this.onChange}
-        value={_value}
+        value={_.isUndefined(value) ? (initialValue / 100).toString() : value}
+        error={!_.isUndefined(value) && _.isNaN(parseFloat(value))}
         {..._props}
       />
     );

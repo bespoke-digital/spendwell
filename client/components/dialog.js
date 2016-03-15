@@ -12,10 +12,12 @@ class Dialog extends Component {
   static propTypes = {
     visible: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
+    size: PropTypes.oneOf(['sm', 'md', 'lg']),
   };
 
   static defaultProps = {
     visible: false,
+    size: 'md',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -24,11 +26,11 @@ class Dialog extends Component {
   }
 
   render() {
-    const { visible, children } = this.props;
+    const { visible, children, size } = this.props;
 
     return (
       <Transition name='fade' show={visible}>
-        <Card className={style.root}>
+        <Card className={`${style.root} ${size}`}>
           {children}
         </Card>
       </Transition>

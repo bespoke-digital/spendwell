@@ -63,10 +63,6 @@
       .amount {
         font-weight: 600;
         text-align: center;
-
-        .asterisk {
-          color: $gray-lightish;
-        }
       }
     }
 
@@ -77,5 +73,9 @@
         text-decoration: none;
       }
     }
+  }
+
+  .asterisk {
+    color: $gray-lightish;
   }
 }

@@ -4,7 +4,6 @@
   z-index: 101;
   top: 50px;
   left: 50%;
-  width: 500px;
   max-width: 90%;
   transform: translateX(-50%);
 
@@ -15,5 +14,17 @@
   .actions {
     margin-top: 10px;
     text-align: right;
+  }
+
+  &.sm {
+    width: 400px;
+  }
+
+  &.md {
+    width: 600px;
+  }
+
+  &.lg {
+    width: 90%;
   }
 }
