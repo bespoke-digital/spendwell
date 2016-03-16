@@ -64,7 +64,7 @@ class Filters extends Component {
       return 'New';
 
     return _.map(fields, (key)=> (
-      <span className='field'>
+      <span className='field' key={key}>
         <strong>{FIELDS[key].label}{':'}</strong>
         {' '}{filter[key]}
       </span>
