@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.db import models
 from django.dispatch import receiver
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+import delorean
 
 from apps.core.signals import month_start
 from apps.core.utils import months_avg
@@ -34,6 +35,8 @@ class User(AbstractBaseUser):
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
@@ -79,6 +82,9 @@ class User(AbstractBaseUser):
             .is_transfer(False),
             date_field='date',
         )
+
+    def first_data_month(self):
+        return delorean(self.transactions.order_by('date').first().date).truncate('month')
 
 
 def get_beta_code():
