@@ -259,7 +259,7 @@ class Dashboard extends Component {
               </Card>
             : null}
 
-            <TransactionList transactions={expenseTransactions} monthHeaders={false}/>
+            <TransactionList transactions={expenseTransactions}/>
 
             {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
               <div className='bottom-buttons'>

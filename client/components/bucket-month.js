@@ -74,7 +74,7 @@ class BucketMonth extends Component {
         </Card>
       }>
         {bucketMonth.transactions ?
-          <TransactionList transactions={bucketMonth.transactions} monthHeaders={false}/>
+          <TransactionList transactions={bucketMonth.transactions}/>
         : null}
 
         <div className='bottom-buttons'>

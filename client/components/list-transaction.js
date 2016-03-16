@@ -13,9 +13,10 @@ import styles from 'sass/components/list-transaction';
 
 class ListTransaction extends Component {
   static propTypes = {
+    abs: PropTypes.bool.isRequired,
+    dateFormat: PropTypes.string.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
-    abs: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -28,7 +29,7 @@ class ListTransaction extends Component {
   }
 
   render() {
-    const { transaction, expanded, onClick, abs, relay } = this.props;
+    const { transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
 
     return (
       <Card
@@ -46,7 +47,7 @@ class ListTransaction extends Component {
               )}
             </div>
             <div className='date'>
-              <DateTime value={transaction.date} format='ddd • Do'/>
+              <DateTime value={transaction.date} format={dateFormat}/>
             </div>
             <div className='amount'>
               <Money amount={transaction.amount} abs={abs}/>

@@ -101,7 +101,7 @@ class BucketForm extends Component {
         </div>
 
         <CardList>
-          <TransactionList transactions={viewer.transactions}/>
+          <TransactionList transactions={viewer.transactions} months={true}/>
         </CardList>
 
       </ScrollTrigger>

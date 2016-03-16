@@ -113,7 +113,11 @@ class Transactions extends Component {
             </Card>
           </CardList>
 
-          <TransactionList transactions={viewer.transactions} abs={false}/>
+          <TransactionList
+            transactions={viewer.transactions}
+            abs={false}
+            monthDisplay={true}
+          />
         </ScrollTrigger>
       </App>
     );

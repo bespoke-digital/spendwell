@@ -33,10 +33,7 @@ class Bucket extends Component {
             <h1>{viewer.bucket.name}</h1>
           </div>
 
-          <TransactionList
-            transactions={viewer.bucket.transactions}
-            monthHeaders={true}
-          />
+          <TransactionList transactions={viewer.bucket.transactions} months={true}/>
         </ScrollTrigger>
       </App>
     );

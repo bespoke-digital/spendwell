@@ -148,7 +148,7 @@ class Filter extends Component {
           </Card>
         </CardList>
 
-        <TransactionList transactions={viewer.transactions}/>
+        <TransactionList transactions={viewer.transactions} months={true}/>
 
         {viewer.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>

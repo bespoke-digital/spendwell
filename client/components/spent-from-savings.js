@@ -36,7 +36,7 @@ class SpentFromSavings extends Component {
           </div>
         }/>
       }>
-        <TransactionList transactions={summary.transactions} monthHeaders={false}/>
+        <TransactionList transactions={summary.transactions}/>
       </SuperCard>
     );
   }
