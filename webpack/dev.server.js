@@ -21,6 +21,7 @@ config.plugins = config.plugins.concat([
 var compiler = webpack(config);
 var server = new webpackDevServer(compiler, {
   hot: true,
+  colors: true,
   noInfo: true,
   port: 3000,
   publicPath: config.output.publicPath,
@@ -32,4 +33,4 @@ var server = new webpackDevServer(compiler, {
   },
 });
 
-server.listen(3000, ()=> console.log('ready'));
+server.listen(3000, ()=> console.log('http://localhost:3000'));
