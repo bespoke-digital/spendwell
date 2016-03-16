@@ -11,3 +11,4 @@ graphene==0.7.3
 tqdm==3.8.0
 django-watchman==0.9.0
 django-extensions==1.6.1
+graphql-django-view==1.1.0
