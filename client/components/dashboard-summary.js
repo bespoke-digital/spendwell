@@ -39,6 +39,7 @@ class DashboardSummary extends Component {
       incomeEstimated,
       goalsTotal,
       billsUnpaidTotal,
+      billsPaidTotal,
       spent,
       net,
     } = summary;
@@ -116,18 +117,22 @@ class DashboardSummary extends Component {
                 <div><Money amount={goalsTotal} abs={true}/></div>
               </div>
             }/>
-            {billsUnpaidTotal < 0 ?
-              <Card summary={
-                <div>
-                  <div>Unpaid Bills</div>
-                  <div><Money amount={billsUnpaidTotal} abs={true}/></div>
-                </div>
-              }/>
-            : null}
+            <Card summary={
+              <div>
+                <div>Unpaid Bills</div>
+                <div><Money amount={billsUnpaidTotal} abs={true}/></div>
+              </div>
+            }/>
+            <Card summary={
+              <div>
+                <div>Paid Bills</div>
+                <div><Money amount={billsPaidTotal} abs={true}/></div>
+              </div>
+            }/>
             <Card summary={
               <div>
                 <div>Money Spent</div>
-                <div><Money amount={spent} abs={true}/></div>
+                <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
               </div>
             }/>
             <Card summary={
@@ -183,6 +188,7 @@ DashboardSummary = Relay.createContainer(DashboardSummary, {
         incomeEstimated
         goalsTotal
         billsUnpaidTotal
+        billsPaidTotal
         spent
         net
       }
