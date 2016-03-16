@@ -9,6 +9,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 import IncomeFromSavingsDialog from 'components/income-from-savings-dialog';
+import IncomeEstimateDialog from 'components/income-estimate-dialog';
 import Transition from 'components/transition';
 
 
@@ -27,7 +28,8 @@ class IncomingSummary extends Component {
   constructor() {
     super();
     this.state = {
-      showInFromSavings: false,
+      showFromSavingsDialog: false,
+      showIncomeEstimateDialog: false,
     };
   }
 
@@ -40,14 +42,14 @@ class IncomingSummary extends Component {
       incomeEstimated,
       transactions,
     } = summary;
-    const { showInFromSavings } = this.state;
+    const { showFromSavingsDialog, showIncomeEstimateDialog } = this.state;
 
     return (
       <SuperCard className='status-details' expanded={true} summary={
         <Card summary={
           <div>
             <div/>
-            <Button onClick={()=> this.setState({ showInFromSavings: true })}>
+            <Button onClick={()=> this.setState({ showFromSavingsDialog: true })}>
               Add Money
             </Button>
           </div>
@@ -62,7 +64,9 @@ class IncomingSummary extends Component {
             <CardList>
               <LineItem name='From Previous Month' value={fromSavingsIncome}/>
               <LineItem name='Income Estimate' value={estimatedIncome}>
-                <Button>Edit</Button>
+                <Button onClick={()=> this.setState({ showIncomeEstimateDialog: true })}>
+                  Edit
+                </Button>
               </LineItem>
               <LineItem name='Total' value={estimatedIncome + fromSavingsIncome} bold/>
             </CardList>
@@ -87,11 +91,19 @@ class IncomingSummary extends Component {
           }/>
         </CardList>
 
-        <Transition show={showInFromSavings}>
+        <Transition show={showFromSavingsDialog}>
           <IncomeFromSavingsDialog
             summary={summary}
             viewer={viewer}
-            onRequestClose={()=> this.setState({ showInFromSavings: false })}
+            onRequestClose={()=> this.setState({ showFromSavingsDialog: false })}
+          />
+        </Transition>
+
+        <Transition show={showIncomeEstimateDialog}>
+          <IncomeEstimateDialog
+            summary={summary}
+            viewer={viewer}
+            onRequestClose={()=> this.setState({ showIncomeEstimateDialog: false })}
           />
         </Transition>
       </SuperCard>
@@ -104,11 +116,13 @@ IncomingSummary = Relay.createContainer(IncomingSummary, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${IncomeFromSavingsDialog.getFragment('viewer')}
+        ${IncomeEstimateDialog.getFragment('viewer')}
       }
     `,
     summary: ()=> Relay.QL`
       fragment on Summary {
         ${IncomeFromSavingsDialog.getFragment('summary')}
+        ${IncomeEstimateDialog.getFragment('summary')}
 
         trueIncome
         estimatedIncome

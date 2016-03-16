@@ -9,6 +9,7 @@ from apps.accounts.mutations import AccountsMutations
 from apps.transactions.schema import TransactionsQuery
 from apps.transactions.mutations import TransactionsMutations
 from apps.users.schema import UsersQuery
+from apps.users.mutations import UsersMutations
 from apps.goals.schema import GoalsQuery
 from apps.goals.mutations import GoalsMutations
 from apps.buckets.schema import BucketsQuery
@@ -47,6 +48,7 @@ class Mutations(
     TransactionsMutations,
     GoalsMutations,
     BucketsMutations,
+    UsersMutations,
 ):
     pass
 

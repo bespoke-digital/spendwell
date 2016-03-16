@@ -9,6 +9,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import Transition from 'components/transition';
 import IncomingSummary from 'components/incoming-summary';
+import OutgoingSummary from 'components/outgoing-summary';
 
 import styles from 'sass/views/dashboard-summary.scss';
 
@@ -39,7 +40,6 @@ class DashboardSummary extends Component {
       incomeEstimated,
       goalsTotal,
       billsUnpaidTotal,
-      billsPaidTotal,
       spent,
       net,
     } = summary;
@@ -104,44 +104,7 @@ class DashboardSummary extends Component {
         </Transition>
 
         <Transition name='fade' show={statusOpen === 'out'}>
-          <SuperCard className='status-details' expanded={true} summary={
-            <Card>
-              {billsUnpaidTotal !== 0 ?
-                <div><strong>*</strong>Includes estimates for unpaid bills</div>
-              : null}
-            </Card>
-          }>
-            <Card summary={
-              <div>
-                <div>Goals</div>
-                <div><Money amount={goalsTotal} abs={true}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div>Unpaid Bills</div>
-                <div><Money amount={billsUnpaidTotal} abs={true}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div>Paid Bills</div>
-                <div><Money amount={billsPaidTotal} abs={true}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div>Money Spent</div>
-                <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div><strong>Total</strong></div>
-                <div><strong><Money amount={allocated} abs={true}/></strong></div>
-              </div>
-            }/>
-          </SuperCard>
+          <OutgoingSummary summary={summary}/>
         </Transition>
 
         <Transition name='fade' show={statusOpen === 'net'}>
@@ -183,12 +146,12 @@ DashboardSummary = Relay.createContainer(DashboardSummary, {
     summary: ()=> Relay.QL`
       fragment on Summary {
         ${IncomingSummary.getFragment('summary')}
+        ${OutgoingSummary.getFragment('summary')}
 
         income
         incomeEstimated
         goalsTotal
         billsUnpaidTotal
-        billsPaidTotal
         spent
         net
       }
