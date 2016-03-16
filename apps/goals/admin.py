@@ -6,7 +6,13 @@ from .models import Goal, GoalMonth
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_displat = ('name', 'owner')
+    list_displat = ('name', 'owner_secret_id')
+    readonly_fields = ('owner_secret_id',)
+    fields = (
+        'owner_secret_id',
+        'name',
+        'monthly_amount',
+    )
 
 admin_site.register(Goal, GoalAdmin)
 
