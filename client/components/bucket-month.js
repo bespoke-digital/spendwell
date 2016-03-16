@@ -52,7 +52,7 @@ class BucketMonth extends Component {
               <div className='amount avg'>
                 {bucketMonth.avgAmount ?
                   <Money amount={bucketMonth.avgAmount} abs={true}/>
-                : 'N/A'}
+                : '-'}
               </div>
               <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
             </div>
