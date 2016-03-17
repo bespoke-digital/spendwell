@@ -8,3 +8,13 @@ local
 local.py
 /spendwell/schema.json
 npm-debug.log
+.vs/
+Include/
+Lib/
+Scripts/
+bin/
+node_modules/
+obj/
+pip-selfcheck.json
+spendwell.pyproj
+spendwell.sln
