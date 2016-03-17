@@ -5,6 +5,6 @@ errors stderr
 
 tls local/dev_spendwell_co.crt local/dev_spendwell_co.key
 
-proxy / localhost:8000 {
+proxy / localhost:3000 {
     websocket
 }
