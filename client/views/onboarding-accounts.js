@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
@@ -10,7 +11,7 @@ import Card from 'components/card';
 import Money from 'components/money';
 
 import { SyncInstitutionsMutation } from 'mutations/institutions';
-import { DisableAccountMutation } from 'mutations/accounts';
+import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
 import styles from 'sass/views/accounts';
 
@@ -27,12 +28,22 @@ class OnboardingAccounts extends Component {
     browserHistory.push('/onboarding/walkthrough');
   }
 
-  disable() {
-    const { account } = this.props;
+  disable(account) {
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
       onFailure: ()=> console.log('Failure: DisableAccountMutation'),
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
+  }
+
+  enable(account) {
+    Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
+      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
+      onSuccess: ()=> console.log('Success: EnableAccountMutation'),
+    });
+  }
+
+  orderedAccounts(institution) {
+    return _.sortBy(institution.accounts.edges.map(({ node })=> node), 'disabled');
   }
 
   render() {
@@ -49,12 +60,17 @@ class OnboardingAccounts extends Component {
             <CardList className='institution' key={node.id}>
               <Card summary={<div><h3>{node.name}</h3></div>}/>
 
-              {node.accounts.edges.map(({ node })=>
-                <Card key={node.id} summary={
+              {this.orderedAccounts(node).map((account)=>
+                <Card key={account.id} className={`account ${account.disabled ? 'disabled' : ''}`} summary={
                   <div>
-                    <div>{node.name}</div>
-                    <div><Money amount={node.currentBalance}/></div>
-                    <Button>{node.disabled ? 'Enable' : 'Disable'}</Button>
+                    <div>{account.name}</div>
+                    <div><Money amount={account.currentBalance}/></div>
+                    <Button onClick={account.disabled ?
+                      this.enable.bind(this, account) :
+                      this.disable.bind(this, account)
+                    }>
+                      {account.disabled ? 'Enable' : 'Disable'}
+                    </Button>
                   </div>
                 }/>
               )}
@@ -95,6 +111,7 @@ OnboardingAccounts = Relay.createContainer(OnboardingAccounts, {
                 edges {
                   node {
                     ${DisableAccountMutation.getFragment('account')}
+                    ${EnableAccountMutation.getFragment('account')}
 
                     id
                     name

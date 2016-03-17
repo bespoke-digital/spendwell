@@ -27,16 +27,8 @@
 
   .account {
     &.disabled {
-      opacity: 0.8;
-
-      > .summary .card {
-        background-color: $gray-lighter;
-      }
-    }
-
-    .summary {
-      > div > .mui-btn {
-        margin: -10px 0;
+      > .summary {
+        background-color: $gray-lightest;
       }
     }
   }
