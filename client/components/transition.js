@@ -21,7 +21,15 @@ export default class Transition extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.show !== this.props.show)
-      setTimeout(()=> this.setState({ visible: nextProps.show }), 1);
+      self.timeout = setTimeout(()=> {
+        this.setState({ visible: nextProps.show });
+        self.timeout = null;
+      }, 1);
+  }
+
+  componentWillUnmount() {
+    if (self.timeout)
+      clearTimeout(self.timeout);
   }
 
   render() {
