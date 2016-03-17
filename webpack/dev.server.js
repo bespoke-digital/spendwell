@@ -8,11 +8,13 @@ const webpackDevServer = require('webpack-dev-server');
 const config = require('./dev.config');
 
 
-config.entry.app = [
-  config.entry.app,
+const hotModules = [
   'webpack-dev-server/client?https://dev.spendwell.co/',
   'webpack/hot/dev-server',
 ];
+
+config.entry.app = [config.entry.app].concat(hotModules);
+config.entry.onboarding = [config.entry.onboarding].concat(hotModules);
 
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),
@@ -33,4 +35,4 @@ var server = new webpackDevServer(compiler, {
   },
 });
 
-server.listen(3000, ()=> console.log('http://localhost:3000'));
+server.listen(3000, ()=> console.log('localhost:3000'));
