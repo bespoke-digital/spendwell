@@ -22,7 +22,7 @@ class ExternalAccounts extends Component {
     const { selected } = this.state;
 
     if (viewer.buckets.edges.length === 0)
-      return;
+      return null;
 
     return (
       <div>
