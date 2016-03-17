@@ -84,7 +84,11 @@ class User(AbstractBaseUser):
         )
 
     def first_data_month(self):
-        return Delorean(self.transactions.order_by('date').first().date).truncate('month').datetime
+        first_transaction = self.transactions.order_by('date').first()
+        if not first_transaction:
+            return self.created
+        else:
+            return Delorean(first_transaction.date).truncate('month').datetime
 
 
 def get_beta_code():
