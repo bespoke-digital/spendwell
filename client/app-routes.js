@@ -16,6 +16,9 @@ import UpdateGoal from 'views/update-goal';
 import Bucket from 'views/bucket';
 import Goal from 'views/goal';
 import Transactions from 'views/transactions';
+import OnboardingAddAccount from 'views/onboarding/add-account';
+import OnboardingAccounts from 'views/onboarding/accounts';
+import OnboardingWalkthrough from 'views/onboarding/walkthrough';
 
 
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
@@ -25,8 +28,17 @@ export default (
     history={browserHistory}
     renderFetched={()=> setTimeout(window.scrollTo.bind(window, 0, 0), 10)}
   >
+    <Route path='onboarding'>
+      <IndexRedirect to='connect'/>
+
+      <Route path='connect' component={OnboardingAddAccount} queries={rootQuery}/>
+      <Route path='accounts' component={OnboardingAccounts} queries={rootQuery}/>
+      <Route path='walkthrough' component={OnboardingWalkthrough} queries={rootQuery}/>
+    </Route>
+
     <Route path='app'>
       <IndexRedirect to='dashboard'/>
+
       <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 

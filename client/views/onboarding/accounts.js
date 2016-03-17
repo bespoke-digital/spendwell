@@ -13,6 +13,8 @@ import Money from 'components/money';
 import { SyncInstitutionsMutation } from 'mutations/institutions';
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
+import eventEmitter from 'utils/event-emitter';
+
 import styles from 'sass/views/accounts';
 
 
@@ -21,8 +23,10 @@ class OnboardingAccounts extends Component {
     const { viewer } = this.props;
 
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
-      onSuccess: ()=> console.log('Success: SyncInstitutionsMutation'),
-      onFailure: ()=> console.log('Failure: SyncInstitutionsMutation'),
+      onSuccess: ()=> {
+        eventEmitter.emit('sync-complete');
+        console.log('Success: SyncInstitutionsMutation');
+      },
     });
 
     browserHistory.push('/onboarding/walkthrough');
@@ -30,14 +34,12 @@ class OnboardingAccounts extends Component {
 
   disable(account) {
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
   }
 
   enable(account) {
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
       onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
   }
@@ -53,7 +55,7 @@ class OnboardingAccounts extends Component {
       <Onboarding viewer={viewer}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>Accounts</h1>
+            <h1>Bank Accounts</h1>
           </div>
 
           {viewer.institutions.edges.map(({ node })=>
@@ -79,10 +81,7 @@ class OnboardingAccounts extends Component {
 
           <div className='flex-row'>
             <div/>
-            <Button to='/onboarding/connect'>
-              <i className='fa fa-plus'/>
-              {' Add Another'}
-            </Button>
+            <Button to='/onboarding/connect' flat>Add Another</Button>
             <Button variant='primary' onClick={::this.continue}>
               Continue
             </Button>

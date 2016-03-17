@@ -8,13 +8,11 @@ const webpackDevServer = require('webpack-dev-server');
 const config = require('./dev.config');
 
 
-const hotModules = [
+config.entry.app = [
+  config.entry.app,
   'webpack-dev-server/client?https://dev.spendwell.co/',
   'webpack/hot/dev-server',
 ];
-
-config.entry.app = [config.entry.app].concat(hotModules);
-config.entry.onboarding = [config.entry.onboarding].concat(hotModules);
 
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),

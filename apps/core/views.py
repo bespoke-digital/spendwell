@@ -16,7 +16,7 @@ class ClientView(TemplateView):
 
 
 class OnboardingView(ClientView):
-    template_name = 'core/onboarding.html'
+    template_name = 'core/app.html'
 
 onboarding_view = login_required(ensure_csrf_cookie(OnboardingView.as_view()))
 
