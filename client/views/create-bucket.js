@@ -1,6 +1,6 @@
 
 import Relay from 'react-relay';
-import { Component } from 'react';
+import { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 
 import BucketForm from 'components/bucket-form';
@@ -12,12 +12,16 @@ import styles from 'sass/views/create-bucket.scss';
 
 
 class CreateBucket extends Component {
+  static contextTypes = {
+    router: PropTypes.object,
+  };
+
   constructor() {
     super();
     this.state = { loading: false };
   }
 
-  handleSubmit({ filters, name }) {
+  handleSubmit({ filters, name, reload }) {
     const { viewer } = this.props;
 
     this.setState({ loading: true });
@@ -29,6 +33,9 @@ class CreateBucket extends Component {
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
         this.setState({ loading: false });
+
+        // if (reload) TODO
+
         browserHistory.push('/app/dashboard');
       },
     });

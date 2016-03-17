@@ -1,24 +1,19 @@
 
 import _ from 'lodash';
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
 import TextInput from 'components/text-input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
-import App from 'components/app';
 
 import { ConnectInstitutionMutation } from 'mutations/institutions';
 
 import styles from 'sass/views/add-plaid.scss';
 
 
-class AddPlaid extends Component {
-  static propTypes = {
-    location: PropTypes.object,
-  };
-
+class ConnectAccount extends Component {
   constructor() {
     super();
     this.state = { results: [] };
@@ -56,7 +51,7 @@ class AddPlaid extends Component {
   }
 
   connect({ fi, publicToken }) {
-    const { viewer, location } = this.props;
+    const { viewer } = this.props;
 
     const mutationInput = {
       viewer,
@@ -70,7 +65,7 @@ class AddPlaid extends Component {
       onSuccess: ()=> {
         console.log('Success: ConnectInstitutionMutation');
 
-        if (location.pathname.indexOf('onboarding') !== -1)
+        if (document.location.pathname.indexOf('onboarding') !== -1)
           browserHistory.push('/onboarding/accounts');
         else
           browserHistory.push('/app/accounts');
@@ -79,49 +74,41 @@ class AddPlaid extends Component {
   }
 
   render() {
-    const { viewer } = this.props;
     const { results } = this.state;
     return (
-      <App viewer={viewer}>
-        <div className={`container ${styles.root}`}>
-          <h1>Connect Accounts</h1>
+      <CardList className={styles.root}>
+        <Card>
+          <TextInput label='Bank Search' onChange={this.handleSearch}/>
+        </Card>
+        {results.length ? results.map((fi)=> (
+          <Card
+            className={`fi ${fi.logo ? 'has-logo' : ''}`}
+            onClick={this.selectFi.bind(this, fi)}
+            key={fi.id}
+            style={{ borderLeftColor: fi.colors.darker }}
+          >
+            {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
 
-          <CardList>
-            <Card>
-              <TextInput label='Bank Search' onChange={this.handleSearch}/>
-            </Card>
-            {results.length ? results.map((fi)=> (
-              <Card
-                className={`fi ${fi.logo ? 'has-logo' : ''}`}
-                onClick={this.selectFi.bind(this, fi)}
-                key={fi.id}
-                style={{ borderLeftColor: fi.colors.darker }}
-              >
-                {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
-
-                <span className='fi-name'>
-                  <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
-                  {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
-                </span>
-              </Card>
-            )) : null}
-          </CardList>
-        </div>
-      </App>
+            <span className='fi-name'>
+              <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
+              {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
+            </span>
+          </Card>
+        )) : null}
+      </CardList>
     );
   }
 }
 
 
-AddPlaid = Relay.createContainer(AddPlaid, {
+ConnectAccount = Relay.createContainer(ConnectAccount, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${App.getFragment('viewer')}
         ${ConnectInstitutionMutation.getFragment('viewer')}
       }
     `,
   },
 });
 
-export default AddPlaid;
+export default ConnectAccount;

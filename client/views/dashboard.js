@@ -66,7 +66,7 @@ class Dashboard extends Component {
     const {
       spent,
       spentFromSavings,
-      expenseTransactions,
+      allTransactions,
     } = viewer.summary;
 
     const { selected } = this.state;
@@ -246,22 +246,13 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>All Expenses</h2>
+            <h2>All Transactions</h2>
           </div>
 
           <CardList>
-            {spent !== 0 ?
-              <Card className='card-list-heading'>
-                <div>Total</div>
-                <div className='amount'>
-                  <Money amount={spent} abs/>
-                </div>
-              </Card>
-            : null}
+            <TransactionList transactions={allTransactions} abs={false}/>
 
-            <TransactionList transactions={expenseTransactions}/>
-
-            {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
+            {allTransactions && allTransactions.pageInfo.hasNextPage ?
               <div className='bottom-buttons'>
                 <Button onClick={::this.loadTransactions} raised>Load More</Button>
               </div>
@@ -338,7 +329,7 @@ Dashboard = Relay.createContainer(Dashboard, {
           incomeTransactions: transactions(first: 100, amountGt: 0) {
             ${TransactionList.getFragment('transactions')}
           }
-          expenseTransactions: transactions(first: $transactionCount, amountLt: 0) {
+          allTransactions: transactions(first: $transactionCount) {
             ${TransactionList.getFragment('transactions')}
             pageInfo {
               hasNextPage

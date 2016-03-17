@@ -52,7 +52,7 @@ class UsersQuery(graphene.ObjectType):
         return MonthSummary(info.request_context.user, args['month'])
 
     def resolve_first_month(self, args, info):
-        return info.request_context.user.transactions.order_by('date').first().date
+        return info.request_context.user.first_data_month()
 
     def resolve_email(self, args, info):
         return info.request_context.user.email

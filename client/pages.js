@@ -1,4 +1,6 @@
 
+import $ from 'jquery';
+
 import 'sass/pages';
 
 
@@ -26,3 +28,12 @@ if (form) {
     window.fbq('track', 'CompleteRegistration');
   };
 }
+
+$('input').on('change', function() {
+  const $input = $(this);
+  const value = $input.val();
+  if (value && value.length)
+    $input.addClass('mui--is-not-empty');
+  else
+    $input.removeClass('mui--is-not-empty');
+});

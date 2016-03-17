@@ -41,11 +41,11 @@ class BucketForm extends Component {
     }
   }
 
-  handleSubmit() {
+  handleSubmit(reload) {
     const { onSubmit } = this.props;
     const { filters, name } = this.state;
 
-    onSubmit({ name, filters });
+    onSubmit({ name, filters, reload });
   }
 
   handleFilterChange(filters) {

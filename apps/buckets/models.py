@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWManager, SWQuerySet
-from apps.core.utils import this_month, months_avg
+from apps.core.utils import this_month, months_avg, months_ago
 from apps.core.signals import month_start
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
@@ -53,7 +53,15 @@ class Bucket(SWModel):
 @receiver(post_save, sender=Bucket)
 def bucket_post_save(sender, instance, created, raw, **kwargs):
     if created and not raw:
-        BucketMonth.objects.create(bucket=instance, month_start=this_month())
+        month_start = this_month()
+        BucketMonth.objects.create(bucket=instance, month_start=month_start)
+
+        if months_ago(instance.owner.created) == 0:
+            for i in range(months_ago(instance.owner.first_data_month())):
+                BucketMonth.objects.create(
+                    bucket=instance,
+                    month_start=month_start - relativedelta(months=i + 1),
+                )
 
     elif not raw:
         BucketTransaction.objects.filter(bucket_month__bucket=instance).delete()
