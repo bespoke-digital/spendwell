@@ -1,13 +1,12 @@
 
 from uuid import uuid4
+from dateutil.relativedelta import relativedelta
 
 from django.db import models
-from django.dispatch import receiver
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from delorean import Delorean
 
-from apps.core.signals import month_start
-from apps.core.utils import months_avg
+from apps.core.utils import months_ago, this_month
 
 
 class UserManager(BaseUserManager):
@@ -75,13 +74,16 @@ class User(AbstractBaseUser):
         return self.as_serializer().as_json()
 
     def estimate_income(self):
-        self.estimated_income = months_avg(
+        income_months = [
             self.transactions
             .filter(amount__gt=0)
             .filter(account__disabled=False)
-            .is_transfer(False),
-            date_field='date',
-        )
+            .filter(date__gte=this_month() - relativedelta(months=i + 1))
+            .is_transfer(False)
+            .sum()
+            for i in range(months_ago(self.first_data_month()))
+        ]
+        self.estimated_income = min(income_months)
 
     def first_data_month(self):
         first_transaction = self.transactions.order_by('date').first()
@@ -98,10 +100,3 @@ def get_beta_code():
 class BetaCode(models.Model):
     key = models.CharField(max_length=255, default=get_beta_code)
     used_by = models.OneToOneField(User, blank=True, null=True)
-
-
-@receiver(month_start)
-def on_month_start(sender, month, **kwargs):
-    for user in User.objects.all():
-        user.estimate_income()
-        user.save()

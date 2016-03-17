@@ -94,6 +94,9 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
         for institution in info.request_context.user.institutions.filter(plaid_id__isnull=False):
             institution.sync()
 
+        info.request_context.user.estimate_income()
+        info.request_context.user.save()
+
         return SyncInstitutionsMutation(viewer=Viewer())
 
 

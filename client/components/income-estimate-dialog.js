@@ -21,18 +21,18 @@ class IncomeEstimateDialog extends Component {
   }
 
   handleSubmit() {
-    const { viewer, summary, onRequestClose } = this.props;
-    const amount = _.isUndefined(this.state.amount) ? summary.estimatedIncome : this.state.amount;
+    const { viewer, onRequestClose } = this.props;
+    const amount = _.isUndefined(this.state.amount) ? viewer.estimatedIncome : this.state.amount;
 
     this.setState({ loading: true });
 
     Relay.Store.commitUpdate(new SetIncomeEstimateMutation({ viewer, amount }), {
       onFailure: ()=> {
-        console.log('AssignTransactionsMutation Failure');
+        console.log('SetIncomeEstimateMutation Failure');
         this.setState({ loading: false });
       },
       onSuccess: ()=> {
-        console.log('AssignTransactionsMutation Success');
+        console.log('SetIncomeEstimateMutation Success');
         this.setState({ loading: false });
         onRequestClose();
       },
@@ -40,7 +40,7 @@ class IncomeEstimateDialog extends Component {
   }
 
   render() {
-    const { summary, onRequestClose } = this.props;
+    const { viewer, onRequestClose } = this.props;
     const { loading } = this.state;
 
     return (
@@ -53,7 +53,7 @@ class IncomeEstimateDialog extends Component {
           </p>
           <MoneyInput
             label='Amount'
-            initialValue={summary.estimatedIncome}
+            initialValue={viewer.estimatedIncome}
             onChange={(amount)=> this.setState({ amount })}
           />
         </div>
@@ -75,10 +75,7 @@ IncomeEstimateDialog = Relay.createContainer(IncomeEstimateDialog, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${SetIncomeEstimateMutation.getFragment('viewer')}
-      }
-    `,
-    summary: ()=> Relay.QL`
-      fragment on Summary {
+
         estimatedIncome
       }
     `,

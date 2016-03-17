@@ -71,6 +71,8 @@ class UpdateBucket extends Component {
     const { viewer } = this.props;
     const { updateLoading, deleteLoading, confirmDelete } = this.state;
 
+    if (!viewer.bucket) return null;
+
     return (
       <App
         viewer={viewer}

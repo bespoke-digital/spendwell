@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import Relay from 'react-relay';
 
 import networkLayer from 'utils/network-layer';
-import routes from 'app-routes';
+import routes from 'routes';
 
 
 Relay.injectNetworkLayer(networkLayer);

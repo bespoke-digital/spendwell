@@ -42,6 +42,9 @@ class Filter extends Component {
   replaceField(oldField, newField, event) {
     if (event) event.preventDefault();
 
+    if (oldField === newField)
+      return;
+
     const filter = _.cloneDeep(this.props.filter);
 
     filter[newField] = filter[oldField];

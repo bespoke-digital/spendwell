@@ -104,6 +104,8 @@ export class SetIncomeFromSavingsMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on SetIncomeFromSavingsMutation {
         viewer {
+          safeToSpend
+
           summary {
             income
             fromSavingsIncome

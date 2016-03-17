@@ -16,9 +16,9 @@ class Summary(graphene.ObjectType):
 
     true_income = graphene.Field(Money())
     from_savings_income = graphene.Field(Money())
-    estimated_income = graphene.Field(Money())
     income = graphene.Field(Money())
     income_estimated = graphene.Field(graphene.Boolean())
+    estimated_income = graphene.Field(Money())
 
     goals_total = graphene.Field(Money())
     bills_paid_total = graphene.Field(Money())
@@ -41,6 +41,7 @@ class UsersQuery(graphene.ObjectType):
     first_month = graphene.Field(Month())
     email = graphene.Field(graphene.String())
     is_admin = graphene.Field(graphene.Boolean())
+    estimated_income = graphene.Field(Money())
 
     class Meta:
         abstract = True
@@ -59,3 +60,6 @@ class UsersQuery(graphene.ObjectType):
 
     def resolve_is_admin(self, args, info):
         return info.request_context.user.is_admin
+
+    def resolve_estimated_income(self, args, info):
+        return info.request_context.user.estimated_income

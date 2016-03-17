@@ -19,6 +19,7 @@ import Transactions from 'views/transactions';
 import OnboardingAddAccount from 'views/onboarding/add-account';
 import OnboardingAccounts from 'views/onboarding/accounts';
 import OnboardingWalkthrough from 'views/onboarding/walkthrough';
+import OnboardingIncomeEstimate from 'views/onboarding/income-estimate';
 
 
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
@@ -34,6 +35,7 @@ export default (
       <Route path='connect' component={OnboardingAddAccount} queries={rootQuery}/>
       <Route path='accounts' component={OnboardingAccounts} queries={rootQuery}/>
       <Route path='walkthrough' component={OnboardingWalkthrough} queries={rootQuery}/>
+      <Route path='income' component={OnboardingIncomeEstimate} queries={rootQuery}/>
     </Route>
 
     <Route path='app'>

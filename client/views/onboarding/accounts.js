@@ -23,6 +23,7 @@ class OnboardingAccounts extends Component {
     const { viewer } = this.props;
 
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
+      onFailure: ()=> console.log('Failure: SyncInstitutionsMutation'),
       onSuccess: ()=> {
         eventEmitter.emit('sync-complete');
         console.log('Success: SyncInstitutionsMutation');
@@ -34,12 +35,14 @@ class OnboardingAccounts extends Component {
 
   disable(account) {
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
+      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
   }
 
   enable(account) {
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
+      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
       onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
   }

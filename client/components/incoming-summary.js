@@ -105,7 +105,6 @@ class IncomingSummary extends Component {
 
         <Transition show={showIncomeEstimateDialog}>
           <IncomeEstimateDialog
-            summary={summary}
             viewer={viewer}
             onRequestClose={()=> this.setState({ showIncomeEstimateDialog: false })}
           />
@@ -126,7 +125,6 @@ IncomingSummary = Relay.createContainer(IncomingSummary, {
     summary: ()=> Relay.QL`
       fragment on Summary {
         ${IncomeFromSavingsDialog.getFragment('summary')}
-        ${IncomeEstimateDialog.getFragment('summary')}
 
         trueIncome
         estimatedIncome
