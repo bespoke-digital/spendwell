@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWManager, SWQuerySet
-from apps.core.utils import this_month, months_avg
+from apps.core.utils import this_month, months_avg, months_ago
 from apps.core.signals import month_start
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
@@ -56,8 +56,8 @@ def bucket_post_save(sender, instance, created, raw, **kwargs):
         month_start = this_month()
         BucketMonth.objects.create(bucket=instance, month_start=month_start)
 
-        if relativedelta(month_start, instance.owner.created).months == 0:
-            for i in range(relativedelta(month_start, instance.owner.resolve_first_month()).months):
+        if months_ago(instance.owner.created) == 0:
+            for i in range(months_ago(instance.owner.first_data_month())):
                 BucketMonth.objects.create(
                     bucket=instance,
                     month_start=month_start - relativedelta(months=i + 1),

@@ -4,7 +4,7 @@ from uuid import uuid4
 from django.db import models
 from django.dispatch import receiver
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-import delorean
+from delorean import Delorean
 
 from apps.core.signals import month_start
 from apps.core.utils import months_avg
@@ -84,7 +84,7 @@ class User(AbstractBaseUser):
         )
 
     def first_data_month(self):
-        return delorean(self.transactions.order_by('date').first().date).truncate('month')
+        return Delorean(self.transactions.order_by('date').first().date).truncate('month').datetime
 
 
 def get_beta_code():
