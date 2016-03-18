@@ -25,24 +25,18 @@ class ExternalAccounts extends Component {
       return null;
 
     return (
-      <div>
-        <div className='heading'>
-          <h3>External Accounts</h3>
-        </div>
-
-        <CardList>
-          {viewer.buckets.edges.map(({ node })=>
-            <ListExternalAccount
-              key={node.id}
-              bucket={node}
-              expanded={selected === node.id}
-              onClick={()=> selected === node.id ?
-                this.setState({ selected: null }) :
-                this.setState({ selected: node.id })}
-            />
-          )}
-        </CardList>
-      </div>
+      <CardList>
+        {viewer.buckets.edges.map(({ node })=>
+          <ListExternalAccount
+            key={node.id}
+            bucket={node}
+            expanded={selected === node.id}
+            onClick={()=> selected === node.id ?
+              this.setState({ selected: null }) :
+              this.setState({ selected: node.id })}
+          />
+        )}
+      </CardList>
     );
   }
 }

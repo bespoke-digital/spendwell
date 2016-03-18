@@ -22,10 +22,7 @@ class Accounts extends Component {
       <App viewer={viewer}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>Accounts</h1>
-            <Button to='/app/accounts/add/external' flat variant='primary'>
-              Ext Acct
-            </Button>
+            <h1>Bank Accounts</h1>
             <Button to='/app/accounts/add/plaid' flat variant='primary'>
               New Bank
             </Button>
@@ -50,6 +47,13 @@ class Accounts extends Component {
               </div>
             }/>
           </CardList>
+
+          <div className='heading'>
+            <h3>External Accounts</h3>
+            <Button to='/app/accounts/add/external' flat variant='primary'>
+              New Account
+            </Button>
+          </div>
 
           <ExternalAccounts viewer={viewer}/>
         </div>
