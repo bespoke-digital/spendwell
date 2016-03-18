@@ -31,26 +31,28 @@ class ConnectAccount extends Component {
   }
 
   handleSearch(query) {
+    const { relay } = this.props;
+
+    relay.setVariables({ query });
+
     fetch(`https://${window.ENV.PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
         `/institutions/search?p=connect&q=${query}`)
       .then((response)=> response.json())
       .then((results)=> this.setState({ results }));
   }
 
-  selectFi(fi) {
+  selectPlaid(fi) {
     window.Plaid.create({
       clientName: 'Spendwell',
       key: window.ENV.PLAID_PUBLIC_KEY,
       product: 'connect',
       longtail: true,
       env: window.ENV.PLAID_PRODUCTION ? 'production' : 'tartan',
-      onSuccess: (publicToken)=> {
-        this.connect({ fi, publicToken });
-      },
+      onSuccess: (publicToken)=> this.connectPlaid({ fi, publicToken }),
     }).open(fi.id);
   }
 
-  connect({ fi, publicToken }) {
+  connectPlaid({ fi, publicToken }) {
     const { viewer } = this.props;
 
     const mutationInput = {
@@ -59,7 +61,6 @@ class ConnectAccount extends Component {
       institutionPlaidId: fi.id,
     };
 
-    console.log('ConnectInstitutionMutation', mutationInput);
     Relay.Store.commitUpdate(new ConnectInstitutionMutation(mutationInput), {
       onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
       onSuccess: ()=> {
@@ -74,16 +75,19 @@ class ConnectAccount extends Component {
   }
 
   render() {
+    const { viewer } = this.props;
     const { results } = this.state;
+
     return (
       <CardList className={styles.root}>
         <Card>
           <TextInput label='Bank Search' onChange={this.handleSearch}/>
         </Card>
+
         {results.length ? results.map((fi)=> (
           <Card
             className={`fi ${fi.logo ? 'has-logo' : ''}`}
-            onClick={this.selectFi.bind(this, fi)}
+            onClick={this.selectPlaid.bind(this, fi)}
             key={fi.id}
             style={{ borderLeftColor: fi.colors.darker }}
           >
@@ -95,6 +99,17 @@ class ConnectAccount extends Component {
             </span>
           </Card>
         )) : null}
+
+        {viewer.finicityInstitutions.edges.map(({ node })=>
+          <Card
+            key={node.id}
+            className='fi'
+            onClick={()=> browserHistory.push(`/app/accounts/new/finicity/${node.id}`)}
+          >
+            <span className='fi-name'><strong>{node.name}</strong></span>
+          </Card>
+        )}
+
       </CardList>
     );
   }
@@ -102,10 +117,22 @@ class ConnectAccount extends Component {
 
 
 ConnectAccount = Relay.createContainer(ConnectAccount, {
+  initialVariables: {
+    query: '',
+  },
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${ConnectInstitutionMutation.getFragment('viewer')}
+
+        finicityInstitutions(query: $query, first: 10) {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
       }
     `,
   },

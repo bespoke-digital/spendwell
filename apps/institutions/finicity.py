@@ -1,11 +1,54 @@
 
 from django.conf import settings
 
+import graphene
+from graphene.utils import to_snake_case
+
 import xmltodict
 import requests
 
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
+VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia')
+
+
+class FinicityLoginField(graphene.ObjectType):
+    id = graphene.String()
+    name = graphene.String()
+    value = graphene.String()
+    description = graphene.String()
+    display_order = graphene.String()
+    mask = graphene.String()
+    value_length_min = graphene.String()
+    value_length_max = graphene.String()
+    instructions = graphene.String()
+
+    def __init__(self, *args, **kwargs):
+        kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
+        self.finicity = kwargs.pop('finicity', Finicity())
+        super(FinicityLoginField, self).__init__(*args, **kwargs)
+
+
+class FinicityInstitution(graphene.relay.Node):
+    name = graphene.String()
+    account_type_description = graphene.String()
+    url_home_app = graphene.String()
+    url_logon_app = graphene.String()
+    url_product_app = graphene.String()
+    login_form = graphene.List(FinicityLoginField)
+
+    def __init__(self, *args, **kwargs):
+        kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
+        self.id = kwargs.pop('id', None)
+        self.finicity = kwargs.pop('finicity', Finicity())
+        super(FinicityInstitution, self).__init__(*args, **kwargs)
+
+    @classmethod
+    def get_node(cls, id, info):
+        return Finicity().get_institution(id)
+
+    def resolve_login_form(self, args, info):
+        return self.finicity.get_login_form(self.id)
 
 
 class Finicity(object):
@@ -48,9 +91,27 @@ class Finicity(object):
     def parse(self, response):
         return xmltodict.parse(response.content)
 
-    def search(self, input):
-        return self.request('/v1/institutions', params={
-            'search': input.replace(' ', '+'),
-            'start': 1,
-            'limit': 10,
-        })
+    def search(self, query):
+        if not any([valid in query for valid in VALID_QUERIES]):
+            return []
+
+        return [
+            FinicityInstitution(finicity=self, **result)
+            for result in self.request('/v1/institutions', params={
+                'search': query.replace(' ', '+'),
+                'start': 1,
+                'limit': 10,
+            })['institutions']['institution']
+        ]
+
+    def get_institution(self, id):
+        response = self.request('/v1/institutions/{}'.format(id))
+        return FinicityInstitution(finicity=self, **response['institution'])
+
+    def get_login_form(self, institution_id):
+        response = self.request('/v1/institutions/{}/loginForm'.format(institution_id))
+
+        return [
+            FinicityLoginField(finicity=self, **field)
+            for field in response['loginForm']['loginField']
+        ]

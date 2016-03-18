@@ -7,6 +7,7 @@ from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
 
 from .models import Institution
+from .finicity import Finicity, FinicityInstitution
 
 
 class InstitutionNode(SWNode):
@@ -32,6 +33,14 @@ class InstitutionNode(SWNode):
 class InstitutionsQuery(graphene.ObjectType):
     institution = graphene.relay.NodeField(InstitutionNode)
     institutions = SWConnectionField(InstitutionNode)
+    finicity_institution = graphene.relay.NodeField(FinicityInstitution)
+    finicity_institutions = graphene.relay.ConnectionField(
+        FinicityInstitution,
+        query=graphene.String(),
+    )
 
     class Meta:
         abstract = True
+
+    def resolve_finicity_institutions(self, args, info):
+        return Finicity().search(args['query'])
