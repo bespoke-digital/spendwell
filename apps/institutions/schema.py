@@ -43,4 +43,4 @@ class InstitutionsQuery(graphene.ObjectType):
         abstract = True
 
     def resolve_finicity_institutions(self, args, info):
-        return Finicity().search(args['query'])
+        return Finicity(info.request_context.user).search(args['query'])

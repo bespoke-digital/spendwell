@@ -68,6 +68,18 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         return ConnectInstitutionMutation(viewer=Viewer())
 
 
+class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        pass
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        from spendwell.schema import Viewer
+        return ConnectFinicityInstitutionMutation(viewer=Viewer())
+
+
 class SyncInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         institution_id = graphene.String()

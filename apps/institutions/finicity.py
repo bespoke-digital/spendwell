@@ -24,8 +24,9 @@ class FinicityLoginField(graphene.ObjectType):
     instructions = graphene.String()
 
     def __init__(self, *args, **kwargs):
+        self.finicity = kwargs.pop('finicity')
+
         kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
-        self.finicity = kwargs.pop('finicity', Finicity())
         super(FinicityLoginField, self).__init__(*args, **kwargs)
 
 
@@ -37,21 +38,24 @@ class FinicityInstitution(graphene.relay.Node):
     url_product_app = graphene.String()
     login_form = graphene.List(FinicityLoginField)
 
+    @classmethod
+    def get_node(cls, id, info):
+        return Finicity(info.request_context.user).get_institution(id)
+
     def __init__(self, *args, **kwargs):
         kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
         self.id = kwargs.pop('id', None)
-        self.finicity = kwargs.pop('finicity', Finicity())
+        self.finicity = kwargs.pop('finicity')
         super(FinicityInstitution, self).__init__(*args, **kwargs)
-
-    @classmethod
-    def get_node(cls, id, info):
-        return Finicity().get_institution(id)
 
     def resolve_login_form(self, args, info):
         return self.finicity.get_login_form(self.id)
 
 
 class Finicity(object):
+    def __init__(self, user):
+        self.user = user
+
     def authenticate(self):
         response = requests.post(
             '{}/v2/partners/authentication'.format(FINICITY_URL),
@@ -71,6 +75,10 @@ class Finicity(object):
         )
 
         self.access_token = self.parse(response)['access']['token']
+
+    def ensure_customer(self):
+        if self.user.finicity_id:
+            return
 
     def request(self, path, method='GET', **kwargs):
         if not hasattr(self, 'access_token'):
