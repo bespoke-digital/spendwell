@@ -82,7 +82,7 @@ class IncomingSummary extends Component {
           </div>
         : null}
 
-        <CardList className='last'>
+        <CardList className={incomeEstimated ? 'last' : ''}>
           {fromSavingsIncome ?
             <LineItem name='From Previous Month' value={fromSavingsIncome}/>
           : null}
@@ -94,6 +94,16 @@ class IncomingSummary extends Component {
             </div>
           }/>
         </CardList>
+
+        {!incomeEstimated ?
+          <CardList className='last disabled'>
+            <LineItem name='Income Estimate' value={estimatedIncome}>
+              <Button onClick={()=> this.setState({ showIncomeEstimateDialog: true })}>
+                Edit
+              </Button>
+            </LineItem>
+          </CardList>
+        : null}
 
         <Transition show={showFromSavingsDialog}>
           <IncomeFromSavingsDialog
