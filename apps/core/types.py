@@ -1,6 +1,8 @@
 
+import json
 from datetime import datetime
 from decimal import Decimal
+
 import delorean
 
 from graphene.core.classtypes import Scalar
@@ -30,11 +32,6 @@ class Month(Scalar):
         else:
             return value
 
-    @classmethod
-    def parse_literal(Cls, node):
-        if isinstance(node, ast.StringValue):
-            return Cls.parse_value(node.value)
-
     @staticmethod
     def parse_value(value):
         return delorean.parse(value).truncate('month').datetime
@@ -53,3 +50,18 @@ class DateTime(Scalar):
     @staticmethod
     def parse_value(value):
         return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+
+
+class JSON(Scalar):
+    @staticmethod
+    def serialize(value):
+        return json.dumps(value)
+
+    @staticmethod
+    def parse_literal(node):
+        if isinstance(node, ast.StringValue):
+            return json.loads(node.value)
+
+    @staticmethod
+    def parse_value(value):
+        return json.loads(value)
