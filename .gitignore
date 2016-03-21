@@ -6,7 +6,8 @@ staticfiles
 static/dist
 local
 local.py
-/spendwell/schema.json
+spendwell/schema.json
+spendwell/settings/secrets.py
 npm-debug.log
 .vs/
 Include/

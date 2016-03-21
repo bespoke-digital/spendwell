@@ -18,8 +18,6 @@ def configure_env():
     env.python = '{bin}/python'.format(**env)
     env.pip = '{bin}/pip'.format(**env)
     env.dir = '/data/web/{domain}'.format(**env)
-    env.deployment = 'DEPLOYMENT'
-    env.hosts = ['72.51.30.238', '107.6.24.166']
 
 
 @task(alias='prod')
@@ -28,6 +26,17 @@ def production():
     env.domain = 'spendwell.co'
     env.settings = 'spendwell.settings.production'
     env.branch = 'master'
+    env.hosts = ['72.51.30.238', '107.6.24.166']
+    configure_env()
+
+
+@task(alias='stag')
+def staging():
+    env.venv_name = 'spendwell'
+    env.domain = 'staging.spendwell.co'
+    env.settings = 'spendwell.settings.staging'
+    env.branch = 'develop'
+    env.hosts = ['162.248.180.146']
     configure_env()
 
 
