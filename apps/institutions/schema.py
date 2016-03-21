@@ -1,4 +1,5 @@
 
+import json
 import graphene
 
 from apps.core.fields import SWNode, SWConnectionField, SWFilterConnectionField
@@ -7,7 +8,7 @@ from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
 
 from .models import Institution
-from .finicity import Finicity, FinicityInstitution
+from .finicity import Finicity, FinicityInstitution, FinicityAccount
 
 
 class InstitutionNode(SWNode):
@@ -38,9 +39,20 @@ class InstitutionsQuery(graphene.ObjectType):
         FinicityInstitution,
         query=graphene.String(),
     )
+    finicity_accounts = graphene.Field(
+        graphene.List(FinicityAccount),
+        credentials=graphene.String(),
+        institution_id=graphene.String(),
+    )
 
     class Meta:
         abstract = True
 
     def resolve_finicity_institutions(self, args, info):
-        return Finicity(info.request_context.user).search(args['query'])
+        return Finicity(info.request_context.user).list_institutions(args['query'])
+
+    def resolve_finicity_accounts(self, args, info):
+        return Finicity(info.request_context.user).list_accounts(
+            args['institution_id'],
+            json.loads(args['credentials']),
+        )

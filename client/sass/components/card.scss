@@ -59,6 +59,11 @@
         margin-left: 20px;
         text-align: right;
       }
+
+
+      > .fw {
+        min-width: 80px;
+      }
     }
 
     @media (max-width: $screen-xs-max) {

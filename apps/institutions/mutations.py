@@ -6,6 +6,8 @@ from django.conf import settings
 from plaid import Client
 
 from apps.core.utils import get_cursor, instance_for_node_id
+# from apps.core.types import JSON
+from .finicity import Finicity
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -41,7 +43,7 @@ class CreateInstitutionMutation(graphene.relay.ClientIDMutation):
 class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         public_token = graphene.String()
-        institution_plaid_id = graphene.String()
+        plaid_institution_id = graphene.String()
 
     viewer = graphene.Field('Viewer')
 
@@ -55,11 +57,11 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         )
 
         token_response = plaid_client.exchange_token(input['public_token']).json()
-        institution_response = plaid_client.institution(input['institution_plaid_id']).json()
+        institution_response = plaid_client.institution(input['plaid_institution_id']).json()
 
         institution, created = Institution.objects.get_or_create(
             owner=info.request_context.user,
-            plaid_id=input['institution_plaid_id'],
+            plaid_id=input['plaid_institution_id'],
             defaults={'name': institution_response['name']},
         )
         institution.access_token = token_response['access_token']
@@ -68,16 +70,17 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         return ConnectInstitutionMutation(viewer=Viewer())
 
 
-class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
-    class Input:
-        pass
+# class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
+#     class Input:
+#         credentials = graphene.InputField(graphene.String())
+#         finicity_institution_id = graphene.InputField(graphene.String())
 
-    viewer = graphene.Field('Viewer')
+#     viewer = graphene.Field('Viewer')
 
-    @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        from spendwell.schema import Viewer
-        return ConnectFinicityInstitutionMutation(viewer=Viewer())
+#     @classmethod
+#     def mutate_and_get_payload(cls, input, info):
+#         from spendwell.schema import Viewer
+#         return ConnectFinicityInstitutionMutation(viewer=Viewer())
 
 
 class SyncInstitutionMutation(graphene.relay.ClientIDMutation):

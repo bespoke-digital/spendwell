@@ -10,7 +10,7 @@ from graphql.core.language import ast
 
 
 class CustomScalar(Scalar):
-    base_type = None
+    base_type = ast.StringValue
 
     @classmethod
     def parse_literal(Cls, node):
@@ -19,6 +19,8 @@ class CustomScalar(Scalar):
 
 
 class Money(CustomScalar):
+    base_type = ast.IntValue
+
     @staticmethod
     def serialize(value):
         return int(Decimal(value) * Decimal(100))

@@ -1,7 +1,6 @@
 https://dev.spendwell.co
 
-log stdout
-errors stderr
+log / stdout "{status} {method} {path}"
 
 tls local/dev_spendwell_co.crt local/dev_spendwell_co.key
 
