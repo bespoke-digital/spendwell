@@ -12,28 +12,23 @@ import App from 'components/app';
 class AddFinicityAccount extends Component {
   constructor() {
     super();
-    this.state = { data: {} };
+    this.state = { credentials: {} };
   }
 
   setFormValue(field, value) {
-    const { data } = this.state;
-    this.setState({ data: Object.assign({}, data, { field: value }) });
+    const { credentials } = this.state;
+
+    this.setState({
+      credentials: Object.assign({}, credentials, { [field]: value }),
+    });
   }
 
   handleSubmit() {
-    const { viewer } = this.props;
-    const { data } = this.state;
-
-    Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation(), {
-      onFailure: ()=> console.log('Failure: ConnectFinicityInstitutionMutation'),
-      onSuccess: ()=> {
-        console.log('Success: ConnectFinicityInstitutionMutation');
-
-        if (document.location.pathname.indexOf('onboarding') !== -1)
-          browserHistory.push('/app/onboarding/accounts');
-        else
-          browserHistory.push('/app/accounts');
-      },
+    const { relay, viewer } = this.props;
+    const { credentials } = this.state;
+    relay.setVariables({
+      institutionId: viewer.finicityInstitution.finicityId,
+      credentials: JSON.stringify(credentials),
     });
   }
 
@@ -48,10 +43,11 @@ class AddFinicityAccount extends Component {
           <h1>Connect {viewer.finicityInstitution.name}</h1>
           <CardList>
             {viewer.finicityInstitution.loginForm.map((field)=>
-              <Card>
+              <Card key={field.name}>
                 <TextInput
                   label={field.description}
                   onChange={this.setFormValue.bind(this, field.name)}
+                  type={field.name.indexOf('Password') !== -1 ? 'password' : undefined}
                 />
               </Card>
             )}
@@ -59,7 +55,7 @@ class AddFinicityAccount extends Component {
 
           <div className='flex-row'>
             <div/>
-            <Button variant='primary'>Submit</Button>
+            <Button variant='primary' onClick={::this.handleSubmit}>Submit</Button>
           </div>
         </div>
       </App>
@@ -69,7 +65,15 @@ class AddFinicityAccount extends Component {
 
 
 AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
-  initialVariables: { id: null },
+  initialVariables: {
+    id: null,
+    credentials: null,
+    institutionId: null,
+  },
+  prepareVariables: (vars)=> ({
+    credentialsReady: !!vars.credentials,
+    ...vars,
+  }),
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
@@ -77,6 +81,7 @@ AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
 
         finicityInstitution(id: $id) {
           id
+          finicityId
           name
 
           loginForm {
@@ -89,6 +94,11 @@ AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
             valueLengthMax
             instructions
           }
+        }
+
+        finicityAccounts(credentials: $credentials, institutionId: $institutionId) @include(if: $credentialsReady) {
+          id
+          name
         }
       }
     `,

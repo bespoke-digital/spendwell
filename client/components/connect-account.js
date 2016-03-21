@@ -58,7 +58,7 @@ class ConnectAccount extends Component {
     const mutationInput = {
       viewer,
       publicToken,
-      institutionPlaidId: fi.id,
+      plaidInstitutionId: fi.id,
     };
 
     Relay.Store.commitUpdate(new ConnectInstitutionMutation(mutationInput), {
@@ -118,7 +118,7 @@ class ConnectAccount extends Component {
 
 ConnectAccount = Relay.createContainer(ConnectAccount, {
   initialVariables: {
-    query: '',
+    query: 'finbank',
   },
   fragments: {
     viewer: ()=> Relay.QL`

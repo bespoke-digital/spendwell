@@ -18,7 +18,7 @@ export class ConnectInstitutionMutation extends Relay.Mutation {
   getVariables() {
     return {
       publicToken: this.props.publicToken,
-      institutionPlaidId: this.props.institutionPlaidId,
+      plaidInstitutionId: this.props.plaidInstitutionId,
     };
   }
 
@@ -44,6 +44,46 @@ export class ConnectInstitutionMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+// export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
+//   static fragments = {
+//     viewer: ()=> Relay.QL`
+//       fragment on Viewer {
+//         id
+//       }
+//     `,
+//   };
+
+//   getMutation() {
+//     return Relay.QL`mutation { connectFinicityInstitution }`;
+//   }
+
+//   getVariables() {
+//     return {
+//       credentials: this.props.credentials,
+//     };
+//   }
+
+//   getFatQuery() {
+//     return Relay.QL`
+//       fragment on ConnectFinicityInstitutionMutation {
+//         viewer {
+//           safeToSpend
+//         }
+//       }
+//     `;
+//   }
+
+//   getConfigs() {
+//     return [{
+//       type: 'FIELDS_CHANGE',
+//       fieldIDs: {
+//         viewer: this.props.viewer.id,
+//       },
+//     }];
+//   }
+// }
 
 
 export class CreateInstitutionMutation extends Relay.Mutation {
