@@ -9,22 +9,26 @@ from graphene.core.classtypes import Scalar
 from graphql.core.language import ast
 
 
-class Money(Scalar):
+class CustomScalar(Scalar):
+    base_type = None
+
+    @classmethod
+    def parse_literal(Cls, node):
+        if isinstance(node, ast.StringValue):
+            return Cls.parse_value(node.value)
+
+
+class Money(CustomScalar):
     @staticmethod
     def serialize(value):
         return int(Decimal(value) * Decimal(100))
-
-    @staticmethod
-    def parse_literal(node):
-        if isinstance(node, ast.IntValue):
-            return Decimal(node.value) / Decimal(100)
 
     @staticmethod
     def parse_value(value):
         return Decimal(value) / Decimal(100)
 
 
-class Month(Scalar):
+class Month(CustomScalar):
     @staticmethod
     def serialize(value):
         if type(value) is datetime:
@@ -37,30 +41,20 @@ class Month(Scalar):
         return delorean.parse(value).truncate('month').datetime
 
 
-class DateTime(Scalar):
+class DateTime(CustomScalar):
     @staticmethod
     def serialize(dt):
         return dt.isoformat()
-
-    @staticmethod
-    def parse_literal(node):
-        if isinstance(node, ast.StringValue):
-            return datetime.strptime(node.value, '%Y-%m-%dT%H:%M:%S.%f')
 
     @staticmethod
     def parse_value(value):
         return datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
 
 
-class JSON(Scalar):
+class JSON(CustomScalar):
     @staticmethod
     def serialize(value):
         return json.dumps(value)
-
-    @staticmethod
-    def parse_literal(node):
-        if isinstance(node, ast.StringValue):
-            return json.loads(node.value)
 
     @staticmethod
     def parse_value(value):
