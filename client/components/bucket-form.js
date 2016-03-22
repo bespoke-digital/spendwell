@@ -12,6 +12,11 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 
 
+const cleanFilters = (filters)=> filters
+  .map((f)=> _.pick(f, (v, k)=> !_.isNull(v) && k !== '__dataID__'))
+  .filter((filter)=> _.some(_.values(filter)));
+
+
 class BucketForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
@@ -33,11 +38,7 @@ class BucketForm extends Component {
     if (this.props.bucket) {
       const { name, filters } = this.props.bucket;
 
-      const cleanFilters = filters.map(
-        (f)=> _.pick(f, (v, k)=> !_.isNull(v) && k !== '__dataID__')
-      );
-
-      this.setState({ name, filters: cleanFilters });
+      this.setState({ name, filters: cleanFilters(filters) });
     }
   }
 
@@ -45,14 +46,12 @@ class BucketForm extends Component {
     const { onSubmit } = this.props;
     const { filters, name } = this.state;
 
-    onSubmit({ name, filters, reload });
+    onSubmit({ name, filters: cleanFilters(filters), reload });
   }
 
   handleFilterChange(filters) {
     this.setState({ filters });
-    this.props.relay.setVariables({
-      filters: _.filter(filters, (filter)=> _.some(_.values(filter))),
-    });
+    this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
   handleScroll() {
