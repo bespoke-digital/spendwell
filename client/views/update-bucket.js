@@ -91,7 +91,7 @@ class UpdateBucket extends Component {
           </div>
 
           {confirmDelete ?
-            <Dialog size='sm'>
+            <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
               <div className='body'>
                 Are you sure? You can't take it back.
               </div>

@@ -6,8 +6,7 @@ from django.conf import settings
 from plaid import Client
 
 from apps.core.utils import get_cursor, instance_for_node_id
-# from apps.core.types import JSON
-from .finicity import Finicity
+# from .finicity import Finicity
 from .models import Institution
 from .schema import InstitutionNode
 
