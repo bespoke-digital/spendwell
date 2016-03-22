@@ -11,6 +11,7 @@ export default (props)=> {
     fab,
     disabled,
     flat,
+    plain,
     type,
     propagateClick,
     loading,
@@ -28,8 +29,10 @@ export default (props)=> {
     classes += ` mui-btn--${variant}`;
   if (raised)
     classes += ' mui-btn--raised';
-  if (flat)
+  if (flat || plain)
     classes += ' mui-btn--flat';
+  if (plain)
+    classes += ' mui-btn--plain';
   if (fab)
     classes += ' mui-btn--fab';
   if (_disabled)

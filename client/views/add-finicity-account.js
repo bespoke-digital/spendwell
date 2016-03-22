@@ -56,8 +56,6 @@ class AddFinicityAccount extends Component {
 
     const formFields = _.sortBy(viewer.finicityInstitution.loginForm, 'displayOrder');
 
-    console.log('loading', loading);
-
     return (
       <App viewer={viewer}>
         <div className='container skinny'>
@@ -89,12 +87,14 @@ class AddFinicityAccount extends Component {
                   <div>
                     <div>{account.name}</div>
                     <div className='fw'><Money amount={account.balance}/></div>
-                    <Button className='fw' onClick={this.toggleAccount.bind(this, account)}>
-                      <Icon
-                        fixedWidth
-                        type={disabledAccounts[account.id] ? 'square-o' : 'check-square-o'}
-                      />
-                    </Button>
+                    <div>
+                      <Button className='fw' onClick={this.toggleAccount.bind(this, account)} plain>
+                        <Icon
+                          fixedWidth
+                          type={disabledAccounts[account.id] ? 'square-o' : 'check-square-o'}
+                        />
+                      </Button>
+                    </div>
                   </div>
                 }/>
               )}

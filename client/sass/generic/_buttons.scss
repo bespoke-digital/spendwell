@@ -69,4 +69,9 @@
     }
   }
 
+  &.mui-btn--plain {
+    &:hover, &:focus, &:active {
+      background-color: transparent;
+    }
+  }
 }
