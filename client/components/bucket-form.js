@@ -39,6 +39,7 @@ class BucketForm extends Component {
       const { name, filters } = this.props.bucket;
 
       this.setState({ name, filters: cleanFilters(filters) });
+      this.props.relay.setVariables({ filters: cleanFilters(filters) });
     }
   }
 

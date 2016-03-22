@@ -38,8 +38,14 @@ class ExternalAccounts extends Component {
       <SuperCard
         className='account'
         expanded={open}
-        summary={<Card summary={bucket.name}/>}
         onSummaryClick={onClick}
+        summary={
+          <Card summary={bucket.name} expanded={open}>
+            <div className='actions'>
+              <Button to={`/app/labels/${bucket.id}/edit`}>Edit</Button>
+            </div>
+          </Card>
+        }
       >
         <TransactionList transactions={bucket.transactions} abs={false}/>
 
@@ -61,6 +67,7 @@ ExternalAccounts = Relay.createContainer(ExternalAccounts, {
   fragments: {
     bucket: ()=> Relay.QL`
       fragment on BucketNode {
+        id
         name
 
         transactions(first: $transactionCount) @include(if: $open) {
