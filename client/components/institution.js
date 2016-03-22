@@ -12,7 +12,7 @@ import Button from 'components/button';
 import ListAccount from 'components/list-account';
 
 import { SyncInstitutionMutation } from 'mutations/institutions';
-import { EnableAccountMutation } from 'mutations/accounts';
+import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
 
 class Institution extends Component {
@@ -42,9 +42,24 @@ class Institution extends Component {
   }
 
   enableAccount(account) {
+    const { relay } = this.props;
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
       onFailure: ()=> console.log('Failure: EnableAccountMutation'),
-      onSuccess: ()=> console.log('Success: EnableAccountMutation'),
+      onSuccess: ()=> {
+        console.log('Success: EnableAccountMutation');
+        relay.forceFetch();
+      },
+    });
+  }
+
+  disableAccount(account) {
+    const { relay } = this.props;
+    Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
+      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
+      onSuccess: ()=> {
+        console.log('Success: DisableAccountMutation');
+        relay.forceFetch();
+      },
     });
   }
 
@@ -74,6 +89,7 @@ class Institution extends Component {
             key={node.id}
             account={node}
             expanded={selected === node.id}
+            onDisable={this.disableAccount.bind(this, node)}
             onClick={()=> selected === node.id ?
               this.setState({ selected: null }) :
               this.setState({ selected: node.id })}
@@ -125,6 +141,7 @@ Institution = Relay.createContainer(Institution, {
         accounts(first: 100, disabled: false) {
           edges {
             node {
+              ${DisableAccountMutation.getFragment('account')}
               ${ListAccount.getFragment('account')}
 
               id

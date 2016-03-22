@@ -29,6 +29,7 @@ export default (
   <RelayRouter
     history={browserHistory}
     renderFetched={()=> setTimeout(window.scrollTo.bind(window, 0, 0), 10)}
+    forceFetch={true}
   >
     <Route path='onboarding'>
       <IndexRedirect to='connect'/>

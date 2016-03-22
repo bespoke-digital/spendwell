@@ -7,13 +7,13 @@ import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
-import { DisableAccountMutation } from 'mutations/accounts';
 
 
 export default class Account extends Component {
   static propTypes = {
-    expanded: PropTypes.bool,
+    onDisable: PropTypes.func.isRequired,
     onClick: PropTypes.func,
+    expanded: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -25,14 +25,6 @@ export default class Account extends Component {
       this.props.relay.setVariables({ open: nextProps.expanded });
   }
 
-  disable() {
-    const { account } = this.props;
-    Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
-      onSuccess: ()=> console.log('Success: DisableAccountMutation'),
-    });
-  }
-
   loadTransactions() {
     const { relay } = this.props;
     const { transactionCount } = relay.variables;
@@ -41,7 +33,7 @@ export default class Account extends Component {
   }
 
   render() {
-    const { account, relay, onClick } = this.props;
+    const { account, relay, onClick, onDisable } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -60,9 +52,7 @@ export default class Account extends Component {
             </div>
           }>
             <div className='disable'>
-              <Button onClick={::this.disable} propagateClick={false}>
-                Disable
-              </Button>
+              <Button onClick={onDisable}>Disable</Button>
             </div>
           </Card>
         }
@@ -87,8 +77,6 @@ Account = Relay.createContainer(Account, {
   fragments: {
     account: ()=> Relay.QL`
       fragment on AccountNode {
-        ${DisableAccountMutation.getFragment('account')}
-
         id
         name
         currentBalance

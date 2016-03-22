@@ -21,9 +21,11 @@ export class AssignTransactionsMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on AssignTransactionsMutation {
+      fragment on DeleteBucketMutation {
         viewer {
-          summary
+          summary {
+            transactions
+          }
         }
       }
     `;
@@ -63,9 +65,8 @@ export class CreateBucketMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on CreateBucketMutation {
+      fragment on DeleteBucketMutation {
         viewer {
-          buckets
           summary {
             bucketMonths
             billMonths
@@ -114,7 +115,6 @@ export class DeleteBucketMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on DeleteBucketMutation {
         viewer {
-          buckets
           summary {
             bucketMonths
             billMonths
@@ -164,13 +164,7 @@ export class UpdateBucketMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on UpdateBucketMutation {
-        viewer {
-          buckets
-          summary {
-            bucketMonths
-            billMonths
-          }
-        }
+        bucket
       }
     `;
   }
@@ -179,9 +173,19 @@ export class UpdateBucketMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        viewer: this.props.viewer.id,
+        bucket: this.props.bucket.id,
       },
     }];
+  }
+
+  getOptimisticResponse() {
+    return {
+      bucket: {
+        id: this.props.bucket.id,
+        name: this.props.bucket.name,
+        filters: this.props.bucket.filters,
+      },
+    };
   }
 }
 
