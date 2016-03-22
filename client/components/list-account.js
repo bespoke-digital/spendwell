@@ -70,7 +70,7 @@ export default class Account extends Component {
         <TransactionList transactions={account.transactions} abs={false}/>
 
         {account.transactions && account.transactions.pageInfo.hasNextPage ?
-          <div className='bottom-load-button'>
+          <div className='bottom-buttons'>
             <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
