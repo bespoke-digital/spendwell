@@ -79,11 +79,11 @@ class User(AbstractBaseUser):
             self.transactions
             .filter(amount__gt=0)
             .filter(account__disabled=False)
-            .filter(date__gte=current_month - relativedelta(months=i + 1))
             .filter(date__lt=current_month - relativedelta(months=i))
+            .filter(date__gte=current_month - relativedelta(months=i + 1))
             .is_transfer(False)
             .sum()
-            for i in range(months_ago(self.first_data_month()))
+            for i in range(months_ago(self.first_data_month()) - 1)
         ]
         self.estimated_income = min(income_months)
 
