@@ -13,7 +13,8 @@ from apps.core.types import Money
 
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
-VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
+# VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
+VALID_QUERIES = []
 
 
 class FinicityError(Exception):
