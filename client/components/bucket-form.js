@@ -69,18 +69,20 @@ class BucketForm extends Component {
       <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
         <CardList>
           <Card className='bucket-type-selector'>
-            <Row>
-              <Col
-                sm={6}
-                className={type === 'bill' ? 'selected' : ''}
-                onClick={()=> this.setState({ type: 'bill' })}
-              >Bill</Col>
-              <Col
-                sm={6}
-                className={type === 'expense' ? 'selected' : ''}
-                onClick={()=> this.setState({ type: 'expense' })}
-              >Expense</Col>
-            </Row>
+            <div
+              className={`bucket-type ${type === 'bill' ? 'selected' : ''}`}
+              onClick={()=> this.setState({ type: 'bill' })}
+            >
+              <h3>Bill</h3>
+              <div>For monthly recurring expenses</div>
+            </div>
+            <div
+              className={`bucket-type ${type === 'expense' ? 'selected' : ''}`}
+              onClick={()=> this.setState({ type: 'expense' })}
+            >
+              <h3>Other Expense</h3>
+              <div>For non-recurring expenses</div>
+            </div>
           </Card>
 
           <Card>
