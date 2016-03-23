@@ -14,8 +14,8 @@ config.entry.app = [
   'webpack/hot/dev-server',
 ];
 
-config.entry.calculator = [
-  config.entry.calculator,
+config.entry.calculators = [
+  config.entry.calculators,
   'webpack-dev-server/client?https://dev.spendwell.co/',
   'webpack/hot/dev-server',
 ];
