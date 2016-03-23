@@ -14,6 +14,13 @@ config.entry.app = [
   'webpack/hot/dev-server',
 ];
 
+config.entry.calculator = [
+  config.entry.calculator,
+  'webpack-dev-server/client?https://dev.spendwell.co/',
+  'webpack/hot/dev-server',
+];
+
+
 config.plugins = config.plugins.concat([
   new webpack.HotModuleReplacementPlugin(),
 ]);
