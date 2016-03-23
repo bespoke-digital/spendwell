@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
+import { Link } from 'react-router';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -16,10 +17,15 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
+import Icon from 'components/icon';
+import Transition from 'components/transition';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 
 import styles from 'sass/views/dashboard.scss';
+import goalsImage from 'img/views/dashboard/goals.svg';
+import billsImage from 'img/views/dashboard/bills.svg';
+import spendingImage from 'img/views/dashboard/spending.svg';
 
 
 class Dashboard extends Component {
@@ -29,7 +35,12 @@ class Dashboard extends Component {
 
   constructor() {
     super();
-    this.state = { selected: null };
+    this.state = {
+      selected: null,
+      goalsHelp: localStorage.getItem('help.dashboard.goals') !== 'hidden',
+      billsHelp: localStorage.getItem('help.dashboard.bills') !== 'hidden',
+      spendingHelp: localStorage.getItem('help.dashboard.spending') !== 'hidden',
+    };
   }
 
   syncBuckets(month) {
@@ -56,6 +67,19 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
+  toggleHelp(type, event) {
+    if (event) event.preventDefault();
+
+    if (this.state[`${type}Help`]) {
+      localStorage.setItem(`help.dashboard.${type}`, 'hidden');
+      this.setState({ [`${type}Help`]: false });
+
+    } else {
+      localStorage.setItem(`help.dashboard.${type}`, 'visible');
+      this.setState({ [`${type}Help`]: true });
+    }
+  }
+
   render() {
     if (!this.props.viewer.summary) {
       console.log('fuck this shit', this.props);
@@ -68,7 +92,7 @@ class Dashboard extends Component {
       allTransactions,
     } = viewer.summary;
 
-    const { selected } = this.state;
+    const { selected, goalsHelp, billsHelp, spendingHelp } = this.state;
 
     const now = moment().startOf('month');
     const current = year && month ? moment(`${year}-${month}-0`) : now;
@@ -116,13 +140,38 @@ class Dashboard extends Component {
           />
 
           <div className='heading'>
-            <h2>Goals <small>for long and short term savings</small></h2>
+            <h2>Goals <small>
+              for long and short term savings
+              <a
+                href='#'
+                onClick={this.toggleHelp.bind(this, 'goals')}
+                className='help-icon'
+              ><Icon type='question-circle'/></a>
+            </small></h2>
+
             <div>
-              <Button to='/app/goals/new' flat={true} variant='primary'>
-                {' New Goal'}
-              </Button>
+              <Button to='/app/goals/new' flat={true} variant='primary'>New Goal</Button>
             </div>
           </div>
+
+          <Transition show={goalsHelp}>
+            <Card className='help'>
+              <Icon type='times' onClick={this.toggleHelp.bind(this, 'goals')}/>
+              <img src={goalsImage}/>
+              <h3>Pay Yourself First</h3>
+              <p>
+                This is where you organize your savings goals.
+                We recommend that you save 10-15% of your gross income if
+                possible. If not, don’t sweat it. Save what you can.
+              </p>
+              <p>
+                Here are some
+                popular goals to help get you started: <Link to=''>Vacation</Link>{', '}
+                <Link to=''>Retirement Savings</Link>{', '} <Link to=''>Car Fund</Link> and <Link to=''>Debt Payout</Link>.
+              </p>
+              <div className='clearfix'/>
+            </Card>
+          </Transition>
 
           {goalMonths.length > 0 ?
             <CardList className='month-list'>
@@ -167,13 +216,40 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Bills <small>for monthly recurring expenses</small></h2>
+            <h2>Bills <small>
+              for monthly recurring expenses
+              <a
+                href='#'
+                onClick={this.toggleHelp.bind(this, 'bills')}
+                className='help-icon'
+              ><Icon type='question-circle'/></a>
+            </small></h2>
             <div>
               <Button to='/app/labels/new/bill' flat={true} variant='primary'>
                 {' New Label'}
               </Button>
             </div>
           </div>
+
+          <Transition show={billsHelp}>
+            <Card className='help'>
+              <Icon type='times' onClick={this.toggleHelp.bind(this, 'bills')}/>
+              <img src={billsImage}/>
+              <h3>Live Within Your Means</h3>
+              <p>
+                Bills are a type of label for monthly recurring expenses. We make
+                sure money is put asside to pay them off at the beginning of
+                each month. This will make your Safe To Spend number safe, even
+                from unpaid bills.
+              </p>
+              <p>
+                Some examples are <Link to=''>Netflix</Link>,
+                your <Link to=''>Cell Phone</Link> bill
+                or <Link to=''>Life Insurance</Link>.
+              </p>
+              <div className='clearfix'/>
+            </Card>
+          </Transition>
 
           {billMonths.length > 0 ?
             <CardList className='month-list'>
@@ -206,13 +282,37 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Labels <small>for non-recurring expenses</small></h2>
+            <h2>Labels <small>
+              for non-recurring expenses
+              <a
+                href='#'
+                onClick={this.toggleHelp.bind(this, 'spending')}
+                className='help-icon'
+              ><Icon type='question-circle'/></a>
+            </small></h2>
             <div>
               <Button to='/app/labels/new/expense' flat={true} variant='primary'>
                 {' New Label'}
               </Button>
             </div>
           </div>
+
+          <Transition show={spendingHelp}>
+            <Card className='help'>
+              <Icon type='times' onClick={this.toggleHelp.bind(this, 'spending')}/>
+              <img src={spendingImage}/>
+              <h3>Understand Where Your Money Goes</h3>
+              <p>
+                Goals and Bills have your monthly set obligations covered and
+                provide you with your Safe To Spend number. Spending money on
+                things you need or want should be fun and this is where you’ll
+                track those transactions. Here is where you can set up some clever
+                labels like, [Lunches], [Groceries], [Kids], [Ubers] and anything
+                else your heart desires.
+              </p>
+              <div className='clearfix'/>
+            </Card>
+          </Transition>
 
           {bucketMonths.length > 0 ?
             <CardList className='month-list'>

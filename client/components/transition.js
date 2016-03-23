@@ -14,9 +14,9 @@ export default class Transition extends Component {
     name: 'fade',
   };
 
-  constructor() {
+  constructor({ show }) {
     super();
-    this.state = { visible: false };
+    this.state = { visible: show };
   }
 
   componentWillReceiveProps(nextProps) {
