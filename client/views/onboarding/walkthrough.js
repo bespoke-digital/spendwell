@@ -10,41 +10,56 @@ import CardList from 'components/card-list';
 import eventEmitter from 'utils/event-emitter';
 
 import styles from 'sass/views/accounts';
+import goalsImage from 'img/views/dashboard/goals.svg';
+import billsImage from 'img/views/dashboard/bills.svg';
+import spendingImage from 'img/views/dashboard/spending.svg';
 
 
 const STEPS = [
   {
     title: 'Welcome to Spendwell!',
     content: (
-      <Card>
-        While we analyze your data, we want to quickly tell you a bit
-        more about our philosophy. It boils down to two principals:
-        {' '}<strong>pay yourself first</strong> and
-        {' '}<strong>live within your means</strong>. These two
-        simple concepts can help make you rich and achieve financial
-        freedom. We’re here to show you the way.
+      <Card className='help'>
+        <img src={spendingImage}/>
+        <p>
+          While we analyze your data, we want to quickly tell you a bit
+          more about our philosophy. It boils down to two principals:
+          {' '}<strong>pay yourself first</strong> and
+          {' '}<strong>live within your means</strong>. These two
+          simple concepts can help make you rich and achieve financial
+          freedom. We’re here to show you the way.
+        </p>
+        <div className='clearfix'/>
       </Card>
     ),
   },
   {
     title: 'Pay Yourself First',
     content: (
-      <Card>
-        Paying yourself first means making your own long-term financial
-        well-being your top priority. You set your goals for saving and
-        investing money, and we'll make sure it's taken off the top each
-        month.
+      <Card className='help'>
+        <img src={goalsImage}/>
+        <p>
+          Paying yourself first means making your own long-term financial
+          well-being your top priority. You set your goals for saving and
+          investing money, and we'll make sure it's taken off the top each
+          month.
+        </p>
+        <div className='clearfix'/>
       </Card>
     ),
   },
   {
     title: 'Live Within Your Means',
     content: (
-      <Card>
-        After paying yourself, you'll have some money left over. Don't
-        spend more then that in a given month. We can help there by
-        showing you how much you've spent so far this month, and how much
-        you have left to spend across all your accounts and credit cards.
+      <Card className='help'>
+        <img src={billsImage}/>
+        <p>
+          After paying yourself, you'll have some money left over. Don't
+          spend more then that in a given month. We can help there by
+          showing you how much you've spent so far this month, and how much
+          you have left to spend across all your accounts and credit cards.
+        </p>
+        <div className='clearfix'/>
       </Card>
     ),
   },

@@ -109,4 +109,25 @@
   .actions {
     margin-top: 20px;
   }
+
+  &.help {
+    position: relative;
+    padding: 40px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $brand-primary;
+
+    .icon-times {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: $gray-lightish;
+      cursor: pointer;
+    }
+
+    img {
+      float: left;
+      margin-right: 20px;
+      max-height: 100%;
+    }
+  }
 }
