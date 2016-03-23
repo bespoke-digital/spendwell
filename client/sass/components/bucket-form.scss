@@ -1,0 +1,26 @@
+
+@import '../variables';
+
+:local(.root) {
+  .bucket-type-selector {
+    padding: 0;
+    border-bottom: 0;
+
+    .bucket-type {
+      position: relative;
+      display: inline-block;
+      width: 50%;
+      padding: 20px;
+      margin-bottom: 1px;
+
+      background-color: white;
+      border-bottom: 1px solid $gray-lighter;
+      color: $gray-light;
+
+      &.selected {
+        border-bottom: 1px solid $brand-primary;
+        color: $gray-dark;
+      }
+    }
+  }
+}

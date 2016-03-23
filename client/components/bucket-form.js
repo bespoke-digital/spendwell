@@ -2,6 +2,8 @@
 import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 
 import Button from 'components/button';
 import Card from 'components/card';
@@ -10,6 +12,8 @@ import TextInput from 'components/text-input';
 import Filters from 'components/filters';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
+
+import style from 'sass/components/bucket-form';
 
 
 const cleanFilters = (filters)=> filters
@@ -22,16 +26,12 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
-    type: PropTypes.oneOf(['bill', 'bucket', 'account']),
+    type: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
-  static defaultProps = {
-    type: 'bucket',
-  };
-
-  constructor() {
+  constructor({ type }) {
     super();
-    this.state = { filters: [], name: '' };
+    this.state = { filters: [], name: '', type };
   }
 
   componentWillMount() {
@@ -43,11 +43,11 @@ class BucketForm extends Component {
     }
   }
 
-  handleSubmit(reload) {
+  handleSubmit() {
     const { onSubmit } = this.props;
     const { filters, name } = this.state;
 
-    onSubmit({ name, filters: cleanFilters(filters), reload });
+    onSubmit({ name, filters: cleanFilters(filters) });
   }
 
   handleFilterChange(filters) {
@@ -60,14 +60,31 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { onCancel, viewer, bucket, loading, type } = this.props;
-    const { name, filters } = this.state;
+    const { onCancel, viewer, bucket, loading } = this.props;
+    const { name, filters, type } = this.state;
 
     const valid = name.length && filters.length;
 
     return (
-      <ScrollTrigger onTrigger={::this.handleScroll}>
+      <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
         <CardList>
+          <Card className='bucket-type-selector'>
+            <div
+              className={`bucket-type ${type === 'bill' ? 'selected' : ''}`}
+              onClick={()=> this.setState({ type: 'bill' })}
+            >
+              <h3>Bill</h3>
+              <div>For monthly recurring expenses</div>
+            </div>
+            <div
+              className={`bucket-type ${type === 'expense' ? 'selected' : ''}`}
+              onClick={()=> this.setState({ type: 'expense' })}
+            >
+              <h3>Other Expense</h3>
+              <div>For non-recurring expenses</div>
+            </div>
+          </Card>
+
           <Card>
             <TextInput
               label='Name'
@@ -90,7 +107,7 @@ class BucketForm extends Component {
               onClick={::this.handleSubmit}
               loading={loading}
             >
-              {bucket ? 'Save ' : 'Create '}{type}
+              {bucket ? 'Save Label' : 'Create Label'}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
           </Card>

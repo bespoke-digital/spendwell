@@ -73,7 +73,7 @@ class ListTransaction extends Component {
             {transaction.buckets.edges.length ?
               <div className='section'>
                 <hr/>
-                <strong>{'Buckets: '}</strong>
+                <strong>{'Labels: '}</strong>
                 <span className='buckets'>
                   {transaction.buckets.edges.map(({ node })=>
                     <span key={node.id}>{node.name}</span>
