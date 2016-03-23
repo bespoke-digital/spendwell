@@ -1,0 +1,16 @@
+
+@import '../variables';
+
+:local(.root) {
+  .bucket-type-selector {
+    padding: 0 15px;
+
+    .mui-row > div {
+      padding: 20px;
+
+      &.selected {
+        background-color: $gray-lightest;
+      }
+    }
+  }
+}

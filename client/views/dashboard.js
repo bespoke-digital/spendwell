@@ -64,7 +64,6 @@ class Dashboard extends Component {
 
     const { params: { year, month }, viewer } = this.props;
     const {
-      spent,
       spentFromSavings,
       allTransactions,
     } = viewer.summary;
@@ -170,8 +169,8 @@ class Dashboard extends Component {
           <div className='heading'>
             <h2>Bills <small>for monthly recurring expenses</small></h2>
             <div>
-              <Button to='/app/bills/new' flat={true} variant='primary'>
-                {' New Bill'}
+              <Button to='/app/labels/new/bill' flat={true} variant='primary'>
+                {' New Label'}
               </Button>
             </div>
           </div>
@@ -207,10 +206,10 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Categories <small>for non-recurring expenses</small></h2>
+            <h2>Labels <small>for non-recurring expenses</small></h2>
             <div>
-              <Button to='/app/labels/new' flat={true} variant='primary'>
-                {' New Category'}
+              <Button to='/app/labels/new/expense' flat={true} variant='primary'>
+                {' New Label'}
               </Button>
             </div>
           </div>
@@ -291,7 +290,6 @@ Dashboard = Relay.createContainer(Dashboard, {
           ${SpentFromSavings.getFragment('summary')}
           ${DashboardSummary.getFragment('summary')}
 
-          spent
           spentFromSavings
           goalMonths(first: 1000) {
             edges {

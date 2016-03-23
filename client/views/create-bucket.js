@@ -14,6 +14,7 @@ import styles from 'sass/views/create-bucket.scss';
 class CreateBucket extends Component {
   static contextTypes = {
     router: PropTypes.object,
+    type: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
   constructor() {
@@ -21,11 +22,11 @@ class CreateBucket extends Component {
     this.state = { loading: false };
   }
 
-  handleSubmit({ filters, name, reload }) {
+  handleSubmit({ filters, name, type }) {
     const { viewer } = this.props;
 
     this.setState({ loading: true });
-    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type: 'expense' }), {
+    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type }), {
       onFailure: ()=> {
         console.log('Failure: CreateBucketMutation');
         this.setState({ loading: false });
@@ -34,22 +35,20 @@ class CreateBucket extends Component {
         console.log('Success: CreateBucketMutation');
         this.setState({ loading: false });
 
-        // if (reload) TODO
-
         browserHistory.push('/app/dashboard');
       },
     });
   }
 
   render() {
-    const { viewer } = this.props;
+    const { viewer, type } = this.props;
     const { loading } = this.state;
 
     return (
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>New Category</h1>
+            <h1>New Label</h1>
           </div>
 
           <BucketForm
@@ -58,6 +57,7 @@ class CreateBucket extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
+            type={type}
           />
         </div>
       </App>
