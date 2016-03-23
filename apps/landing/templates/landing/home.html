@@ -9,15 +9,160 @@
 {% endblock %}
 
 {% block body %}
-  <div class="hero">
-    <div class="hero-content">
-      <div class="logo"></div>
+  <div class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <ul class="list-inline">
+            <li class="logo"><img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/></li>
+            <li class="hidden-xs"><a href="#how-it-works">How it Works</a></li>
+            <li class="hidden-xs"><a href="#security">Security</a></li>
+            <li class="hidden-xs"><a href="#faq">FAQ</a></li>
+            <li class="hidden-xs"><a href="https://blog.spendwell.co">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-4 hidden-xs">
+          <ul class="list-inline">
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}" class="mui-btn mui-btn--primary">Signup</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <h1>
-        Managing your money shouldn't suck.<br class="hidden-xs">
-        Soon it won't have to.
-      </h1>
+  <div class="container">
+    <div class="hero row">
+      <div class="col-sm-7">
+        <img src="{% static 'img/landing/laptop.png' %}"/>
+      </div>
+      <div class="col-sm-5 hero-content">
+        <h1>A fitness tracker for your money</h1>
+        <p class="main">
+          Get a clear picture of how your money flows through your accounts.
+          Know how much money is safe to spend without blowing your savings
+          or missing your bills.
+        </p>
+        <a class="mui-btn mui-btn--primary">Get Notified</a>
+        <p class="extra">
+          We're in private beta. <a>Get on the list</a>.
+        </p>
+      </div>
+    </div>
+  </div>
 
+  <a name="how-it-works"></a>
+  <h2 class="color-bar">How it Works</h2>
+
+  <div class="section how-section how-section-first">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 col-sm-offset-1 how-copy">
+          <img src="{% static 'img/landing/bank.svg' %}" class="icon"/>
+          <h3>Connect your Account</h3>
+          <p>It's super easy to connect to your accounts. Simply enter your banking info into our bank connect form and that's it! We'll import your data and analyze it instantly.</p>
+        </div>
+        <div class="col-sm-6">
+          <img src="{% static 'img/landing/desktop.png' %}" class="screenshot"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section how-section how-section-second">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 col-sm-push-6 how-copy">
+          <img src="{% static 'img/landing/chart.svg' %}" class="icon"/>
+          <h3>Get a visual breakdown</h3>
+          <p>We’ll show you everything you want to know. How much money is coming in, going out, safe to spend and what you’re saving. If you’re running a deficit, we’ll help you fix that too. </p>
+        </div>
+        <div class="col-sm-5 col-sm-pull-4">
+          <img src="{% static 'img/landing/phone.png' %}" class="screenshot phone"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section how-section how-section-third">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 col-sm-offset-1 how-copy">
+          <img src="{% static 'img/landing/dollar.svg' %}" class="icon"/>
+          <h3>Set your financial goals</h3>
+          <p>Whether you want a rock solid budget or you plan to buy a house or car in the near future, we’ll help you reach your goals. We make it easy to set and monitor your progress.</p>
+        </div>
+        <div class="col-sm-6">
+          <img src="{% static 'img/landing/tablet.png' %}" class="screenshot"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a name="security"></a>
+  <h2 class="color-bar">Security</h2>
+
+  <div class="section security-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <img src="{% static 'img/landing/security.svg' %}" class="icon"/>
+          <h3>Bank Level Security</h3>
+          <p>Spendwell uses 256-bit encryption, that’s twice as secure as some banks. </p>
+        </div>
+        <div class="col-sm-4">
+          <img src="{% static 'img/landing/anonymity.svg' %}" class="icon"/>
+          <h3>Anonymity</h3>
+          <p>We do not ask for any personally identifying information from you, other than your email.</p>
+        </div>
+        <div class="col-sm-4">
+          <img src="{% static 'img/landing/privacy.svg' %}" class="icon"/>
+          <h3>Data Privacy</h3>
+          <p>Your financial data is safe with us. We do not share or sell your information.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-bar">
+    <a class="mui-btn mui-btn--primary">Get Notified</a>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 col left">
+          <ul class="list-inline">
+            <li><a href="https://www.facebook.com/SpendwellApp">
+              <i class="fa fa-facebook"></i>
+            </a></li>
+            <li><a href="https://twitter.com/spendwellapp">
+              <i class="fa fa-twitter"></i>
+            </a></li>
+          </ul>
+        </div>
+        <div class="col-sm-6 col center">
+          <ul class="list-inline">
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="https://blog.spendwell.co">Blog</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'signup' %}">Signup</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-3 col right">
+          &copy;{{ copyright_year }} Spendwell Inc.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'dist/pages.js' %}"></script>
+  <script>window.mixpanel.track('Landing: Home');</script>
+{% endblock %}
+
+<!--
       <form
         action="//spendwell.us12.list-manage.com/subscribe/post?u=f06a44d9caea5e9890f52c259&id=edd6ea8786"
         method="post"
@@ -35,13 +180,4 @@
         <i class="fa fa-chevron-right"></i>
         </button>
       </form>
-
-      <p>Leave your email to get early access and start managing money like a boss.</p>
-    </div>
-  </div>
-
-  <script src="{% static 'dist/pages.js' %}"></script>
-  <script>
-    window.mixpanel.track('Landing: Home');
-  </script>
-{% endblock %}
+ -->

@@ -1,100 +1,219 @@
 
 body.home {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  .header {
+    padding: 13px 0 10px;
+    background-color: transparent;
 
-  .hero {
-    position: relative;
-    height: 100vh;
-    width: 100%;
+    .col-sm-6:first-child {
+      text-align: left;
 
-    color: white;
-    background-image: url('~img/landing/dad-cover.jpg');
-    background-position: 75% center;
-
-    @media (max-width: $screen-xs-max) {
-      position: inherit;
-      height: auto;
-      min-height: 100vh;
+      a {
+        padding-top: 3px;
+      }
     }
 
-    .hero-content {
-      width: 100%;
+    .col-sm-6:last-child {
+      text-align: right;
+    }
 
-      background-color: rgba(black, 0.3);
-      text-align: center;
-      line-height: 1.1;
+    img {
+      height: 40px;
+    }
+
+    a:not(.mui-btn) {
+      color: $gray;
+    }
+
+    .logo {
+      img {
+        @media (min-width: $screen-sm-min) {
+          margin-top: -3px;
+        }
+      }
 
       @media (max-width: $screen-xs-max) {
-        padding: 20px 10px;
-        min-height: 100vh;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .hero {
+    padding: 60px 0;
+
+    @media (max-width: $screen-xs-max) {
+      padding-top: 40px;
+    }
+
+    img {
+      max-width: 100%;
+
+      @media (max-width: $screen-xs-max) {
+        margin-bottom: 40px;
+      }
+    }
+
+    h1 {
+      line-height: 1;
+    }
+
+    p.main {
+      margin-bottom: 40px;
+    }
+
+    p.extra {
+      margin-top: 20px;
+      color: $gray-light;
+    }
+  }
+
+  h2.color-bar {
+    padding: 30px 0;
+    margin-bottom: 0;
+    background-color: $brand-primary;
+    text-align: center;
+    color: white;
+  }
+
+  .section {
+    img.icon {
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: auto;
+    }
+  }
+
+  .how-section {
+    padding: 60px 0;
+    text-align: center;
+    border-bottom: 1px solid $gray-6;
+
+    img.screenshot {
+      max-width: 100%;
+      max-height: 400px;
+
+      @media (max-width: $screen-xs-max) {
+        margin-top: 20px;
       }
 
-      @media (min-width: $screen-sm-min) {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 30px 20px 20px;
-        max-width: 560px;
-        border-radius: 4px;
+      &.phone {
+        height: 300px;
       }
+    }
 
-      .logo {
-        height: 60px;
-        margin-bottom: 19px;
+    &.how-section-first {
+      background-color: white;
 
-        background-image: url('~img/logo-white.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-
-      h1 {
-        margin-bottom: 30px;
-        font-size: 28px;
-        font-weight: 600;
-      }
-
-      form {
-        margin-bottom: 15px;
-
-        .mui-textfield {
-          display: inline-block;
-          text-align: left;
-          margin-right: 5px;
-          margin-bottom: 0;
-
-          > input {
-            color: white;
-            border-bottom: 1px solid rgba(white, 0.8);
-            width: 220px;
-
-            &:focus {
-              border-bottom-color: white;
-
-              ~ label {
-                color: white;
-              }
-            }
-          }
-
-          > label {
-            color: rgba(white, 0.8);
-          }
+      .how-copy {
+        @media (min-width: $screen-md-min) {
+          padding-top: 40px;
         }
-
-        .mui-btn {
-          height: 30px;
-          padding: 0 10px 0 13px;
-          line-height: 30px;
-          font-weight: 600;
+        @media (min-width: $screen-sm-min) {
+          padding-top: 20px;
         }
       }
+    }
 
-      p {
-        display: inline-block;
-        font-size: 18px;
-        max-width: 300px;
+    &.how-section-second {
+      padding-bottom: 0;
+
+      .how-copy {
+        @media (min-width: $screen-md-min) {
+          padding-top: 40px;
+        }
+        @media (min-width: $screen-sm-min) {
+          padding-top: 20px;
+        }
+      }
+    }
+
+    &.how-section-third {
+      background-color: $gray-lighter;
+
+      .how-copy {
+        @media (min-width: $screen-md-min) {
+          padding-top: 40px;
+        }
+        @media (min-width: $screen-sm-min) {
+          padding-top: 10px;
+        }
+      }
+    }
+
+    p {
+      max-width: 340px;
+      font-size: 16px;
+    }
+
+  }
+
+  .security-section {
+    padding: 60px 0;
+    text-align: center;
+
+    img {
+      height: 90px;
+    }
+
+    .col-sm-4 {
+      @media (max-width: $screen-xs-max) {
+        margin-top: 40px;
+      }
+    }
+  }
+
+  .cta-bar {
+    margin-bottom: 60px;
+    text-align: center;
+  }
+
+  footer {
+    padding: 60px 0;
+    background-color: $gray-2;
+    color: $gray-8;
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    a {
+      color: $gray-lightest;
+
+      .fa {
+        font-size: 20px;
+        color: $brand-primary;
+      }
+    }
+
+    .right {
+      color: $gray-5;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      text-align: center;
+
+      .col {
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      .left {
+        text-align: left;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .right {
+        text-align: right;
       }
     }
   }

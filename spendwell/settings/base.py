@@ -67,6 +67,7 @@ TEMPLATES = [{
             'django.template.context_processors.request',
             'django.contrib.messages.context_processors.messages',
             'apps.core.context_processors.settings',
+            'apps.core.context_processors.copyright_year',
         ),
     },
 }]
