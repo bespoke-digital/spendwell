@@ -36,4 +36,5 @@ app_view = login_required(ensure_csrf_cookie(AppView.as_view()))
 class CalculatorsView(TemplateView):
     template_name = 'core/calculators.html'
 
-calculators_view = login_required(ensure_csrf_cookie(CalculatorsView.as_view()))
+calculators_view = CalculatorsView.as_view()
+#login_required(ensure_csrf_cookie(CalculatorsView.as_view()))

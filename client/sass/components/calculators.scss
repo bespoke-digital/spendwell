@@ -1,0 +1,40 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  .container{ 
+  }
+
+  .top-margin {
+    margin-top:30px;
+  }
+
+  .bottom-margin{
+    margin-top:30px;
+  }
+  
+  // suppresses the up and down arrows 
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .double-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:baseline;
+  }
+
+  @media screen and (max-width: 992px ) {
+    .double-card {
+      flex-wrap:wrap;
+    }
+  }
+}
+
+
+
+   

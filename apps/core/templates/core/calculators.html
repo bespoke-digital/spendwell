@@ -1,12 +1,13 @@
-{% extends "base.html" %}
+{% extends "landing/base.html" %}
 
 {% load staticfiles %}
 
 {% block head %}
+  {{ block.super }}
   <link rel="stylesheet" href="{% static 'dist/calculators.css' %}">
 {% endblock %}
 
-{% block body %}
+{% block content %}
   <div id="root"></div>
 
   <script src="{% static 'dist/calculators.js' %}"></script>
