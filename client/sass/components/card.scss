@@ -116,6 +116,10 @@
     margin-bottom: 20px;
     border-bottom: 1px solid $brand-primary;
 
+    h1, h2, h3, h4, h5 {
+      line-height: 1.1;
+    }
+
     .icon-times {
       position: absolute;
       top: 10px;

@@ -15,6 +15,7 @@ import { DisableAccountMutation, EnableAccountMutation } from 'mutations/account
 
 import eventEmitter from 'utils/event-emitter';
 
+import bankImage from 'img/views/onboarding/bank.svg';
 import styles from 'sass/views/accounts';
 
 
@@ -56,10 +57,19 @@ class OnboardingAccounts extends Component {
 
     return (
       <Onboarding viewer={viewer}>
-        <div className={`container ${styles.root}`}>
+        <div className={`container skinny ${styles.root}`}>
           <div className='heading'>
             <h1>Bank Accounts</h1>
           </div>
+
+          <CardList>
+            <Card className='help'>
+              <img src={bankImage}/>
+              <h3>Your bank has been succesfully connected!</h3>
+              <p>You can disable any of your accounts below, or just continue.</p>
+              <div className='clearfix'/>
+            </Card>
+          </CardList>
 
           {viewer.institutions.edges.map(({ node })=>
             <CardList className='institution' key={node.id}>
@@ -86,7 +96,7 @@ class OnboardingAccounts extends Component {
             <div/>
             <Button to='/onboarding/connect' flat>Add Another</Button>
             <Button variant='primary' onClick={::this.continue}>
-              Continue
+              Next
             </Button>
           </div>
         </div>

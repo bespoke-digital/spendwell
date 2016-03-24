@@ -162,12 +162,12 @@ class Dashboard extends Component {
               <p>
                 This is where you organize your savings goals.
                 We recommend that you save 10-15% of your gross income if
-                possible. If not, don’t sweat it. Save what you can.
+                possible. If not, don't sweat it. Save what you can.
               </p>
               <p>
                 Here are some
-                popular goals to help get you started: <Link to=''>Vacation</Link>{', '}
-                <Link to=''>Retirement Savings</Link>{', '} <Link to=''>Car Fund</Link> and <Link to=''>Debt Payout</Link>.
+                popular goals to help get you started: <Link to='/app/goals/new'>Vacation</Link>{', '}
+                <Link to='/app/goals/new'>Retirement Savings</Link>{', '} <Link to='/app/goals/new'>Car Fund</Link> and <Link to='/app/goals/new'>Debt Payout</Link>.
               </p>
               <div className='clearfix'/>
             </Card>
@@ -243,9 +243,9 @@ class Dashboard extends Component {
                 from unpaid bills.
               </p>
               <p>
-                Some examples are <Link to=''>Netflix</Link>,
-                your <Link to=''>Cell Phone</Link> bill
-                or <Link to=''>Life Insurance</Link>.
+                Some examples are <Link to='/app/labels/new/bill'>Netflix</Link>,
+                your <Link to='/app/labels/new/bill'>Cell Phone</Link> bill
+                or <Link to='/app/labels/new/bill'>Life Insurance</Link>.
               </p>
               <div className='clearfix'/>
             </Card>
@@ -282,7 +282,7 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Labels <small>
+            <h2>Other Expenses <small>
               for non-recurring expenses
               <a
                 href='#'
@@ -304,11 +304,18 @@ class Dashboard extends Component {
               <h3>Understand Where Your Money Goes</h3>
               <p>
                 Goals and Bills have your monthly set obligations covered and
-                provide you with your Safe To Spend number. Spending money on
-                things you need or want should be fun and this is where you’ll
+                provide you with your Safe To Spend number.
+              </p>
+              <p>
+                Spending money on
+                things you need or want should be fun and this is where you'll
                 track those transactions. Here is where you can set up some clever
-                labels like, [Lunches], [Groceries], [Kids], [Ubers] and anything
-                else your heart desires.
+                labels like,
+                {' '}<Link to='/app/labels/new/expense'>Lunches</Link>,
+                {' '}<Link to='/app/labels/new/expense'>Groceries</Link>,
+                {' '}<Link to='/app/labels/new/expense'>Kids</Link>,
+                {' '}<Link to='/app/labels/new/expense'>Ubers</Link>
+                {' '}and anything else your heart desires.
               </p>
               <div className='clearfix'/>
             </Card>

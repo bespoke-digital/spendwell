@@ -106,6 +106,14 @@ class OnboardingWalkthrough extends Component {
 
           <div className='flex-row'>
             <div/>
+            {stepIndex > 0 ?
+              <Button
+                flat
+                onClick={()=> this.setState({ stepIndex: stepIndex - 1 })}
+              >
+                Previous
+              </Button>
+            : null}
             {stepIndex === STEPS.length - 1 ?
               <Button
                 variant='primary'
@@ -113,7 +121,7 @@ class OnboardingWalkthrough extends Component {
                 disabled={syncing}
                 loading={syncing}
               >
-                Continue
+                Next
               </Button>
             :
               <Button
