@@ -1,4 +1,6 @@
 
+from decimal import Decimal
+
 from django.db import models
 
 from apps.core.models import SWModel, SWManager
@@ -31,6 +33,28 @@ class AccountManager(SWManager):
         account.save()
         return account
 
+    def from_finicity(self, institution, json_data):
+        try:
+            account = Account.objects.get(
+                owner=institution.owner,
+                institution=institution,
+                finicity_id=json_data['id'],
+            )
+        except Account.DoesNotExist:
+            account = Account()
+            account.owner = institution.owner
+            account.institution = institution
+            account.finicity_id = json_data['id']
+
+        account.type = json_data['type']
+        account.name = json_data['name']
+        account.number_snippet = json_data['number']
+        account.current_balance = Decimal(json_data['balance'])
+        account.disabled = True
+
+        account.save()
+        return account
+
 
 class Account(SWModel):
     owner = models.ForeignKey(
@@ -59,6 +83,7 @@ class Account(SWModel):
     )
     number_snippet = models.CharField(max_length=255, blank=True, null=True)
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    finicity_id = models.CharField(max_length=255, blank=True, null=True)
     disabled = models.BooleanField(default=False, db_index=True)
 
     objects = AccountManager()

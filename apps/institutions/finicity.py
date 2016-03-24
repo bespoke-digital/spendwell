@@ -10,11 +10,13 @@ import xmltodict
 import requests
 
 from apps.core.types import Money
+from apps.accounts.models import Account
+from .models import Institution
 
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
-# VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
-VALID_QUERIES = []
+VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
+# VALID_QUERIES = []
 
 
 class FinicityError(Exception):
@@ -169,8 +171,10 @@ class Finicity(object):
             for field in response['loginForm']['loginField']
         ]
 
-    def list_accounts(self, institution_id, credentials):
+    def connect_institution(self, institution_id, credentials):
         self.ensure_customer()
+
+        institution = self.get_institution(institution_id)
 
         path = '/v1/customers/{}/institutions/{}/accounts'.format(
             self.user.finicity_id,
@@ -192,11 +196,57 @@ class Finicity(object):
 
         response = self.request(path, method='POST', data=body)
 
-        return [
-            FinicityAccount(
-                finicity=self,
-                balance=Decimal(account.pop('balance', '0')),
-                **account
-            )
-            for account in response['accounts']['account']
-        ]
+        institution, created = Institution.objects.get_or_create(
+            owner=self.user,
+            finicity_id=institution_id,
+            defaults={'name': institution['name']},
+        )
+
+        for account_data in response['accounts']['account']:
+            Account.objects.from_finicity(institution, account_data)
+
+        return institution
+
+    def connect_accounts(self, institution_id, accounts_ids):
+        self.ensure_customer()
+
+        institution = Institution.objects.get(finicity_id=institution_id)
+
+        accounts = Account.objects.filter(
+            institution=institution,
+            finicity_id__in=accounts_ids,
+        )
+
+        path = '/v1/customers/{}/institutions/{}/accounts'.format(
+            self.user.finicity_id,
+            institution_id,
+        )
+
+        body = '<accounts>{}</accounts>'.format(
+            ''.join([
+                '''
+                    <account>
+                        <id>{}</id>
+                        <number>{}</number>
+                        <name>{}</name>
+                        <type>{}</type>
+                    </account>
+                '''.format(
+                    account.finicity_id,
+                    account.number_snippet,
+                    account.name,
+                    account.type,
+                )
+                for account in accounts
+            ])
+        )
+
+        self.request(path, method='PUT', data=body)
+
+        accounts.update(disabled=False)
+
+        institution.sync()
+
+    def list_transactions(self, institution_id):
+        response = self.request('/v2/customers/{}/transactions'.format(self.user.finicity_id))
+        return response['transactions']['transaction']

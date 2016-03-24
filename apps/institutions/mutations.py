@@ -1,12 +1,13 @@
 
+import json
+
 import graphene
 from graphene.relay.types import Edge
 from django.conf import settings
-
 from plaid import Client
 
 from apps.core.utils import get_cursor, instance_for_node_id
-# from .finicity import Finicity
+from .finicity import Finicity
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -69,17 +70,40 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         return ConnectInstitutionMutation(viewer=Viewer())
 
 
-# class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
-#     class Input:
-#         credentials = graphene.InputField(graphene.String())
-#         finicity_institution_id = graphene.InputField(graphene.String())
+class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        finicity_institution_id = graphene.InputField(graphene.String())
+        credentials = graphene.InputField(graphene.String())
 
-#     viewer = graphene.Field('Viewer')
+    institution = graphene.Field(InstitutionNode)
 
-#     @classmethod
-#     def mutate_and_get_payload(cls, input, info):
-#         from spendwell.schema import Viewer
-#         return ConnectFinicityInstitutionMutation(viewer=Viewer())
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        finicity = Finicity(info.request_context.user)
+        institution = finicity.connect_institution(
+            input['finicity_institution_id'],
+            json.loads(input['credentials']),
+        )
+
+        return ConnectFinicityInstitutionMutation(
+            institution=InstitutionNode(institution),
+        )
+
+
+class ConnectFinicityAccountsMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        finicity_institution_id = graphene.InputField(graphene.String())
+        account_ids = graphene.InputField(graphene.List(graphene.Int()))
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, info):
+        finicity = Finicity(info.request_context.user)
+        finicity.connect_accounts(
+            input['finicity_institution_id'],
+            input['account_ids'],
+        )
+
+        return ConnectFinicityAccountsMutation()
 
 
 class SyncInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -119,6 +143,8 @@ class InstitutionsMutations(graphene.ObjectType):
     connect_institution = graphene.Field(ConnectInstitutionMutation)
     sync_institution = graphene.Field(SyncInstitutionMutation)
     sync_institutions = graphene.Field(SyncInstitutionsMutation)
+    connect_finicity_institution = graphene.Field(ConnectFinicityInstitutionMutation)
+    connect_finicity_accounts = graphene.Field(ConnectFinicityAccountsMutation)
 
     class Meta:
         abstract = True

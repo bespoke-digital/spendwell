@@ -9,7 +9,10 @@ import TextInput from 'components/text-input';
 import Button from 'components/button';
 import Money from 'components/money';
 import Icon from 'components/icon';
+import Transition from 'components/transition';
 import App from 'components/app';
+
+import { ConnectFinicityInstitutionMutation } from 'mutations/institutions';
 
 
 class AddFinicityAccount extends Component {
@@ -36,7 +39,7 @@ class AddFinicityAccount extends Component {
 
   handleSubmit() {
     const { relay, viewer } = this.props;
-    const { credentials } = this.state;
+    const { credentials, disabledAccounts } = this.state;
 
     if (!viewer.finicityAccounts) {
       this.setState({ loading: true });
@@ -46,7 +49,19 @@ class AddFinicityAccount extends Component {
       }, ({ done, error })=> this.setState({ loading: !(done || error) }));
 
     } else {
-      console.log('TODO: connect accounts');
+      Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
+        viewer,
+        finicityInstitutionId: viewer.finicityInstitution.id,
+        accounts: _.difference(
+          viewer.finicityAccounts.edges.map(({ node })=> node.id),
+          Object.keys(_.filter(disabledAccounts, (v)=> v)),
+        ),
+      }), {
+        onFailure: ()=> console.log('Failure: ConnectFinicityInstitutionMutation'),
+        onSuccess: ()=> {
+          console.log('Success: ConnectFinicityInstitutionMutation');
+        },
+      });
     }
   }
 
@@ -61,7 +76,7 @@ class AddFinicityAccount extends Component {
         <div className='container skinny'>
           <h1>Connect {viewer.finicityInstitution.name}</h1>
 
-          {!viewer.finicityAccounts ?
+          <Transition show={!viewer.finicityAccounts}>
             <CardList>
               {formFields.map((field)=>
                 <Card key={field.name}>
@@ -73,7 +88,9 @@ class AddFinicityAccount extends Component {
                 </Card>
               )}
             </CardList>
-          :
+          </Transition>
+
+          <Transition show={!!viewer.finicityAccounts}>
             <CardList>
               <Card className='card-list-heading' summary={
                 <div>
@@ -82,7 +99,8 @@ class AddFinicityAccount extends Component {
                   <div className='fw'>Enabled</div>
                 </div>
               }/>
-              {viewer.finicityAccounts.map((account)=>
+
+              {viewer.finicityAccounts ? viewer.finicityAccounts.map((account)=>
                 <Card key={account.id} summary={
                   <div>
                     <div>{account.name}</div>
@@ -97,9 +115,9 @@ class AddFinicityAccount extends Component {
                     </div>
                   </div>
                 }/>
-              )}
+              ) : null}
             </CardList>
-          }
+          </Transition>
 
           <div className='flex-row'>
             <div/>
@@ -127,6 +145,7 @@ AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${ConnectFinicityInstitutionMutation.getFragment('viewer')}
         ${App.getFragment('viewer')}
 
         finicityInstitution(id: $id) {

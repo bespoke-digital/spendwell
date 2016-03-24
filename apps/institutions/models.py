@@ -22,6 +22,7 @@ class Institution(SWModel):
 
     name = models.CharField(max_length=255)
     plaid_id = models.CharField(max_length=255, null=True, blank=True)
+    finicity_id = models.CharField(max_length=255, blank=True, null=True)
     access_token = models.CharField(max_length=255, null=True, blank=True)
     last_sync = models.DateTimeField(null=True)
 
@@ -37,8 +38,20 @@ class Institution(SWModel):
         return '{} - {}'.format(self.name, self.owner)
 
     @property
+    def current_balance(self):
+        return (
+            self.accounts
+            .filter(disabled=False)
+            .aggregate(models.Sum('current_balance'))
+            ['current_balance__sum']
+        ) or 0
+
+    @property
     def plaid_client(self):
-        if not self.plaid_id or not self.access_token:
+        if not self.plaid_id:
+            return
+
+        if not self.access_token:
             raise RuntimeWarning('Attempt to sync an institution without plaid creds')
 
         if not hasattr(self, '_plaid_client'):
@@ -51,6 +64,9 @@ class Institution(SWModel):
 
     @property
     def plaid_data(self):
+        if not self.plaid_id:
+            return
+
         if not hasattr(self, '_plaid_data'):
             try:
                 self._plaid_data = self.plaid_client.connect_get().json()
@@ -59,29 +75,36 @@ class Institution(SWModel):
         return self._plaid_data
 
     @property
-    def current_balance(self):
-        return (
-            self.accounts
-            .filter(disabled=False)
-            .aggregate(models.Sum('current_balance'))
-            ['current_balance__sum']
-        ) or 0
+    def finicity_client(self):
+        from .finicity import Fincitiy
+
+        if not self.finicity_id:
+            return
+
+        if not hasattr(self, '_finicity_client'):
+            self._finicity_client = Fincitiy(self.owner)
+        return self._finicity_client
 
     def sync_accounts(self):
-        if not self.plaid_data:
+        if not self.plaid_client:
             return
 
         for account_data in self.plaid_data['accounts']:
             Account.objects.from_plaid(self, account_data)
 
     def sync(self):
-        if not self.plaid_data:
-            return
-
         self.sync_accounts()
 
-        for transaction_data in self.plaid_data['transactions']:
-            Transaction.objects.from_plaid(self, transaction_data)
+        if self.plaid_data:
+            for transaction_data in self.plaid_data['transactions']:
+                Transaction.objects.from_plaid(self, transaction_data)
+
+        elif self.finicity_client:
+            for transaction_data in self.finicity_client.list_transactions(self.finicity_id):
+                Transaction.objects.from_finicity(self, transaction_data)
+
+        else:
+            return
 
         Transaction.objects.detect_transfers(owner=self.owner)
 
