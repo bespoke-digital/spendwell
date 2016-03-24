@@ -29,6 +29,8 @@ body.landing {
     }
 
     .logo {
+      margin-right: 10px;
+
       img {
         @media (min-width: $screen-sm-min) {
           margin-top: -3px;
