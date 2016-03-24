@@ -24,7 +24,7 @@
         <div class="col-sm-4 hidden-xs">
           <ul class="list-inline">
             <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}" class="mui-btn mui-btn--primary">Signup</a></li>
+            <li><a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Signup</a></li>
           </ul>
         </div>
       </div>
@@ -43,7 +43,7 @@
           Know how much money is safe to spend without blowing your savings
           or missing your bills.
         </p>
-        <a class="mui-btn mui-btn--primary">Get Notified</a>
+        <a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Get Notified</a>
         <p class="extra">
           We're in private beta. <a>Get on the list</a>.
         </p>
@@ -125,7 +125,7 @@
   </div>
 
   <div class="cta-bar">
-    <a class="mui-btn mui-btn--primary">Get Notified</a>
+    <a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Get Notified</a>
   </div>
 
   <footer>
@@ -158,26 +158,8 @@
     </div>
   </footer>
 
+  {% include 'landing/_email-form.html' %}
+
   <script src="{% static 'dist/pages.js' %}"></script>
   <script>window.mixpanel.track('Landing: Home');</script>
 {% endblock %}
-
-<!--
-      <form
-        action="//spendwell.us12.list-manage.com/subscribe/post?u=f06a44d9caea5e9890f52c259&id=edd6ea8786"
-        method="post"
-        target="_blank"
-        class="form-inline"
-        id="landing-form"
-        novalidate
-      >
-        <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
-        <div class="mui-textfield mui-textfield--float-label">
-          <input class="form-control" name="EMAIL" type="email">
-          <label>Email</label>
-        </div>
-        <button type="submit" name="subscribe" class="mui-btn mui-btn--default">
-        <i class="fa fa-chevron-right"></i>
-        </button>
-      </form>
- -->

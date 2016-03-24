@@ -4,20 +4,16 @@ import $ from 'jquery';
 import 'sass/pages';
 
 
-const landingCta = document.getElementById('landing-cta');
+$('.landing-cta').on('click', function(event) {
+  event.preventDefault();
 
-if (landingCta) {
-  landingCta.onclick = function(event) {
-    event.preventDefault();
+  window.mixpanel.track('Landing: CTA Clicked');
+  window.fbq('track', 'Lead');
 
-    window.mixpanel.track('Landing: CTA Clicked');
-    window.fbq('track', 'Lead');
-
-    const formContainer = document.getElementById('landing-form-container');
-    formContainer.style.display = 'block';
-    formContainer.onclick = ()=> formContainer.style.display = 'none';
-  };
-}
+  const formContainer = document.getElementById('landing-form-container');
+  formContainer.style.display = 'block';
+  formContainer.onclick = ()=> formContainer.style.display = 'none';
+});
 
 const form = document.getElementById('landing-form');
 

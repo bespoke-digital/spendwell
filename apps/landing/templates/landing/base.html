@@ -15,38 +15,14 @@
       <h1>{% block hero_heading %}{% endblock %}</h1>
       <p>{% block hero_graph %}{% endblock %}</p>
       <div class="cta">
-        <a href="#" class="mui-btn mui-btn--primary" id="landing-cta">
+        <a href="#" class="mui-btn mui-btn--primary landing-cta">
           {% block hero_cta %}Get Started{% endblock %}
         </a>
       </div>
     </div>
   </div>
 
-  <div id="landing-form-container">
-    <form
-      action="//spendwell.us12.list-manage.com/subscribe/post?u=f06a44d9caea5e9890f52c259&id=edd6ea8786"
-      method="post"
-      target="_blank"
-      class="form-inline"
-      id="landing-form"
-      novalidate
-    >
-      <p>
-        <strong>We're launching soon.</strong><br>
-        Leave your email and we'll notify you.
-      </p>
-      <input type="hidden" name="b_bec5076d8b34caeee6a5ef6cb_64ed676338" tabindex="-1" value="">
-      <div class="form-fields">
-        <div class="mui-textfield mui-textfield--float-label">
-          <input class="form-control" name="EMAIL" type="email">
-          <label>Email</label>
-        </div>
-        <button type="submit" name="subscribe" class="mui-btn mui-btn--primary">
-          <i class="fa fa-chevron-right"></i>
-        </button>
-      </div>
-    </form>
-  </div>
+  {% include 'landing/_email-form.html' %}
 
   <script src="{% static 'dist/pages.js' %}"></script>
 {% endblock %}
