@@ -16,6 +16,10 @@ body.landing {
       text-align: right;
     }
 
+    .list-inline {
+      margin-bottom: 0;
+    }
+
     img {
       height: 40px;
     }
@@ -36,6 +40,14 @@ body.landing {
         text-align: center;
       }
     }
+  }
+
+  .color-bar {
+    padding: 30px 0;
+    margin-bottom: 0;
+    background-color: $brand-primary;
+    text-align: center;
+    color: white;
   }
 
   footer {
