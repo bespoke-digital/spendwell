@@ -1,36 +1,10 @@
-{% extends "base.html" %}
+{% extends "landing/base.html" %}
 
 {% load staticfiles %}
 
-{% block body_class %}{{ super }} home{% endblock %}
+{% block body_class %}{{ block.super }} home{% endblock %}
 
-{% block head %}
-  <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
-{% endblock %}
-
-{% block body %}
-  <div class="header">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-8">
-          <ul class="list-inline">
-            <li class="logo"><img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/></li>
-            <li class="hidden-xs"><a href="#how-it-works">How it Works</a></li>
-            <li class="hidden-xs"><a href="#security">Security</a></li>
-            <li class="hidden-xs"><a href="#faq">FAQ</a></li>
-            <li class="hidden-xs"><a href="https://blog.spendwell.co">Blog</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-4 hidden-xs">
-          <ul class="list-inline">
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Signup</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
+{% block content %}
   <div class="container">
     <div class="hero row">
       <div class="col-sm-7">
@@ -45,7 +19,7 @@
         </p>
         <a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Get Notified</a>
         <p class="extra">
-          We're in private beta. <a>Get on the list</a>.
+          We're in private beta. <a href="javascript:;" class="landing-cta">Get on the list</a>.
         </p>
       </div>
     </div>
@@ -63,7 +37,7 @@
           <p>It's super easy to connect to your accounts. Simply enter your banking info into our bank connect form and that's it! We'll import your data and analyze it instantly.</p>
         </div>
         <div class="col-sm-6">
-          <img src="{% static 'img/landing/desktop.png' %}" class="screenshot"/>
+          <img src="{% static 'img/landing/phone.png' %}" class="screenshot phone"/>
         </div>
       </div>
     </div>
@@ -78,7 +52,7 @@
           <p>We’ll show you everything you want to know. How much money is coming in, going out, safe to spend and what you’re saving. If you’re running a deficit, we’ll help you fix that too. </p>
         </div>
         <div class="col-sm-5 col-sm-pull-4">
-          <img src="{% static 'img/landing/phone.png' %}" class="screenshot phone"/>
+          <img src="{% static 'img/landing/desktop.png' %}" class="screenshot"/>
         </div>
       </div>
     </div>
@@ -128,38 +102,5 @@
     <a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Get Notified</a>
   </div>
 
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-3 col left">
-          <ul class="list-inline">
-            <li><a href="https://www.facebook.com/SpendwellApp">
-              <i class="fa fa-facebook"></i>
-            </a></li>
-            <li><a href="https://twitter.com/spendwellapp">
-              <i class="fa fa-twitter"></i>
-            </a></li>
-          </ul>
-        </div>
-        <div class="col-sm-6 col center">
-          <ul class="list-inline">
-            <li><a href="#how-it-works">How it Works</a></li>
-            <li><a href="#security">Security</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="https://blog.spendwell.co">Blog</a></li>
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-3 col right">
-          &copy;{{ copyright_year }} Spendwell Inc.
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  {% include 'landing/_email-form.html' %}
-
-  <script src="{% static 'dist/pages.js' %}"></script>
   <script>window.mixpanel.track('Landing: Home');</script>
 {% endblock %}

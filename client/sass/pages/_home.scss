@@ -1,42 +1,5 @@
 
 body.home {
-  .header {
-    padding: 13px 0 10px;
-    background-color: transparent;
-
-    .col-sm-6:first-child {
-      text-align: left;
-
-      a {
-        padding-top: 3px;
-      }
-    }
-
-    .col-sm-6:last-child {
-      text-align: right;
-    }
-
-    img {
-      height: 40px;
-    }
-
-    a:not(.mui-btn) {
-      color: $gray;
-    }
-
-    .logo {
-      img {
-        @media (min-width: $screen-sm-min) {
-          margin-top: -3px;
-        }
-      }
-
-      @media (max-width: $screen-xs-max) {
-        width: 100%;
-        text-align: center;
-      }
-    }
-  }
 
   .hero {
     padding: 60px 0;
@@ -108,6 +71,7 @@ body.home {
     }
 
     &.how-section-first {
+      padding-bottom: 0;
       background-color: white;
 
       .how-copy {
@@ -121,7 +85,6 @@ body.home {
     }
 
     &.how-section-second {
-      padding-bottom: 0;
 
       .how-copy {
         @media (min-width: $screen-md-min) {
@@ -171,50 +134,5 @@ body.home {
   .cta-bar {
     margin-bottom: 60px;
     text-align: center;
-  }
-
-  footer {
-    padding: 60px 0;
-    background-color: $gray-2;
-    color: $gray-8;
-
-    ul {
-      margin-bottom: 0;
-    }
-
-    a {
-      color: $gray-lightest;
-
-      .fa {
-        font-size: 20px;
-        color: $brand-primary;
-      }
-    }
-
-    .right {
-      color: $gray-5;
-    }
-
-    @media (max-width: $screen-xs-max) {
-      text-align: center;
-
-      .col {
-        margin-bottom: 20px;
-      }
-    }
-
-    @media (min-width: $screen-sm-min) {
-      .left {
-        text-align: left;
-      }
-
-      .center {
-        text-align: center;
-      }
-
-      .right {
-        text-align: right;
-      }
-    }
   }
 }

@@ -28,10 +28,12 @@
         {% trans "Don't have an account?" %}
         <a href="{% url 'signup' %}">{% trans 'Sign Up' %}</a>.
       </p>
+      {% comment %}
       <p class="help-block">
         {% trans "Don't remember your password?" %}
         <a href="{% url 'password_reset' %}">{% trans 'Reset it' %}</a>.
       </p>
+      {% endcomment %}
     </form>
   </div>
 </div>

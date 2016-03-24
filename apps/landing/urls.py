@@ -1,15 +1,10 @@
 
 from django.conf.urls import url
 
-from .views import (
-    home_view,
-    freedom_view,
-    debt_view,
-)
+from .views import home_view, faq_view
 
 
 urlpatterns = [
     url(r'^$', home_view, name='home'),
-    url(r'^financial-freedom/$', freedom_view, name='freedom'),
-    url(r'^crush-your-debt/$', debt_view, name='debt'),
+    url(r'^faq/$', faq_view, name='faq'),
 ]

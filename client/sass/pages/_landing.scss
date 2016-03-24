@@ -1,73 +1,85 @@
 
 body.landing {
-  .hero {
-    position: relative;
-    height: 100vh;
-    width: 100%;
+  .header {
+    padding: 13px 0 10px;
+    background-color: transparent;
 
-    color: white;
-    background-image: url('~img/landing/dad-cover.jpg');
-    background-position: 75% center;
+    .col-sm-6:first-child {
+      text-align: left;
 
-    @media (max-width: $screen-xs-max) {
-      position: inherit;
-      height: auto;
-      min-height: 100vh;
+      a {
+        padding-top: 3px;
+      }
     }
 
-    .hero-content {
-      width: 100%;
+    .col-sm-6:last-child {
+      text-align: right;
+    }
 
-      background-color: rgba(black, 0.4);
-      text-align: center;
-      line-height: 1.2;
+    img {
+      height: 40px;
+    }
+
+    a:not(.mui-btn) {
+      color: $gray;
+    }
+
+    .logo {
+      img {
+        @media (min-width: $screen-sm-min) {
+          margin-top: -3px;
+        }
+      }
 
       @media (max-width: $screen-xs-max) {
-        padding: 20px 10px;
-        min-height: 100vh;
-      }
-
-      @media (min-width: $screen-sm-min) {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 30px 20px 40px;
-        max-width: 560px;
-        border-radius: 4px;
-      }
-
-      .logo {
-        height: 65px;
-        margin-bottom: 20px;
-
-        background-image: url('~img/logo-icon-white.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-
-      h1 {
-        margin-bottom: 10px;
-        font-size: 48px;
-        font-weight: 600;
-      }
-
-      p {
-        display: inline-block;
-        font-size: 20px;
-        margin-bottom: 30px;
-      }
-
-      .cta {
+        width: 100%;
         text-align: center;
       }
     }
   }
-}
 
-body.landing-dept {
-  .hero .hero-content p {
-    max-width: 400px;
+  footer {
+    padding: 60px 0;
+    background-color: $gray-2;
+    color: $gray-8;
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    a {
+      color: $gray-lightest;
+
+      .fa {
+        font-size: 20px;
+        color: $brand-primary;
+      }
+    }
+
+    .right {
+      color: $gray-5;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      text-align: center;
+
+      .col {
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      .left {
+        text-align: left;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .right {
+        text-align: right;
+      }
+    }
   }
 }

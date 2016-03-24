@@ -1,0 +1,45 @@
+{% extends "landing/base.html" %}
+
+{% load staticfiles %}
+
+{% block body_class %}{{ block.super }} faq{% endblock %}
+
+{% block content %}
+  <div class="container skinny faq-content">
+    <h1>Frequently Asked Questions</h1>
+
+    <div class="question">
+      <h2>What is Spendwell?</h2>
+      <p>Spendwell is a personal finance management app that will help you save money and plan for early retirement. If you're in debt, we can help you with that too. You'll learn about managing your personal finances and never be surprised again by a hidden fee or subscription you forgot to cancel.</p>
+
+      <h2>How does it work?</h2>
+      <p>As part of the signup process, you'll be asked to connect your financial institutions (FIs) including checking, savings, investments, credit cards and lines of credit. You will need to do this for each FI, but not for every account.</p>
+
+      <h2>What does it cost?</h2>
+      <p>Spendwell is free while in private beta, we'll be charging a flat monthly fee of $5/month or $50/year. We're certain we'll save you a lot more than that, earning our small fee. For the cost of a Starbucks drink you can take control of your finances and plan for your future.</p>
+
+      <h2>Can I add more than one account?</h2>
+      <p>You sure can. From the accounts page, click “Add Account.”</p>
+
+      <h2>Is Spendwell secure?</h2>
+      <p>Yes, we take security very seriously. We think bank-level security is to low a standard. All communication between you and us is highly encrypted, and we don't store your banking credentials beyond the initial setup process.</p>
+
+      <h2>What about my data?</h2>
+      <p>We don't sell it or use your data in any way other than to provide you the service we've already explained to you. Your data is as safe (or even safer) than at a bank.</p>
+
+      <h2>How can you save me money?</h2>
+      <p>We analyze all your transactions and give you insight into where your money is going. You can then quickly spot that subscription you forgot about, realize you're paying way too much in bank fees, or learn how selling your car and taking Ubers all the time might actually save you money.</p>
+
+      <h2>Do you take a percentage of my savings?</h2>
+      <p>Absolutely not. Your $5/mo covers all our wonderful services.</p>
+
+      <h2>How do I cancel my Spendwell account?</h2>
+      <p>You can cancel at anytime by simply sending an email to: <a href="mailto:hellp@spendwell.co">hellp@spendwell.co</a>. Please put “Cancel My Subscription” in the subject line and if you're feeling nice, tell us why you think we suck.</p>
+
+      <h2>I have other questions, how can I get in touch?</h2>
+      <p>Email us any time: <a href="mailto:hellp@spendwell.co">hellp@spendwell.co</a>. We love to hear from our customers and potential ones.</p>
+    </div>
+  </div>
+
+  <script>window.mixpanel.track('Landing: FAQ');</script>
+{% endblock %}
