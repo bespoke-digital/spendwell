@@ -90,7 +90,7 @@ AUTHENTICATION_BACKENDS = (
     'apps.users.backends.DemoBackend',
 )
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 
 LANGUAGE_CODE = 'en-us'
