@@ -4,6 +4,14 @@
 
 {% block body_class %}{{ block.super }} home{% endblock %}
 
+{% block head %}
+  {{ block.super }}
+  <meta property="og:url" content="https://{{ request.get_host }}" />
+  <meta property="og:title" content="Spendwell" />
+  <meta property="og:description" content="A fitness tracker for your money" />
+  <meta property="og:image" content="https://{{ request.get_host }}{% static 'img/landing/og-image.png' %}"/>
+{% endblock %}
+
 {% block content %}
   <div class="container">
     <div class="hero row">
