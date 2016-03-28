@@ -9,7 +9,7 @@
   <meta property="og:url" content="{{ request.build_absolute_url }}" />
   <meta property="og:title" content="Spendwell" />
   <meta property="og:description" content="A fitness tracker for your money" />
-  <meta property="og:image" content="{% static 'img/landing/laptop.png' %}"/>
+  <meta property="og:image" content="https://{{ request.domain }}{% static 'img/landing/laptop.png' %}"/>
 {% endblock %}
 
 {% block content %}
