@@ -7,12 +7,13 @@ import Onboarding from 'components/onboarding';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 
-import eventEmitter from 'utils/event-emitter';
+import { SyncInstitutionsMutation } from 'mutations/institutions';
 
-import styles from 'sass/views/accounts';
 import goalsImage from 'img/views/dashboard/goals.svg';
 import billsImage from 'img/views/dashboard/bills.svg';
 import spendingImage from 'img/views/dashboard/spending.svg';
+
+import styles from 'sass/views/accounts';
 
 
 const STEPS = [
@@ -69,22 +70,23 @@ const STEPS = [
 class OnboardingWalkthrough extends Component {
   constructor() {
     super();
-    this.onSyncComplete = ::this.onSyncComplete;
-    this.state = { syncing: true, stepIndex: 0 };
+    this.state = { syncing: false, stepIndex: 0 };
   }
 
   componentDidMount() {
-    eventEmitter.addListener('sync-complete', this.onSyncComplete);
-    this.timeout = setTimeout(this.onSyncComplete, 10000);
-  }
+    const { viewer } = this.props;
 
-  componentWillUnmount() {
-    eventEmitter.removeListener('sync-complete', this.onSyncComplete);
-    clearTimeout(this.timeout);
-  }
-
-  onSyncComplete() {
-    this.setState({ syncing: false });
+    this.setState({ syncing: true });
+    Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
+      onFailure: ()=> {
+        console.log('Failure: SyncInstitutionsMutation');
+        this.setState({ syncing: false });
+      },
+      onSuccess: ()=> {
+        console.log('Success: SyncInstitutionsMutation');
+        this.setState({ syncing: false });
+      },
+    });
   }
 
   render() {
@@ -142,6 +144,7 @@ OnboardingWalkthrough = Relay.createContainer(OnboardingWalkthrough, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${SyncInstitutionsMutation.getFragment('viewer')}
         ${Onboarding.getFragment('viewer')}
       }
     `,

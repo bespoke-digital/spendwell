@@ -10,10 +10,7 @@ import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
 
-import { SyncInstitutionsMutation } from 'mutations/institutions';
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
-
-import eventEmitter from 'utils/event-emitter';
 
 import bankImage from 'img/views/onboarding/bank.svg';
 import styles from 'sass/views/accounts';
@@ -21,16 +18,6 @@ import styles from 'sass/views/accounts';
 
 class OnboardingAccounts extends Component {
   continue() {
-    const { viewer } = this.props;
-
-    Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
-      onFailure: ()=> console.log('Failure: SyncInstitutionsMutation'),
-      onSuccess: ()=> {
-        eventEmitter.emit('sync-complete');
-        console.log('Success: SyncInstitutionsMutation');
-      },
-    });
-
     browserHistory.push('/onboarding/walkthrough');
   }
 
@@ -110,7 +97,6 @@ OnboardingAccounts = Relay.createContainer(OnboardingAccounts, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${Onboarding.getFragment('viewer')}
-        ${SyncInstitutionsMutation.getFragment('viewer')}
 
         institutions(first: 10) {
           edges {

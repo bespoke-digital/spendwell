@@ -87,6 +87,15 @@ export class DisableAccountMutation extends Relay.Mutation {
       },
     }];
   }
+
+  getOptimisticResponse() {
+    return {
+      account: {
+        id: this.props.account.id,
+        disabled: true,
+      },
+    };
+  }
 }
 
 
@@ -124,5 +133,14 @@ export class EnableAccountMutation extends Relay.Mutation {
         account: this.props.account.id,
       },
     }];
+  }
+
+  getOptimisticResponse() {
+    return {
+      account: {
+        id: this.props.account.id,
+        disabled: false,
+      },
+    };
   }
 }
