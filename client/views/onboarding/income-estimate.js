@@ -67,7 +67,7 @@ class OnboardingIncomeEstimate extends Component {
               <MoneyInput
                 label='Income'
                 initialValue={viewer.estimatedIncome}
-                onChange={(income)=> this.setState({ income })}
+                onChange={(amount)=> this.setState({ amount })}
               />
             </Card>
           </CardList>
