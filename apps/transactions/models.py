@@ -211,13 +211,6 @@ class Transaction(SWModel):
         self.save()
 
 
-@receiver(post_save, sender=Transaction)
-def transaction_post_save(sender, instance, created, raw, **kwargs):
-    if created and not raw:
-        instance.detect_transfer()
-        instance.assign_to_buckets()
-
-
 class BucketTransaction(models.Model):
     bucket_month = models.ForeignKey('buckets.BucketMonth')
     transaction = models.ForeignKey('transactions.Transaction')

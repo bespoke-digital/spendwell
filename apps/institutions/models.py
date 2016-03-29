@@ -10,6 +10,7 @@ from plaid.errors import ResourceNotFoundError
 from apps.core.models import SWModel
 from apps.core.signals import day_start
 from apps.accounts.models import Account
+from apps.buckets.models import BucketMonth
 from apps.transactions.models import Transaction
 
 
@@ -84,6 +85,9 @@ class Institution(SWModel):
             Transaction.objects.from_plaid(self, transaction_data)
 
         Transaction.objects.detect_transfers(owner=self.owner)
+
+        for bucket_month in BucketMonth.objects.filter(bucket__owner=self.owner):
+            bucket_month.assign_transactions()
 
         self.last_sync = timezone.now()
         self.save()
