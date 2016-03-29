@@ -50,7 +50,7 @@ class ExternalAccounts extends Component {
         <TransactionList transactions={bucket.transactions} abs={false}/>
 
         {bucket.transactions && bucket.transactions.pageInfo.hasNextPage ?
-          <div className='bottom-load-button'>
+          <div className='bottom-buttons'>
             <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
