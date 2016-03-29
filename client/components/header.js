@@ -55,8 +55,8 @@ class Header extends Component {
         </Link>
         {showSafeToSpend ?
           <div className='safe-to-spend'>
-            <small>Safe To Spend</small>
             <Money amount={safeToSpend}/>
+            <small>safe to spend</small>
           </div>
         : null}
       </nav>
