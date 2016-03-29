@@ -26,12 +26,12 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
-    type: PropTypes.oneOf(['bill', 'expense', 'account']),
+    initialType: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
-  constructor({ type }) {
+  constructor({ initialType }) {
     super();
-    this.state = { filters: [], name: '', type };
+    this.state = { filters: [], name: '', type: initialType };
   }
 
   componentWillMount() {
@@ -45,9 +45,9 @@ class BucketForm extends Component {
 
   handleSubmit() {
     const { onSubmit } = this.props;
-    const { filters, name } = this.state;
+    const { filters, name, type } = this.state;
 
-    onSubmit({ name, filters: cleanFilters(filters) });
+    onSubmit({ type, name, filters: cleanFilters(filters) });
   }
 
   handleFilterChange(filters) {

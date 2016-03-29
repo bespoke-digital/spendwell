@@ -65,7 +65,7 @@ export class CreateBucketMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteBucketMutation {
+      fragment on CreateBucketMutation {
         viewer {
           summary {
             bucketMonths
