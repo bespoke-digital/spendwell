@@ -78,6 +78,9 @@ class Institution(SWModel):
         if not self.plaid_data:
             return
 
+        print('print before exception')
+        raise Exception('test')
+
         self.sync_accounts()
 
         for transaction_data in self.plaid_data['transactions']:
