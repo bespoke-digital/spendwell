@@ -58,8 +58,8 @@ class OnboardingAccounts extends Component {
             </Card>
           </CardList>
 
-          {viewer.institutions.edges.map(({ node })=>
-            <CardList className='institution' key={node.id}>
+          {viewer.institutions.edges.map(({ node }, index)=>
+            <CardList className='institution' key={index}>
               <Card summary={<div><h3>{node.name}</h3></div>}/>
 
               {this.orderedAccounts(node).map((account)=>
