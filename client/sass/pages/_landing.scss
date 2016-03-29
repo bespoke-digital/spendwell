@@ -96,10 +96,4 @@ body.landing {
       }
     }
   }
-
-  .container {
-    @media (min-width: $screen-lg-min) {
-      max-width: $container-md;
-    }
-  }
 }

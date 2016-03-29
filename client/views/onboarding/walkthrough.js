@@ -56,7 +56,7 @@ const STEPS = [
         <img src={billsImage}/>
         <p>
           After paying yourself, you'll have some money left over. Don't
-          spend more then that in a given month. We can help there by
+          spend more than that in a given month. We can help there by
           showing you how much you've spent so far this month, and how much
           you have left to spend across all your accounts and credit cards.
         </p>
