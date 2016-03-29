@@ -213,7 +213,7 @@ class BucketTransaction(models.Model):
     bucket_month = models.ForeignKey('buckets.BucketMonth')
     transaction = models.ForeignKey('transactions.Transaction')
 
-    class Meda:
+    class Meta:
         unique_together = ('bucket_month', 'transaction')
 
 

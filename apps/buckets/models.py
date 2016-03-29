@@ -110,7 +110,6 @@ class BucketMonth(SWModel):
                 self.bucket.transactions(),
                 month_start=self.month_start,
             )
-
         return self._avg_amount
 
     @property
