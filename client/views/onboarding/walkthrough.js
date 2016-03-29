@@ -64,6 +64,17 @@ const STEPS = [
       </Card>
     ),
   },
+  {
+    title: 'We\'re crunching the numbers',
+    content: (
+      <iframe
+        src='//giphy.com/embed/2WuHHWbGt3fY4'
+        width='100%'
+        height='305'
+        frameBorder='0'
+      />
+    ),
+  },
 ];
 
 
