@@ -161,7 +161,7 @@ class Transaction(SWModel):
 
         for bucket_month in BucketMonth.objects.filter(month_start=month_start):
             if self in bucket_month.bucket.transactions():
-                BucketTransaction.objects.create(
+                BucketTransaction.objects.get_or_create(
                     bucket_month=bucket_month,
                     transaction=self,
                 )
