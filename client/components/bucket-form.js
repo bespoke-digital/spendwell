@@ -2,8 +2,6 @@
 import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
 
 import Button from 'components/button';
 import Card from 'components/card';
