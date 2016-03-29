@@ -66,7 +66,10 @@ export class DisableAccountMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    return { accountId: this.props.account.id };
+    return {
+      accountId: this.props.account.id,
+      detectTransfers: this.props.detectTransfers,
+    };
   }
 
   getFatQuery() {
@@ -113,7 +116,10 @@ export class EnableAccountMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    return { accountId: this.props.account.id };
+    return {
+      accountId: this.props.account.id,
+      sync: this.props.sync,
+    };
   }
 
   getFatQuery() {

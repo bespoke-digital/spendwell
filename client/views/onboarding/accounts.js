@@ -22,14 +22,14 @@ class OnboardingAccounts extends Component {
   }
 
   disable(account) {
-    Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
+    Relay.Store.commitUpdate(new DisableAccountMutation({ account, detectTransfers: false }), {
       onFailure: ()=> console.log('Failure: DisableAccountMutation'),
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
   }
 
   enable(account) {
-    Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
+    Relay.Store.commitUpdate(new EnableAccountMutation({ account, sync: false }), {
       onFailure: ()=> console.log('Failure: EnableAccountMutation'),
       onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
