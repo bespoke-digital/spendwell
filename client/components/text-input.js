@@ -12,17 +12,25 @@ export default class TextInput extends Component {
     error: PropTypes.any,
     className: PropTypes.string,
     type: PropTypes.string,
+    select: PropTypes.bool,
   };
 
   static defaultProps = {
     error: false,
     className: '',
     type: 'text',
+    select: false,
   };
 
   constructor() {
     super();
     this.state = {};
+  }
+
+  componentDidMount() {
+    const { select } = this.props;
+    if (select)
+      this.refs.input.select();
   }
 
   changeValue(event) {
@@ -51,8 +59,12 @@ export default class TextInput extends Component {
           type={type}
           onChange={::this.changeValue}
           value={_value}
-          className={_value ? 'mui--is-not-empty' : ''}
+          className={`
+            ${_value ? 'mui--is-not-empty' : ''}
+            ${error ? 'mui--is-invalid' : ''}
+          `}
           autoFocus={autoFocus}
+          ref='input'
           {..._props}
         />
         {label ? <label>{label}</label> : null}

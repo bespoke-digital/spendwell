@@ -59,7 +59,8 @@ class IncomeFromSavingsDialog extends Component {
             label='Amount'
             initialValue={summary.fromSavingsIncome}
             onChange={(amount)=> this.setState({ amount })}
-            autoFocus={true}
+            autoFocus
+            select
           />
         </div>
         <div className='actions'>
