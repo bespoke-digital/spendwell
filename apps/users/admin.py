@@ -70,6 +70,6 @@ admin_site.register(User, UserAdmin)
 
 class BetaCodeAdmin(admin.ModelAdmin):
     list_display = ('key', 'used_by')
-    readonly_fields = ('used_by')
+    readonly_fields = ('used_by',)
 
 admin_site.register(BetaCode, BetaCodeAdmin)
