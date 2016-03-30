@@ -1,5 +1,6 @@
 
 from django import forms
+from django.utils import timezone
 
 from .models import User, BetaCode
 
@@ -47,6 +48,7 @@ class SignupForm(forms.ModelForm):
 
         beta_code = BetaCode.objects.get(key=self.cleaned_data['beta_code'])
         beta_code.used_by = user
+        beta_code.used = timezone.now()
         beta_code.save()
 
         return user
