@@ -1,5 +1,6 @@
 
 from django import forms
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
@@ -66,4 +67,9 @@ class UserAdmin(AuthUserAdmin):
 
 admin_site.register(User, UserAdmin)
 
-admin_site.register(BetaCode)
+
+class BetaCodeAdmin(admin.ModelAdmin):
+    list_display = ('key', 'used_by')
+    readonly_fields = ('key', 'used_by')
+
+admin_site.register(BetaCode, BetaCodeAdmin)
