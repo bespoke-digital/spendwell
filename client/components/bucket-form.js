@@ -63,8 +63,6 @@ class BucketForm extends Component {
 
     const valid = name.length && filters.length;
 
-    console.log('type', type);
-
     return (
       <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
         <CardList>
