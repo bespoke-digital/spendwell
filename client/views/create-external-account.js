@@ -51,7 +51,7 @@ class CreateExternalAccount extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
-            type='account'
+            initialType='account'
           />
         </div>
       </App>
