@@ -91,6 +91,7 @@ const STEPS = [
               frameBorder='0'
             />
           </div>
+          <h3>You're Data Is Ready To Go</h3>
         </Card>
       ),
     },
