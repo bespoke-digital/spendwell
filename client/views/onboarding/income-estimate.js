@@ -47,16 +47,14 @@ class OnboardingIncomeEstimate extends Component {
     return (
       <Onboarding viewer={viewer}>
         <div className={`container skinny ${styles.root}`}>
-          <div className='heading'>
-            <h1>Income Estimate</h1>
-          </div>
-
           <CardList>
             <Card className='help'>
               <img src={dollarImage}/>
-              <h3>Is this your monthly income?</h3>
+              <h3>We've Estimated Your Income</h3>
               <p>
-                We use it to calculate a lot of other numbers, so please make sure it's correct.
+                Take a quick look and fix it if we got it wrong. We use it to
+                figure out your <strong>safe to spend</strong> number before
+                you get paid for the month.
               </p>
               <div className='clearfix'/>
             </Card>

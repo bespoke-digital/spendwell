@@ -97,7 +97,12 @@ class IncomingSummary extends Component {
 
         {!incomeEstimated ?
           <CardList className='last disabled'>
-            <LineItem name='Income Estimate' value={estimatedIncome}>
+            <LineItem name={
+              <span>
+                Income Estimate <br className='visible-xs'/>
+                <small>Used when actual incoming money is below this number</small>
+              </span>
+            } value={estimatedIncome}>
               <Button onClick={()=> this.setState({ showIncomeEstimateDialog: true })}>
                 Edit
               </Button>

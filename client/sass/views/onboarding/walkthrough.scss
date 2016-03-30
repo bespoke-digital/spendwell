@@ -1,0 +1,16 @@
+
+@import '~sass/variables';
+@import '~sass/depth';
+
+:local(.root) {
+  .video {
+    @extend .depth-z1;
+
+    background-color: white;
+
+    > p {
+      padding: 20px;
+    }
+
+  }
+}

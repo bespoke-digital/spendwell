@@ -52,8 +52,8 @@ class OnboardingAccounts extends Component {
           <CardList>
             <Card className='help'>
               <img src={bankImage}/>
-              <h3>Your bank has been succesfully connected!</h3>
-              <p>You can disable any of your accounts below, or just continue.</p>
+              <h3>Your Bank Has Been Succesfully Connected</h3>
+              <p>Below you can disable accounts, add another account, or continue.</p>
               <div className='clearfix'/>
             </Card>
           </CardList>

@@ -8,7 +8,7 @@ export default function DateTime({ value, format }) {
   if (!format)
     format = 'MMMM Do, YYYY';
 
-  value = value.format(format);
+  value = value.asUtc().format(format);
 
   return <span className='datetime'>{value}</span>;
 }
