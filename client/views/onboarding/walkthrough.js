@@ -91,10 +91,6 @@ const STEPS = [
               frameBorder='0'
             />
           </div>
-          <h3>We've Crunched The Numbers</h3>
-          <p>
-            The process looked something like this gif.
-          </p>
         </Card>
       ),
     },

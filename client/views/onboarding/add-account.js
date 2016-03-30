@@ -37,13 +37,13 @@ class AddAccountView extends Component {
             </Card>
           </CardList>
           <Row>
-            <Col md='8' lg='9' className={`connect ${connectStyles.root}`}>
+            <Col md='8' className={`connect ${connectStyles.root}`}>
 
               <h1>Connect Accounts</h1>
 
               <ConnectAccount viewer={viewer}/>
             </Col>
-            <Col md='4' lg='3' className='welcome'>
+            <Col md='4' className='welcome'>
               <div>
                 <div>
                   <img src={securityImage}/>

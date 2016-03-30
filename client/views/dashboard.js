@@ -158,7 +158,7 @@ class Dashboard extends Component {
             <Card className='help'>
               <Icon type='times' onClick={this.toggleHelp.bind(this, 'goals')}/>
               <img src={goalsImage}/>
-              <h3>Pay Yourself First</h3>
+              <h3>Set Up Some Goals</h3>
               <p>
                 This is where you organize your savings goals.
                 We recommend that you save 10-15% of your gross income if
@@ -235,7 +235,7 @@ class Dashboard extends Component {
             <Card className='help'>
               <Icon type='times' onClick={this.toggleHelp.bind(this, 'bills')}/>
               <img src={billsImage}/>
-              <h3>Live Within Your Means</h3>
+              <h3>Add Your Bills</h3>
               <p>
                 Bills are a type of label for monthly recurring expenses. We make
                 sure money is put asside to pay them off at the beginning of
@@ -301,7 +301,7 @@ class Dashboard extends Component {
             <Card className='help'>
               <Icon type='times' onClick={this.toggleHelp.bind(this, 'spending')}/>
               <img src={spendingImage}/>
-              <h3>Understand Where Your Money Goes</h3>
+              <h3>Label Your Other Expenses</h3>
               <p>
                 Goals and Bills have your monthly set obligations covered and
                 provide you with your Safe To Spend number.

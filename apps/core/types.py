@@ -2,11 +2,15 @@
 import json
 from datetime import datetime
 from decimal import Decimal
+import logging
 
 import delorean
 
 from graphene.core.classtypes import Scalar
 from graphql.core.language import ast
+
+
+logger = logging.getLogger(__name__)
 
 
 class CustomScalar(Scalar):
@@ -40,7 +44,7 @@ class Month(CustomScalar):
 
     @staticmethod
     def parse_value(value):
-        return delorean.parse(value).truncate('month').datetime
+        return delorean.parse('{}/01'.format(value)).truncate('month').datetime
 
 
 class DateTime(CustomScalar):
