@@ -1,13 +1,13 @@
 
 from decimal import Decimal
 from datetime import datetime
+from pytz import timezone
 
 from dateutil.relativedelta import relativedelta
 from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.timezone import get_current_timezone
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
@@ -67,7 +67,7 @@ class TransactionManager(SWManager):
         transaction.amount = -Decimal(json_data['amount'])
         transaction.date = datetime(
             *map(int, json_data['date'].split('-')),
-            tzinfo=get_current_timezone()
+            tzinfo=timezone(institution.owner.timezone)
         )
         transaction.pending = json_data['pending']
         transaction.location = json_data['meta'].get('location', {})

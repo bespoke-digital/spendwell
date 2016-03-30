@@ -1,5 +1,6 @@
 
 import $ from 'jquery';
+import moment from 'moment-timezone';
 
 import 'sass/pages';
 
@@ -33,3 +34,7 @@ $('input').on('change', function() {
   else
     $input.removeClass('mui--is-not-empty');
 });
+
+
+if ($('#id_timezone'))
+  $('#id_timezone').val(moment.tz.guess());

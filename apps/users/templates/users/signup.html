@@ -1,6 +1,7 @@
 {% extends "page.html" %}
 
 {% load i18n %}
+{% load class_name %}
 
 {% block body_class %}{{ block.super }} users-auth{% endblock %}
 
@@ -12,13 +13,24 @@
     <form action="" method="post">
       {% csrf_token %}
 
+      {{ form.non_field_errors }}
+
       {% for field in form %}
-        {{ form.non_field_errors }}
-        <div class="mui-textfield mui-textfield--float-label">
-          {{ field.errors }}
-          {{ field }}
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        </div>
+        {% if field.field.widget|class_name == 'Select' %}
+          <div class="mui-select">
+            {{ field.errors }}
+            <div class="mui-textfield">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+            {{ field }}
+          </div>
+        {% else %}
+          <div class="mui-textfield mui-textfield--float-label">
+            {{ field.errors }}
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          </div>
+        {% endif %}
       {% endfor %}
 
       <div class="form-group">
