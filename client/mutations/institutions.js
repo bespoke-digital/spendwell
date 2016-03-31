@@ -2,7 +2,7 @@
 import Relay from 'react-relay';
 
 
-export class ConnectInstitutionMutation extends Relay.Mutation {
+export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
   static fragments = {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
@@ -12,7 +12,7 @@ export class ConnectInstitutionMutation extends Relay.Mutation {
   };
 
   getMutation() {
-    return Relay.QL`mutation { connectInstitution }`;
+    return Relay.QL`mutation { connectPlaidInstitution }`;
   }
 
   getVariables() {
@@ -24,7 +24,7 @@ export class ConnectInstitutionMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on ConnectInstitutionMutation {
+      fragment on ConnectPlaidInstitutionMutation {
         viewer {
           summary
           institutions
@@ -53,6 +53,11 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
         id
       }
     `,
+    finicityInstitution: ()=> Relay.QL`
+      fragment on FinicityInstitution {
+        id
+      }
+    `,
   };
 
   getMutation() {
@@ -60,7 +65,10 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    return {};
+    return {
+      finicityInstitutionId: this.props.finicityInstitution.id,
+      credentials: JSON.stringify(this.props.credentials),
+    };
   }
 
   getFatQuery() {
@@ -80,53 +88,6 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
         viewer: this.props.viewer.id,
       },
     }];
-  }
-}
-
-
-export class CreateInstitutionMutation extends Relay.Mutation {
-  static fragments = {
-    viewer: ()=> Relay.QL`
-      fragment on Viewer {
-        id
-      }
-    `,
-  };
-
-  getMutation() {
-    return Relay.QL`mutation { createInstitution }`;
-  }
-
-  getVariables() {
-    return { name: this.props.name };
-  }
-
-  getFatQuery() {
-    return Relay.QL`
-      fragment on CreateInstitutionMutation {
-        viewer { institutions }
-        institutionEdge
-      }
-    `;
-  }
-
-  getConfigs() {
-    return [{
-      type: 'RANGE_ADD',
-      parentName: 'viewer',
-      parentID: this.props.viewer.id,
-      connectionName: 'institutions',
-      edgeName: 'institutionEdge',
-      rangeBehaviors: { '': 'append' },
-    }];
-  }
-
-  getOptimisticResponse() {
-    return {
-      institution: {
-        name: this.props.name,
-      },
-    };
   }
 }
 

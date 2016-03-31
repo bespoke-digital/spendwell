@@ -6,7 +6,6 @@ import { RelayRouter } from 'react-router-relay';
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
 import AddAccount from 'views/add-account';
-import AddFinicityAccount from 'views/add-finicity-account';
 import Categories from 'views/categories';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
@@ -59,7 +58,6 @@ export default (
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/new' component={AddAccount} queries={rootQuery}/>
       <Route path='accounts/new/external' component={CreateExternalAccount} queries={rootQuery}/>
-      <Route path='accounts/new/finicity/:id' component={AddFinicityAccount} queries={rootQuery}/>
       <Route path='accounts/:accountId' component={Accounts} queries={rootQuery}/>
 
       <Route path='categories' component={Categories} queries={rootQuery}/>

@@ -73,7 +73,7 @@ class Institution extends Component {
           <div>
             <h3>{institution.name}</h3>
 
-            { institution.canSync && isAdmin ? [
+            {institution.canSync && isAdmin ? [
               <div key='last-sync' className='last-sync'>
                 {moment(institution.lastSync).fromNow()}
               </div>,

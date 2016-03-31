@@ -1,17 +1,11 @@
 
-from decimal import Decimal
+import time
 
 from django.conf import settings
 
-import graphene
-from graphene.utils import to_snake_case
-
+from xml.parsers.expat import ExpatError
 import xmltodict
 import requests
-
-from apps.core.types import Money
-from apps.accounts.models import Account
-from .models import Institution
 
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
@@ -21,60 +15,6 @@ VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
 
 class FinicityError(Exception):
     pass
-
-
-class FinicityLoginField(graphene.ObjectType):
-    id = graphene.String()
-    name = graphene.String()
-    value = graphene.String()
-    description = graphene.String()
-    display_order = graphene.String()
-    mask = graphene.String()
-    value_length_min = graphene.String()
-    value_length_max = graphene.String()
-    instructions = graphene.String()
-
-    def __init__(self, *args, **kwargs):
-        self.finicity = kwargs.pop('finicity')
-
-        kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
-        super(FinicityLoginField, self).__init__(*args, **kwargs)
-
-
-class FinicityInstitution(graphene.relay.Node):
-    finicity_id = graphene.String()
-    name = graphene.String()
-    account_type_description = graphene.String()
-    url_home_app = graphene.String()
-    url_logon_app = graphene.String()
-    url_product_app = graphene.String()
-    login_form = graphene.List(FinicityLoginField)
-
-    @classmethod
-    def get_node(cls, id, info):
-        return Finicity(info.request_context.user).get_institution(id)
-
-    def __init__(self, *args, **kwargs):
-        kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
-        self.finicity_id = kwargs.get('id')
-        self.finicity = kwargs.pop('finicity')
-        super(FinicityInstitution, self).__init__(*args, **kwargs)
-
-    def resolve_login_form(self, args, info):
-        return self.finicity.get_login_form(self.finicity_id)
-
-
-class FinicityAccount(graphene.ObjectType):
-    id = graphene.String()
-    number = graphene.Int()
-    name = graphene.String()
-    type = graphene.String()
-    balance = graphene.Field(Money())
-    status = graphene.String()
-
-    def __init__(self, *args, **kwargs):
-        self.finicity = kwargs.pop('finicity')
-        super(FinicityAccount, self).__init__(*args, **kwargs)
 
 
 class Finicity(object):
@@ -123,7 +63,10 @@ class Finicity(object):
         return response
 
     def parse(self, response):
-        return xmltodict.parse(response.content)
+        try:
+            return xmltodict.parse(response.content)
+        except ExpatError:
+            raise FinicityError('Unable to parse "{}"'.format(response.content))
 
     def ensure_customer(self):
         if self.user.finicity_id:
@@ -146,42 +89,8 @@ class Finicity(object):
         self.user.finicity_id = response['customer']['id']
         self.user.save()
 
-    def list_institutions(self, query):
-        if not any([valid in query for valid in VALID_QUERIES]):
-            return []
-
-        return [
-            FinicityInstitution(finicity=self, **result)
-            for result in self.request('/v1/institutions', params={
-                'search': query.replace(' ', '+'),
-                'start': 1,
-                'limit': 10,
-            })['institutions']['institution']
-        ]
-
-    def get_institution(self, id):
-        response = self.request('/v1/institutions/{}'.format(id))
-        return FinicityInstitution(finicity=self, **response['institution'])
-
-    def get_login_form(self, institution_id):
-        response = self.request('/v1/institutions/{}/loginForm'.format(institution_id))
-
-        return [
-            FinicityLoginField(finicity=self, **field)
-            for field in response['loginForm']['loginField']
-        ]
-
-    def connect_institution(self, institution_id, credentials):
-        self.ensure_customer()
-
-        institution = self.get_institution(institution_id)
-
-        path = '/v1/customers/{}/institutions/{}/accounts'.format(
-            self.user.finicity_id,
-            institution_id,
-        )
-
-        body = '<accounts><credentials>{}</credentials></accounts>'.format(
+    def credentials_xml(self, credentials):
+        return '<accounts><credentials>{}</credentials></accounts>'.format(
             ''.join([
                 '''
                     <loginField>
@@ -194,59 +103,70 @@ class Finicity(object):
             ])
         )
 
-        response = self.request(path, method='POST', data=body)
+    def list_institutions(self, query):
+        if not any([valid in query for valid in VALID_QUERIES]):
+            return []
 
-        institution, created = Institution.objects.get_or_create(
-            owner=self.user,
-            finicity_id=institution_id,
-            defaults={'name': institution['name']},
-        )
+        return self.request('/v1/institutions', params={
+            'search': query.replace(' ', '+'),
+            'start': 1,
+            'limit': 10,
+        })['institutions']['institution']
 
-        for account_data in response['accounts']['account']:
-            Account.objects.from_finicity(institution, account_data)
+    def get_institution(self, id):
+        return self.request('/v1/institutions/{}'.format(id))['institution']
 
-        return institution
+    def get_login_form(self, institution_id):
+        response = self.request('/v1/institutions/{}/loginForm'.format(institution_id))
+        return response['loginForm']['loginField']
 
-    def connect_accounts(self, institution_id, accounts_ids):
+    def connect_institution(self, institution_id, credentials):
         self.ensure_customer()
 
-        institution = Institution.objects.get(finicity_id=institution_id)
-
-        accounts = Account.objects.filter(
-            institution=institution,
-            finicity_id__in=accounts_ids,
+        response = self.request(
+            '/v1/customers/{}/institutions/{}/accounts/addall'.format(
+                self.user.finicity_id,
+                institution_id,
+            ),
+            method='POST',
+            data=self.credentials_xml(credentials),
         )
+
+        return response['accounts']['account']
+
+    def list_accounts(self, institution_id, credentials):
+        self.ensure_customer()
 
         path = '/v1/customers/{}/institutions/{}/accounts'.format(
             self.user.finicity_id,
             institution_id,
         )
 
-        body = '<accounts>{}</accounts>'.format(
-            ''.join([
-                '''
-                    <account>
-                        <id>{}</id>
-                        <number>{}</number>
-                        <name>{}</name>
-                        <type>{}</type>
-                    </account>
-                '''.format(
-                    account.finicity_id,
-                    account.number_snippet,
-                    account.name,
-                    account.type,
-                )
-                for account in accounts
-            ])
-        )
+        response = self.request(path, method='POST', data=self.credentials_xml(credentials))
 
-        self.request(path, method='PUT', data=body)
-
-        accounts.update(disabled=False)
-
-        institution.sync()
+        return response['accounts']['account']
 
     def list_transactions(self, institution_id):
-        response = self.request('/v2/customers/{}/transactions'.format(self.user.finicity_id))
-        return response['transactions']['transaction']
+        self.ensure_customer()
+        self.request('/v1/customers/{}/accounts'.format(self.user.finicity_id), method='POST')
+
+        path = '/v1/customers/{}/transactions'.format(self.user.finicity_id)
+        to_date = int(time.time())
+        from_date = int(to_date - 16416000)
+        transactions = []
+
+        while True:
+            response = self.request(path, params={
+                'fromDate': from_date,
+                'toDate': to_date,
+                'start': len(transactions),
+                'limit': 1000,
+            })
+            if response['transactions']:
+                transactions += response['transactions']['transaction']
+                if len(response['transactions']['transaction']) < 1000:
+                    break
+            else:
+                break
+
+        return transactions

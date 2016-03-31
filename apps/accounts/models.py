@@ -1,56 +1,53 @@
 
-from decimal import Decimal
-
 from django.db import models
 
 from apps.core.models import SWModel, SWManager
 
 
 class AccountManager(SWManager):
-    def from_plaid(self, institution, json_data):
+    def from_plaid(self, institution, data):
         try:
             account = Account.objects.get(
                 owner=institution.owner,
                 institution=institution,
-                plaid_id=json_data['_id'],
+                plaid_id=data['_id'],
             )
         except Account.DoesNotExist:
             account = Account()
             account.owner = institution.owner
             account.institution = institution
-            account.plaid_id = json_data['_id']
+            account.plaid_id = data['_id']
 
-        account.type = json_data['type']
-        account.subtype = json_data.get('subtype')
-        account.name = json_data['meta']['name']
-        account.number_snippet = json_data['meta']['number']
+        account.type = data['type']
+        account.subtype = data.get('subtype')
+        account.name = data['meta']['name']
+        account.number_snippet = data['meta']['number']
 
         if account.type == 'credit':
-            account.current_balance = -(json_data['balance']['current'] or 0)
+            account.current_balance = -(data['balance']['current'] or 0)
         else:
-            account.current_balance = json_data['balance']['current']
+            account.current_balance = data['balance']['current']
 
         account.save()
         return account
 
-    def from_finicity(self, institution, json_data):
+    def from_finicity(self, institution, data):
         try:
             account = Account.objects.get(
                 owner=institution.owner,
                 institution=institution,
-                finicity_id=json_data['id'],
+                finicity_id=data['id'],
             )
         except Account.DoesNotExist:
             account = Account()
             account.owner = institution.owner
             account.institution = institution
-            account.finicity_id = json_data['id']
+            account.finicity_id = data['id']
 
-        account.type = json_data['type']
-        account.name = json_data['name']
-        account.number_snippet = json_data['number']
-        account.current_balance = Decimal(json_data['balance'])
-        account.disabled = True
+        account.type = data['type']
+        account.name = data['name']
+        account.number_snippet = data['number']
+        account.current_balance = data['balance']
 
         account.save()
         return account

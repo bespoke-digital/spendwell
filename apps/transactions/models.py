@@ -43,35 +43,62 @@ class TransactionManager(SWManager):
     def is_transfer(self, *args, **kwargs):
         return self.get_queryset().is_transfer(*args, **kwargs)
 
-    def from_plaid(self, institution, json_data):
+    def from_plaid(self, institution, data):
         account = Account.objects.get(
             institution=institution,
-            plaid_id=json_data['_account'],
+            plaid_id=data['_account'],
         )
         if account.disabled:
             return None
 
         try:
-            transaction = Transaction.objects.get(plaid_id=json_data['_id'])
+            transaction = Transaction.objects.get(plaid_id=data['_id'])
         except Transaction.DoesNotExist:
             transaction = Transaction()
-            transaction.plaid_id = json_data['_id']
+            transaction.plaid_id = data['_id']
 
         transaction.account = account
         transaction.owner = institution.owner
 
-        if json_data.get('category_id'):
-            transaction.category = Category.objects.get(plaid_id=json_data['category_id'])
+        if data.get('category_id'):
+            transaction.category = Category.objects.get(plaid_id=data['category_id'])
 
-        transaction.description = json_data['name']
-        transaction.amount = -Decimal(json_data['amount'])
+        transaction.description = data['name']
+        transaction.amount = -Decimal(data['amount'])
         transaction.date = datetime(
-            *map(int, json_data['date'].split('-')),
+            *map(int, data['date'].split('-')),
             tzinfo=timezone(institution.owner.timezone)
         )
-        transaction.pending = json_data['pending']
-        transaction.location = json_data['meta'].get('location', {})
-        transaction.location['score'] = json_data.get('score')
+        transaction.pending = data['pending']
+        transaction.location = data['meta'].get('location', {})
+        transaction.location['score'] = data.get('score')
+
+        transaction.save()
+        return transaction
+
+    def from_finicity(self, institution, data):
+        account = Account.objects.get(
+            institution=institution,
+            finicity_id=data['accountId'],
+        )
+        if account.disabled:
+            return None
+
+        try:
+            transaction = Transaction.objects.get(finicity_id=data['id'])
+        except Transaction.DoesNotExist:
+            transaction = Transaction()
+            transaction.finicity_id = data['id']
+
+        transaction.account = account
+        transaction.owner = institution.owner
+
+        transaction.description = data['description']
+        transaction.amount = Decimal(data['amount'])
+        transaction.date = datetime.fromtimestamp(
+            float(data['postedDate']),
+            timezone(institution.owner.timezone),
+        )
 
         transaction.save()
         return transaction
@@ -122,6 +149,7 @@ class Transaction(SWModel):
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    finicity_id = models.CharField(max_length=255, blank=True, null=True)
     from_savings = models.BooleanField(default=False)
     pending = models.BooleanField(default=False)
     location = JSONField(null=True)

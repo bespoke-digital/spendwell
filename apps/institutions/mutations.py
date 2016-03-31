@@ -3,10 +3,12 @@ import json
 
 import graphene
 from graphene.relay.types import Edge
+from graphql_relay.node.node import from_global_id
 from django.conf import settings
+
 from plaid import Client
 
-from apps.core.utils import get_cursor, instance_for_node_id
+from apps.core.utils import instance_for_node_id
 from .finicity import Finicity
 from .models import Institution
 from .schema import InstitutionNode
@@ -15,32 +17,7 @@ from .schema import InstitutionNode
 InstitutionEdge = Edge.for_node(InstitutionNode)
 
 
-class CreateInstitutionMutation(graphene.relay.ClientIDMutation):
-    class Input:
-        name = graphene.String()
-
-    viewer = graphene.Field('Viewer')
-    institution_edge = graphene.Field(InstitutionEdge)
-
-    @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        from spendwell.schema import Viewer
-
-        institution = Institution.objects.create(
-            owner=info.request_context.user,
-            name=input['name'],
-        )
-
-        return CreateInstitutionMutation(
-            viewer=Viewer(),
-            institution_edge=InstitutionEdge(
-                cursor=get_cursor(institution),
-                node=institution
-            ),
-        )
-
-
-class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
+class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         public_token = graphene.String()
         plaid_institution_id = graphene.String()
@@ -59,51 +36,41 @@ class ConnectInstitutionMutation(graphene.relay.ClientIDMutation):
         token_response = plaid_client.exchange_token(input['public_token']).json()
         institution_response = plaid_client.institution(input['plaid_institution_id']).json()
 
-        institution, created = Institution.objects.get_or_create(
+        institution = Institution.objects.from_plaid(
             owner=info.request_context.user,
             plaid_id=input['plaid_institution_id'],
-            defaults={'name': institution_response['name']},
+            access_token=token_response['access_token'],
+            data=institution_response,
         )
-        institution.access_token = token_response['access_token']
-        institution.save()
         institution.sync_accounts()
-        return ConnectInstitutionMutation(viewer=Viewer())
+
+        return ConnectPlaidInstitutionMutation(viewer=Viewer())
 
 
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
-        finicity_institution_id = graphene.InputField(graphene.String())
         credentials = graphene.InputField(graphene.String())
+        finicity_institution_id = graphene.InputField(graphene.ID())
 
-    institution = graphene.Field(InstitutionNode)
-
-    @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        finicity = Finicity(info.request_context.user)
-        institution = finicity.connect_institution(
-            input['finicity_institution_id'],
-            json.loads(input['credentials']),
-        )
-
-        return ConnectFinicityInstitutionMutation(
-            institution=InstitutionNode(institution),
-        )
-
-
-class ConnectFinicityAccountsMutation(graphene.relay.ClientIDMutation):
-    class Input:
-        finicity_institution_id = graphene.InputField(graphene.String())
-        account_ids = graphene.InputField(graphene.List(graphene.Int()))
+    viewer = graphene.Field('Viewer')
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
-        finicity = Finicity(info.request_context.user)
-        finicity.connect_accounts(
-            input['finicity_institution_id'],
-            input['account_ids'],
+        from spendwell.schema import Viewer
+
+        finicity_client = Finicity(info.request_context.user)
+
+        finicity_institution_id = from_global_id(input['finicity_institution_id']).id
+
+        institution = Institution.objects.from_finicity(
+            info.request_context.user,
+            finicity_client.get_institution(finicity_institution_id),
+        )
+        institution.sync_accounts(
+            finicity_credentials=json.loads(input['credentials']),
         )
 
-        return ConnectFinicityAccountsMutation()
+        return ConnectFinicityInstitutionMutation(viewer=Viewer())
 
 
 class SyncInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -139,12 +106,10 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
 
 
 class InstitutionsMutations(graphene.ObjectType):
-    create_institution = graphene.Field(CreateInstitutionMutation)
-    connect_institution = graphene.Field(ConnectInstitutionMutation)
+    connect_plaid_institution = graphene.Field(ConnectPlaidInstitutionMutation)
+    connect_finicity_institution = graphene.Field(ConnectFinicityInstitutionMutation)
     sync_institution = graphene.Field(SyncInstitutionMutation)
     sync_institutions = graphene.Field(SyncInstitutionsMutation)
-    connect_finicity_institution = graphene.Field(ConnectFinicityInstitutionMutation)
-    connect_finicity_accounts = graphene.Field(ConnectFinicityAccountsMutation)
 
     class Meta:
         abstract = True

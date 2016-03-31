@@ -7,8 +7,10 @@ import { browserHistory } from 'react-router';
 import TextInput from 'components/text-input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
+import Transition from 'components/transition';
+import FinicityAccountDialog from 'components/finicity-account-dialog';
 
-import { ConnectInstitutionMutation } from 'mutations/institutions';
+import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 
 import styles from 'sass/views/add-plaid.scss';
 
@@ -61,10 +63,10 @@ class ConnectAccount extends Component {
       plaidInstitutionId: fi.id,
     };
 
-    Relay.Store.commitUpdate(new ConnectInstitutionMutation(mutationInput), {
-      onFailure: ()=> console.log('Failure: ConnectInstitutionMutation'),
+    Relay.Store.commitUpdate(new ConnectPlaidInstitutionMutation(mutationInput), {
+      onFailure: ()=> console.log('Failure: ConnectPlaidInstitutionMutation'),
       onSuccess: ()=> {
-        console.log('Success: ConnectInstitutionMutation');
+        console.log('Success: ConnectPlaidInstitutionMutation');
 
         if (document.location.pathname.indexOf('onboarding') !== -1)
           browserHistory.push('/onboarding/accounts');
@@ -74,15 +76,27 @@ class ConnectAccount extends Component {
     });
   }
 
+  selectFinicity(selectedFinicityInstitution) {
+    this.setState({ selectedFinicityInstitution });
+  }
+
   render() {
     const { viewer } = this.props;
-    const { results } = this.state;
+    const { results, selectedFinicityInstitution } = this.state;
 
     return (
       <CardList className={styles.root}>
         <Card>
           <TextInput label='Bank Search' onChange={this.handleSearch}/>
         </Card>
+
+        <Transition show={!!selectedFinicityInstitution}>
+          <FinicityAccountDialog
+            viewer={viewer}
+            finicityInstitution={selectedFinicityInstitution}
+            onRequestClose={()=> this.setState({ selectedFinicityInstitution: null })}
+          />
+        </Transition>
 
         {results.length ? results.map((fi)=> (
           <Card
@@ -104,7 +118,7 @@ class ConnectAccount extends Component {
           <Card
             key={node.id}
             className='fi'
-            onClick={()=> browserHistory.push(`/app/accounts/new/finicity/${node.id}`)}
+            onClick={this.selectFinicity.bind(this, node)}
           >
             <span className='fi-name'><strong>{node.name}</strong></span>
           </Card>
@@ -123,11 +137,14 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${ConnectInstitutionMutation.getFragment('viewer')}
+        ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
+        ${FinicityAccountDialog.getFragment('viewer')}
 
         finicityInstitutions(query: $query, first: 10) {
           edges {
             node {
+              ${FinicityAccountDialog.getFragment('finicityInstitution')}
+
               id
               name
             }
