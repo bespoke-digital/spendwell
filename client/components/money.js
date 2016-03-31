@@ -10,7 +10,7 @@ export default function Money({ amount, abs }) {
 
   return <span className={`
     money
-    ${negative ? 'money--negative' : ''}
+    ${negative ? 'money--negative' : 'money--positive'}
   `}>
     ${amount}
   </span>;

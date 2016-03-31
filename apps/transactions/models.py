@@ -1,15 +1,13 @@
 
 from decimal import Decimal
 from datetime import datetime
+from pytz import timezone
 
 from dateutil.relativedelta import relativedelta
 from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.utils.timezone import get_current_timezone
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.categories.models import Category
@@ -69,7 +67,7 @@ class TransactionManager(SWManager):
         transaction.amount = -Decimal(json_data['amount'])
         transaction.date = datetime(
             *map(int, json_data['date'].split('-')),
-            tzinfo=get_current_timezone()
+            tzinfo=timezone(institution.owner.timezone)
         )
         transaction.pending = json_data['pending']
         transaction.location = json_data['meta'].get('location', {})
@@ -163,7 +161,7 @@ class Transaction(SWModel):
 
         for bucket_month in BucketMonth.objects.filter(month_start=month_start):
             if self in bucket_month.bucket.transactions():
-                BucketTransaction.objects.create(
+                BucketTransaction.objects.get_or_create(
                     bucket_month=bucket_month,
                     transaction=self,
                 )
@@ -211,18 +209,11 @@ class Transaction(SWModel):
         self.save()
 
 
-@receiver(post_save, sender=Transaction)
-def transaction_post_save(sender, instance, created, raw, **kwargs):
-    if created and not raw:
-        instance.detect_transfer()
-        instance.assign_to_buckets()
-
-
 class BucketTransaction(models.Model):
     bucket_month = models.ForeignKey('buckets.BucketMonth')
     transaction = models.ForeignKey('transactions.Transaction')
 
-    class Meda:
+    class Meta:
         unique_together = ('bucket_month', 'transaction')
 
 

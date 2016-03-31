@@ -13,27 +13,28 @@ export default class MoneyInput extends Component {
 
   constructor() {
     super();
-    this.state = { addDecimal: false };
+    this.state = { valid: true };
   }
 
   onChange(value) {
-    this.setState({ value });
+    const numberValue = parseInt(parseFloat(value.replace(',', '')) * 100);
+    const valid = !_.isNaN(numberValue);
 
-    value = parseInt(parseFloat(value.replace(',', '')) * 100);
+    this.setState({ value, valid });
 
-    if (!_.isNaN(value) && this.props.onChange)
-      this.props.onChange(value);
+    if (valid && this.props.onChange)
+      this.props.onChange(numberValue);
   }
 
   render() {
     const { onChange, initialValue, ..._props } = this.props;
-    const { value } = this.state;
+    const { value, valid } = this.state;
 
     return (
       <TextInput
         onChange={::this.onChange}
         value={_.isUndefined(value) ? (initialValue / 100).toString() : value}
-        error={!_.isUndefined(value) && _.isNaN(parseFloat(value))}
+        error={!valid}
         {..._props}
       />
     );

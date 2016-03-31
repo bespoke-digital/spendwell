@@ -110,7 +110,6 @@ class BucketMonth(SWModel):
                 self.bucket.transactions(),
                 month_start=self.month_start,
             )
-
         return self._avg_amount
 
     @property
@@ -122,7 +121,7 @@ class BucketMonth(SWModel):
             date__gte=self.month_start,
             date__lt=self.month_start + relativedelta(months=1),
         ).values_list('id', flat=True):
-            BucketTransaction.objects.create(
+            BucketTransaction.objects.get_or_create(
                 bucket_month=self,
                 transaction_id=transaction_id,
             )

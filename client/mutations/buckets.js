@@ -65,11 +65,15 @@ export class CreateBucketMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteBucketMutation {
+      fragment on CreateBucketMutation {
         viewer {
           summary {
-            bucketMonths
-            billMonths
+            billsUnpaidTotal
+            billsPaidTotal
+            allocated
+            spent
+            net
+            spentFromSavings
           }
         }
       }
@@ -116,8 +120,12 @@ export class DeleteBucketMutation extends Relay.Mutation {
       fragment on DeleteBucketMutation {
         viewer {
           summary {
-            bucketMonths
-            billMonths
+            billsUnpaidTotal
+            billsPaidTotal
+            allocated
+            spent
+            net
+            spentFromSavings
           }
         }
       }
@@ -164,7 +172,10 @@ export class UpdateBucketMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on UpdateBucketMutation {
-        bucket
+        bucket {
+          name
+          filters
+        }
       }
     `;
   }

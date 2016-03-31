@@ -44,7 +44,8 @@ a:focus {
   overflow: hidden !important;
 }
 
-.container {
+.container,
+.mui-container {
   margin-right: auto;
   margin-left: auto;
   padding-left:  20px;
@@ -57,7 +58,7 @@ a:focus {
     max-width: $container-md;
   }
   @media (min-width: $screen-lg-min) {
-    max-width: $container-lg;
+    max-width: $container-md;
   }
 
   > h1, > h2, > h3, > h4, > h5, > h6 {
@@ -65,7 +66,7 @@ a:focus {
   }
 
   &.skinny {
-    width: 650px;
+    max-width: 650px;
   }
 }
 

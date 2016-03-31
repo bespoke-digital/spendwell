@@ -2,8 +2,6 @@
 import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
 
 import Button from 'components/button';
 import Card from 'components/card';
@@ -26,12 +24,12 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
-    type: PropTypes.oneOf(['bill', 'expense', 'account']),
+    initialType: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
-  constructor({ type }) {
+  constructor({ initialType }) {
     super();
-    this.state = { filters: [], name: '', type };
+    this.state = { filters: [], name: '', type: initialType };
   }
 
   componentWillMount() {
@@ -45,9 +43,9 @@ class BucketForm extends Component {
 
   handleSubmit() {
     const { onSubmit } = this.props;
-    const { filters, name } = this.state;
+    const { filters, name, type } = this.state;
 
-    onSubmit({ name, filters: cleanFilters(filters) });
+    onSubmit({ type, name, filters: cleanFilters(filters) });
   }
 
   handleFilterChange(filters) {
@@ -68,22 +66,24 @@ class BucketForm extends Component {
     return (
       <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
         <CardList>
-          <Card className='bucket-type-selector'>
-            <div
-              className={`bucket-type ${type === 'bill' ? 'selected' : ''}`}
-              onClick={()=> this.setState({ type: 'bill' })}
-            >
-              <h3>Bill</h3>
-              <div>For monthly recurring expenses</div>
-            </div>
-            <div
-              className={`bucket-type ${type === 'expense' ? 'selected' : ''}`}
-              onClick={()=> this.setState({ type: 'expense' })}
-            >
-              <h3>Other Expense</h3>
-              <div>For non-recurring expenses</div>
-            </div>
-          </Card>
+          {type !== 'account' ?
+            <Card className='bucket-type-selector'>
+              <div
+                className={`bucket-type ${type === 'bill' ? 'selected' : ''}`}
+                onClick={()=> this.setState({ type: 'bill' })}
+              >
+                <h3>Bill</h3>
+                <div>For monthly recurring expenses</div>
+              </div>
+              <div
+                className={`bucket-type ${type === 'expense' ? 'selected' : ''}`}
+                onClick={()=> this.setState({ type: 'expense' })}
+              >
+                <h3>Other Expense</h3>
+                <div>For non-recurring expenses</div>
+              </div>
+            </Card>
+          : null}
 
           <Card>
             <TextInput

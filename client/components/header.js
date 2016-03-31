@@ -11,16 +11,18 @@ import style from 'sass/components/header';
 
 class Header extends Component {
   static propTypes = {
+    toggleNav: PropTypes.func,
     navHandle: PropTypes.bool,
     showSafeToSpend: PropTypes.bool,
     back: PropTypes.bool,
-    toggleNav: PropTypes.func,
+    logoLink: PropTypes.bool,
   };
 
   static defaultProps = {
     navHandle: true,
     showSafeToSpend: true,
     back: false,
+    logoLink: true,
   };
 
   handleHandleClick(event) {
@@ -35,7 +37,14 @@ class Header extends Component {
   }
 
   render() {
-    const { showSafeToSpend, navHandle, back, viewer: { safeToSpend } } = this.props;
+    const {
+      viewer: { safeToSpend },
+      showSafeToSpend,
+      navHandle,
+      back,
+      logoLink,
+    } = this.props;
+
     return (
       <nav className={`mui-appbar mui--z2 ${style.root}`}>
         <div className='left mui--appbar-height mui--appbar-line-height'>
@@ -49,14 +58,21 @@ class Header extends Component {
             </a>
           ) : null}
         </div>
-        <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
-          <img src={logoWhite} alt='Spendwell' className='logo'/>
-          <img src={logoIconWhite} alt='Spendwell' className='icon'/>
-        </Link>
+        {logoLink ?
+          <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
+            <img src={logoWhite} alt='Spendwell' className='logo'/>
+            <img src={logoIconWhite} alt='Spendwell' className='icon'/>
+          </Link>
+        :
+          <div className='brand mui--appbar-height mui--appbar-line-height'>
+            <img src={logoWhite} alt='Spendwell' className='logo'/>
+            <img src={logoIconWhite} alt='Spendwell' className='icon'/>
+          </div>
+        }
         {showSafeToSpend ?
           <div className='safe-to-spend'>
-            <small>Safe To Spend</small>
             <Money amount={safeToSpend}/>
+            <small>safe to spend</small>
           </div>
         : null}
       </nav>

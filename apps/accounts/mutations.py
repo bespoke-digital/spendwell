@@ -35,26 +35,28 @@ class CreateAccountMutation(graphene.relay.ClientIDMutation):
 class DisableAccountMutation(graphene.relay.ClientIDMutation):
     class Input:
         account_id = graphene.ID()
+        detect_transfers = graphene.Boolean()
 
     account = graphene.Field(AccountNode)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
         account = instance_for_node_id(input.get('account_id'), info)
-        account.disable()
+        account.disable(input.get('detect_transfers', True))
         return DisableAccountMutation(account=account)
 
 
 class EnableAccountMutation(graphene.relay.ClientIDMutation):
     class Input:
         account_id = graphene.ID()
+        sync = graphene.Boolean()
 
     account = graphene.Field(AccountNode)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
         account = instance_for_node_id(input.get('account_id'), info)
-        account.enable()
+        account.enable(input.get('sync', True))
         return EnableAccountMutation(account=account)
 
 

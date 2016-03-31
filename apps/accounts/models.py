@@ -94,16 +94,19 @@ class Account(SWModel):
         else:
             return '{} - {}'.format(self.name, self.type)
 
-    def disable(self):
+    def disable(self, detect_transfers=True):
         from apps.transactions.models import Transaction
 
         self.disabled = True
         self.save()
         self.transactions.all().delete()
-        Transaction.objects.detect_transfers(owner=self.owner)
 
-    def enable(self):
+        if detect_transfers:
+            Transaction.objects.detect_transfers(owner=self.owner)
+
+    def enable(self, sync=True):
         self.disabled = False
         self.save()
 
-        self.institution.sync()
+        if sync:
+            self.institution.sync()

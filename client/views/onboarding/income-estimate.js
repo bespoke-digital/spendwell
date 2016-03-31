@@ -12,6 +12,7 @@ import MoneyInput from 'components/money-input';
 
 import { SetIncomeEstimateMutation } from 'mutations/users';
 
+import dollarImage from 'img/views/onboarding/dollar.svg';
 import styles from 'sass/views/accounts';
 
 
@@ -46,20 +47,25 @@ class OnboardingIncomeEstimate extends Component {
     return (
       <Onboarding viewer={viewer}>
         <div className={`container skinny ${styles.root}`}>
-          <div className='heading'>
-            <h1>Income Estimate</h1>
-          </div>
+          <CardList>
+            <Card className='help'>
+              <img src={dollarImage}/>
+              <h3>We've Estimated Your Income</h3>
+              <p>
+                Take a quick look and fix it if we got it wrong. We use it to
+                figure out your <strong>safe to spend</strong> number before
+                you get paid for the month.
+              </p>
+              <div className='clearfix'/>
+            </Card>
+          </CardList>
 
           <CardList>
-            <Card>
-              This is our guess at your monthly income. We use it to calculate
-              a lot of other numbers, so please make sure it's correct.
-            </Card>
             <Card>
               <MoneyInput
                 label='Income'
                 initialValue={viewer.estimatedIncome}
-                onChange={(income)=> this.setState({ income })}
+                onChange={(amount)=> this.setState({ amount })}
               />
             </Card>
           </CardList>
@@ -67,7 +73,7 @@ class OnboardingIncomeEstimate extends Component {
           <div className='flex-row'>
             <div/>
             <Button variant='primary' onClick={::this.handleSubmit}>
-              Continue
+              Finish
             </Button>
           </div>
         </div>

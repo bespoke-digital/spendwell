@@ -36,6 +36,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    timezone = models.CharField(max_length=100)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
@@ -102,3 +103,7 @@ def get_beta_code():
 class BetaCode(models.Model):
     key = models.CharField(max_length=255, default=get_beta_code)
     used_by = models.OneToOneField(User, blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    used = models.DateTimeField(null=True, blank=True)

@@ -90,6 +90,23 @@ AUTHENTICATION_BACKENDS = (
     'apps.users.backends.DemoBackend',
 )
 
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'

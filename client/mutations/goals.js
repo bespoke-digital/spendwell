@@ -26,9 +26,12 @@ export class CreateGoalMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on CreateGoalMutation {
         viewer {
-          goals
+          safeToSpend
+
           summary {
-            goalMonths
+            goalsTotal
+            allocated
+            net
           }
         }
       }

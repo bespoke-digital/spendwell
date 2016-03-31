@@ -5,4 +5,4 @@ import moment from 'moment';
 // how it's stored on the server. This needs to be addressed.
 moment.fn.asUtc = function() {
   return this.subtract(moment().utcOffset(), 'minutes');
-}
+};

@@ -57,7 +57,7 @@ class CreateBucket extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
-            type={type}
+            initialType={type}
           />
         </div>
       </App>

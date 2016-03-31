@@ -1,10 +1,12 @@
 
-body.faq {
-  .faq-content {
-    h1 {
-      margin-bottom: 40px;
-    }
+@import '../variables';
 
+body.faq {
+  .faq-heading {
+    margin-bottom: 40px;
+  }
+
+  .faq-content {
     h2 {
       margin-bottom: 10px;
       font-size: 20px;

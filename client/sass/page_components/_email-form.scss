@@ -1,4 +1,6 @@
 
+@import '../variables';
+@import '../depth';
 
 #landing-form-container {
   display: none;
@@ -11,17 +13,31 @@
   background-color: rgba(black, 0.5);
 
   form {
+    @extend .depth-z1;
+
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: 40px;
+
+    @media (min-width: $screen-sm-min) {
+      width: 315px;
+    }
 
     @media (max-width: $screen-xs-max) {
       width: 90vw;
     }
 
     background-color: white;
+
+    h4 {
+      margin: 0 0 10px;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
 
     .mui-textfield {
       display: inline-block;
@@ -39,6 +55,12 @@
 
     .form-fields {
       text-align: center;
+    }
+
+    input {
+      @media (min-width: $screen-sm-min) {
+        width: 192px;
+      }
     }
   }
 }

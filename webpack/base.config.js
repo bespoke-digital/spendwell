@@ -22,6 +22,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: 'babel' },
+      { test: /\.json$/, loader: 'json' },
       { test: /\.scss$/, loader: ExtractTextPlugin.extract(
         'style',
         'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'
@@ -43,7 +44,7 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['', '.js', '.jsx', '.scss', '.css'],
+    extensions: ['', '.js', '.jsx', '.scss', '.css', '.svg'],
     modulesDirectories: ['client', 'node_modules'],
   },
 };

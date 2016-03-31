@@ -5,13 +5,22 @@ import nprogress from 'nprogress';
 import { getCookie } from 'utils/cookies';
 
 
+let pendingRequests = 0;
+
+
 function finishPromise(arg) {
-  nprogress.done();
+  pendingRequests--;
+
+  if (pendingRequests === 0)
+    nprogress.done();
+
   return arg;
 }
 
 function loadingPromise(promise) {
   nprogress.start();
+  pendingRequests++;
+
   return promise.then(finishPromise, finishPromise);
 }
 
