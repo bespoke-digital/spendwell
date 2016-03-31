@@ -8,6 +8,7 @@ import ConnectAccount from 'components/connect-account';
 import Onboarding from 'components/onboarding';
 import Card from 'components/card';
 import CardList from 'components/card-list';
+import Button from 'components/button';
 
 import bankImage from 'img/views/onboarding/bank.svg';
 import securityImage from 'img/views/onboarding/security.svg';
@@ -38,11 +39,20 @@ class AddAccountView extends Component {
           </CardList>
           <Row>
             <Col md='8' className={`connect ${connectStyles.root}`}>
-
-              <h1>Connect Accounts</h1>
+              <div className='heading'>
+                <h1>Connect Accounts</h1>
+              </div>
 
               <ConnectAccount viewer={viewer}/>
+
+              <div className='flex-row'>
+                <div/>
+                {viewer.institutions.edges.length ?
+                  <Button to='/onboarding/accounts' variant='primary'>Skip</Button>
+                : null}
+              </div>
             </Col>
+
             <Col md='4' className='welcome'>
               <div>
                 <div>
@@ -62,6 +72,7 @@ class AddAccountView extends Component {
               </div>
             </Col>
           </Row>
+
         </div>
       </Onboarding>
     );
@@ -75,6 +86,14 @@ AddAccountView = Relay.createContainer(AddAccountView, {
       fragment on Viewer {
         ${Onboarding.getFragment('viewer')}
         ${ConnectAccount.getFragment('viewer')}
+
+        institutions(first: 1) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
       }
     `,
   },

@@ -12,7 +12,12 @@ class Onboarding extends Component {
     const { viewer, children } = this.props;
     return (
       <div className={style.root}>
-        <Header viewer={viewer} navHandle={false} showSafeToSpend={false}/>
+        <Header
+          viewer={viewer}
+          navHandle={false}
+          showSafeToSpend={false}
+          logoLink={false}
+        />
         {children}
       </div>
     );
