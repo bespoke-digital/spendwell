@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from plaid import Client
-from plaid.errors import ResourceNotFoundError
+from plaid.errors import ResourceNotFoundError, RequestFailedError
 
 from apps.core.models import SWModel, SWManager
 from apps.core.signals import day_start
@@ -78,7 +78,7 @@ class Institution(SWModel):
         if not hasattr(self, '_plaid_data'):
             try:
                 self._plaid_data = self.plaid_client.connect_get().json()
-            except ResourceNotFoundError:
+            except (ResourceNotFoundError, RequestFailedError):
                 self._plaid_data = None
         return self._plaid_data
 
