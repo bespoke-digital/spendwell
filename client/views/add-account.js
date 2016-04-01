@@ -14,7 +14,7 @@ class AddAccountView extends Component {
 
     return (
       <App viewer={viewer}>
-        <div className={`container ${styles.root}`}>
+        <div className={`container skinny ${styles.root}`}>
           <h1>Connect Accounts</h1>
 
           <ConnectAccount viewer={viewer}/>

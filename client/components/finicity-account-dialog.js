@@ -13,6 +13,7 @@ import { ConnectFinicityInstitutionMutation } from 'mutations/institutions';
 class AddFinicityAccount extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
+    onConnected: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -37,17 +38,23 @@ class AddFinicityAccount extends Component {
   }
 
   handleSubmit() {
-    const { viewer, finicityInstitution } = this.props;
+    const { viewer, finicityInstitution, onConnected } = this.props;
     const { credentials } = this.state;
 
+    this.setState({ loading: true });
     Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
       viewer,
       finicityInstitution,
       credentials,
     }), {
-      onFailure: ()=> console.log('Failure: ConnectFinicityInstitutionMutation'),
+      onFailure: ()=> {
+        console.log('Failure: ConnectFinicityInstitutionMutation');
+        this.setState({ loading: false });
+      },
       onSuccess: ()=> {
         console.log('Success: ConnectFinicityInstitutionMutation');
+        this.setState({ loading: false });
+        onConnected();
       },
     });
   }
@@ -63,14 +70,14 @@ class AddFinicityAccount extends Component {
         <div className='body'>
           <h3>Connect {finicityInstitution.name}</h3>
 
-            {formFields.map((field)=>
-              <TextInput
-                key={field.name}
-                label={field.description}
-                onChange={this.setFormValue.bind(this, field.name, field.id)}
-                type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
-              />
-            )}
+          {formFields.map((field)=>
+            <TextInput
+              key={field.name}
+              label={field.description}
+              onChange={this.setFormValue.bind(this, field.name, field.id)}
+              type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
+            />
+          )}
         </div>
 
         <div className='actions'>

@@ -67,13 +67,16 @@ class ConnectAccount extends Component {
       onFailure: ()=> console.log('Failure: ConnectPlaidInstitutionMutation'),
       onSuccess: ()=> {
         console.log('Success: ConnectPlaidInstitutionMutation');
-
-        if (document.location.pathname.indexOf('onboarding') !== -1)
-          browserHistory.push('/onboarding/accounts');
-        else
-          browserHistory.push('/app/accounts');
+        this.handleConnected();
       },
     });
+  }
+
+  handleConnected() {
+    if (document.location.pathname.indexOf('onboarding') !== -1)
+      browserHistory.push('/onboarding/accounts');
+    else
+      browserHistory.push('/app/accounts');
   }
 
   selectFinicity(selectedFinicityInstitution) {
@@ -95,8 +98,19 @@ class ConnectAccount extends Component {
             viewer={viewer}
             finicityInstitution={selectedFinicityInstitution}
             onRequestClose={()=> this.setState({ selectedFinicityInstitution: null })}
+            onConnected={::this.handleConnected}
           />
         </Transition>
+
+        {viewer.finicityInstitutions ? viewer.finicityInstitutions.edges.map(({ node })=>
+          <Card
+            key={node.id}
+            className='fi'
+            onClick={this.selectFinicity.bind(this, node)}
+          >
+            <span className='fi-name'><strong>{node.name}</strong></span>
+          </Card>
+        ) : null}
 
         {results.length ? results.map((fi)=> (
           <Card
@@ -114,16 +128,6 @@ class ConnectAccount extends Component {
           </Card>
         )) : null}
 
-        {viewer.finicityInstitutions.edges.map(({ node })=>
-          <Card
-            key={node.id}
-            className='fi'
-            onClick={this.selectFinicity.bind(this, node)}
-          >
-            <span className='fi-name'><strong>{node.name}</strong></span>
-          </Card>
-        )}
-
       </CardList>
     );
   }
@@ -132,7 +136,13 @@ class ConnectAccount extends Component {
 
 ConnectAccount = Relay.createContainer(ConnectAccount, {
   initialVariables: {
-    query: 'finbank',
+    query: null,
+  },
+  prepareVariables(vars) {
+    return {
+      hasQuery: !!vars.query,
+      ...vars,
+    };
   },
   fragments: {
     viewer: ()=> Relay.QL`
@@ -140,7 +150,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
         ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
         ${FinicityAccountDialog.getFragment('viewer')}
 
-        finicityInstitutions(query: $query, first: 10) {
+        finicityInstitutions(query: $query, first: 10) @include(if: $hasQuery) {
           edges {
             node {
               ${FinicityAccountDialog.getFragment('finicityInstitution')}
