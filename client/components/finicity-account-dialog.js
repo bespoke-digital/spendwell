@@ -39,7 +39,9 @@ class FinicityAccountDialog extends Component {
     });
   }
 
-  handleSubmit() {
+  handleSubmit(event) {
+    if (event) event.preventDefault();
+
     const { viewer, finicityInstitution, onConnected } = this.props;
     const { credentials } = this.state;
 
@@ -49,9 +51,13 @@ class FinicityAccountDialog extends Component {
       finicityInstitution,
       credentials,
     }), {
-      onFailure: ()=> {
-        console.log('Failure: ConnectFinicityInstitutionMutation');
+      onFailure: (transaction)=> {
         this.setState({ loading: false });
+
+        console.log('Failure: ConnectFinicityInstitutionMutation');
+        const errors = transaction.getError().source.errors.map(({ message })=> message);
+        if (errors.indexOf('Finicity MFA Required') !== -1)
+          console.log('Finicity MFA Required');
       },
       onSuccess: ()=> {
         console.log('Success: ConnectFinicityInstitutionMutation');
@@ -67,28 +73,30 @@ class FinicityAccountDialog extends Component {
 
     const formFields = _.sortBy(finicityInstitution.loginForm, 'displayOrder');
 
+    console.log('render loading', loading);
+
     return (
       <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
-        <div className='body'>
-          <h3>Connect {finicityInstitution.name}</h3>
+        <form onSubmit={::this.handleSubmit}>
+          <div className='body'>
+            <h3>Connect {finicityInstitution.name}</h3>
 
-          {formFields.map((field)=>
-            <div className='form-field' key={field.name}>
-              <TextInput
-                label={field.description}
-                onChange={this.setFormValue.bind(this, field.name, field.id)}
-                type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
-              />
-            </div>
-          )}
-        </div>
+            {formFields.map((field)=>
+              <div className='form-field' key={field.name}>
+                <TextInput
+                  label={field.description}
+                  onChange={this.setFormValue.bind(this, field.name, field.id)}
+                  type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
+                />
+              </div>
+            )}
+          </div>
 
-        <div className='actions'>
-          <Button onClick={onRequestClose}>Cancel</Button>
-          <Button variant='primary' onClick={::this.handleSubmit} loading={loading}>
-            Submit
-          </Button>
-        </div>
+          <div className='actions'>
+            <Button onClick={onRequestClose}>Cancel</Button>
+            <Button loading={loading} variant='primary' type='submit'>Submit</Button>
+          </div>
+        </form>
       </Dialog>
     );
   }

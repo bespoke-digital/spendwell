@@ -21,6 +21,14 @@ class FinicityError(Exception):
     pass
 
 
+class FinicityMFAException(FinicityError):
+    def __init__(self, msg, finicity_client, session_key):
+        self.finicity_client = finicity_client
+        self.session_key = session_key
+
+        super(FinicityMFAException, self).__init__(msg)
+
+
 class Finicity(object):
     def __init__(self, user):
         self.user = user
@@ -59,12 +67,15 @@ class Finicity(object):
             **kwargs
         )
 
-        response = self.parse(response)
+        if response.status_code == 203:
+            raise FinicityMFAException('Finicity MFA Required', self, response.headers['MFA-Session'])
 
-        if 'error' in response:
-            raise FinicityError('Finicity: {}'.format(response['error']['message']))
+        data = self.parse(response)
 
-        return response
+        if 'error' in data:
+            raise FinicityError('Finicity: {}'.format(data['error']['message']))
+
+        return data
 
     def parse(self, response):
         try:

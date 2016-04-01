@@ -9,7 +9,7 @@ from django.conf import settings
 from plaid import Client
 
 from apps.core.utils import instance_for_node_id
-from .finicity import Finicity
+from .finicity import Finicity, FinicityMFAException
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -58,9 +58,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        finicity_client = Finicity(info.request_context.user)
-
         finicity_institution_id = from_global_id(input['finicity_institution_id']).id
+        finicity_client = Finicity(info.request_context.user)
 
         institution = Institution.objects.from_finicity(
             info.request_context.user,
