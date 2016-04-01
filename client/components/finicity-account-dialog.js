@@ -9,8 +9,10 @@ import Dialog from 'components/dialog';
 
 import { ConnectFinicityInstitutionMutation } from 'mutations/institutions';
 
+import style from 'sass/components/finicity-account-dialog';
 
-class AddFinicityAccount extends Component {
+
+class FinicityAccountDialog extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
     onConnected: PropTypes.func.isRequired,
@@ -66,17 +68,18 @@ class AddFinicityAccount extends Component {
     const formFields = _.sortBy(finicityInstitution.loginForm, 'displayOrder');
 
     return (
-      <Dialog size='sm' onRequestClose={onRequestClose}>
+      <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
         <div className='body'>
           <h3>Connect {finicityInstitution.name}</h3>
 
           {formFields.map((field)=>
-            <TextInput
-              key={field.name}
-              label={field.description}
-              onChange={this.setFormValue.bind(this, field.name, field.id)}
-              type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
-            />
+            <div className='form-field' key={field.name}>
+              <TextInput
+                label={field.description}
+                onChange={this.setFormValue.bind(this, field.name, field.id)}
+                type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
+              />
+            </div>
           )}
         </div>
 
@@ -92,7 +95,7 @@ class AddFinicityAccount extends Component {
 }
 
 
-AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
+FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
@@ -118,4 +121,4 @@ AddFinicityAccount = Relay.createContainer(AddFinicityAccount, {
   },
 });
 
-export default AddFinicityAccount;
+export default FinicityAccountDialog;

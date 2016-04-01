@@ -11,11 +11,13 @@ class Dialog extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
     size: PropTypes.oneOf(['sm', 'md', 'lg']),
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     visible: false,
     size: 'md',
+    className: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -39,11 +41,11 @@ class Dialog extends Component {
   }
 
   renderDialog() {
-    const { size, onRequestClose, children } = this.props;
+    const { size, onRequestClose, className, children } = this.props;
 
     return (
       <div>
-        <Card className={`${style.root} ${size}`}>
+        <Card className={`${style.root} ${size} ${className}`}>
           {children}
         </Card>
         <div className='overlay' onClick={onRequestClose}/>

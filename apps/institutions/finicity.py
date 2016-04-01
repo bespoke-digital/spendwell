@@ -9,8 +9,12 @@ import requests
 
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
-VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'finbank')
-# VALID_QUERIES = []
+
+
+if settings.FINICITY_PRODUCTION:
+    VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia')
+else:
+    VALID_QUERIES = ('finbank',)
 
 
 class FinicityError(Exception):
@@ -104,7 +108,7 @@ class Finicity(object):
         )
 
     def list_institutions(self, query):
-        if not any([valid in query for valid in VALID_QUERIES]):
+        if not any([valid in query for valid in VALID_QUERIES]) or not settings.FINICITY_ENABLED:
             return []
 
         return self.request('/v1/institutions', params={

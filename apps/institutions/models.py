@@ -45,6 +45,7 @@ class Institution(SWModel):
     plaid_id = models.CharField(max_length=255, null=True, blank=True)
     access_token = models.CharField(max_length=255, null=True, blank=True)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
+    reauth_required = models.BooleanField(default=False)
     last_sync = models.DateTimeField(null=True)
 
     objects = InstitutionManager()
@@ -78,8 +79,15 @@ class Institution(SWModel):
         if not hasattr(self, '_plaid_data'):
             try:
                 self._plaid_data = self.plaid_client.connect_get().json()
-            except (ResourceNotFoundError, RequestFailedError):
+
+            except ResourceNotFoundError:
                 self._plaid_data = None
+
+            except RequestFailedError:
+                self._plaid_data = None
+                self.reauth_required = True
+                self.save()
+
         return self._plaid_data
 
     @property
@@ -101,7 +109,7 @@ class Institution(SWModel):
         ) or 0
 
     def sync_accounts(self, finicity_credentials=None):
-        if self.plaid_client:
+        if self.plaid_client and self.plaid_data:
             for account_data in self.plaid_data['accounts']:
                 Account.objects.from_plaid(self, account_data)
 
@@ -116,12 +124,13 @@ class Institution(SWModel):
     def sync(self, finicity_credentials=None):
         self.sync_accounts(finicity_credentials=finicity_credentials)
 
-        if self.plaid_client:
+        if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
 
         elif self.finicity_client:
-            for transaction_data in self.finicity_client.list_transactions(self.finicity_id):
+            transactions_data = self.finicity_client.list_transactions(self.finicity_id)
+            for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 
         Transaction.objects.detect_transfers(owner=self.owner)
