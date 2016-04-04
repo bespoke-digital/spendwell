@@ -1,6 +1,6 @@
 
 from .base import *
-from .secrets import db_password, plaid_secret
+from .secrets import db_password, plaid_secret, finicity_secret
 
 
 ALLOWED_HOSTS = ['*']
@@ -17,6 +17,12 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 PLAID_PRODUCTION = False
 PLAID_SECRET = plaid_secret
+
+FINICITY_ENABLED = True
+FINICITY_PRODUCTION = True
+FINICITY_ID = '2445581415347'
+FINICITY_SECRET = finicity_secret
+FINICITY_APP_KEY = 'e152b1e1dc39cd13969ffc7dc954bb88'
 
 MIXPANEL_PUBLIC_KEY = '25e4cbc88d444229cfcddfe21935ed2c'
 GOOGLE_ANALYTICS_KEY = 'UA-71571230-1'
