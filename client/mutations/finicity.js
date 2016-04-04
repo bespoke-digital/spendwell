@@ -35,7 +35,6 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
       fragment on ConnectFinicityInstitutionMutation {
         viewer {
           safeToSpend
-          finicityChallenges
         }
       }
     `;
