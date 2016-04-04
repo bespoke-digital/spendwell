@@ -20,8 +20,6 @@ export default (props)=> {
     ...extraProps,
   } = props;
 
-  console.log('button loading', loading);
-
   const _disabled = disabled;
   const _children = children;
 

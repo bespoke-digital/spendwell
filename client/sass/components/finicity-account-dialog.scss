@@ -2,5 +2,24 @@
 :local(.root) {
   .form-field {
     margin: 10px 0;
+
+    .mfa-question {
+      margin-bottom: 5px;
+    }
+
+    .mfa-choices {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .fa {
+        margin-right: 5px;
+      }
+
+      img {
+        margin-bottom: 5px;
+        max-width: 100%;
+      }
+    }
   }
 }

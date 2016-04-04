@@ -8,7 +8,6 @@ from apps.institutions.models import Institution
 from apps.accounts.models import Account
 
 from .client import Finicity
-from .schema import FinicityChallenge
 
 
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -18,7 +17,6 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         mfa_answers = graphene.InputField(graphene.String())
 
     viewer = graphene.Field('Viewer')
-    mfa_challenges = graphene.List(FinicityChallenge)
 
     @classmethod
     def mutate_and_get_payload(cls, input, info):
@@ -28,7 +26,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         finicity_client = Finicity(info.request_context.user)
         finicity_institution = finicity_client.get_institution(finicity_institution_id)
 
-        Institution.objects.from_finicity(
+        institution = Institution.objects.from_finicity(
             owner=info.request_context.user,
             data=finicity_institution,
         )
@@ -42,7 +40,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         accounts_data = finicity_client.connect_institution(finicity_institution_id, **sync_kwargs)
 
         for account_data in accounts_data:
-            Account.objects.from_finicity(self, account_data)
+            Account.objects.from_finicity(institution, account_data)
 
         return ConnectFinicityInstitutionMutation(viewer=Viewer())
 

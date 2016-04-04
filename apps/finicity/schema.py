@@ -51,8 +51,21 @@ class FinicityInstitution(graphene.relay.Node):
         ]
 
 
-class FinicityChallenge(graphene.ObjectType):
-    text = graphene.String()
+# class FinicityImageChoice(graphene.ObjectType):
+#     image = graphene.String()
+#     value = graphene.String()
+
+
+# class FinicityTextChoice(graphene.ObjectType):
+#     text = graphene.String()
+#     value = graphene.String()
+
+
+# class FinicityChallenge(graphene.ObjectType):
+#     text = graphene.String()
+#     image = graphene.String()
+#     image_choices = graphene.List(FinicityImageChoice)
+#     text_choices = graphene.List(FinicityTextChoice)
 
 
 class FinicityQuery(graphene.ObjectType):

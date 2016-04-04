@@ -26,24 +26,25 @@ class FinicityAccountDialog extends Component {
   setCredentialValue(name, id, value) {
     const { credentials } = this.state;
 
-    console.log('change', value);
-
     this.setState({
       credentials: Object.assign({}, credentials, { [id]: { value, name } }),
     });
   }
 
-  setMfaValue(challenge, index, value) {
+  setMfaValue(challenge, index, value, event) {
+    if (event) event.preventDefault();
+
     const { mfaAnswers } = this.state;
     mfaAnswers[index] = value;
     this.setState({ mfaAnswers });
   }
 
   handleSubmit(event) {
+    if (event) event.preventDefault();
+
     const { viewer, finicityInstitution, onConnected } = this.props;
     const { credentials, mfaAnswers } = this.state;
 
-    if (event) event.preventDefault();
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
@@ -90,8 +91,6 @@ class FinicityAccountDialog extends Component {
 
     const formFields = _.sortBy(finicityInstitution.loginForm, 'displayOrder');
 
-    console.log('render', _.values(credentials).map(({ value })=> value));
-
     return (
       <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
         <form onSubmit={::this.handleSubmit}>
@@ -100,12 +99,51 @@ class FinicityAccountDialog extends Component {
 
             {mfaChallenges ? mfaChallenges.map((challenge, index)=>
               <div className='form-field' key={index}>
-                {challenge.text ? <strong>{challenge.text}</strong> : null}
-                <TextInput
-                  label='Answer'
-                  onChange={this.setMfaValue.bind(this, challenge, index)}
-                  value={mfaAnswers[index] || ''}
-                />
+                {challenge.image ?
+                  <div className='mfa-question'><img src={challenge.image} alt={challenge.text}/></div>
+                : null}
+
+                {(challenge.choice || challenge.imageChoice) && challenge.text ?
+                  <div className='mfa-question'><strong>{challenge.text}</strong></div>
+                : null}
+
+                {challenge.choice ?
+                  <ul className='mfa-choices'>
+                    {challenge.choice.map((choice)=>
+                      <li key={choice['@value']}>
+                        {mfaAnswers[index] === choice['@value'] ?
+                          <i className='fa fa-dot-circle-o'/>
+                        :
+                          <i className='fa fa-circle-o'/>
+                        }
+                        <a href='#' onClick={this.setMfaValue.bind(this, challenge, index, choice['@value'])}>
+                          {choice['#text']}
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                : challenge.imageChoice ?
+                  <ul className='mfa-choices'>
+                    {challenge.imageChoice.map((choice)=>
+                      <li key={choice['@value']}>
+                        {mfaAnswers[index] === choice['@value'] ?
+                          <i className='fa fa-dot-circle-o'/>
+                        :
+                          <i className='fa fa-circle-o'/>
+                        }
+                        <a href='#' onClick={this.setMfaValue.bind(this, challenge, index, choice['@value'])}>
+                          <img src={choice['#text']} alt={choice['@value']}/>
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+                :
+                  <TextInput
+                    label={challenge.text ? challenge.text : 'Answer'}
+                    onChange={this.setMfaValue.bind(this, challenge, index)}
+                    value={mfaAnswers[index] || ''}
+                  />
+                }
               </div>
             ) : formFields.map((field)=>
               <div className='form-field' key={field.name}>
