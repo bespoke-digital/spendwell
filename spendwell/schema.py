@@ -14,6 +14,8 @@ from apps.goals.schema import GoalsQuery
 from apps.goals.mutations import GoalsMutations
 from apps.buckets.schema import BucketsQuery
 from apps.buckets.mutations import BucketsMutations
+from apps.finicity.schema import FinicityQuery
+from apps.finicity.mutations import FinicityMutations
 
 
 class Viewer(
@@ -25,6 +27,7 @@ class Viewer(
     UsersQuery,
     GoalsQuery,
     BucketsQuery,
+    FinicityQuery,
 ):
     @classmethod
     def get_node(Cls, args, info):
@@ -49,6 +52,7 @@ class Mutations(
     GoalsMutations,
     BucketsMutations,
     UsersMutations,
+    FinicityMutations,
 ):
     pass
 

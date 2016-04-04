@@ -20,15 +20,13 @@ class Dialog extends Component {
     className: '',
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.insert(this.renderDialog(nextProps));
+  componentDidMount() {
+    this.node = document.body.appendChild(document.createElement('div'));
+    this.insert();
   }
 
-  componentDidMount() {
-    this.node = document.createElement('div');
-    document.body.appendChild(this.node);
-
-    this.insert(this.renderDialog(this.props));
+  componentWillReceiveProps() {
+    this.insert();
   }
 
   componentWillUnmount() {
@@ -36,11 +34,14 @@ class Dialog extends Component {
     document.body.removeChild(this.node);
   }
 
-  insert(element) {
-    ReactDOM.render(element, this.node);
+  insert() {
+    // Here Be Dragons
+    // Had to use a "secret" feature of ReactDOM to render outside the main
+    // react tree without breaking all the things.
+    ReactDOM.unstable_renderSubtreeIntoContainer(this, this.props.children, this.node);
   }
 
-  renderDialog() {
+  render() {
     const { size, onRequestClose, className, children } = this.props;
 
     return (
@@ -51,10 +52,6 @@ class Dialog extends Component {
         <div className='overlay' onClick={onRequestClose}/>
       </div>
     );
-  }
-
-  render() {
-    return null;
   }
 }
 

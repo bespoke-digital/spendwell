@@ -1,4 +1,6 @@
 
+import logging
+
 from django.db import models
 from django.conf import settings
 from django.dispatch import receiver
@@ -12,7 +14,10 @@ from apps.core.signals import day_start
 from apps.accounts.models import Account
 from apps.buckets.models import BucketMonth
 from apps.transactions.models import Transaction
-from .finicity import Finicity
+from apps.finicity.client import Finicity
+
+
+logger = logging.getLogger(__name__)
 
 
 class InstitutionManager(SWManager):
@@ -96,7 +101,7 @@ class Institution(SWModel):
             return
 
         if not hasattr(self, '_finicity_client'):
-            self._finicity_client = Finicity(self.owner)
+            self._finicity_client = Finicity(user=self.owner)
         return self._finicity_client
 
     @property
@@ -108,21 +113,18 @@ class Institution(SWModel):
             ['current_balance__sum']
         ) or 0
 
-    def sync_accounts(self, finicity_credentials=None):
+    def sync_accounts(self):
         if self.plaid_client and self.plaid_data:
             for account_data in self.plaid_data['accounts']:
                 Account.objects.from_plaid(self, account_data)
 
-        elif self.finicity_client and finicity_credentials:
-            accounts_data = self.finicity_client.connect_institution(
-                self.finicity_id,
-                finicity_credentials,
-            )
+        elif self.finicity_client:
+            accounts_data = self.finicity_client.list_accounts(self.finicity_id)
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync(self, finicity_credentials=None):
-        self.sync_accounts(finicity_credentials=finicity_credentials)
+    def sync(self):
+        self.sync_accounts()
 
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
@@ -148,4 +150,19 @@ def on_day_start(*args, **kwargs):
         access_token__isnull=False,
         plaid_id__isnull=False,
     ):
-        institution.sync()
+        try:
+            institution.sync()
+        except:
+            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
+            logger.exception(
+                'Exception occurred while syncing plaid institution {}'.format(institution.id)
+            )
+
+    for institution in Institution.objects.filter(finicity_id__isnull=False):
+        try:
+            institution.sync()
+        except:
+            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
+            logger.exception(
+                'Exception occurred while syncing finicity institution {}'.format(institution.id)
+            )

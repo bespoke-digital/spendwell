@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.categories',
     'apps.buckets',
     'apps.goals',
+    'apps.finicity',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -90,7 +91,12 @@ AUTHENTICATION_BACKENDS = (
     'apps.users.backends.DemoBackend',
 )
 
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache',
+    }
+}
 
 LOGGING = {
     'version': 1,

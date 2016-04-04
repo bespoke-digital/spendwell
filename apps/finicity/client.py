@@ -1,7 +1,10 @@
 
 import time
+import json
+from collections import OrderedDict
 
 from django.conf import settings
+from django.core.cache import cache
 
 from xml.parsers.expat import ExpatError
 import xmltodict
@@ -17,16 +20,32 @@ else:
     VALID_QUERIES = ('finbank',)
 
 
+def mfa_cache_key(user):
+    return 'finicity-mfa:{}'.format(user.id)
+
+
 class FinicityError(Exception):
     pass
 
 
 class FinicityMFAException(FinicityError):
-    def __init__(self, msg, finicity_client, session_key):
-        self.finicity_client = finicity_client
-        self.session_key = session_key
+    def __init__(self, user, response, data):
+        self.user = user
+        self.response = response
+        self.session = response.headers['MFA-Session']
 
-        super(FinicityMFAException, self).__init__(msg)
+        self.challenges = data['mfaChallenges']['questions']['question']
+        if isinstance(self.challenges, OrderedDict):
+            self.challenges = [self.challenges]
+
+        cache.set(mfa_cache_key(user), {
+            'session': self.session,
+            'challenges': self.challenges,
+        }, 120)
+
+        message = 'finicity-mfa-required:{}'.format(json.dumps(self.challenges))
+
+        super(FinicityMFAException, self).__init__(message)
 
 
 class Finicity(object):
@@ -53,24 +72,25 @@ class Finicity(object):
 
         self.access_token = self.parse(response)['access']['token']
 
-    def request(self, path, method='GET', **kwargs):
+    def request(self, path, method='GET', headers=None, **kwargs):
         if not hasattr(self, 'access_token'):
             self.authenticate()
 
+        headers = headers or {}
+        headers['Content-Type'] = 'application/xml'
+        headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
+        headers['Finicity-App-Token'] = self.access_token
+
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
-            headers={
-                'Content-Type': 'application/xml',
-                'Finicity-App-Key': settings.FINICITY_APP_KEY,
-                'Finicity-App-Token': self.access_token,
-            },
+            headers=headers,
             **kwargs
         )
 
-        if response.status_code == 203:
-            raise FinicityMFAException('Finicity MFA Required', self, response.headers['MFA-Session'])
-
         data = self.parse(response)
+
+        if response.status_code == 203:
+            raise FinicityMFAException(self.user, response, data)
 
         if 'error' in data:
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
@@ -118,6 +138,26 @@ class Finicity(object):
             ])
         )
 
+    def mfa_xml(self, answers):
+        mfa_data = cache.get(mfa_cache_key(self.user))
+        if not mfa_data:
+            raise FinicityError('finicity-mfa-expired')
+
+        body = '<accounts><mfaChallenges><questions>{}</questions></mfaChallenges></accounts>'.format(
+            ''.join([
+                '<question>{question}<answer>{answer}</answer></question>'.format(
+                    answer=answers[index],
+                    question=''.join([
+                        '<{key}>{value}</{key}>'.format(key=key, value=value)
+                        for key, value in question.items()
+                    ]),
+                )
+                for index, question in enumerate(mfa_data['challenges'])
+            ]),
+        )
+
+        return body, mfa_data['session']
+
     def list_institutions(self, query):
         if not any([valid in query for valid in VALID_QUERIES]) or not settings.FINICITY_ENABLED:
             return []
@@ -135,29 +175,43 @@ class Finicity(object):
         response = self.request('/v1/institutions/{}/loginForm'.format(institution_id))
         return response['loginForm']['loginField']
 
-    def connect_institution(self, institution_id, credentials):
+    def connect_institution(self, institution_id, credentials=None, mfa_answers=None):
         self.ensure_customer()
 
-        response = self.request(
-            '/v1/customers/{}/institutions/{}/accounts/addall'.format(
-                self.user.finicity_id,
-                institution_id,
-            ),
-            method='POST',
-            data=self.credentials_xml(credentials),
-        )
-
-        return response['accounts']['account']
-
-    def list_accounts(self, institution_id, credentials):
-        self.ensure_customer()
-
-        path = '/v1/customers/{}/institutions/{}/accounts'.format(
+        path = '/v1/customers/{}/institutions/{}/accounts/addall'.format(
             self.user.finicity_id,
             institution_id,
         )
 
-        response = self.request(path, method='POST', data=self.credentials_xml(credentials))
+        if mfa_answers:
+            path += '/mfa'
+            body, session = self.mfa_xml(mfa_answers)
+            headers = {'MFA-Session': session}
+
+        elif credentials:
+            body = self.credentials_xml(credentials)
+            headers = {}
+
+        else:
+            raise ValueError(
+                'credentials or mfa_answers must be used to connect a '
+                'finicity account.'
+            )
+
+        response = self.request(path, method='POST', data=body, headers=headers)
+
+        return response['accounts']['account']
+
+    def mfa_submit(self, answers):
+        print('answers', answers)
+
+    def list_accounts(self, institution_id):
+        self.ensure_customer()
+
+        response = self.request('/v1/customers/{}/institutions/{}/accounts'.format(
+            self.user.finicity_id,
+            institution_id,
+        ))
 
         return response['accounts']['account']
 
