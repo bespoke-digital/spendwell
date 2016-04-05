@@ -1,3 +1,8 @@
+
 from django.db import models
 
-# Create your models here.
+
+class FinicityInstitution(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    finicity_id = models.CharField(max_length=255)

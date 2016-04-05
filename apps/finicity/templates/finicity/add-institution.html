@@ -1,0 +1,22 @@
+{% extends "page.html" %}
+
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} finicity-add-institution{% endblock %}
+
+{% block content %}
+<div class="container">
+  {% for institution in institutions %}
+    <div class="card">
+      <pre>{{ institution.raw }}</pre>
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{ institution.id }}"/>
+        <button type="submit" class="mui-btn mui-btn--primary">
+          Add to whitelist
+        </button>
+      </form>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

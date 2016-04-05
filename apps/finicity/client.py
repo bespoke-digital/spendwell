@@ -164,9 +164,6 @@ class Finicity(object):
         return body, mfa_data['session']
 
     def list_institutions(self, query):
-        if not any([valid in query for valid in VALID_QUERIES]) or not settings.FINICITY_ENABLED:
-            return []
-
         response = self.request('/v1/institutions', params={
             'search': query.replace(' ', '+'),
             'start': 1,

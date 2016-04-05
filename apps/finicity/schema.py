@@ -1,8 +1,11 @@
 
 import graphene
 from graphene.utils import to_snake_case
+from graphene.contrib.django.types import DjangoNode
+from graphene.contrib.django.fields import DjangoConnectionField
 
 from .client import Finicity
+from .models import FinicityInstitution
 
 
 class FinicityLoginField(graphene.ObjectType):
@@ -23,54 +26,25 @@ class FinicityLoginField(graphene.ObjectType):
         super(FinicityLoginField, self).__init__(*args, **kwargs)
 
 
-class FinicityInstitution(graphene.relay.Node):
-    finicity_id = graphene.String()
-    name = graphene.String()
-    account_type_description = graphene.String()
-    url_home_app = graphene.String()
-    url_logon_app = graphene.String()
-    url_product_app = graphene.String()
+class FinicityInstitutionNode(DjangoNode):
     login_form = graphene.List(FinicityLoginField)
 
-    @classmethod
-    def get_node(Cls, id, info):
-        finicity_client = Finicity(info.request_context.user)
-        return Cls(**finicity_client.get_institution(id))
-
-    def __init__(self, *args, **kwargs):
-        kwargs = {to_snake_case(k): v for k, v in kwargs.items()}
-        self.finicity_id = kwargs.get('id')
-        self.finicity = kwargs.pop('finicity')
-        super(FinicityInstitution, self).__init__(*args, **kwargs)
+    class Meta:
+        model = FinicityInstitution
 
     def resolve_login_form(self, args, info):
+        finicity_client = Finicity(info.request_context.user)
+
         return [
             FinicityLoginField(finicity=self, **field)
-            for field in self.finicity.get_login_form(self.finicity_id)
+            for field in finicity_client.get_login_form(self.finicity_id)
         ]
 
 
-# class FinicityImageChoice(graphene.ObjectType):
-#     image = graphene.String()
-#     value = graphene.String()
-
-
-# class FinicityTextChoice(graphene.ObjectType):
-#     text = graphene.String()
-#     value = graphene.String()
-
-
-# class FinicityChallenge(graphene.ObjectType):
-#     text = graphene.String()
-#     image = graphene.String()
-#     image_choices = graphene.List(FinicityImageChoice)
-#     text_choices = graphene.List(FinicityTextChoice)
-
-
 class FinicityQuery(graphene.ObjectType):
-    finicity_institution = graphene.relay.NodeField(FinicityInstitution)
-    finicity_institutions = graphene.relay.ConnectionField(
-        FinicityInstitution,
+    finicity_institution = graphene.relay.NodeField(FinicityInstitutionNode)
+    finicity_institutions = DjangoConnectionField(
+        FinicityInstitutionNode,
         query=graphene.String(),
     )
 
@@ -78,8 +52,9 @@ class FinicityQuery(graphene.ObjectType):
         abstract = True
 
     def resolve_finicity_institutions(self, args, info):
-        finicity_client = Finicity(info.request_context.user)
-        return [
-            FinicityInstitution(finicity=finicity_client, **data)
-            for data in finicity_client.list_institutions(args['query'])
-        ]
+        query = args.get('query')
+
+        if not query:
+            return []
+
+        return FinicityInstitution.objects.filter(name__icontains=query)

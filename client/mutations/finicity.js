@@ -10,7 +10,7 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
       }
     `,
     finicityInstitution: ()=> Relay.QL`
-      fragment on FinicityInstitution {
+      fragment on FinicityInstitutionNode {
         id
       }
     `,

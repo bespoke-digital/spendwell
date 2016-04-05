@@ -26,6 +26,7 @@ graphiql_view = login_required(GraphiQL.as_view())
 urlpatterns = [
     url(r'^admin/', admin_site.urls),
     url(r'^watchman/', include('watchman.urls')),
+    url(r'^finicity/', include('apps.finicity.urls', namespace='finicity')),
 
     url(r'^graphiql', graphiql_view, name='graphiql'),
     url(r'^graphql', auth_graphql_view, name='graphql'),

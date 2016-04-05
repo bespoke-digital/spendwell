@@ -111,7 +111,7 @@ class ConnectAccount extends Component {
             onClick={this.selectFinicity.bind(this, node)}
           >
             <div className='fi-name'><strong>{node.name}</strong></div>
-            <div className='fi-domain'>{parseUrl(node.urlHomeApp).hostname}</div>
+            <div className='fi-domain'>{parseUrl(node.url).hostname}</div>
           </Card>
         ) : null}
 
@@ -161,7 +161,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
 
               id
               name
-              urlHomeApp
+              url
             }
           }
         }

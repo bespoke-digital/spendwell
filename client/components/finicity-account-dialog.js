@@ -176,7 +176,7 @@ FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
       }
     `,
     finicityInstitution: ()=> Relay.QL`
-      fragment on FinicityInstitution {
+      fragment on FinicityInstitutionNode {
         ${ConnectFinicityInstitutionMutation.getFragment('finicityInstitution')}
 
         id
