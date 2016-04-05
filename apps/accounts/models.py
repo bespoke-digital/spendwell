@@ -1,6 +1,4 @@
 
-import sys
-
 from django.db import models
 
 from apps.core.models import SWModel, SWManager
@@ -34,7 +32,6 @@ class AccountManager(SWManager):
         return account
 
     def from_finicity(self, institution, data):
-        print('data', data, file=sys.stderr)
         try:
             account = Account.objects.get(
                 owner=institution.owner,

@@ -234,8 +234,9 @@ class Finicity(object):
                 'limit': 1000,
             })
             if response['transactions']:
-                transactions += response['transactions']['transaction']
-                if len(response['transactions']['transaction']) < 1000:
+                response_data = maybe_list(response['transactions']['transaction'])
+                transactions += response_data
+                if len(response_data) < 1000:
                     break
             else:
                 break

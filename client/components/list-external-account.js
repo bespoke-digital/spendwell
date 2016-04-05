@@ -31,7 +31,7 @@ class ListExternalAccount extends Component {
   }
 
   render() {
-    const { bucket, onClick, relay } = this.props;
+    const { viewer, bucket, onClick, relay } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -47,7 +47,7 @@ class ListExternalAccount extends Component {
           </Card>
         }
       >
-        <TransactionList transactions={bucket.transactions} abs={false}/>
+        <TransactionList viewer={viewer} transactions={bucket.transactions} abs={false}/>
 
         {bucket.transactions && bucket.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>

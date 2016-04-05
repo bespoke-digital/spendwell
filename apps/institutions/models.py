@@ -1,4 +1,5 @@
 
+import sys
 import logging
 
 from django.db import models
@@ -126,12 +127,16 @@ class Institution(SWModel):
     def sync(self):
         self.sync_accounts()
 
+        print('fi sync', self.id, file=sys.stderr)
+
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
 
         elif self.finicity_client:
+            print('import fini txns', file=sys.stderr)
             transactions_data = self.finicity_client.list_transactions(self.finicity_id)
+            print(len(transactions_data), file=sys.stderr)
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 

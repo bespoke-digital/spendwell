@@ -1,5 +1,4 @@
 
-import sys
 import json
 
 import graphene
@@ -39,8 +38,6 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
             sync_kwargs['mfa_answers'] = json.loads(input['mfa_answers'])
 
         accounts_data = finicity_client.connect_institution(finicity_institution_id, **sync_kwargs)
-
-        print('accounts_data', accounts_data, file=sys.stderr)
 
         for account_data in accounts_data:
             Account.objects.from_finicity(institution, account_data)
