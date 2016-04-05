@@ -1,6 +1,7 @@
 
 import time
 import json
+import logging
 from collections import OrderedDict
 
 from django.conf import settings
@@ -10,6 +11,8 @@ from xml.parsers.expat import ExpatError
 import xmltodict
 import requests
 
+
+logger = logging.getLogger(__name__)
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
 
@@ -199,6 +202,7 @@ class Finicity(object):
             )
 
         response = self.request(path, method='POST', data=body, headers=headers)
+        logger.debug(response)
 
         return response['accounts']['account']
 
