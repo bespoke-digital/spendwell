@@ -20,7 +20,7 @@ FINICITY_URL = 'https://api.finicity.com/aggregation'
 
 
 if settings.FINICITY_PRODUCTION:
-    VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia')
+    VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'rbc')
 else:
     VALID_QUERIES = ('finbank',)
 
@@ -167,11 +167,13 @@ class Finicity(object):
         if not any([valid in query for valid in VALID_QUERIES]) or not settings.FINICITY_ENABLED:
             return []
 
-        return self.request('/v1/institutions', params={
+        response = self.request('/v1/institutions', params={
             'search': query.replace(' ', '+'),
             'start': 1,
             'limit': 10,
-        })['institutions']['institution']
+        })
+
+        return maybe_list(response['institutions'].get('institution', []))
 
     def get_institution(self, id):
         return self.request('/v1/institutions/{}'.format(id))['institution']

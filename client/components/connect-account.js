@@ -12,6 +12,8 @@ import FinicityAccountDialog from 'components/finicity-account-dialog';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 
+import { parseUrl } from 'utils';
+
 import styles from 'sass/views/add-plaid.scss';
 
 
@@ -108,7 +110,8 @@ class ConnectAccount extends Component {
             className='fi'
             onClick={this.selectFinicity.bind(this, node)}
           >
-            <span className='fi-name'><strong>{node.name}</strong></span>
+            <div className='fi-name'><strong>{node.name}</strong></div>
+            <div className='fi-domain'>{parseUrl(node.urlHomeApp).hostname}</div>
           </Card>
         ) : null}
 
@@ -121,10 +124,11 @@ class ConnectAccount extends Component {
           >
             {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
 
-            <span className='fi-name'>
+            <div className='fi-name'>
               <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
               {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
-            </span>
+            </div>
+            <div className='fi-domain'>{parseUrl(fi.accountSetup).hostname}</div>
           </Card>
         )) : null}
 
@@ -157,6 +161,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
 
               id
               name
+              urlHomeApp
             }
           }
         }

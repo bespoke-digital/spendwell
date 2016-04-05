@@ -1,7 +1,6 @@
 
 import graphene
 from graphene.utils import to_snake_case
-from django.core.cache import cache
 
 from .client import Finicity
 
