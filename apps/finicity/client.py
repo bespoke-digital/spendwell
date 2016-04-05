@@ -11,6 +11,8 @@ from xml.parsers.expat import ExpatError
 import xmltodict
 import requests
 
+from .utils import maybe_list
+
 
 logger = logging.getLogger(__name__)
 
@@ -203,10 +205,7 @@ class Finicity(object):
 
         response = self.request(path, method='POST', data=body, headers=headers)
 
-        return response['accounts']['account']
-
-    def mfa_submit(self, answers):
-        print('answers', answers)
+        return maybe_list(response['accounts']['account'])
 
     def list_accounts(self, institution_id):
         self.ensure_customer()
@@ -216,7 +215,7 @@ class Finicity(object):
             institution_id,
         ))
 
-        return response['accounts']['account']
+        return maybe_list(response['accounts']['account'])
 
     def list_transactions(self, institution_id):
         self.ensure_customer()
