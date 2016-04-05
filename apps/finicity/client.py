@@ -2,7 +2,6 @@
 import time
 import json
 import logging
-import sys
 from collections import OrderedDict
 
 from django.conf import settings
@@ -203,7 +202,6 @@ class Finicity(object):
             )
 
         response = self.request(path, method='POST', data=body, headers=headers)
-        print(response, file=sys.stderr)
 
         return response['accounts']['account']
 

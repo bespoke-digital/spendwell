@@ -117,12 +117,12 @@ def deploy(force=False, interactive=False):
                 return
             npm_install()
 
-        if 'client' in changed or 'webpack' in changed or 'package.json' in changed or force:
+        if 'client/' in changed or 'webpack' in changed or 'package.json' in changed or force:
             if interactive and not console.confirm('Continue with npm_build?'):
                 return
             npm_build()
 
-        if 'static' in changed or 'client' in changed or 'webpack' in changed or force:
+        if 'static' in changed or 'client/' in changed or 'webpack' in changed or force:
             if interactive and not console.confirm('Continue with collectstatic?'):
                 return
             collectstatic()
