@@ -86,7 +86,10 @@ class User(AbstractBaseUser):
             .sum()
             for i in range(months_ago(self.first_data_month()) - 1)
         ]
-        self.estimated_income = min(income_months)
+        if len(income_months) > 0:
+            self.estimated_income = min(income_months)
+        else:
+            self.estimated_income = 0
 
     def first_data_month(self):
         first_transaction = self.transactions.order_by('date').first()
