@@ -7,6 +7,9 @@ import Col from 'muicss/lib/react/col';
 import Card from 'components/card';
 import Money from 'components/money';
 import DateTime from 'components/date-time';
+import Dropdown from 'components/dropdown';
+import Icon from 'components/icon';
+import TransactionQuickAdd from 'components/transaction-quick-add';
 
 import styles from 'sass/components/list-transaction';
 
@@ -29,7 +32,7 @@ class ListTransaction extends Component {
   }
 
   render() {
-    const { transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
+    const { viewer, transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
 
     return (
       <Card
@@ -59,38 +62,32 @@ class ListTransaction extends Component {
           <div>
             <Row>
               <Col md='6'>
-                <strong>{'Date: '}</strong><DateTime value={transaction.date}/><br/>
-                <strong>{'Amount: '}</strong><Money amount={transaction.amount}/><br/>
-                <strong>{'Type: '}</strong>
-                {transaction.category ? transaction.category.name : 'Unknown'}
+                <div><strong>{'Date: '}</strong><DateTime value={transaction.date}/></div>
+                <div><strong>{'Amount: '}</strong><Money amount={transaction.amount}/></div>
+                {transaction.buckets.edges.length ?
+                  <div>
+                    <strong>{'Labels: '}</strong>
+                    <span className='buckets'>
+                      {transaction.buckets.edges.map(({ node })=>
+                        <span key={node.id}>{node.name}</span>
+                      )}
+                    </span>
+                  </div>
+                : null}
               </Col>
               <Col md='6'>
-                <strong>{'Account: '}</strong>{transaction.account.name}<br/>
-                <strong>{'Institution: '}</strong>{transaction.account.institution.name}
+                <div><strong>{'Account: '}</strong>{transaction.account.name}</div>
+                <div><strong>{'Institution: '}</strong>{transaction.account.institution.name}</div>
+                {transaction.transferPair ?
+                  <div><strong>{'Transfer To: '}</strong>{transaction.transferPair.account.name}</div>
+                : null}
               </Col>
             </Row>
 
-            {transaction.buckets.edges.length ?
-              <div className='section'>
-                <hr/>
-                <strong>{'Labels: '}</strong>
-                <span className='buckets'>
-                  {transaction.buckets.edges.map(({ node })=>
-                    <span key={node.id}>{node.name}</span>
-                  )}
-                </span>
-              </div>
-            : null}
+            <div className='actions'>
+              <TransactionQuickAdd viewer={viewer} transaction={transaction}/>
+            </div>
 
-            {transaction.transferPair ?
-              <div className='section'>
-                <hr/>
-                <strong>{'Transfer Pair: '}</strong>
-                {transaction.transferPair.description}
-                {' - '}
-                <Money amount={transaction.transferPair.amount}/>
-              </div>
-            : null}
           </div>
         : null}
       </Card>
@@ -103,8 +100,15 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     open: false,
   },
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${TransactionQuickAdd.getFragment('viewer')}
+      }
+    `,
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
+        ${TransactionQuickAdd.getFragment('transaction')}
+
         description
         amount
         date
@@ -125,8 +129,9 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         fromSavings @include(if: $open)
 
         transferPair @include(if: $open) {
-          description
-          amount
+          account {
+            name
+          }
         }
 
         account @include(if: $open) {

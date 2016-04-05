@@ -1,5 +1,10 @@
 
+@import '../variables';
+@import '../depth';
+
 :local(.root) {
+  @extend .depth-z4;
+
   position: fixed;
   z-index: 101;
   top: 50px;
@@ -7,12 +12,14 @@
   max-width: 90%;
   transform: translateX(-50%);
 
-  border-radius: 4px;
-
-  .body {}
+  .body {
+    > h1, > h2, > h3, > h4, > h5 {
+      margin-bottom: 20px;
+    }
+  }
 
   .actions {
-    margin-top: 10px;
+    margin-top: 20px;
     text-align: right;
   }
 

@@ -33,7 +33,11 @@ class Bucket extends Component {
             <h1>{viewer.bucket.name}</h1>
           </div>
 
-          <TransactionList transactions={viewer.bucket.transactions} months={true}/>
+          <TransactionList
+            viewer={viewer}
+            transactions={viewer.bucket.transactions}
+            months={true}
+          />
         </ScrollTrigger>
       </App>
     );
@@ -62,6 +66,7 @@ Bucket = Relay.createContainer(Bucket, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+        ${TransactionList.getFragment('viewer')}
 
         bucket(id: $id) {
           name

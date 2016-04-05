@@ -114,6 +114,7 @@ class Transactions extends Component {
           </CardList>
 
           <TransactionList
+            viewer={viewer}
             transactions={viewer.transactions}
             abs={false}
             monthDisplay={true}
@@ -137,6 +138,8 @@ Transactions = Relay.createContainer(Transactions, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
+        ${TransactionList.getFragment('viewer')}
+
         transactions(
           first: $count,
           amountGt: $amountGt,

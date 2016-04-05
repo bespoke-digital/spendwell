@@ -86,7 +86,7 @@ class IncomingSummary extends Component {
           {fromSavingsIncome ?
             <LineItem name='From Previous Month' value={fromSavingsIncome}/>
           : null}
-          <TransactionList transactions={transactions}/>
+          <TransactionList viewer={viewer} transactions={transactions}/>
           <Card summary={
             <div>
               <div><strong>Total</strong></div>
@@ -135,6 +135,7 @@ IncomingSummary = Relay.createContainer(IncomingSummary, {
       fragment on Viewer {
         ${IncomeFromSavingsDialog.getFragment('viewer')}
         ${IncomeEstimateDialog.getFragment('viewer')}
+        ${TransactionList.getFragment('viewer')}
       }
     `,
     summary: ()=> Relay.QL`

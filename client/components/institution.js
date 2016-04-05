@@ -64,7 +64,7 @@ class Institution extends Component {
   }
 
   render() {
-    const { institution, isAdmin } = this.props;
+    const { viewer, institution, isAdmin } = this.props;
     const { selected, showDisabled } = this.state;
 
     return (
@@ -87,6 +87,7 @@ class Institution extends Component {
         {institution.accounts.edges.map(({ node })=>
           <ListAccount
             key={node.id}
+            viewer={viewer}
             account={node}
             expanded={selected === node.id}
             onDisable={this.disableAccount.bind(this, node)}
@@ -129,6 +130,11 @@ class Institution extends Component {
 
 Institution = Relay.createContainer(Institution, {
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${ListAccount.getFragment('viewer')}
+      }
+    `,
     institution: ()=> Relay.QL`
       fragment on InstitutionNode {
         ${SyncInstitutionMutation.getFragment('institution')}

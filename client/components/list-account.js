@@ -9,7 +9,7 @@ import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 
 
-export default class Account extends Component {
+export default class ListAccount extends Component {
   static propTypes = {
     onDisable: PropTypes.func.isRequired,
     onClick: PropTypes.func,
@@ -33,7 +33,7 @@ export default class Account extends Component {
   }
 
   render() {
-    const { account, relay, onClick, onDisable } = this.props;
+    const { viewer, account, relay, onClick, onDisable } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -57,7 +57,7 @@ export default class Account extends Component {
           </Card>
         }
       >
-        <TransactionList transactions={account.transactions} abs={false}/>
+        <TransactionList viewer={viewer} transactions={account.transactions} abs={false}/>
 
         {account.transactions && account.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
@@ -69,12 +69,17 @@ export default class Account extends Component {
   }
 }
 
-Account = Relay.createContainer(Account, {
+ListAccount = Relay.createContainer(ListAccount, {
   initialVariables: {
     open: false,
     transactionCount: 20,
   },
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${TransactionList.getFragment('viewer')}
+      }
+    `,
     account: ()=> Relay.QL`
       fragment on AccountNode {
         id
@@ -93,4 +98,4 @@ Account = Relay.createContainer(Account, {
   },
 });
 
-export default Account;
+export default ListAccount;

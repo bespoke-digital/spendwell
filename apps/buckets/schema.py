@@ -25,7 +25,10 @@ class BucketNode(SWNode):
             'filters',
             'type',
         )
-        filter_fields = ('type',)
+        filter_fields = {
+            'type': ['exact'],
+            'name': ['exact', 'icontains'],
+        }
 
     def resolve_transactions(self, args, info):
         return self.instance.transactions()

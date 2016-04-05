@@ -118,7 +118,11 @@ class BucketForm extends Component {
         </div>
 
         <CardList>
-          <TransactionList transactions={viewer.transactions} months={true}/>
+          <TransactionList
+            viewer={viewer}
+            transactions={viewer.transactions}
+            months={true}
+          />
         </CardList>
 
       </ScrollTrigger>
@@ -135,6 +139,7 @@ BucketForm = Relay.createContainer(BucketForm, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${Filters.getFragment('viewer')}
+        ${TransactionList.getFragment('viewer')}
 
         transactions(first: $count, filters: $filters, isTransfer: false) {
           ${TransactionList.getFragment('transactions')}

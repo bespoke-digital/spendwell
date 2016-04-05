@@ -207,6 +207,7 @@ class Dashboard extends Component {
           {spentFromSavings > 0 ?
             <CardList>
               <SpentFromSavings
+                viewer={viewer}
                 summary={viewer.summary}
                 month={periods.current}
                 selected={selected === 'spentFromSavings'}
@@ -261,6 +262,7 @@ class Dashboard extends Component {
               {billMonths.map((node)=>
                 <BillMonth
                   key={node.id}
+                  viewer={viewer}
                   bucketMonth={node}
                   month={periods.current}
                   expanded={selected === node.id}
@@ -331,6 +333,7 @@ class Dashboard extends Component {
               {bucketMonths.map((node)=>
                 <BucketMonth
                   key={node.id}
+                  viewer={viewer}
                   bucketMonth={node}
                   month={periods.current}
                   expanded={selected === node.id}
@@ -356,7 +359,11 @@ class Dashboard extends Component {
           </div>
 
           <CardList>
-            <TransactionList transactions={allTransactions} abs={false}/>
+            <TransactionList
+              viewer={viewer}
+              transactions={allTransactions}
+              abs={false}
+            />
 
             {allTransactions && allTransactions.pageInfo.hasNextPage ?
               <div className='bottom-buttons'>
@@ -390,6 +397,10 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${App.getFragment('viewer')}
         ${AssignTransactionsMutation.getFragment('viewer')}
         ${DashboardSummary.getFragment('viewer')}
+        ${TransactionList.getFragment('viewer')}
+        ${SpentFromSavings.getFragment('viewer')}
+        ${BucketMonth.getFragment('viewer')}
+        ${BillMonth.getFragment('viewer')}
 
         firstMonth
 

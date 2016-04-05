@@ -20,7 +20,7 @@ class SpentFromSavings extends Component {
   };
 
   render() {
-    const { summary, onClick, selected } = this.props;
+    const { viewer, summary, onClick, selected } = this.props;
 
     if (summary.spentFromSavings === 0)
       return <span/>;
@@ -36,7 +36,7 @@ class SpentFromSavings extends Component {
           </div>
         }/>
       }>
-        <TransactionList transactions={summary.transactions}/>
+        <TransactionList viewer={viewer} transactions={summary.transactions}/>
       </SuperCard>
     );
   }
@@ -44,6 +44,11 @@ class SpentFromSavings extends Component {
 
 SpentFromSavings = Relay.createContainer(SpentFromSavings, {
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${TransactionList.getFragment('viewer')}
+      }
+    `,
     summary: ()=> Relay.QL`
       fragment on Summary {
         spentFromSavings

@@ -151,7 +151,7 @@ class Filter extends Component {
           </Card>
         </CardList>
 
-        <TransactionList transactions={viewer.transactions} months={true}/>
+        <TransactionList viewer={viewer} transactions={viewer.transactions} months={true}/>
 
         {viewer.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
@@ -171,6 +171,8 @@ Filter = Relay.createContainer(Filter, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${TransactionList.getFragment('viewer')}
+
         transactions(
           first: $count,
           filters: $filters,

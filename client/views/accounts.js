@@ -31,6 +31,7 @@ class Accounts extends Component {
           {viewer.institutions.edges.map(({ node })=>
             <Institution
               key={node.id}
+              viewer={viewer}
               institution={node}
               isAdmin={viewer.isAdmin}
             />
@@ -68,6 +69,7 @@ Accounts = Relay.createContainer(Accounts, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${ExternalAccounts.getFragment('viewer')}
+        ${Institution.getFragment('viewer')}
 
         isAdmin
 
@@ -75,6 +77,7 @@ Accounts = Relay.createContainer(Accounts, {
           edges {
             node {
               ${Institution.getFragment('institution')}
+
               id
               name
               currentBalance

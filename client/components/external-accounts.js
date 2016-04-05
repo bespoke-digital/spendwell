@@ -29,6 +29,7 @@ class ExternalAccounts extends Component {
         {viewer.buckets.edges.map(({ node })=>
           <ListExternalAccount
             key={node.id}
+            viewer={viewer}
             bucket={node}
             expanded={selected === node.id}
             onClick={()=> selected === node.id ?
@@ -45,6 +46,8 @@ ExternalAccounts = Relay.createContainer(ExternalAccounts, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${ListExternalAccount.getFragment('viewer')}
+
         buckets(first: 100, type: "account") {
           edges {
             node {

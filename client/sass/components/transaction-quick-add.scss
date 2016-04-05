@@ -1,0 +1,20 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  position: relative;
+
+  .options {
+    @extend .depth-z3;
+
+    position: absolute;
+    top: 100%;
+    width: 100%;
+
+    > a {
+      display: block;
+      padding: 5px;
+    }
+  }
+}

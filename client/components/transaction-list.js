@@ -35,7 +35,7 @@ class TransactionList extends Component {
   }
 
   render() {
-    const { transactions, expand, abs, months } = this.props;
+    const { viewer, transactions, expand, abs, months } = this.props;
     const { expanded } = this.state;
 
     if (_.isNull(transactions) || _.isUndefined(transactions)) return null;
@@ -45,6 +45,7 @@ class TransactionList extends Component {
         {transactions.edges.map(({ node })=>
           <ListTransaction
             key={node.id}
+            viewer={viewer}
             transaction={node}
             onClick={this.toggleSelect.bind(this, node)}
             expanded={expand && expanded === node.id}
@@ -59,6 +60,11 @@ class TransactionList extends Component {
 
 TransactionList = Relay.createContainer(TransactionList, {
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${ListTransaction.getFragment('viewer')}
+      }
+    `,
     transactions: ()=> Relay.QL`
       fragment on TransactionNodeDefaultConnection {
         edges {

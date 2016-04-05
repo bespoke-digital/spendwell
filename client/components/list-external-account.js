@@ -8,7 +8,7 @@ import Button from 'components/button';
 import TransactionList from 'components/transaction-list';
 
 
-class ExternalAccounts extends Component {
+class ListExternalAccount extends Component {
   static propTypes = {
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
@@ -59,12 +59,17 @@ class ExternalAccounts extends Component {
   }
 }
 
-ExternalAccounts = Relay.createContainer(ExternalAccounts, {
+ListExternalAccount = Relay.createContainer(ListExternalAccount, {
   initialVariables: {
     open: false,
     transactionCount: 20,
   },
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${TransactionList.getFragment('viewer')}
+      }
+    `,
     bucket: ()=> Relay.QL`
       fragment on BucketNode {
         id
@@ -82,4 +87,4 @@ ExternalAccounts = Relay.createContainer(ExternalAccounts, {
   },
 });
 
-export default ExternalAccounts;
+export default ListExternalAccount;

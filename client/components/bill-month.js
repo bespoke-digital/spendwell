@@ -33,7 +33,7 @@ class BillMonth extends Component {
   }
 
   render() {
-    const { bucketMonth, onClick, relay } = this.props;
+    const { viewer, bucketMonth, onClick, relay } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -67,7 +67,7 @@ class BillMonth extends Component {
         </Card>
       }>
         {bucketMonth.transactions ?
-          <TransactionList transactions={bucketMonth.transactions}/>
+          <TransactionList viewer={viewer} transactions={bucketMonth.transactions}/>
         : null}
 
         <div className='bottom-buttons'>
@@ -98,6 +98,11 @@ BillMonth = Relay.createContainer(BillMonth, {
     transactionCount: 20,
   },
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${TransactionList.getFragment('viewer')}
+      }
+    `,
     bucketMonth: ()=> Relay.QL`
       fragment on BucketMonthNode {
         name
