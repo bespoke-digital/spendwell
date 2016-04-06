@@ -2,6 +2,7 @@
 import time
 import json
 import logging
+from uuid import uuid4
 from collections import OrderedDict
 
 from django.conf import settings
@@ -119,11 +120,11 @@ class Finicity(object):
 
         body = '''
             <customer>
-                <username>username{0}</username>
-                <firstName>firstName{0}</firstName>
-                <lastName>lastName{0}</lastName>
+                <username>username{0}{1}</username>
+                <firstName>firstName{0}{1}</firstName>
+                <lastName>lastName{0}{1}</lastName>
             </customer>
-        '''.format(self.user.id)
+        '''.format(self.user.id, uuid4().hex[:5])
 
         response = self.request(path, method='POST', data=body)
         self.user.finicity_id = response['customer']['id']
