@@ -2,7 +2,6 @@
 import json
 
 import graphene
-from graphql_relay.node.node import from_global_id
 
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
@@ -23,7 +22,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        finicity_institution = instance_for_node_id(input['finicity_institution_id'])
+        finicity_institution = instance_for_node_id(input['finicity_institution_id'], info)
         finicity_client = Finicity(info.request_context.user)
 
         institution = Institution.objects.from_finicity(
