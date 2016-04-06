@@ -19,7 +19,7 @@ class TransactionQuickAdd extends Component {
   }
 
   addToBucket(bucket) {
-    const { viewer, transaction } = this.props;
+    const { relay, viewer, transaction } = this.props;
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new TransactionQuickAddMutation({ viewer, transaction, bucket }), {
@@ -29,20 +29,30 @@ class TransactionQuickAdd extends Component {
       },
       onSuccess: ()=> {
         console.log('Success: TransactionQuickAddMutation');
-        this.setState({ loading: false });
+        this.setState({ loading: false, searchValue: '' });
+        relay.setVariables({ searchValue: '' });
       },
     });
   }
 
+  handleSearchChange(searchValue) {
+    const { relay } = this.props;
+
+    this.setState({ searchValue });
+    relay.setVariables({ searchValue });
+  }
+
   render() {
-    const { viewer, relay } = this.props;
-    const { focus } = this.state;
+    const { viewer } = this.props;
+    const { focus, searchValue } = this.state;
 
     return (
       <div className={styles.root}>
         <TextInput
+          ref='input'
           label='Add To Label'
-          onChange={(searchValue)=> relay.setVariables({ searchValue })}
+          value={searchValue}
+          onChange={::this.handleSearchChange}
           onFocus={()=> this.setState({ focus: true })}
           onBlur={()=> this.setState({ focus: false })}
         />
