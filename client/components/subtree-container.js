@@ -25,6 +25,7 @@ export default class SubtreeContainer extends Component {
   }
 
   insert() {
+    // If we don't clear the stack before this render state gets fucked.
     setTimeout(()=> renderSubtreeIntoContainer(this, this.subtreeRender(), this.node), 0);
   }
 
