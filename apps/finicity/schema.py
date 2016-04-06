@@ -62,4 +62,4 @@ class FinicityQuery(graphene.ObjectType):
         if not query:
             return []
 
-        return FinicityInstitution.objects.filter(name__icontains=query).order_by('-id')
+        return FinicityInstitution.objects.filter(name__icontains=query).order_by('id')
