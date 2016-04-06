@@ -11,6 +11,11 @@ from .models import FinicityInstitution
 class AddInstitutionView(TemplateView):
     template_name = 'finicity/add-institution.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated() or not request.user.is_admin:
+            return HttpResponseRedirect('/')
+        return super(AddInstitutionView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, *args, **kwargs):
         context = super(AddInstitutionView, self).get_context_data(*args, **kwargs)
 
