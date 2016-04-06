@@ -2,6 +2,7 @@
 from decimal import Decimal
 from datetime import datetime
 from pytz import timezone
+import logging
 
 from dateutil.relativedelta import relativedelta
 from delorean import Delorean
@@ -14,6 +15,9 @@ from apps.categories.models import Category
 from apps.accounts.models import Account
 
 from .utils import similarity
+
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionsQuerySet(SWQuerySet):
@@ -77,10 +81,18 @@ class TransactionManager(SWManager):
         return transaction
 
     def from_finicity(self, institution, data):
-        account = Account.objects.get(
-            institution=institution,
-            finicity_id=data['accountId'],
-        )
+        try:
+            account = Account.objects.get(
+                institution=institution,
+                finicity_id=data['accountId'],
+            )
+        except Account.DoesNotExist:
+            logger.warn('Account with Finicity ID {} for institution {} does not exits.'.format(
+                data['accountId'],
+                institution.id,
+            ))
+            return None
+
         if account.disabled:
             return None
 

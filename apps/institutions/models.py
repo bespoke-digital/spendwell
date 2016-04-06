@@ -1,5 +1,4 @@
 
-import sys
 import logging
 
 from django.db import models
@@ -65,7 +64,7 @@ class Institution(SWModel):
         return InstitutionSerializer
 
     def __str__(self):
-        return '{} - {}'.format(self.name, self.owner)
+        return '{} - {}'.format(self.name, self.owner_secret_id)
 
     @property
     def plaid_client(self):
@@ -124,9 +123,7 @@ class Institution(SWModel):
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync(self):
-        self.sync_accounts()
-
+    def sync_transactions(self):
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
@@ -141,6 +138,9 @@ class Institution(SWModel):
         for bucket_month in BucketMonth.objects.filter(bucket__owner=self.owner):
             bucket_month.assign_transactions()
 
+    def sync(self):
+        self.sync_accounts()
+        self.sync_transactions()
         self.last_sync = timezone.now()
         self.save()
 
