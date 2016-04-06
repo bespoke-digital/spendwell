@@ -18,6 +18,7 @@ class AccountAdmin(admin.ModelAdmin):
         'available_balance',
         'number_snippet',
         'plaid_id',
+        'finicity_id',
         'disabled',
     )
 
