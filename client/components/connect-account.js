@@ -81,13 +81,9 @@ class ConnectAccount extends Component {
       browserHistory.push('/app/accounts');
   }
 
-  selectFinicity(selectedFinicityInstitution) {
-    this.setState({ selectedFinicityInstitution });
-  }
-
   render() {
-    const { viewer } = this.props;
-    const { results, selectedFinicityInstitution } = this.state;
+    const { viewer, relay } = this.props;
+    const { results } = this.state;
 
     return (
       <CardList className={styles.root}>
@@ -95,11 +91,11 @@ class ConnectAccount extends Component {
           <TextInput label='Bank Search' onChange={this.handleSearch}/>
         </Card>
 
-        <Transition show={!!selectedFinicityInstitution}>
+        <Transition show={!!viewer.finicityInstitution}>
           <FinicityAccountDialog
             viewer={viewer}
-            finicityInstitution={selectedFinicityInstitution}
-            onRequestClose={()=> this.setState({ selectedFinicityInstitution: null })}
+            finicityInstitution={viewer.finicityInstitution}
+            onRequestClose={()=> relay.setVariables({ selectedFinicityId: null })}
             onConnected={::this.handleConnected}
           />
         </Transition>
@@ -108,7 +104,7 @@ class ConnectAccount extends Component {
           <Card
             key={node.id}
             className='fi'
-            onClick={this.selectFinicity.bind(this, node)}
+            onClick={()=> relay.setVariables({ selectedFinicityId: node.id })}
           >
             <div className='fi-name'><strong>{node.name}</strong></div>
             <div className='fi-domain'>{parseUrl(node.url).hostname}</div>
@@ -141,10 +137,12 @@ class ConnectAccount extends Component {
 ConnectAccount = Relay.createContainer(ConnectAccount, {
   initialVariables: {
     query: null,
+    selectedFinicityId: null,
   },
   prepareVariables(vars) {
     return {
       hasQuery: !!vars.query,
+      selectedFinicity: !!vars.selectedFinicityId,
       ...vars,
     };
   },
@@ -157,13 +155,15 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
         finicityInstitutions(query: $query, first: 10) @include(if: $hasQuery) {
           edges {
             node {
-              ${FinicityAccountDialog.getFragment('finicityInstitution')}
-
               id
               name
               url
             }
           }
+        }
+
+        finicityInstitution(id: $selectedFinicityId) @include(if: $selectedFinicity) {
+          ${FinicityAccountDialog.getFragment('finicityInstitution')}
         }
       }
     `,
