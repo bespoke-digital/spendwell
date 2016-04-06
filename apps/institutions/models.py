@@ -64,7 +64,7 @@ class Institution(SWModel):
         return InstitutionSerializer
 
     def __str__(self):
-        return '{} - {}'.format(self.name, self.owner_secret_id)
+        return self.name
 
     @property
     def plaid_client(self):
