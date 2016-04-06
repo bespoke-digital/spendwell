@@ -3,7 +3,6 @@ import graphene
 from graphene.utils import to_snake_case
 from graphene.contrib.django.types import DjangoNode
 from graphene.contrib.django.fields import DjangoConnectionField
-from django.conf import settings
 
 from .client import Finicity
 from .models import FinicityInstitution

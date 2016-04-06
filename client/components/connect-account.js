@@ -106,6 +106,7 @@ class ConnectAccount extends Component {
             className='fi'
             className={`fi ${node.image ? 'has-logo' : ''}`}
             onClick={()=> relay.setVariables({ selectedFinicityId: node.id })}
+            style={{ borderLeftColor: node.color }}
           >
             {node.image ? <img src={node.image} alt={node.name}/> : null}
             <div className='fi-name'><strong>{node.name}</strong></div>
@@ -161,6 +162,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
               name
               url
               image
+              color
             }
           }
         }
