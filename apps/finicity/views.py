@@ -22,20 +22,29 @@ class AddInstitutionView(TemplateView):
         client = Finicity(self.request.user)
 
         context['institutions'] = client.list_institutions(query)
-        for i in context['institutions']:
-            i['raw'] = json.dumps(i, indent=2)
+        for institution in context['institutions']:
+            institution['raw'] = json.dumps(institution, indent=2)
+            institution['in_whitelist'] = FinicityInstitution.objects.filter(
+                finicity_id=institution['id']
+            ).exists()
 
         return context
 
     def post(self, *args, **kwargs):
         client = Finicity(self.request.user)
-        fi_data = client.get_institution(self.request.POST.get('id'))
+        action = self.request.POST.get('action', 'add')
+        finicity_id = self.request.POST.get('id')
 
-        FinicityInstitution.objects.create(
-            name=fi_data['name'],
-            url=fi_data['urlHomeApp'],
-            finicity_id=fi_data['id'],
-        )
+        if action == 'remove':
+            FinicityInstitution.objects.filter(finicity_id=finicity_id).delete()
+
+        else:
+            fi_data = client.get_institution(finicity_id)
+            FinicityInstitution.objects.create(
+                name=fi_data['name'],
+                url=fi_data['urlHomeApp'],
+                finicity_id=finicity_id,
+            )
 
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 

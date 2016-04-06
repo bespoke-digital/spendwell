@@ -9,12 +9,21 @@
   {% for institution in institutions %}
     <div class="card">
       <pre>{{ institution.raw }}</pre>
+
       <form method="POST">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{ institution.id }}"/>
-        <button type="submit" class="mui-btn mui-btn--primary">
-          Add to whitelist
-        </button>
+        {% if institution.in_whitelist %}
+          <input type="hidden" name="action" value="remove"/>
+          <button type="submit" class="mui-btn mui-btn--danger">
+            Remove from whitelist
+          </button>
+        {% else %}
+          <input type="hidden" name="action" value="add"/>
+          <button type="submit" class="mui-btn mui-btn--primary">
+            Add to whitelist
+          </button>
+        {% endif %}
       </form>
     </div>
   {% endfor %}
