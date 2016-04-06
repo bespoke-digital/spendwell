@@ -26,6 +26,8 @@ class FinicityAccountDialog extends Component {
   setCredentialValue(name, id, value) {
     const { credentials } = this.state;
 
+    console.log('setCredentialValue', name, id, value);
+
     this.setState({
       credentials: Object.assign({}, credentials, { [id]: { value, name } }),
     });

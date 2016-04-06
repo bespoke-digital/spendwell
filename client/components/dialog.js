@@ -25,9 +25,7 @@ export default class Dialog extends Component {
 
     return (
       <SubtreeContainer>
-        <Card className={`${style.root} ${size} ${className}`}>
-          {children}
-        </Card>
+        <Card className={`${style.root} ${size} ${className}`}>{children}</Card>
         <div className='overlay' onClick={onRequestClose}/>
       </SubtreeContainer>
     );

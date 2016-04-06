@@ -3,6 +3,12 @@ import { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 
+// Here Be Dragons
+// Had to use a "secret" feature of ReactDOM to render outside the main
+// react tree without breaking context, which would break relay.
+const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer;
+
+
 export default class SubtreeContainer extends Component {
   componentDidMount() {
     this.node = document.body.appendChild(document.createElement('div'));
@@ -19,13 +25,15 @@ export default class SubtreeContainer extends Component {
   }
 
   insert() {
-    // Here Be Dragons
-    // Had to use a "secret" feature of ReactDOM to render outside the main
-    // react tree without breaking all the things.
-    ReactDOM.unstable_renderSubtreeIntoContainer(this, this.props.children, this.node);
+    setTimeout(()=> renderSubtreeIntoContainer(this, this.subtreeRender(), this.node), 0);
+  }
+
+  subtreeRender() {
+    const { children } = this.props;
+    return <span>{children}</span>;
   }
 
   render() {
-    return <span>{this.props.children}</span>;
+    return <span/>;
   }
 }

@@ -42,7 +42,8 @@ class FinicityInstitutionNode(DjangoNode):
         ]
 
     def resolve_image(self, args, info):
-        return self.instance.image.url
+        if self.instance.image:
+            return self.instance.image.url
 
 
 class FinicityQuery(graphene.ObjectType):
