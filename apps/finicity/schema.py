@@ -3,6 +3,7 @@ import graphene
 from graphene.utils import to_snake_case
 from graphene.contrib.django.types import DjangoNode
 from graphene.contrib.django.fields import DjangoConnectionField
+from django.conf import settings
 
 from .client import Finicity
 from .models import FinicityInstitution
@@ -28,6 +29,7 @@ class FinicityLoginField(graphene.ObjectType):
 
 class FinicityInstitutionNode(DjangoNode):
     login_form = graphene.List(FinicityLoginField)
+    image = graphene.String()
 
     class Meta:
         model = FinicityInstitution
@@ -39,6 +41,9 @@ class FinicityInstitutionNode(DjangoNode):
             FinicityLoginField(finicity=self, **field)
             for field in finicity_client.get_login_form(self.finicity_id)
         ]
+
+    def resolve_image(self, args, info):
+        return self.instance.image.url
 
 
 class FinicityQuery(graphene.ObjectType):

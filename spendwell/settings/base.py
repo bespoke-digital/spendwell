@@ -121,6 +121,9 @@ USE_I18N = False
 USE_L10N = False
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
+
 STATIC_URL = '/static/'
 STATIC_ROOT = 'collected_static'
 STATICFILES_DIRS = (

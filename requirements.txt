@@ -16,3 +16,4 @@ django-extensions==1.6.1
 graphql-django-view==1.1.0
 requests==2.7.0
 xmltodict==0.10.1
+Pillow==3.2.0

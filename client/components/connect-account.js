@@ -104,8 +104,10 @@ class ConnectAccount extends Component {
           <Card
             key={node.id}
             className='fi'
+            className={`fi ${node.image ? 'has-logo' : ''}`}
             onClick={()=> relay.setVariables({ selectedFinicityId: node.id })}
           >
+            {node.image ? <img src={node.image} alt={node.name}/> : null}
             <div className='fi-name'><strong>{node.name}</strong></div>
             <div className='fi-domain'>{parseUrl(node.url).hostname}</div>
           </Card>
@@ -158,6 +160,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
               id
               name
               url
+              image
             }
           }
         }
