@@ -1,0 +1,130 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  padding: 0;
+  width: 500px;
+
+  border: none;
+  text-align: center;
+  color: white;
+
+  .image {
+    padding: 40px 40px 0;
+
+    img {
+      height: 200px;
+    }
+  }
+
+  .copy {
+    padding: 40px;
+
+    p {
+      max-width: 340px;
+      margin: auto;
+    }
+  }
+
+  .control-prev {
+    position: absolute;
+
+    @media (min-width: $screen-sm-min) {
+      left: -75px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .control-next {
+    position: absolute;
+
+    @media (min-width: $screen-sm-min) {
+      right: -75px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  &.scheme-pink {
+    .image {
+      background-color: #F48FB1;
+    }
+    .copy {
+      background-color: #AD1457;
+    }
+  }
+
+  &.scheme-cyan {
+    .image {
+      background-color: #26C6DA;
+    }
+    .copy {
+      background-color: #00838F;
+    }
+  }
+
+  &.scheme-orange {
+    .image {
+      background-color: #FF7043;
+    }
+    .copy {
+      background-color: #D84315;
+    }
+  }
+
+  &.scheme-blue {
+    .image {
+      background-color: #81D4FA;
+    }
+    .copy {
+      background-color: #0277BD;
+    }
+  }
+
+  &.scheme-yellow {
+    .image {
+      background-color: #FFF59D;
+    }
+    .copy {
+      background-color: #F9A825;
+    }
+  }
+
+  &.scheme-green {
+    .image {
+      background-color: #4CAF50;
+    }
+    .copy {
+      background-color: darken($brand-primary, 5%);
+    }
+  }
+
+  &.scheme-red {
+    .image {
+      background-color: #EF9A9A;
+    }
+    .copy {
+      background-color: #C62828;
+    }
+  }
+
+  &.scheme-purple {
+    .image {
+      background-color: #7E57C2;
+    }
+    .copy {
+      background-color: #4527A0;
+    }
+  }
+
+  &.scheme-dark-blue {
+    .image {
+      background-color: lighten(#2c3e50, 20%);
+    }
+    .copy {
+      background-color: #2c3e50;
+    }
+  }
+}

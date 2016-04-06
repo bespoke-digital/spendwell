@@ -9,14 +9,22 @@ import Onboarding from 'components/onboarding';
 import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
+import GraphicCard from 'components/graphic-card';
+import Icon from 'components/icon';
+import Transition from 'components/transition';
 
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
-import bankImage from 'img/views/onboarding/bank.svg';
+import connectImage from 'img/views/onboarding/connect.svg';
 import styles from 'sass/views/accounts';
 
 
 class OnboardingAccounts extends Component {
+  constructor() {
+    super();
+    this.state = { help: true };
+  }
+
   continue() {
     browserHistory.push('/onboarding/walkthrough');
   }
@@ -41,22 +49,32 @@ class OnboardingAccounts extends Component {
 
   render() {
     const { viewer } = this.props;
+    const { help } = this.state;
 
     return (
       <Onboarding viewer={viewer}>
+
+        <Transition show={help}>
+          <GraphicCard
+            scheme='pink'
+            image={connectImage}
+            header='Your Bank Has Been Succesfully Connected'
+            paragraph={`
+              Below you can disable accounts, add another account, or continue.
+            `}
+            next={
+              <Button fab onClick={()=> this.setState({ help: false })}>
+                <Icon type='check'/>
+              </Button>
+            }
+            onRequestClose={()=> this.setState({ help: false })}
+          />
+        </Transition>
+
         <div className={`container skinny ${styles.root}`}>
           <div className='heading'>
             <h1>Bank Accounts</h1>
           </div>
-
-          <CardList>
-            <Card className='help'>
-              <img src={bankImage}/>
-              <h3>Your Bank Has Been Succesfully Connected</h3>
-              <p>Below you can disable accounts, add another account, or continue.</p>
-              <div className='clearfix'/>
-            </Card>
-          </CardList>
 
           {viewer.institutions.edges.map(({ node }, index)=>
             <CardList className='institution' key={index}>

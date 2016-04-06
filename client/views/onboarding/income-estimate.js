@@ -9,17 +9,20 @@ import Onboarding from 'components/onboarding';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import MoneyInput from 'components/money-input';
+import GraphicCard from 'components/graphic-card';
+import Icon from 'components/icon';
+import Transition from 'components/transition';
 
 import { SetIncomeEstimateMutation } from 'mutations/users';
 
-import dollarImage from 'img/views/onboarding/dollar.svg';
+import incomeImage from 'img/views/onboarding/income.svg';
 import styles from 'sass/views/accounts';
 
 
 class OnboardingIncomeEstimate extends Component {
   constructor() {
     super();
-    this.state = { loading: false };
+    this.state = { loading: false, help: true };
   }
 
   handleSubmit() {
@@ -43,22 +46,34 @@ class OnboardingIncomeEstimate extends Component {
 
   render() {
     const { viewer } = this.props;
+    const { help } = this.state;
 
     return (
       <Onboarding viewer={viewer}>
+
+        <Transition show={help}>
+          <GraphicCard
+            scheme='green'
+            image={incomeImage}
+            header={'We\'ve Estimated Your Income'}
+            paragraph={`
+              Take a quick look and fix it if we got it wrong. We use it to
+              figure out your safe to spend number before
+              you get paid for the month.
+            `}
+            next={
+              <Button fab onClick={()=> this.setState({ help: false })}>
+                <Icon type='check'/>
+              </Button>
+            }
+            onRequestClose={()=> this.setState({ help: false })}
+          />
+        </Transition>
+
         <div className={`container skinny ${styles.root}`}>
-          <CardList>
-            <Card className='help'>
-              <img src={dollarImage}/>
-              <h3>We've Estimated Your Income</h3>
-              <p>
-                Take a quick look and fix it if we got it wrong. We use it to
-                figure out your <strong>safe to spend</strong> number before
-                you get paid for the month.
-              </p>
-              <div className='clearfix'/>
-            </Card>
-          </CardList>
+          <div className='heading'>
+            <h1>Income Estimate</h1>
+          </div>
 
           <CardList>
             <Card>

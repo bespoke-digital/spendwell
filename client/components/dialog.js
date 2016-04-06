@@ -9,7 +9,7 @@ import style from 'sass/components/dialog';
 
 export default class Dialog extends Component {
   static propTypes = {
-    onRequestClose: PropTypes.func.isRequired,
+    onRequestClose: PropTypes.func,
     size: PropTypes.oneOf(['sm', 'md', 'lg']),
     className: PropTypes.string,
   };
@@ -18,6 +18,7 @@ export default class Dialog extends Component {
     visible: false,
     size: 'md',
     className: '',
+    onRequestClose() {},
   };
 
   render() {
@@ -25,7 +26,7 @@ export default class Dialog extends Component {
 
     return (
       <SubtreeContainer>
-        <Card className={`${style.root} ${size} ${className}`}>{children}</Card>
+        <Card className={`${style.root} ${size ? size : ''} ${className}`}>{children}</Card>
         <div className='overlay' onClick={onRequestClose}/>
       </SubtreeContainer>
     );

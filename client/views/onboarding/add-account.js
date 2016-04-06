@@ -6,11 +6,12 @@ import Col from 'muicss/lib/react/col';
 
 import ConnectAccount from 'components/connect-account';
 import Onboarding from 'components/onboarding';
-import Card from 'components/card';
-import CardList from 'components/card-list';
 import Button from 'components/button';
+import GraphicCard from 'components/graphic-card';
+import Icon from 'components/icon';
+import Transition from 'components/transition';
 
-import bankImage from 'img/views/onboarding/bank.svg';
+import welcomeImage from 'img/views/onboarding/welcome.svg';
 import securityImage from 'img/views/onboarding/security.svg';
 import anonymityImage from 'img/views/onboarding/anonymity.svg';
 import privacyImage from 'img/views/onboarding/privacy.svg';
@@ -20,23 +21,38 @@ import style from 'sass/views/onboarding/add-account.scss';
 
 
 class AddAccountView extends Component {
+  constructor() {
+    super();
+    this.state = { help: true };
+  }
+
   render() {
     const { viewer } = this.props;
+    const { help } = this.state;
+    const hasInstitutions = !!viewer.institutions.edges.length;
 
     return (
       <Onboarding viewer={viewer}>
+
+        <Transition show={!!(help && !hasInstitutions)}>
+          <GraphicCard
+            scheme='green'
+            image={welcomeImage}
+            header='Welcome To Spendwell'
+            paragraph={`
+              Get started by connecting your bank accounts. It's important
+              that you connect all accounts where money comes in or is spent.
+            `}
+            next={
+              <Button fab onClick={()=> this.setState({ help: false })}>
+                <Icon type='check'/>
+              </Button>
+            }
+            onRequestClose={()=> this.setState({ help: false })}
+          />
+        </Transition>
+
         <div className={`container skinny ${style.root}`}>
-          <CardList>
-            <Card className='help'>
-              <img src={bankImage}/>
-              <h3>Welcome To Spendwell</h3>
-              <p>
-                Get started by connecting your bank accounts. It's important that
-                you connect all accounts where money comes in or is spent.
-              </p>
-              <div className='clearfix'/>
-            </Card>
-          </CardList>
           <Row>
             <Col md='8' className={`connect ${connectStyles.root}`}>
               <div className='heading'>
@@ -47,7 +63,7 @@ class AddAccountView extends Component {
 
               <div className='flex-row'>
                 <div/>
-                {viewer.institutions.edges.length ?
+                {hasInstitutions ?
                   <Button to='/onboarding/accounts' variant='primary'>Skip</Button>
                 : null}
               </div>
