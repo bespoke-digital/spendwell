@@ -114,7 +114,8 @@ export class TransactionQuickAddMutation extends Relay.Mutation {
   getVariables() {
     return {
       transactionId: this.props.transaction.id,
-      bucketId: this.props.bucket.id,
+      bucketId: this.props.bucket ? this.props.bucket.id : null,
+      bucketName: this.props.bucketName,
     };
   }
 

@@ -32,14 +32,6 @@ class Nav extends Component {
               Dashboard
             </Link>
           </li>
-          {/*
-          <li className={isActive('/app/transactions') ? 'active' : ''}>
-            <Link onClick={toggleNav} to='/app/transactions'>
-              <i className='fa fa-fw fa-list'/>
-              Transactions
-            </Link>
-          </li>
-          */}
           <li className={isActive('/app/accounts') ? 'active' : ''}>
             <Link onClick={toggleNav} to='/app/accounts'>
               <i className='fa fa-fw fa-university'/>

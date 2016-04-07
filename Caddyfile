@@ -8,7 +8,3 @@ proxy / localhost:3000 {
     websocket
     except /media
 }
-
-
-startup node ./webpack/dev.server.js &
-startup ./manage.py runserver &

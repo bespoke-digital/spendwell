@@ -4,6 +4,7 @@ from graphene.relay import ClientIDMutation
 
 from apps.core.types import Month, Money
 from apps.core.utils import instance_for_node_id
+from apps.buckets.models import Bucket
 
 from .models import Transaction, IncomeFromSavings
 
@@ -47,6 +48,7 @@ class TransactionQuickAddMutation(ClientIDMutation):
     class Input:
         transaction_id = graphene.InputField(graphene.ID())
         bucket_id = graphene.InputField(graphene.ID())
+        bucket_name = graphene.InputField(graphene.String())
 
     viewer = graphene.Field('Viewer')
     transaction = graphene.Field('TransactionNode')
@@ -57,10 +59,19 @@ class TransactionQuickAddMutation(ClientIDMutation):
         from spendwell.schema import Viewer
 
         transaction = instance_for_node_id(input.get('transaction_id'), info)
-        bucket = instance_for_node_id(input.get('bucket_id'), info)
+        filter = {'description_exact': transaction.description}
 
-        bucket.filters.append({'description_exact': transaction.description})
-        bucket.save()
+        if input.get('bucket_id'):
+            bucket = instance_for_node_id(input['bucket_id'], info)
+            bucket.filters.append(filter)
+            bucket.save()
+
+        elif input.get('bucket_name'):
+            bucket = Bucket.objects.create(
+                owner=info.request_context.user,
+                name=input['bucket_name'],
+                filters=[filter],
+            )
 
         return Cls(viewer=Viewer(), bucket=bucket, transaction=transaction)
 

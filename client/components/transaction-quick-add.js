@@ -18,11 +18,10 @@ class TransactionQuickAdd extends Component {
     this.state = { loading: false };
   }
 
-  addToBucket(bucket) {
-    const { relay, viewer, transaction } = this.props;
+  getResponseHandler(clbk) {
+    const { relay } = this.props;
 
-    this.setState({ loading: true });
-    Relay.Store.commitUpdate(new TransactionQuickAddMutation({ viewer, transaction, bucket }), {
+    return {
       onFailure: ()=> {
         console.log('Failure: TransactionQuickAddMutation');
         this.setState({ loading: false });
@@ -31,8 +30,33 @@ class TransactionQuickAdd extends Component {
         console.log('Success: TransactionQuickAddMutation');
         this.setState({ loading: false, searchValue: '' });
         relay.setVariables({ searchValue: '' });
+        if (clbk) clbk();
       },
-    });
+    };
+  }
+
+  createBucket() {
+    const { viewer, transaction } = this.props;
+    const { searchValue } = this.state;
+
+    this.setState({ loading: true });
+    Relay.Store.commitUpdate(new TransactionQuickAddMutation({
+      viewer,
+      transaction,
+      bucket: null,
+      bucketName: searchValue,
+    }), this.getResponseHandler());
+  }
+
+  addToBucket(bucket) {
+    const { viewer, transaction } = this.props;
+
+    this.setState({ loading: true });
+    Relay.Store.commitUpdate(new TransactionQuickAddMutation({
+      viewer,
+      transaction,
+      bucket,
+    }), this.getResponseHandler());
   }
 
   handleSearchChange(searchValue) {
@@ -65,7 +89,9 @@ class TransactionQuickAdd extends Component {
                 </A>
               )
             ) :
-              <span>None Found</span>
+              <A onClick={::this.createBucket}>
+                Create "{searchValue}" label
+              </A>
             }
           </Card>
         </Transition>
