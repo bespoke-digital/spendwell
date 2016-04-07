@@ -1,6 +1,6 @@
 
 from .base import *
-from .secrets import db_password, plaid_secret
+from .secrets import db_password, plaid_secret, finicity_secret
 
 
 ALLOWED_HOSTS = ['*']
