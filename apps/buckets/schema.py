@@ -10,6 +10,7 @@ from apps.transactions.filters import TransactionFilter
 from apps.transactions.fields import TransactionConnectionField
 
 from .models import Bucket, BucketMonth
+from .filters import BucketFilter
 
 
 class BucketNode(SWNode):
@@ -26,10 +27,6 @@ class BucketNode(SWNode):
             'filters',
             'type',
         )
-        filter_fields = {
-            'type': ['exact'],
-            'name': ['exact', 'icontains'],
-        }
 
     def resolve_transactions(self, args, info):
         return self.instance.transactions()
@@ -65,7 +62,7 @@ class BucketMonthNode(SWNode):
 
 class BucketsQuery(graphene.ObjectType):
     bucket = graphene.relay.NodeField(BucketNode)
-    buckets = SWFilterConnectionField(BucketNode)
+    buckets = SWFilterConnectionField(BucketNode, filterset_class=BucketFilter)
 
     bucket_month = graphene.relay.NodeField(BucketMonthNode)
     bucket_months = SWConnectionField(BucketMonthNode)
