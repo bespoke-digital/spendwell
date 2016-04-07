@@ -63,7 +63,7 @@ class TransactionQuickAddMutation(ClientIDMutation):
 
         if input.get('bucket_id'):
             bucket = instance_for_node_id(input['bucket_id'], info)
-            bucket.filters.append(filter)
+            bucket.filters = list(set(bucket.filters + [filter]))
             bucket.save()
 
         elif input.get('bucket_name'):
