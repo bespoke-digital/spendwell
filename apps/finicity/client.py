@@ -58,7 +58,12 @@ class Finicity(object):
     def __init__(self, user):
         self.user = user
 
-    def authenticate(self):
+    def authenticate(self, force=False):
+        self.access_token = cache.get('finicity-access-token')
+
+        if self.access_token and not force:
+            return
+
         response = requests.post(
             '{}/v2/partners/authentication'.format(FINICITY_URL),
             headers={
@@ -78,9 +83,11 @@ class Finicity(object):
 
         self.access_token = self.parse(response)['access']['token']
 
-    def request(self, path, method='GET', headers=None, **kwargs):
-        if not hasattr(self, 'access_token'):
-            self.authenticate()
+        cache.set('finicity-access-token', self.access_token, 3600)
+
+    def request(self, path, method='GET', headers=None, force_auth=False, **kwargs):
+        if force_auth or not hasattr(self, 'access_token'):
+            self.authenticate(force=force_auth)
 
         headers = headers or {}
         headers['Content-Type'] = 'application/xml'
@@ -99,6 +106,10 @@ class Finicity(object):
             raise FinicityMFAException(self.user, response, data)
 
         if 'error' in data:
+            if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
+                print('force auth')
+                return self.request(path, method, headers, force_auth=True, **kwargs)
+
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
 
         return data
