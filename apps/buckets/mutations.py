@@ -68,6 +68,7 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
     class Input:
         bucket_id = graphene.ID()
         name = graphene.String()
+        type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'UpdateBucketFilterSet')
 
     viewer = graphene.Field('Viewer')
@@ -81,6 +82,9 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
 
         if 'name' in input and input['name']:
             bucket.name = input['name']
+
+        if 'type' in input and input['type']:
+            bucket.type = input['type']
 
         if 'filters' in input and input['filters']:
             bucket.filters = clean_filters(input['filters'])

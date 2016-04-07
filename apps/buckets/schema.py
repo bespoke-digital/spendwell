@@ -15,6 +15,7 @@ from .models import Bucket, BucketMonth
 class BucketNode(SWNode):
     transactions = TransactionConnectionField(TransactionNode)
     filters = filter_list_schema(TransactionFilter, name='BucketFilters', input=False)
+    type = graphene.Field(graphene.String())
 
     class Meta:
         model = Bucket

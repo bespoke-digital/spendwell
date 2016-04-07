@@ -27,18 +27,23 @@ class BucketForm extends Component {
     initialType: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
-  constructor({ initialType }) {
+  static defaultProps = {
+    initialType: 'expense',
+  };
+
+  constructor({ initialType, bucket }) {
     super();
-    this.state = { filters: [], name: '', type: initialType };
+    this.state = {
+      filters: bucket ? cleanFilters(bucket.filters) : [],
+      name: bucket ? bucket.name : '',
+      type: bucket ? bucket.type : initialType,
+    };
   }
 
   componentWillMount() {
-    if (this.props.bucket) {
-      const { name, filters } = this.props.bucket;
-
-      this.setState({ name, filters: cleanFilters(filters) });
-      this.props.relay.setVariables({ filters: cleanFilters(filters) });
-    }
+    const { bucket } = this.props;
+    if (bucket)
+      this.props.relay.setVariables({ filters: cleanFilters(bucket.filters) });
   }
 
   handleSubmit() {
@@ -149,6 +154,8 @@ BucketForm = Relay.createContainer(BucketForm, {
     bucket: ()=> Relay.QL`
       fragment on BucketNode {
         name
+        type
+
         filters {
           amountGt
           amountLt

@@ -43,13 +43,14 @@ class UpdateBucket extends Component {
     });
   }
 
-  updateBucket({ filters, name }) {
+  updateBucket({ filters, name, type }) {
     const { viewer } = this.props;
 
     const args = {
       viewer,
       bucket: viewer.bucket,
       name,
+      type,
       filters,
     };
 
