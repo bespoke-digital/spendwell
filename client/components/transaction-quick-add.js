@@ -134,7 +134,7 @@ TransactionQuickAdd = Relay.createContainer(TransactionQuickAdd, {
       fragment on Viewer {
         ${TransactionQuickAddMutation.getFragment('viewer')}
 
-        buckets(first: 10, name_Icontains: $searchValue) @include(if: $search) {
+        buckets(first: 10, nameContains: $searchValue) @include(if: $search) {
           edges {
             node {
               ${TransactionQuickAddMutation.getFragment('bucket')}
