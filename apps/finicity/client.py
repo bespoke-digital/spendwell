@@ -60,14 +60,10 @@ class Finicity(object):
         self.user = user
 
     def authenticate(self, force=False):
-        print('authenticate', file=sys.stderr)
-
         self.access_token = cache.get('finicity-access-token')
 
         if self.access_token and not force:
             return
-
-        print('authenticate request', file=sys.stderr)
 
         response = requests.post(
             '{}/v2/partners/authentication'.format(FINICITY_URL),
@@ -86,15 +82,8 @@ class Finicity(object):
             ),
         )
 
-        print('authenticate response', response, file=sys.stderr)
-
         data = self.parse(response)
-
-        print('authenticate data', data, file=sys.stderr)
-
         self.access_token = data['access']['token']
-
-        print('authenticate token', self.access_token, file=sys.stderr)
 
         cache.set('finicity-access-token', self.access_token, 7200)
 
