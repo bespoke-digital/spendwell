@@ -106,6 +106,7 @@ def get_beta_code():
 class BetaCode(models.Model):
     key = models.CharField(max_length=255, default=get_beta_code)
     used_by = models.OneToOneField(User, blank=True, null=True)
+    intended_for = models.CharField(max_length=255, blank=True, default='')
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
