@@ -1,5 +1,4 @@
 
-import sys
 import time
 import json
 import logging
@@ -83,6 +82,10 @@ class Finicity(object):
         )
 
         data = self.parse(response)
+
+        if 'error' in data:
+            raise FinicityError('Finicity: {}'.format(data['error']['message']))
+
         self.access_token = data['access']['token']
 
         cache.set('finicity-access-token', self.access_token, 7200)
