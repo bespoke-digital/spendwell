@@ -57,22 +57,26 @@ class TransactionQuickAdd extends Component {
         console.log('Success: TransactionQuickAddMutation');
         this.setState({ loading: false });
 
-        const { transaction } = this.props;
+        // Need to clear the stack to props.transaction gets updates
+        // from mutation response
+        setTimeout(()=> {
+          const { transaction } = this.props;
 
-        if (!transaction.buckets) {
-          console.warn('No transaction buckets after quick-add', response, transaction);
-          return;
-        }
+          if (!transaction.buckets) {
+            console.warn('No transaction buckets after quick-add', response, transaction);
+            return;
+          }
 
-        const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
-        const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
+          const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
+          const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
 
-        if (!newBucketId) {
-          console.warn('New bucket not found after quick-add', response, transaction);
-          return;
-        }
+          if (!newBucketId) {
+            console.warn('New bucket not found after quick-add', response, transaction);
+            return;
+          }
 
-        browserHistory.push(`/app/labels/${newBucketId}/edit`);
+          browserHistory.push(`/app/labels/${newBucketId}/edit`);
+        }, 0);
       },
     });
   }
@@ -128,11 +132,10 @@ class TransactionQuickAdd extends Component {
                   {node.name}
                 </A>
               )
-            ) :
-              <A onClick={::this.createBucket}>
-                Create "{searchValue}" label
-              </A>
-            }
+            ) : null}
+            <A onClick={::this.createBucket}>
+              Create "{searchValue}" label
+            </A>
           </Card>
         </Transition>
       </div>
