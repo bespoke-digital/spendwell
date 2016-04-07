@@ -65,7 +65,10 @@ class TransactionManager(SWManager):
         transaction.owner = institution.owner
 
         if data.get('category_id'):
-            transaction.category = Category.objects.get(plaid_id=data['category_id'])
+            try:
+                transaction.category = Category.objects.get(plaid_id=data['category_id'])
+            except Category.DoesNotExist:
+                pass
 
         transaction.description = data['name']
         transaction.amount = -Decimal(data['amount'])
@@ -78,6 +81,7 @@ class TransactionManager(SWManager):
         transaction.location['score'] = data.get('score')
 
         transaction.save()
+
         return transaction
 
     def from_finicity(self, institution, data):
