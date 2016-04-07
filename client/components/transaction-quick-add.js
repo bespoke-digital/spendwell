@@ -48,35 +48,55 @@ class TransactionQuickAdd extends Component {
       transaction,
       bucket: null,
       bucketName: searchValue,
-    }), this.getResponseHandler((response)=> {
-      const { transaction } = this.props;
+    }), {
+      onFailure: ()=> {
+        console.log('Failure: TransactionQuickAddMutation');
+        this.setState({ loading: false });
+      },
+      onSuccess: (response)=> {
+        console.log('Success: TransactionQuickAddMutation');
+        this.setState({ loading: false });
 
-      if (!transaction.buckets) {
-        console.warn('No transaction buckets after quick-add', response, transaction);
-        return;
-      }
+        const { transaction } = this.props;
 
-      const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
-      const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
+        if (!transaction.buckets) {
+          console.warn('No transaction buckets after quick-add', response, transaction);
+          return;
+        }
 
-      if (!newBucketId) {
-        console.warn('New bucket not found after quick-add', response, transaction);
-        return;
-      }
+        const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
+        const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
 
-      browserHistory.push(`/app/labels/${newBucketId}/edit`);
-    }));
+        if (!newBucketId) {
+          console.warn('New bucket not found after quick-add', response, transaction);
+          return;
+        }
+
+        browserHistory.push(`/app/labels/${newBucketId}/edit`);
+      },
+    });
   }
 
   addToBucket(bucket) {
-    const { viewer, transaction } = this.props;
+    const { relay, viewer, transaction } = this.props;
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new TransactionQuickAddMutation({
       viewer,
       transaction,
       bucket,
-    }), this.getResponseHandler());
+    }), {
+      onFailure: ()=> {
+        console.log('Failure: TransactionQuickAddMutation');
+        this.setState({ loading: false });
+      },
+      onSuccess: ()=> {
+        console.log('Success: TransactionQuickAddMutation');
+
+        this.setState({ loading: false, searchValue: '' });
+        relay.setVariables({ searchValue: '' });
+      },
+    });
   }
 
   handleSearchChange(searchValue) {
