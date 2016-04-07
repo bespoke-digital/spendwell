@@ -54,14 +54,11 @@ class Bucket(SWModel):
 def bucket_post_save(sender, instance, created, raw, **kwargs):
     if created and not raw:
         month_start = this_month()
-        BucketMonth.objects.create(bucket=instance, month_start=month_start)
+        instance.generate_month(month_start)
 
         if months_ago(instance.owner.created) == 0:
             for i in range(months_ago(instance.owner.first_data_month())):
-                BucketMonth.objects.create(
-                    bucket=instance,
-                    month_start=month_start - relativedelta(months=i + 1),
-                )
+                instance.generate_month(month_start - relativedelta(months=i + 1))
 
     elif not raw:
         BucketTransaction.objects.filter(bucket_month__bucket=instance).delete()

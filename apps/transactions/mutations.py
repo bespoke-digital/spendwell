@@ -1,9 +1,11 @@
 
+from dateutil.relativedelta import relativedelta
+
 import graphene
 from graphene.relay import ClientIDMutation
 
 from apps.core.types import Month, Money
-from apps.core.utils import instance_for_node_id, unique
+from apps.core.utils import instance_for_node_id, unique, months_ago, this_month
 from apps.buckets.models import Bucket
 
 from .models import Transaction, IncomeFromSavings
@@ -72,6 +74,13 @@ class TransactionQuickAddMutation(ClientIDMutation):
                 name=input['bucket_name'],
                 filters=[filter],
             )
+
+        transaction_months_ago = months_ago(transaction.date)
+        if transaction_months_ago > 0:
+            now = this_month()
+
+            for i in range(transaction_months_ago):
+                bucket.generate_month(now - relativedelta(months=i + 1))
 
         return Cls(viewer=Viewer(), bucket=bucket, transaction=transaction)
 
