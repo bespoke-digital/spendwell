@@ -54,13 +54,14 @@ class OnboardingAccounts extends Component {
     return (
       <Onboarding viewer={viewer}>
 
-        <Transition show={help}>
+        <Transition show={help && viewer.institutions.edges.length < 2}>
           <GraphicCard
             scheme='pink'
             image={connectImage}
-            header='Your Bank Has Been Succesfully Connected'
+            header={<span>Your Bank Has Been <br className='visible-xs'/>Succesfully Connected</span>}
             paragraph={`
-              Below you can disable accounts, add another account, or continue.
+              If you have any other bank accounts, make sure to add them before
+              continuing. You can also disable any unwanted accounts (eg. business).
             `}
             next={
               <Button fab onClick={()=> this.setState({ help: false })}>

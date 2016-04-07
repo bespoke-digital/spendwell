@@ -32,7 +32,7 @@ const STEPS = [
     image: pyfImage,
     header: 'Pay Yourself First',
     paragraph: `
-      This means taking your goals for saving and investing money off the
+      This means taking money for your savings goals off the
       top, before anything else. Our goals feature can help.
     `,
   },
@@ -119,7 +119,7 @@ class OnboardingWalkthrough extends Component {
               <Icon type='arrow-right'/>
             </Button>
           :
-            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
+            <Button fab flat onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
               <Icon type='arrow-right'/>
             </Button>
           }
