@@ -3,7 +3,7 @@ import graphene
 from graphene.relay import ClientIDMutation
 
 from apps.core.types import Month, Money
-from apps.core.utils import instance_for_node_id
+from apps.core.utils import instance_for_node_id, unique
 from apps.buckets.models import Bucket
 
 from .models import Transaction, IncomeFromSavings
@@ -63,7 +63,7 @@ class TransactionQuickAddMutation(ClientIDMutation):
 
         if input.get('bucket_id'):
             bucket = instance_for_node_id(input['bucket_id'], info)
-            bucket.filters = list(set(bucket.filters + [filter]))
+            bucket.filters = unique(bucket.filters + [filter])
             bucket.save()
 
         elif input.get('bucket_name'):
