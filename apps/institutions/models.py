@@ -29,6 +29,7 @@ class InstitutionManager(SWManager):
         )
         institution.access_token = access_token
         institution.save()
+        return institution
 
     def from_finicity(self, owner, data):
         institution, created = Institution.objects.get_or_create(
