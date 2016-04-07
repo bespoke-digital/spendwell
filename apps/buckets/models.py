@@ -56,9 +56,8 @@ def bucket_post_save(sender, instance, created, raw, **kwargs):
         month_start = this_month()
         instance.generate_month(month_start)
 
-        if months_ago(instance.owner.created) == 0:
-            for i in range(months_ago(instance.owner.first_data_month())):
-                instance.generate_month(month_start - relativedelta(months=i + 1))
+        for i in range(months_ago(instance.owner.first_data_month())):
+            instance.generate_month(month_start - relativedelta(months=i + 1))
 
     elif not raw:
         BucketTransaction.objects.filter(bucket_month__bucket=instance).delete()

@@ -75,13 +75,6 @@ class TransactionQuickAddMutation(ClientIDMutation):
                 filters=[filter],
             )
 
-        transaction_months_ago = months_ago(transaction.date)
-        if transaction_months_ago > 0:
-            now = this_month()
-
-            for i in range(transaction_months_ago):
-                bucket.generate_month(now - relativedelta(months=i + 1))
-
         return Cls(viewer=Viewer(), bucket=bucket, transaction=transaction)
 
 
