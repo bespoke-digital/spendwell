@@ -1,4 +1,5 @@
 
+import sys
 import time
 import json
 import logging
@@ -81,7 +82,9 @@ class Finicity(object):
             ),
         )
 
-        self.access_token = self.parse(response)['access']['token']
+        data = self.parse(response)
+        print(data, file=sys.stderr)
+        self.access_token = data['access']['token']
 
         cache.set('finicity-access-token', self.access_token, 7200)
 
