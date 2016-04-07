@@ -83,7 +83,7 @@ class Finicity(object):
 
         self.access_token = self.parse(response)['access']['token']
 
-        cache.set('finicity-access-token', self.access_token, 3600)
+        cache.set('finicity-access-token', self.access_token, 7200)
 
     def request(self, path, method='GET', headers=None, force_auth=False, **kwargs):
         if force_auth or not hasattr(self, 'access_token'):
