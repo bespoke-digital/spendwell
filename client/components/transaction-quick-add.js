@@ -1,6 +1,7 @@
 
 import { Component } from 'react';
 import Relay from 'react-relay';
+import { browserHistory } from 'react-router';
 
 import Card from 'components/card';
 import A from 'components/a';
@@ -26,11 +27,13 @@ class TransactionQuickAdd extends Component {
         console.log('Failure: TransactionQuickAddMutation');
         this.setState({ loading: false });
       },
-      onSuccess: ()=> {
+      onSuccess: (response)=> {
         console.log('Success: TransactionQuickAddMutation');
+
         this.setState({ loading: false, searchValue: '' });
         relay.setVariables({ searchValue: '' });
-        if (clbk) clbk();
+
+        if (clbk) setTimeout(clbk.bind(this, response), 0);
       },
     };
   }
@@ -45,7 +48,24 @@ class TransactionQuickAdd extends Component {
       transaction,
       bucket: null,
       bucketName: searchValue,
-    }), this.getResponseHandler());
+    }), this.getResponseHandler((response)=> {
+      const { transaction } = this.props;
+
+      if (!transaction.buckets) {
+        console.warn('No transaction buckets after quick-add', response, transaction);
+        return;
+      }
+
+      const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
+      const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
+
+      if (!newBucketId) {
+        console.warn('New bucket not found after quick-add', response, transaction);
+        return;
+      }
+
+      browserHistory.push(`/app/labels/${newBucketId}/edit`);
+    }));
   }
 
   addToBucket(bucket) {
@@ -131,6 +151,15 @@ TransactionQuickAdd = Relay.createContainer(TransactionQuickAdd, {
         ${TransactionQuickAddMutation.getFragment('transaction')}
 
         id
+
+        buckets(first: 100) {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
       }
     `,
   },

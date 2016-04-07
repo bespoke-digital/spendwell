@@ -122,9 +122,6 @@ export class TransactionQuickAddMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on TransactionQuickAddMutation {
-        viewer {
-          safeToSpend
-        }
         transaction {
           buckets
         }
@@ -134,11 +131,6 @@ export class TransactionQuickAddMutation extends Relay.Mutation {
 
   getConfigs() {
     return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        viewer: this.props.viewer.id,
-      },
-    }, {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         transaction: this.props.transaction.id,
