@@ -35,6 +35,11 @@ class Summary(graphene.ObjectType):
     transactions = TransactionConnectionField(TransactionNode)
 
 
+class Settings(graphene.ObjectType):
+    timezone = graphene.Field(graphene.String())
+    dashboard_help = graphene.Field(graphene.Boolean())
+
+
 class UsersQuery(graphene.ObjectType):
     safe_to_spend = graphene.Field(Money())
     summary = graphene.Field(Summary, month=Month())
@@ -42,6 +47,8 @@ class UsersQuery(graphene.ObjectType):
     email = graphene.Field(graphene.String())
     is_admin = graphene.Field(graphene.Boolean())
     estimated_income = graphene.Field(Money())
+
+    settings = graphene.Field(Settings)
 
     class Meta:
         abstract = True
@@ -63,3 +70,6 @@ class UsersQuery(graphene.ObjectType):
 
     def resolve_estimated_income(self, args, info):
         return info.request_context.user.estimated_income
+
+    def resolve_settings(self, args, info):
+        return info.request_context.user

@@ -9,7 +9,7 @@ import Onboarding from 'components/onboarding';
 import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
-import GraphicCard from 'components/graphic-card';
+import GraphicDialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 import Transition from 'components/transition';
 
@@ -55,7 +55,7 @@ class OnboardingAccounts extends Component {
       <Onboarding viewer={viewer}>
 
         <Transition show={help && viewer.institutions.edges.length < 2}>
-          <GraphicCard
+          <GraphicDialog
             scheme='pink'
             image={connectImage}
             header={<span>Your Bank Has Been <br className='visible-xs'/>Succesfully Connected</span>}

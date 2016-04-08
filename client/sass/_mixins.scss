@@ -1,3 +1,5 @@
+
+
 // Placeholder text
 @mixin placeholder($color: $input-color-placeholder) {
   // Firefox
@@ -7,4 +9,16 @@
   }
   &:-ms-input-placeholder { color: $color; } // Internet Explorer 10+
   &::-webkit-input-placeholder  { color: $color; } // Safari and Chrome
+}
+
+
+@mixin clearfix() {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
 }

@@ -4,7 +4,7 @@ import Relay from 'react-relay';
 
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
-import GraphicCard from 'components/graphic-card';
+import Graphicdialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 
 import { SyncInstitutionsMutation } from 'mutations/institutions';
@@ -98,7 +98,7 @@ class OnboardingWalkthrough extends Component {
 
     return (
       <Onboarding viewer={viewer}>
-        <GraphicCard
+        <Graphicdialog
           scheme={step.scheme}
           gif={step.gif}
           image={step.image}

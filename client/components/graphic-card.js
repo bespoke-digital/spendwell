@@ -1,5 +1,7 @@
 
-import Dialog from 'components/dialog';
+import Card from 'components/card';
+import Icon from 'components/icon';
+import A from 'components/a';
 
 import styles from 'sass/components/graphic-card.scss';
 
@@ -8,37 +10,28 @@ export default (props)=> {
   const {
       scheme,
       image,
-      gif,
       header,
-      paragraph,
-      next,
-      prev,
-      onRequestClose,
+      paragraphs,
+      dismiss,
       ...childProps,
   } = props;
 
   return (
-    <Dialog
-      className={`${styles.root} scheme-${scheme}`}
-      onRequestClose={onRequestClose}
-      size={null}
-    >
+    <Card className={`${styles.root} scheme-${scheme}`}>
       <div className='image'>
         <img src={image}/>
       </div>
 
       <div className='copy'>
-        <h3>{header}</h3>
-        <p>{paragraph}</p>
+        {header ? <h3>{header}</h3> : null}
+        {paragraphs ? paragraphs : null}
       </div>
 
-      <div className='control-prev'>
-        {prev ? prev : null}
-      </div>
-
-      <div className='control-next'>
-        {next ? next : null}
-      </div>
-    </Dialog>
+      {dismiss ?
+        <div className='dismiss'>
+          <A onClick={dismiss}><Icon type='times'/></A>
+        </div>
+      : null}
+    </Card>
   );
 };

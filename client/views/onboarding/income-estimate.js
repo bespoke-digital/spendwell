@@ -9,7 +9,7 @@ import Onboarding from 'components/onboarding';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import MoneyInput from 'components/money-input';
-import GraphicCard from 'components/graphic-card';
+import GraphicDialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 import Transition from 'components/transition';
 
@@ -52,7 +52,7 @@ class OnboardingIncomeEstimate extends Component {
       <Onboarding viewer={viewer}>
 
         <Transition show={help}>
-          <GraphicCard
+          <GraphicDialog
             scheme='green'
             image={incomeImage}
             header={'We\'ve Estimated Your Income'}
