@@ -15,6 +15,8 @@ DATABASES['default'] = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+RAVEN_CONFIG['dsn'] = 'https://bae98f33e86d49c48db01355c79f3eb0:a7337610c14a4a6eaa4e9aba529c2d08@app.getsentry.com/73490'
+
 PLAID_PRODUCTION = True
 PLAID_SECRET = plaid_secret
 

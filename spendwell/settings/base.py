@@ -1,5 +1,6 @@
 
 import os
+import raven
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'graphene.contrib.django',
     'watchman',
     'django_extensions',
+    'raven.contrib.django.raven_compat',
 
     'apps.core',
     'apps.landing',
@@ -134,6 +136,11 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = '/app'
 LOGIN_URL = '/login'
 
+
+RAVEN_CONFIG = {
+    'dsn': 'https://9d6ebfcebcbe41ac8455f9af7a5d451d:b9769017546a429f9d8c089dd5fe9cdb@app.getsentry.com/73494',
+    'release': raven.fetch_git_sha(BASE_DIR),
+}
 
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
