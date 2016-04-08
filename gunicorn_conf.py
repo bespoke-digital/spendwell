@@ -1,3 +1,3 @@
 
 workers = 4
-timeout = graceful_timeout = 60
+timeout = graceful_timeout = 120
