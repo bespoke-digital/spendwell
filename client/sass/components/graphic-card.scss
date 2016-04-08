@@ -66,8 +66,7 @@
     position: absolute;
 
     @media (min-width: $screen-sm-min) {
-      top: 50%;
-      transform: translateY(-50%);
+      top: 185px;
     }
 
     @media (max-width: $screen-xs-max) {
