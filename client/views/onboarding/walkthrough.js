@@ -59,7 +59,7 @@ const STEPS = [
     doneSyncing: {
       scheme: 'blue',
       image: readyImage,
-      header: 'You\'re Data Is Ready To Go',
+      header: 'Your Data Is Ready To Go',
     },
   },
 ];
