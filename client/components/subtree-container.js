@@ -12,6 +12,7 @@ const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer;
 export default class SubtreeContainer extends Component {
   componentDidMount() {
     this.node = document.body.appendChild(document.createElement('div'));
+    this.mounted = true;
     this.insert();
   }
 
@@ -22,11 +23,14 @@ export default class SubtreeContainer extends Component {
   componentWillUnmount() {
     ReactDOM.unmountComponentAtNode(this.node);
     document.body.removeChild(this.node);
+    this.mounted = false;
   }
 
   insert() {
-    // If we don't clear the stack before this render state gets fucked.
-    setTimeout(()=> renderSubtreeIntoContainer(this, this.subtreeRender(), this.node), 0);
+    // If we don't clear the stack before this render state won't be updated
+    // yet in the rendered tree. Since we clear the stack, we have to make
+    // sure the node is still mounted when we render.
+    setTimeout(()=> this.mounted ? renderSubtreeIntoContainer(this, this.subtreeRender(), this.node) : null, 0);
   }
 
   subtreeRender() {
