@@ -2,12 +2,13 @@
 import json
 
 import graphene
+from raven.contrib.django.raven_compat.models import client as raven
 
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 
 from apps.core.utils import instance_for_node_id
-from .client import Finicity
+from .client import Finicity, FinicityError
 
 
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -22,31 +23,35 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        finicity_institution = instance_for_node_id(
-            input['finicity_institution_id'],
-            info,
-            check_owner=False,
-        )
-        finicity_client = Finicity(info.request_context.user)
+        try:
+            finicity_institution = instance_for_node_id(
+                input['finicity_institution_id'],
+                info,
+                check_owner=False,
+            )
+            finicity_client = Finicity(info.request_context.user)
 
-        institution = Institution.objects.from_finicity(
-            owner=info.request_context.user,
-            data=finicity_client.get_institution(finicity_institution.finicity_id),
-        )
+            institution = Institution.objects.from_finicity(
+                owner=info.request_context.user,
+                data=finicity_client.get_institution(finicity_institution.finicity_id),
+            )
 
-        sync_kwargs = {
-            'credentials': json.loads(input['credentials']),
-        }
-        if 'mfa_answers' in input:
-            sync_kwargs['mfa_answers'] = json.loads(input['mfa_answers'])
+            sync_kwargs = {
+                'credentials': json.loads(input['credentials']),
+            }
+            if 'mfa_answers' in input:
+                sync_kwargs['mfa_answers'] = json.loads(input['mfa_answers'])
 
-        accounts_data = finicity_client.connect_institution(
-            finicity_institution.finicity_id,
-            **sync_kwargs
-        )
+            accounts_data = finicity_client.connect_institution(
+                finicity_institution.finicity_id,
+                **sync_kwargs
+            )
 
-        for account_data in accounts_data:
-            Account.objects.from_finicity(institution, account_data)
+            for account_data in accounts_data:
+                Account.objects.from_finicity(institution, account_data)
+        except FinicityError as e:
+            raven.captureException()
+            raise e
 
         return ConnectFinicityInstitutionMutation(viewer=Viewer())
 

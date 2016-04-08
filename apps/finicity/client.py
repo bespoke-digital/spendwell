@@ -112,7 +112,6 @@ class Finicity(object):
 
         if 'error' in data:
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
-                print('force auth')
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
