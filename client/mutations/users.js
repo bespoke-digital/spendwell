@@ -68,7 +68,9 @@ export class SettingsMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on SettingsMutation {
         viewer {
-          settings
+          settings {
+            dashboardHelp
+          }
         }
       }
     `;
@@ -81,5 +83,13 @@ export class SettingsMutation extends Relay.Mutation {
         viewer: this.props.viewer.id,
       },
     }];
+  }
+
+  getOptimisticResponse() {
+    return {
+      settings: {
+        dashboardHelp: this.props.dashboardHelp,
+      },
+    };
   }
 }
