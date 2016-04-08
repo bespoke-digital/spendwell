@@ -7,7 +7,7 @@ import Col from 'muicss/lib/react/col';
 import ConnectAccount from 'components/connect-account';
 import Onboarding from 'components/onboarding';
 import Button from 'components/button';
-import GraphicCard from 'components/graphic-card';
+import GraphicDialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 import Transition from 'components/transition';
 
@@ -35,7 +35,7 @@ class AddAccountView extends Component {
       <Onboarding viewer={viewer}>
 
         <Transition show={!!(help && !hasInstitutions)}>
-          <GraphicCard
+          <GraphicDialog
             scheme='green'
             image={welcomeImage}
             header='Welcome To Spendwell'

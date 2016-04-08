@@ -1,6 +1,6 @@
 
 from .base import *
-from .secrets import db_password, plaid_secret, finicity_secret
+from .secrets import db_password, plaid_secret, finicity_secret, raven_dsn
 
 
 ALLOWED_HOSTS = ['*']
@@ -14,6 +14,9 @@ DATABASES['default'] = {
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+RAVEN_PUBLIC_DSN = 'https://f5915ddc585f49798179209ff074b43a@app.getsentry.com/73490'
+RAVEN_CONFIG['dsn'] = raven_dsn
 
 PLAID_PRODUCTION = True
 PLAID_SECRET = plaid_secret

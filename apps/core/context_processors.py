@@ -8,6 +8,7 @@ def settings(request):
         'MIXPANEL_PUBLIC_KEY': django_settings.MIXPANEL_PUBLIC_KEY,
         'GOOGLE_ANALYTICS_KEY': django_settings.GOOGLE_ANALYTICS_KEY,
         'FACEBOOK_PIXEL_KEY': django_settings.FACEBOOK_PIXEL_KEY,
+        'RAVEN_PUBLIC_DSN': django_settings.RAVEN_PUBLIC_DSN,
     }
 
 
