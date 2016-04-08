@@ -119,7 +119,7 @@ class OnboardingWalkthrough extends Component {
               <Icon type='arrow-right'/>
             </Button>
           :
-            <Button fab flat onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
+            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
               <Icon type='arrow-right'/>
             </Button>
           }
