@@ -72,5 +72,8 @@
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% block body %}{% endblock %}
+
+    <script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
+    <script>Raven.config('{{ RAVEN_PUBLIC_DSN }}').install()</script>
   </body>
 </html>

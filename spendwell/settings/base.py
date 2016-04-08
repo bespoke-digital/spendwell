@@ -137,6 +137,7 @@ LOGIN_REDIRECT_URL = '/app'
 LOGIN_URL = '/login'
 
 
+RAVEN_PUBLIC_DSN = 'https://9d6ebfcebcbe41ac8455f9af7a5d451d@app.getsentry.com/73494'
 RAVEN_CONFIG = {
     'dsn': 'https://9d6ebfcebcbe41ac8455f9af7a5d451d:b9769017546a429f9d8c089dd5fe9cdb@app.getsentry.com/73494',
     'release': raven.fetch_git_sha(BASE_DIR),
