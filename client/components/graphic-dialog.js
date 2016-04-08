@@ -1,7 +1,7 @@
 
 import Dialog from 'components/dialog';
 
-import styles from 'sass/components/graphic-card.scss';
+import styles from 'sass/components/graphic-dialog.scss';
 
 
 export default (props)=> {
