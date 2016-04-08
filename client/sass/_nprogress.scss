@@ -1,10 +1,15 @@
+
+@import 'depth';
+
 /* Make clicks pass-through */
 #nprogress {
   pointer-events: none;
 }
 
 #nprogress .bar {
-  background: $brand-secordary;
+  @extend .depth-z2;
+
+  background: lighten($brand-secordary, 10%);
 
   position: fixed;
   z-index: 1031;
@@ -13,6 +18,9 @@
 
   width: 100%;
   height: 2px;
+
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
 }
 
 /* Fancy blur effect */
@@ -22,12 +30,14 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px $brand-secordary, 0 0 5px $brand-secordary;
+  box-shadow:
+    0 0 10px lighten($brand-secordary, 40%),
+    0 0 5px lighten($brand-secordary, 40%);
   opacity: 1.0;
 
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
+  -webkit-transform: translate(0px, -4px);
+      -ms-transform: translate(0px, -4px);
+          transform: translate(0px, -4px);
 }
 
 /* Remove these to get rid of the spinner */
@@ -45,8 +55,8 @@
   box-sizing: border-box;
 
   border: solid 2px transparent;
-  border-top-color: $brand-secordary;
-  border-left-color: $brand-secordary;
+  border-top-color: lighten($brand-secordary, 10%);
+  border-left-color: lighten($brand-secordary, 10%);
   border-radius: 50%;
 
   -webkit-animation: nprogress-spinner 400ms linear infinite;
