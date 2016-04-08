@@ -17,7 +17,6 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
-import Icon from 'components/icon';
 import Transition from 'components/transition';
 import GraphicCard from 'components/graphic-card';
 
@@ -65,15 +64,10 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
-  toggleHelp(type, event) {
-    if (event) event.preventDefault();
-
+  hideHelp(show) {
     const { viewer } = this.props;
 
-    Relay.Store.commitUpdate(new SettingsMutation({
-      viewer,
-      dashboardHelp: !viewer.settings.dashboardHelp,
-    }), {
+    Relay.Store.commitUpdate(new SettingsMutation({ viewer, dashboardHelp: !!show }), {
       onSuccess: ()=> console.log('SettingsMutation Success'),
       onFailure: ()=> console.log('SettingsMutation Failure'),
     });
@@ -139,6 +133,7 @@ class Dashboard extends Component {
                 scheme='green'
                 image={labelsImage}
                 header='Get Started With Labels'
+                dismiss={::this.hideHelp}
                 paragraphs={
                   <span>
                     <p>
@@ -339,6 +334,7 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${SpentFromSavings.getFragment('viewer')}
         ${BucketMonth.getFragment('viewer')}
         ${BillMonth.getFragment('viewer')}
+        ${SettingsMutation.getFragment('viewer')}
 
         firstMonth
 

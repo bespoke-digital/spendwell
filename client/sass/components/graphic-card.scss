@@ -4,6 +4,8 @@
 @import '../mixins';
 
 :local(.root) {
+  position: relative;
+
   color: white;
 
   @media (min-width: $screen-sm-min) {
@@ -24,6 +26,12 @@
       max-height: 100px;
       margin: 0 auto 20px;
     }
+  }
+
+  .dismiss {
+    position: absolute;
+    top: 5px;
+    right: 9px;
   }
 
   &.scheme-pink {
