@@ -138,7 +138,7 @@ class Dashboard extends Component {
                   <span>
                     <p>
                       Labels are how you organize your spending with Spendwell.
-                      Use than to track goals, bills, or other expenses
+                      Use them to track goals, bills, or other expenses
                       in the way that makes sense for you.
                     </p>
                     <p>
