@@ -16,6 +16,10 @@
 
   &.can-expand {
     transition: 0.5s ease;
+
+    > .summary {
+      cursor: pointer;
+    }
   }
 
   &.can-expand.expanded {
