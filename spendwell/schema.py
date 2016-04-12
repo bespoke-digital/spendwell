@@ -30,7 +30,7 @@ class Viewer(
     FinicityQuery,
 ):
     @classmethod
-    def get_node(Cls, args, info):
+    def get_node(Cls, id, info):
         return Cls()
 
     def to_global_id(self):

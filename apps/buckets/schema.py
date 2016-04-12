@@ -2,14 +2,13 @@
 from collections import namedtuple
 import graphene
 
-from apps.core.fields import SWNode, SWConnectionField, SWFilterConnectionField
-from apps.core.types import Money
+from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.transactions.schema import TransactionNode
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.fields import TransactionConnectionField
 
-from .models import Bucket, BucketMonth
+from .models import Bucket
 from .filters import BucketFilter
 
 
@@ -38,34 +37,9 @@ class BucketNode(SWNode):
         ]
 
 
-class BucketMonthNode(SWNode):
-    name = graphene.Field(graphene.String())
-    amount = graphene.Field(Money)
-    avg_amount = graphene.Field(Money)
-    transactions = TransactionConnectionField(TransactionNode)
-
-    class Meta:
-        model = BucketMonth
-        only_fields = (
-            'name',
-            'month_start',
-            'transactions',
-            'amount',
-            'avg_amount',
-            'bucket',
-            'type',
-        )
-
-    def resolve_name(self, args, info):
-        return self.instance.bucket.name
-
-
 class BucketsQuery(graphene.ObjectType):
     bucket = graphene.relay.NodeField(BucketNode)
     buckets = SWFilterConnectionField(BucketNode, filterset_class=BucketFilter)
-
-    bucket_month = graphene.relay.NodeField(BucketMonthNode)
-    bucket_months = SWConnectionField(BucketMonthNode)
 
     class Meta:
         abstract = True

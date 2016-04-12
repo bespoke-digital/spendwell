@@ -14,6 +14,7 @@ from apps.goals.factories import GoalFactory
 from apps.buckets.factories import BucketFactory
 
 from .factories import UserFactory
+from .summary import MonthSummary
 
 
 class UsersTestCase(SWTestCase):
@@ -158,12 +159,6 @@ class UsersTestCase(SWTestCase):
     def test_summary_bills(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
-        BucketFactory.create(
-            owner=owner,
-            type='bill',
-            filters=[{'description': 'phone'}],
-        )
-
         last_month = this_month() - relativedelta(months=1)
         TransactionFactory.create(
             owner=owner,
@@ -177,6 +172,17 @@ class UsersTestCase(SWTestCase):
             amount=-111,
             description='phone'
         )
+
+        bucket = BucketFactory.create(
+            owner=owner,
+            type='bill',
+            filters=[{'description_exact': 'phone'}],
+        )
+        bucket.assign_transactions()
+
+        summary = MonthSummary(owner)
+
+        self.assertEqual(summary.bills_unpaid_total, -111)
 
         result = self.graph_query('''{{
             viewer {{

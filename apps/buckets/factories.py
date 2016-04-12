@@ -1,5 +1,4 @@
 
-import delorean
 import factory
 from factory.django import DjangoModelFactory
 
@@ -12,11 +11,3 @@ class BucketFactory(DjangoModelFactory):
 
     class Meta:
         model = 'buckets.Bucket'
-
-
-class BucketMonthFactory(DjangoModelFactory):
-    bucket = factory.SubFactory(BucketFactory)
-    month_start = delorean.now().truncate('month').datetime
-
-    class Meta:
-        model = 'buckets.BucketMonth'

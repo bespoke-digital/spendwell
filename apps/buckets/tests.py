@@ -22,8 +22,8 @@ class BucktsTestCase(SWTestCase):
 
         bucket = BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
 
-        self.assertEqual(transaction.bucket_months.count(), 1)
-        self.assertEqual(transaction.bucket_months.all()[0].bucket, bucket)
+        self.assertEqual(transaction.buckets.count(), 1)
+        self.assertEqual(transaction.buckets.first(), bucket)
 
         transaction2 = TransactionFactory.create(
             owner=owner,
@@ -31,7 +31,7 @@ class BucktsTestCase(SWTestCase):
             amount=-100,
         )
 
-        self.assertEqual(transaction2.bucket_months.count(), 0)
+        self.assertEqual(transaction2.buckets.count(), 0)
 
     def test_filters_query(self):
         owner = UserFactory.create()
@@ -77,7 +77,8 @@ class BucktsTestCase(SWTestCase):
             amount=-111,
             description='phone'
         )
-        self.assertTrue(transaction in bill.transactions())
+        bill.assign_transactions()
+        self.assertTrue(transaction in bill.transactions.all())
 
         transaction = TransactionFactory.create(
             owner=owner,
@@ -85,9 +86,8 @@ class BucktsTestCase(SWTestCase):
             amount=-111,
             description='phone'
         )
-        self.assertTrue(transaction in bill.transactions())
-
-        self.assertEqual(bill.months.first().avg_amount, -111)
+        bill.assign_transactions()
+        self.assertTrue(transaction in bill.transactions.all())
 
     def test_external_accounts(self):
         owner = UserFactory.create()
@@ -99,10 +99,13 @@ class BucktsTestCase(SWTestCase):
         )
 
         transaction = TransactionFactory.create(owner=owner, description='trnsfr')
-        self.assertTrue(transaction in account.transactions())
+        account.assign_transactions()
+        self.assertTrue(transaction in account.transactions.all())
 
         transaction = TransactionFactory.create(owner=owner, description='trnsfr')
-        self.assertTrue(transaction in account.transactions())
+        account.assign_transactions()
+        self.assertTrue(transaction in account.transactions.all())
 
         transaction = TransactionFactory.create(owner=owner, description='transfer')
-        self.assertTrue(transaction not in account.transactions())
+        account.assign_transactions()
+        self.assertTrue(transaction not in account.transactions.all())

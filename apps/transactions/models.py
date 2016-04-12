@@ -5,7 +5,6 @@ from pytz import timezone
 import logging
 
 from dateutil.relativedelta import relativedelta
-from delorean import Delorean
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
@@ -34,7 +33,7 @@ class TransactionsQuerySet(SWQuerySet):
 
         return getattr(queryset, method)(
             models.Q(_transfer_pair__count__gt=0)
-            | models.Q(bucket_months__bucket__type='account')
+            | models.Q(buckets__type='account')
         )
 
 
@@ -152,8 +151,8 @@ class Transaction(SWModel):
         null=True,
         on_delete=models.SET_NULL,
     )
-    bucket_months = models.ManyToManyField(
-        'buckets.BucketMonth',
+    buckets = models.ManyToManyField(
+        'buckets.Bucket',
         related_name='transactions',
         through='transactions.BucketTransaction',
     )
@@ -188,7 +187,7 @@ class Transaction(SWModel):
         if self.amount > 0:
             raise ValueError('only outgoing transactions can be "from savings".')
 
-        self.bucket_months.clear()
+        self.buckets.clear()
         self.from_savings = not self.from_savings
         self.save()
 
@@ -196,19 +195,14 @@ class Transaction(SWModel):
             self.assign_to_buckets()
 
     def assign_to_buckets(self):
-        from apps.buckets.models import BucketMonth
+        from apps.buckets.models import Bucket
 
         if self.transfer_pair:
             return
 
-        month_start = Delorean(datetime=self.date).truncate('month').datetime
-
-        for bucket_month in BucketMonth.objects.filter(month_start=month_start):
-            if self in bucket_month.bucket.transactions():
-                BucketTransaction.objects.get_or_create(
-                    bucket_month=bucket_month,
-                    transaction=self,
-                )
+        for bucket in Bucket.objects.filter(owner=self.owner):
+            if self in bucket.transactions():
+                BucketTransaction.objects.get_or_create(bucket=bucket, transaction=self)
 
     def get_transfer_pair(self):
         try:
@@ -254,11 +248,11 @@ class Transaction(SWModel):
 
 
 class BucketTransaction(models.Model):
-    bucket_month = models.ForeignKey('buckets.BucketMonth')
+    bucket = models.ForeignKey('buckets.Bucket')
     transaction = models.ForeignKey('transactions.Transaction')
 
     class Meta:
-        unique_together = ('bucket_month', 'transaction')
+        unique_together = ('bucket', 'transaction')
 
 
 class IncomeFromSavings(SWModel):

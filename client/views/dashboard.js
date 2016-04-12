@@ -77,7 +77,7 @@ class Dashboard extends Component {
     const { params: { year, month }, viewer } = this.props;
     const {
       spentFromSavings,
-      allTransactions,
+      expenseTransactions,
     } = viewer.summary;
 
     const { selected } = this.state;
@@ -98,12 +98,16 @@ class Dashboard extends Component {
       (n)=> n.name.toLowerCase()
     );
     const billMonths = _.sortBy(
-      viewer.summary.billMonths.edges.map((e)=> e.node),
-      (n)=> n.name.toLowerCase()
+      viewer.summary.bucketMonths.edges
+        .map(({ node })=> node)
+        .filter(({ bucket })=> bucket.type === 'bill'),
+      (bm)=> bm.bucket.name.toLowerCase()
     );
     const bucketMonths = _.sortBy(
-      viewer.summary.bucketMonths.edges.map((e)=> e.node),
-      (n)=> n.name.toLowerCase()
+      viewer.summary.bucketMonths.edges
+        .map(({ node })=> node)
+        .filter(({ bucket })=> bucket.type === 'expense'),
+      (bm)=> bm.bucket.name.toLowerCase()
     );
 
     const goalTargetTotal = _.sum(goalMonths, 'targetAmount');
@@ -294,11 +298,11 @@ class Dashboard extends Component {
           <CardList>
             <TransactionList
               viewer={viewer}
-              transactions={allTransactions}
+              transactions={expenseTransactions}
               abs={true}
             />
 
-            {allTransactions && allTransactions.pageInfo.hasNextPage ?
+            {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
               <div className='bottom-buttons'>
                 <Button onClick={::this.loadTransactions} raised>Load More</Button>
               </div>
@@ -347,6 +351,7 @@ Dashboard = Relay.createContainer(Dashboard, {
           ${DashboardSummary.getFragment('summary')}
 
           spentFromSavings
+
           goalMonths(first: 1000) {
             edges {
               node {
@@ -358,32 +363,31 @@ Dashboard = Relay.createContainer(Dashboard, {
               }
             }
           }
+
           bucketMonths(first: 1000) {
             edges {
               node {
                 ${BucketMonth.getFragment('bucketMonth')}
-                id
-                name
-                avgAmount
-                amount
-              }
-            }
-          }
-          billMonths(first: 1000) {
-            edges {
-              node {
                 ${BillMonth.getFragment('bucketMonth')}
+
                 id
-                name
                 avgAmount
                 amount
+
+                bucket {
+                  id
+                  name
+                  type
+                }
               }
             }
           }
+
           incomeTransactions: transactions(first: 100, amountGt: 0) {
             ${TransactionList.getFragment('transactions')}
           }
-          allTransactions: transactions(first: $transactionCount, amountLt: 0) {
+
+          expenseTransactions: transactions(first: $transactionCount, amountLt: 0) {
             ${TransactionList.getFragment('transactions')}
             pageInfo {
               hasNextPage

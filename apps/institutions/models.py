@@ -12,7 +12,7 @@ from plaid.errors import ResourceNotFoundError, RequestFailedError
 from apps.core.models import SWModel, SWManager
 from apps.core.signals import day_start
 from apps.accounts.models import Account
-from apps.buckets.models import BucketMonth
+from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity
 
@@ -136,8 +136,8 @@ class Institution(SWModel):
 
         Transaction.objects.detect_transfers(owner=self.owner)
 
-        for bucket_month in BucketMonth.objects.filter(bucket__owner=self.owner):
-            bucket_month.assign_transactions()
+        for bucket in Bucket.objects.filter(owner=self.owner):
+            bucket.assign_transactions()
 
     def sync(self):
         self.sync_accounts()

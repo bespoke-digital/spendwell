@@ -2,10 +2,26 @@
 import delorean
 from dateutil.relativedelta import relativedelta
 
+from apps.core.utils import months_avg
 from apps.goals.models import GoalMonth
-from apps.buckets.models import BucketMonth
+from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction, IncomeFromSavings
 from apps.core.utils import this_month
+
+
+def bucket_month(bucket, month):
+    transactions = bucket.transactions.filter(
+        date__gte=month,
+        date__lt=month + relativedelta(months=1),
+    )
+
+    return {
+        'bucket': bucket,
+        'month': month,
+        'transactions': transactions,
+        'amount': transactions.sum(),
+        'avg_amount': months_avg(bucket.transactions.all(), month_start=month),
+    }
 
 
 class MonthSummary(object):
@@ -82,17 +98,18 @@ class MonthSummary(object):
             self._bills_unpaid_total = 0
             self._bills_paid_total = 0
 
-            unpaid_month = this_month()
+            calculate_unpaid = this_month() == self.month_start
 
-            for bill_month in BucketMonth.objects.filter(
-                bucket__owner=self.user,
-                bucket__type='bill',
-                month_start=self.month_start,
-            ):
-                self._bills_paid_total += bill_month.amount
+            for bucket in Bucket.objects.filter(owner=self.user, type='bill'):
+                bill_month = bucket_month(bucket, self.month_start)
 
-                if bill_month.month_start == unpaid_month and bill_month.amount > bill_month.avg_amount:
-                    self._bills_unpaid_total -= abs(bill_month.avg_amount) - abs(bill_month.amount)
+                self._bills_paid_total += bill_month['amount']
+
+                if not calculate_unpaid:
+                    continue
+
+                if bill_month['amount'] > bill_month['avg_amount']:
+                    self._bills_unpaid_total -= abs(bill_month['avg_amount']) - abs(bill_month['amount'])
 
         return self._bills_unpaid_total
 
@@ -147,23 +164,13 @@ class MonthSummary(object):
 
     @property
     def bucket_months(self):
+        from .schema import BucketMonthNode
         if not hasattr(self, '_bucket_months'):
-            self._bucket_months = BucketMonth.objects.filter(
-                bucket__owner=self.user,
-                bucket__type='expense',
-                month_start=self.month_start,
-            )
+            self._bucket_months = [
+                BucketMonthNode(**bucket_month(bucket, self.month_start))
+                for bucket in Bucket.objects.filter(owner=self.user)
+            ]
         return self._bucket_months
-
-    @property
-    def bill_months(self):
-        if not hasattr(self, '_bill_months'):
-            self._bill_months = BucketMonth.objects.filter(
-                bucket__owner=self.user,
-                bucket__type='bill',
-                month_start=self.month_start,
-            )
-        return self._bill_months
 
     @property
     def transactions(self):

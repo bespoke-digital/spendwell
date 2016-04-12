@@ -40,7 +40,7 @@ class TransactionNode(SWNode):
     def resolve_buckets(self, args, info):
         return Bucket.objects.filter(
             owner=info.request_context.user,
-            months__transactions=self.instance,
+            transactions=self.instance,
         ).distinct()
 
 

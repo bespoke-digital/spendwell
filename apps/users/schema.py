@@ -1,14 +1,39 @@
 
-from graphene.contrib.django.fields import DjangoConnectionField
+import delorean
 import graphene
+from graphene.contrib.django.fields import DjangoConnectionField
 
 from apps.core.types import Money, Month
 from apps.goals.schema import GoalMonthNode
-from apps.buckets.schema import BucketMonthNode
 from apps.transactions.schema import TransactionNode
 from apps.transactions.fields import TransactionConnectionField
+from apps.buckets.schema import BucketNode
+from apps.buckets.models import Bucket
 
-from .summary import MonthSummary
+from .summary import MonthSummary, bucket_month
+
+
+class BucketMonthNode(graphene.relay.Node):
+    bucket = graphene.Field(BucketNode)
+    month = graphene.Field(Month())
+    amount = graphene.Field(Money())
+    avg_amount = graphene.Field(Money())
+    transactions = TransactionConnectionField(TransactionNode)
+
+    @classmethod
+    def get_node(Cls, id, info):
+        bucket_id, month_start = id.split(':')
+
+        month_start = delorean.parse('{}/01'.format(month_start)).truncate('month').datetime
+        bucket = Bucket.objects.get(id=bucket_id)
+
+        return Cls(**bucket_month(bucket, month_start))
+
+    def to_global_id(self):
+        return self.global_id('{}:{:%Y/%m}'.format(
+            self.bucket.id,
+            self.month,
+        ))
 
 
 class Summary(graphene.ObjectType):
@@ -30,8 +55,7 @@ class Summary(graphene.ObjectType):
     spent_from_savings = graphene.Field(Money())
 
     goal_months = DjangoConnectionField(GoalMonthNode)
-    bucket_months = DjangoConnectionField(BucketMonthNode)
-    bill_months = DjangoConnectionField(BucketMonthNode)
+    bucket_months = graphene.relay.ConnectionField(BucketMonthNode)
     transactions = TransactionConnectionField(TransactionNode)
 
 
@@ -41,8 +65,10 @@ class Settings(graphene.ObjectType):
 
 
 class UsersQuery(graphene.ObjectType):
-    safe_to_spend = graphene.Field(Money())
+    bucket_month = graphene.relay.NodeField(BucketMonthNode)
     summary = graphene.Field(Summary, month=Month())
+
+    safe_to_spend = graphene.Field(Money())
     first_month = graphene.Field(Month())
     email = graphene.Field(graphene.String())
     is_admin = graphene.Field(graphene.Boolean())

@@ -105,12 +105,17 @@ BillMonth = Relay.createContainer(BillMonth, {
     `,
     bucketMonth: ()=> Relay.QL`
       fragment on BucketMonthNode {
-        name
         amount
         avgAmount
-        bucket { id }
+
+        bucket {
+          id
+          name
+        }
+
         transactions(first: $transactionCount) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
+
           pageInfo {
             hasNextPage
           }

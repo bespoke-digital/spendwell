@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 from spendwell.admin import admin_site
-from .models import Bucket, BucketMonth
+from .models import Bucket
 
 
 class BucketAdmin(admin.ModelAdmin):
@@ -16,9 +16,3 @@ class BucketAdmin(admin.ModelAdmin):
     )
 
 admin_site.register(Bucket, BucketAdmin)
-
-
-class BucketMonthAdmin(admin.ModelAdmin):
-    list_display = ('bucket', 'month_start')
-
-admin_site.register(BucketMonth, BucketMonthAdmin)

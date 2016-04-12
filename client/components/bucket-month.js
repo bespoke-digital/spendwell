@@ -48,13 +48,15 @@ class BucketMonth extends Component {
           }`}
           summary={
             <div>
-              <div>{bucketMonth.name}</div>
+              <div>{bucketMonth.bucket.name}</div>
               <div className='amount avg'>
                 {bucketMonth.avgAmount ?
                   <Money amount={bucketMonth.avgAmount} abs={true}/>
                 : '-'}
               </div>
-              <div className='amount'><Money amount={bucketMonth.amount} abs={true}/></div>
+              <div className='amount'>
+                <Money amount={bucketMonth.amount} abs={true}/>
+              </div>
             </div>
           }
         >
@@ -110,18 +112,20 @@ BucketMonth = Relay.createContainer(BucketMonth, {
     `,
     bucketMonth: ()=> Relay.QL`
       fragment on BucketMonthNode {
-        name
         amount
         avgAmount
+
+        bucket {
+          id
+          name
+        }
+
         transactions(first: 20) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
 
           pageInfo {
             hasNextPage
           }
-        }
-        bucket {
-          id
         }
       }
     `,
