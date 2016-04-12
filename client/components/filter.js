@@ -20,8 +20,8 @@ export class Filter {
   static fields = {
     descriptionExact: { label: 'Description Exact', type: 'string' },
     descriptionContains: { label: 'Description Contains', type: 'string' },
-    amountGt: { label: 'Amount Greater Than', type: 'money', blank: false },
-    amountLt: { label: 'Amount Less Than', type: 'money', blank: false },
+    amountGt: { label: 'Amount Greater Than', type: 'money' },
+    amountLt: { label: 'Amount Less Than', type: 'money' },
     // category: { label: 'Category', type: 'string' },
     // dateGt: { label: 'Date Greater Than', type: 'date' },
     // dateLt: { label: 'Date Less Than', type: 'date' },
@@ -41,9 +41,21 @@ export class Filter {
       this._data = { descriptionContains: '' };
   }
 
+  _castValue(field, value) {
+    const type = Filter.fields[field].type;
+
+    if (type === 'money' && _.isString(value)) {
+      value = parseInt(value.replace(/\D/, ''));
+      if (_.isNaN(value))
+        value = 0;
+    }
+
+    return value;
+  }
+
   update(key, value) {
     this._data = _.clone(this._data);
-    this._data[key] = value;
+    this._data[key] = this._castValue(key, value);
 
     this.onChange(this._data);
   }
@@ -52,7 +64,7 @@ export class Filter {
     if (oldField === newField) return;
 
     this._data = _.clone(this._data);
-    this._data[newField] = this._data[oldField];
+    this._data[newField] = this._castValue(newField, this._data[oldField]);
     delete this._data[oldField];
 
     this.onChange(this._data);
