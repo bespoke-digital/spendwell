@@ -50,10 +50,15 @@ class UserAdmin(AuthUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = ((None, {'fields': (
         'email',
-        'password',
         'is_admin',
+        'finicity_id',
         'estimated_income',
+        'timezone',
+        'dashboard_help',
     )}),)
+    readonly_fields = (
+        'finicity_id',
+    )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
