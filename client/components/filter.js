@@ -11,6 +11,7 @@ import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
 import TransactionList from 'components/transaction-list';
 import MoneyInput from 'components/money-input';
+import Money from 'components/money';
 import A from 'components/a';
 
 import style from 'sass/components/filter';
@@ -20,8 +21,8 @@ export class Filter {
   static fields = {
     descriptionExact: { label: 'Description Exact', type: 'string' },
     descriptionContains: { label: 'Description Contains', type: 'string' },
-    amountGt: { label: 'Amount Greater Than', type: 'money' },
-    amountLt: { label: 'Amount Less Than', type: 'money' },
+    amountGt: { label: 'Amount Less Than', type: 'money' },
+    amountLt: { label: 'Amount Greater Than', type: 'money' },
     // category: { label: 'Category', type: 'string' },
     // dateGt: { label: 'Date Greater Than', type: 'date' },
     // dateLt: { label: 'Date Less Than', type: 'date' },
@@ -49,6 +50,9 @@ export class Filter {
       if (_.isNaN(value))
         value = 0;
     }
+
+    if (type === 'money' && value > 0)
+      value = (-value);
 
     return value;
   }
@@ -104,11 +108,17 @@ export class Filter {
     if (fields.length === 0)
       return 'New';
 
-    return fields.map((key)=> (
-      <span className='field' key={key}>
-        <strong>{Filter.fields[key].label}{':'}</strong>{' '}{this._data[key]}
-      </span>
-    ));
+    return fields.map((key)=> {
+      const { type, label } = Filter.fields[key];
+      const value = this._data[key];
+
+      return (
+        <span className='field' key={key}>
+          <strong>{label}{':'}</strong>
+          {type === 'money' ? <Money amount={value} abs={true}/> : value}
+        </span>
+      );
+    });
   }
 }
 
@@ -201,7 +211,7 @@ class FilterComponent extends Component {
 
               {Filter.fields[field].type === 'money' ?
                 <MoneyInput
-                  initialValue={filter.value(field)}
+                  initialValue={Math.abs(filter.value(field))}
                   onChange={(value)=> filter.update(field, value)}
                 />
               :

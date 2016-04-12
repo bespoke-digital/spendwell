@@ -295,7 +295,7 @@ class Dashboard extends Component {
             <TransactionList
               viewer={viewer}
               transactions={allTransactions}
-              abs={false}
+              abs={true}
             />
 
             {allTransactions && allTransactions.pageInfo.hasNextPage ?
@@ -383,7 +383,7 @@ Dashboard = Relay.createContainer(Dashboard, {
           incomeTransactions: transactions(first: 100, amountGt: 0) {
             ${TransactionList.getFragment('transactions')}
           }
-          allTransactions: transactions(first: $transactionCount) {
+          allTransactions: transactions(first: $transactionCount, amountLt: 0) {
             ${TransactionList.getFragment('transactions')}
             pageInfo {
               hasNextPage
