@@ -35,7 +35,7 @@ def form_field_to_scalar(field):
         return convert_form_field(field)
 
 
-def filter_list_schema(filterset_class, name=None, input=True):
+def filter_schema(filterset_class, name=None, input=True):
     if name is None:
         name = filterset_class.__name__
 
@@ -46,9 +46,11 @@ def filter_list_schema(filterset_class, name=None, input=True):
         ObjectType = graphene.ObjectType
         ObjectField = graphene.Field
 
-    Filter = type(name, (ObjectType,), {
+    return type(name, (ObjectType,), {
         key: ObjectField(form_field_to_scalar(value.field))
         for key, value in filterset_class.base_filters.items()
     })
 
-    return graphene.List(Filter)
+
+def filter_list_schema(filterset_class, *args, **kwargs):
+    return graphene.List(filter_schema(filterset_class, *args, **kwargs))

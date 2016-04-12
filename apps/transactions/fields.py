@@ -19,7 +19,7 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
     def get_queryset(self, queryset, args, info):
         queryset = queryset.filter(owner=info.request_context.user)
         queryset = self.filterset_class(
-            data=self.get_filter_kwargs(args),
+            self.get_filter_kwargs(args),
             queryset=queryset,
         ).qs
 

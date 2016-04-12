@@ -24,6 +24,9 @@ class SWNode(DjangoNode):
         except Cls._meta.model.DoesNotExist:
             return None
 
+    def resolve_djid(self, args, info):
+        return self.instance.id
+
 
 class SWConnectionMixin(object):
     def get_queryset(self, queryset, args, info):

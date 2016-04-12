@@ -107,11 +107,25 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'sentry'],
             'level': 'INFO',
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
         },
     },
 }
@@ -137,9 +151,9 @@ LOGIN_REDIRECT_URL = '/app'
 LOGIN_URL = '/login'
 
 
-RAVEN_PUBLIC_DSN = 'https://9d6ebfcebcbe41ac8455f9af7a5d451d@app.getsentry.com/73494'
+RAVEN_PUBLIC_DSN = None
 RAVEN_CONFIG = {
-    'dsn': 'https://9d6ebfcebcbe41ac8455f9af7a5d451d:b9769017546a429f9d8c089dd5fe9cdb@app.getsentry.com/73494',
+    'dsn': None,
     'release': raven.fetch_git_sha(BASE_DIR),
 }
 

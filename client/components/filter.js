@@ -3,23 +3,133 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
 import TransactionList from 'components/transaction-list';
-
-import FIELDS from 'constants/filter-fields';
+import MoneyInput from 'components/money-input';
+import A from 'components/a';
 
 import style from 'sass/components/filter';
 
 
-class Filter extends Component {
+export class Filter {
+  static fields = {
+    descriptionExact: { label: 'Description Exact', type: 'string' },
+    descriptionContains: { label: 'Description Contains', type: 'string' },
+    amountGt: { label: 'Amount Greater Than', type: 'money', blank: false },
+    amountLt: { label: 'Amount Less Than', type: 'money', blank: false },
+    // category: { label: 'Category', type: 'string' },
+    // dateGt: { label: 'Date Greater Than', type: 'date' },
+    // dateLt: { label: 'Date Less Than', type: 'date' },
+    // accountId: { label: 'Account', type: 'account' },
+  };
+
+  constructor(source, onChange) {
+    this.onChange = onChange;
+
+    if (typeof source === Filter)
+      this._data = source.raw();
+
+    else if (_.isPlainObject(source))
+      this._data = source;
+
+    else
+      this._data = { descriptionContains: '' };
+  }
+
+  update(key, value) {
+    this._data = _.clone(this._data);
+    this._data[key] = value;
+
+    this.onChange(this._data);
+  }
+
+  replace(oldField, newField) {
+    if (oldField === newField) return;
+
+    this._data = _.clone(this._data);
+    this._data[newField] = this._data[oldField];
+    delete this._data[oldField];
+
+    this.onChange(this._data);
+  }
+
+  remove(key) {
+    this._data = _.clone(this._data);
+    delete this._data[key];
+
+    this.onChange(this._data);
+  }
+
+  add(key) {
+    if (this._data[key]) return;
+
+    this._data = _.clone(this._data);
+    this._data[key] = null;
+
+    this.onChange(this._data);
+  }
+
+  fields() {
+    return Object.keys(this._data);
+  }
+
+  length() {
+    return this.fields().length;
+  }
+
+  value(key) {
+    return this._data[key];
+  }
+
+  name() {
+    const fields = Object.keys(_.pick(this._data, (v)=> !(_.isNull(v) || v === '')));
+
+    if (fields.length === 0)
+      return 'New';
+
+    return fields.map((key)=> (
+      <span className='field' key={key}>
+        <strong>{Filter.fields[key].label}{':'}</strong>{' '}{this._data[key]}
+      </span>
+    ));
+  }
+}
+
+
+function FilterDropdown({ discludeFields, label, onSelect }) {
+  const fields = Object.keys(Filter.fields).filter(
+    (field)=> discludeFields.indexOf(field) === -1
+  );
+
+  if (fields.length === 0)
+    return null;
+
+  return (
+    <Dropdown label={label}>
+      {fields.map((field)=>
+        <A key={field} onClick={()=> onSelect(field)}>
+          {Filter.fields[field].label}
+        </A>
+      )}
+    </Dropdown>
+  );
+}
+
+
+class FilterComponent extends Component {
   static propTypes = {
     filter: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onExpand: PropTypes.func.isRequired,
     onCollapse: PropTypes.func.isRequired,
+    expanded: PropTypes.bool.isRequired,
+    onRemove: PropTypes.func.isRequired,
+    canRemove: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -31,114 +141,67 @@ class Filter extends Component {
       this.props.relay.setVariables({ filters: [nextProps.filter] });
   }
 
-  updateField(field, value) {
-    const filter = _.cloneDeep(this.props.filter);
-
-    filter[field] = this.toData(field, value);
-
-    this.props.onChange(filter);
-  }
-
-  replaceField(oldField, newField, event) {
-    if (event) event.preventDefault();
-
-    if (oldField === newField)
-      return;
-
-    const filter = _.cloneDeep(this.props.filter);
-
-    filter[newField] = filter[oldField];
-    delete filter[oldField];
-
-    this.props.onChange(filter);
-  }
-
-  removeField(field) {
-    const filter = _.cloneDeep(this.props.filter);
-
-    delete filter[field];
-
-    this.props.onChange(filter);
-  }
-
-  addField(field, event) {
-    if (event) event.preventDefault();
-
-    if (!this.props.filter[field]) {
-      const filter = _.cloneDeep(this.props.filter);
-
-      filter[field] = null;
-
-      this.props.onChange(filter);
-    }
-  }
-
   loadTransactions() {
     const { relay } = this.props;
     relay.setVariables({ count: relay.variables.count + 10 });
   }
 
-  toInput(field, value) {
-    if (FIELDS[field].type === 'number' && _.isNumber(value))
-      value = (value / 100).toString();
-    return value;
-  }
-
-  toData(field, value) {
-    if (FIELDS[field].type === 'number' && _.isNumber(value))
-      value = parseInt(parseFloat(value) * 100);
-    return value;
-  }
-
-  renderDropdown(usedFields, selected) {
-    const fields = _.filter(
-      Object.keys(FIELDS),
-      (field)=> usedFields.indexOf(field) === -1 || field === selected
-    );
-
-    if (fields.length === 0)
-      return null;
-
-    const label = selected ? FIELDS[selected].label : 'Add Field';
-
-    return (
-      <Dropdown label={label}>
-        {fields.map((field)=>
-          <a
-            href='#'
-            key={FIELDS[field].label}
-            onClick={selected ?
-              this.replaceField.bind(this, selected, field)
-            :
-              this.addField.bind(this, field)
-            }
-          >
-            {FIELDS[field].label}
-          </a>
-        )}
-      </Dropdown>
-    );
-  }
-
   render() {
-    const { filter, viewer, onCollapse } = this.props;
-    const fields = Object.keys(filter);
+    const {
+      viewer,
+      onCollapse,
+      onExpand,
+      expanded,
+      onRemove,
+      canRemove,
+      onChange,
+    } = this.props;
+
+    const filter = new Filter(this.props.filter, onChange);
 
     return (
-      <div className={style.root}>
+      <SuperCard
+        className={style.root}
+        expanded={expanded}
+        onSummaryClick={onExpand}
+        summary={
+          <Card summary={
+            <div>
+              <div className='filter-name'>
+                <div className='subtitle'>Filter</div>
+                <div>{filter.name()}</div>
+              </div>
+              <Button onClick={onRemove} disabled={canRemove}>
+                Remove Filter
+              </Button>
+            </div>
+          }/>
+        }
+      >
         <CardList>
-          {fields.map((field)=> FIELDS[field] ?
+          {filter.fields().map((field)=> Filter.fields[field] ?
             <Card key={field} className='field'>
-              {this.renderDropdown(fields, field)}
-
-              <TextInput
-                value={this.toInput(field, filter[field])}
-                onChange={this.updateField.bind(this, field)}
+              <FilterDropdown
+                discludeFields={[field]}
+                label={Filter.fields[field].label}
+                onSelect={(selected)=> filter.replace(field, selected)}
               />
 
+              {Filter.fields[field].type === 'money' ?
+                <MoneyInput
+                  initialValue={filter.value(field)}
+                  onChange={(value)=> filter.update(field, value)}
+                />
+              :
+                <TextInput
+                  value={filter.value(field)}
+                  onChange={(value)=> filter.update(field, value)}
+                />
+              }
+
               <Button
-                onClick={()=> this.removeField(field)}
-                disabled={fields.length === 1}
+                onClick={()=> filter.remove(field)}
+                disabled={filter.length() === 1}
               >
                 Remove Field
               </Button>
@@ -147,7 +210,11 @@ class Filter extends Component {
 
           <Card className='save-card'>
             <Button onClick={onCollapse} variant='primary'>Save</Button>
-            {/*this.renderDropdown(fields)  TODO: bring back once to have an amount filter */}
+            <FilterDropdown
+              discludeFields={filter.fields()}
+              label='New Field'
+              onSelect={(selected)=> filter.add(selected)}
+            />
           </Card>
         </CardList>
 
@@ -158,12 +225,12 @@ class Filter extends Component {
             <Button flat variant='primary' onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
-      </div>
+      </SuperCard>
     );
   }
 }
 
-Filter = Relay.createContainer(Filter, {
+FilterComponent = Relay.createContainer(FilterComponent, {
   initialVariables: {
     filters: [],
     count: 10,
@@ -178,6 +245,7 @@ Filter = Relay.createContainer(Filter, {
           filters: $filters,
           isTransfer: false,
           fromSavings: false,
+          amountLt: 0,
         ) {
           ${TransactionList.getFragment('transactions')}
 
@@ -190,4 +258,4 @@ Filter = Relay.createContainer(Filter, {
   },
 });
 
-export default Filter;
+export default FilterComponent;

@@ -14,13 +14,13 @@ class BucktsTestCase(SWTestCase):
     def test_transaction_assignment(self):
         owner = UserFactory.create()
 
-        bucket = BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
-
         transaction = TransactionFactory.create(
             owner=owner,
             description='Description',
             amount=-100,
         )
+
+        bucket = BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
 
         self.assertEqual(transaction.bucket_months.count(), 1)
         self.assertEqual(transaction.bucket_months.all()[0].bucket, bucket)

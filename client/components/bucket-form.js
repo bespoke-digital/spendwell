@@ -14,9 +14,13 @@ import ScrollTrigger from 'components/scroll-trigger';
 import style from 'sass/components/bucket-form';
 
 
-const cleanFilters = (filters)=> filters
-  .map((f)=> _.pick(f, (v, k)=> !_.isNull(v) && k !== '__dataID__'))
-  .filter((filter)=> _.some(_.values(filter)));
+function cleanFilter(filter) {
+  return _.pick(filter, (v, k)=> !(_.isNull(v) || k === '__dataID__' || v === ''));
+}
+
+function cleanFilters(filters) {
+  return filters.map(cleanFilter).filter((filter)=> _.some(_.values(filter)));
+}
 
 
 class BucketForm extends Component {
@@ -33,6 +37,7 @@ class BucketForm extends Component {
 
   constructor({ initialType, bucket }) {
     super();
+
     this.state = {
       filters: bucket ? cleanFilters(bucket.filters) : [],
       name: bucket ? bucket.name : '',
@@ -41,9 +46,8 @@ class BucketForm extends Component {
   }
 
   componentWillMount() {
-    const { bucket } = this.props;
-    if (bucket)
-      this.props.relay.setVariables({ filters: cleanFilters(bucket.filters) });
+    const { filters } = this.state;
+    this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
   handleSubmit() {
@@ -53,13 +57,35 @@ class BucketForm extends Component {
     onSubmit({ type, name, filters: cleanFilters(filters) });
   }
 
-  handleFilterChange(filters) {
+  handleAddFilter() {
+    const filters = _.clone(this.state.filters);
+
+    filters.push({ descriptionContains: '' });
+
+    this.setState({ filters });
+  }
+
+  handleRemoveFilter(index) {
+    const filters = _.clone(this.state.filters);
+
+    filters.splice(index, 1);
+
+    this.setState({ filters });
+    this.props.relay.setVariables({ filters: cleanFilters(filters) });
+  }
+
+  handleChangeFilter(index, filter) {
+    const filters = _.clone(this.state.filters);
+
+    filters[index] = filter;
+
     this.setState({ filters });
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
   handleScroll() {
-    this.props.relay.setVariables({ count: this.props.relay.variables.count + 50 });
+    const { count } = this.props.relay.variables;
+    this.props.relay.setVariables({ count: count + 50 });
   }
 
   render() {
@@ -101,8 +127,10 @@ class BucketForm extends Component {
 
           <Filters
             filters={filters}
-            onChange={::this.handleFilterChange}
             viewer={viewer}
+            onAdd={::this.handleAddFilter}
+            onRemove={::this.handleRemoveFilter}
+            onChange={::this.handleChangeFilter}
           />
 
           <Card>

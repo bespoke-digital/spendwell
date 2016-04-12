@@ -43,9 +43,6 @@ class TransactionNode(SWNode):
             months__transactions=self.instance,
         ).distinct()
 
-    def resolve_djid(self, args, info):
-        return self.instance.id
-
 
 class TransactionsQuery(graphene.ObjectType):
     transaction = graphene.relay.NodeField(TransactionNode)

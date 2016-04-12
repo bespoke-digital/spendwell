@@ -3,6 +3,7 @@ from apps.core.tests import SWTestCase
 from apps.users.factories import UserFactory
 
 from .models import Transaction
+from .filters import TransactionFilter
 from .factories import TransactionFactory
 
 
@@ -14,6 +15,8 @@ class TransactionsTestCase(SWTestCase):
         self.assertIsNone(transfer_to.transfer_pair)
 
         transfer_from = TransactionFactory.create(owner=owner, amount=-100)
+
+        Transaction.objects.detect_transfers(owner=owner)
 
         self.assertEqual(transfer_to.transfer_pair, transfer_from)
         self.assertEqual(transfer_from.transfer_pair, transfer_to)
@@ -97,33 +100,62 @@ class TransactionsTestCase(SWTestCase):
             -10100,
         )
 
+    def test_amount_zero_filter(self):
+        owner = UserFactory.create()
+
+        TransactionFactory.create(owner=owner, amount=100)
+        TransactionFactory.create(owner=owner, amount=-100)
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(amountGt: 0) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            10000,
+        )
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(amountLt: 0) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            -10000,
+        )
+
     def test_amount_filter(self):
         owner = UserFactory.create()
 
         TransactionFactory.create(owner=owner, amount=100)
         TransactionFactory.create(owner=owner, amount=200)
 
-        result = self.graph_query('''{
-            viewer {
-                transactions(amountGt: 15000) {
-                    edges {
-                        node {
-                            amount
-                        }
-                    }
-                }
-            }
-        }''', user=owner)
-
-        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
         self.assertEqual(
-            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
-            -20000,
+            TransactionFilter({'amount_gt': 150}).qs.filter(owner=owner).count(),
+            1,
         )
 
         result = self.graph_query('''{
             viewer {
-                transactions(filters: [{ amountGt: 15000 }]) {
+                transactions(filters: [{ amountGt: "15000" }]) {
                     edges {
                         node {
                             amount
@@ -136,7 +168,25 @@ class TransactionsTestCase(SWTestCase):
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
         self.assertEqual(
             result.data['viewer']['transactions']['edges'][0]['node']['amount'],
-            -20000,
+            20000,
+        )
+
+        result = self.graph_query('''{
+            viewer {
+                transactions(filters: [{ amountLt: "15000" }]) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            10000,
         )
 
     def test_description_filter(self):
