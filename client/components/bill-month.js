@@ -48,7 +48,7 @@ class BillMonth extends Component {
           }`}
           summary={
             <div>
-              <div>{bucketMonth.name}</div>
+              <div>{bucketMonth.bucket.name}</div>
               <div className='amount avg'>
                 {bucketMonth.avgAmount ?
                   <Money amount={bucketMonth.avgAmount} abs={true}/>

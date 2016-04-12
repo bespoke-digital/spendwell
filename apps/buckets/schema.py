@@ -28,7 +28,7 @@ class BucketNode(SWNode):
         )
 
     def resolve_transactions(self, args, info):
-        return self.instance.transactions()
+        return self.instance.transactions.all()
 
     def resolve_filters(self, args, info):
         return [
