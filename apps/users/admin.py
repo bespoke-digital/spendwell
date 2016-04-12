@@ -56,9 +56,6 @@ class UserAdmin(AuthUserAdmin):
         'timezone',
         'dashboard_help',
     )}),)
-    readonly_fields = (
-        'finicity_id',
-    )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
