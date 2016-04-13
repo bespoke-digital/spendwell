@@ -13,10 +13,17 @@ DATABASES['default'] = {
     'PASSWORD': db_password,
 }
 
+INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+LOGGING['loggers']['django']['handlers'] = ['console', 'sentry']
+
 RAVEN_PUBLIC_DSN = 'https://e82e41c7ae084a72b64d0571f6b4dcfd@app.getsentry.com/73495'
-RAVEN_CONFIG['dsn'] = raven_dsn
+RAVEN_CONFIG = {
+    'dsn': raven_dsn,
+    'release': raven.fetch_git_sha(BASE_DIR),
+}
 
 PLAID_PRODUCTION = True
 PLAID_SECRET = plaid_secret

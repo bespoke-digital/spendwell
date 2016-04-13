@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'graphene.contrib.django',
     'watchman',
     'django_extensions',
-    'raven.contrib.django.raven_compat',
 
     'apps.core',
     'apps.landing',
@@ -114,16 +113,16 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
             'level': 'INFO',
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
         },
     },
 }
@@ -148,12 +147,6 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = '/app'
 LOGIN_URL = '/login'
 
-
-RAVEN_PUBLIC_DSN = None
-RAVEN_CONFIG = {
-    'dsn': None,
-    'release': raven.fetch_git_sha(BASE_DIR),
-}
 
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
