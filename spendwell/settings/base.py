@@ -137,6 +137,7 @@ STATIC_ROOT = 'collected_static'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
 
 
 LOGIN_REDIRECT_URL = '/app'
