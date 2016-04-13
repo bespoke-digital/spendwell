@@ -176,7 +176,7 @@ class FinicityAccountDialog extends Component {
                 <TextInput
                   label={field.description}
                   onChange={this.setCredentialValue.bind(this, field.name, field.id)}
-                  type={field.name.indexOf('Password') !== -1 ? 'password' : 'text'}
+                  type={field.mask ? 'password' : 'text'}
                   value={credentials[field.id] ? credentials[field.id].value : ''}
                 />
               </div>
@@ -214,6 +214,7 @@ FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
           name
           description
           displayOrder
+          mask
         }
       }
     `,
