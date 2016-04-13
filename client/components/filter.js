@@ -114,7 +114,7 @@ export class Filter {
 
       return (
         <span className='field' key={key}>
-          <strong>{label}{':'}</strong>
+          <strong>{label}{':'}&nbsp;</strong>
           {type === 'money' ? <Money amount={value} abs={true}/> : value}
         </span>
       );
