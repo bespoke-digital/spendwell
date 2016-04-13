@@ -17,7 +17,7 @@ export default class MoneyInput extends Component {
   }
 
   onChange(value) {
-    const numberValue = parseInt(parseFloat(value.replace(',', '')) * 100);
+    const numberValue = parseInt(parseFloat(value.replace(/[\$,]/g, '')) * 100);
     const valid = !_.isNaN(numberValue);
 
     this.setState({ value, valid });

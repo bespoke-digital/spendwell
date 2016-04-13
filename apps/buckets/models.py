@@ -15,7 +15,6 @@ from apps.transactions.utils import apply_filter_list
 class Bucket(SWModel):
     owner = models.ForeignKey('users.User', related_name='buckets')
     name = models.CharField(max_length=255)
-    # filters = JSONField(default=list)
     _filters = JSONField(default=list)
     type = models.CharField(max_length=10, default='expense', choices=(
         ('expense', 'Expense Category'),
