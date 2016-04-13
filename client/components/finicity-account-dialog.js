@@ -56,28 +56,38 @@ class FinicityAccountDialog extends Component {
 
         this.setState({ loading: false });
 
-        const mfaError = transaction.getError().source.errors.find(
-          ({ message })=> message.indexOf('finicity-mfa-required:') === 0
-        );
+        const errors = transaction.getError().source.errors;
+        const error = (testMessage)=> errors.find(({ message })=> message.indexOf(testMessage) === 0);
+
+        const mfaError = error('finicity-mfa-required');
+        const mfaExpired = error('finicity-mfa-expired');
+        const invalidCredentials = error('finicity-invalid-credentials');
+        const userActionRequired = error('finicity-user-action-required');
 
         if (mfaError) {
           const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'));
           console.log('Finicity MFA Required', mfaChallenges);
           this.setState({ mfaChallenges });
 
-          return;
-        }
-
-        const mfaExpired = transaction.getError().source.errors.find(
-          ({ message })=> message.indexOf('finicity-mfa-expired') === 0
-        );
-
-        if (mfaExpired)
+        } else if (mfaExpired) {
           this.setState({ mfaChallenges: null });
+
+        } else {
+          this.setState({
+            invalidCredentials: !!invalidCredentials,
+            userActionRequired: !!userActionRequired,
+          });
+        }
       },
       onSuccess: ()=> {
         console.log('Success: ConnectFinicityInstitutionMutation');
-        this.setState({ loading: false });
+
+        this.setState({
+          loading: false,
+          invalidCredentials: false,
+          userActionRequired: false,
+        });
+
         onConnected();
       },
     });
@@ -85,7 +95,14 @@ class FinicityAccountDialog extends Component {
 
   render() {
     const { finicityInstitution, onRequestClose } = this.props;
-    const { loading, mfaChallenges, credentials, mfaAnswers } = this.state;
+    const {
+      loading,
+      mfaChallenges,
+      credentials,
+      mfaAnswers,
+      invalidCredentials,
+      userActionRequired,
+    } = this.state;
 
     const formFields = _.sortBy(finicityInstitution.loginForm, 'displayOrder');
 
@@ -94,6 +111,17 @@ class FinicityAccountDialog extends Component {
         <form onSubmit={::this.handleSubmit}>
           <div className='body'>
             <h3>Connect {finicityInstitution.name}</h3>
+
+            {invalidCredentials ?
+              <span className='form-error'>
+                We're having trouble connecting to your account with this
+                login information.
+              </span>
+            : userActionRequired ?
+              <span className='form-error'>
+                You need to login to your bank and complete an action to continue.
+              </span>
+            : null}
 
             {mfaChallenges ? mfaChallenges.map((challenge, index)=>
               <div className='form-field' key={index}>

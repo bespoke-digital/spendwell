@@ -30,11 +30,19 @@ def mfa_cache_key(user):
     return 'finicity-mfa:{}'.format(user.id)
 
 
-class FinicityError(Exception):
+class FinicityException(Exception):
     pass
 
 
-class FinicityMFAException(FinicityError):
+class FinicityError(FinicityException):
+    pass
+
+
+class FinicityValidation(FinicityException):
+    pass
+
+
+class FinicityMFAException(FinicityException):
     def __init__(self, user, response, data):
         self.user = user
         self.response = response
@@ -114,6 +122,12 @@ class Finicity(object):
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
+            if data['error']['code'] in ('103',):
+                raise FinicityValidation('finicity-invalid-credentials')
+
+            if data['error']['code'] in ('108', '109'):
+                raise FinicityValidation('finicity-user-action-required')
+
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
 
         return data
@@ -162,7 +176,7 @@ class Finicity(object):
     def mfa_xml(self, answers):
         mfa_data = cache.get(mfa_cache_key(self.user))
         if not mfa_data:
-            raise FinicityError('finicity-mfa-expired')
+            raise FinicityValidation('finicity-mfa-expired')
 
         body = '<accounts><mfaChallenges><questions>{}</questions></mfaChallenges></accounts>'.format(
             ''.join([

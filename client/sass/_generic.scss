@@ -108,3 +108,9 @@ a:focus {
 .chatlio-title-avatar-container {
   display: none;
 }
+
+.form-error {
+  font-size: 12px;
+  color: $brand-danger;
+  line-height: 1.2;
+}
