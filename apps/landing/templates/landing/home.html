@@ -4,6 +4,8 @@
 
 {% block body_class %}{{ block.super }} home{% endblock %}
 
+{% block analytics_page_name %}Home{% endblock %}
+
 {% block head %}
   {{ block.super }}
   <meta property="og:url" content="https://{{ request.get_host }}" />
@@ -109,6 +111,4 @@
   <div class="cta-bar">
     <a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Get Notified</a>
   </div>
-
-  <script>window.mixpanel.track('Landing: Home');</script>
 {% endblock %}

@@ -17,8 +17,6 @@ DATABASES['default'] = {
 
 INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 
 LOGGING['handlers']['sentry'] = {
     'level': 'ERROR',

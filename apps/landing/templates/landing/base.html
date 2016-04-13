@@ -4,20 +4,12 @@
 
 {% block body_class %}{{ block.super }} landing{% endblock %}
 
+{% block analytics_page_name %}Landing{% endblock %}
+
 {% block head %}
   <link rel="stylesheet" href="{% static 'dist/pages.css' %}">
 
-  <!-- Facebook Pixel Code -->
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','//connect.facebook.net/en_US/fbevents.js');
-
-    fbq('init', '{{ FACEBOOK_PIXEL_KEY }}');
-    fbq('track', 'PageView');
-  </script>
+  <!-- Facebook Pixel Backup -->
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=227041677640062&ev=PageView&noscript=1"
   /></noscript>
@@ -91,4 +83,6 @@
   {% include 'landing/_email-form.html' %}
 
   <script src="{% static 'dist/pages.js' %}"></script>
+  <script src="https://kickoffpages-kickofflabs.netdna-ssl.com/widgets/1.9.0/kol_any_form.js"></script>
+  <script src='https://kickoffpages-kickofflabs.netdna-ssl.com/w/64667/91026.js'></script>
 {% endblock %}

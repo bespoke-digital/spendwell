@@ -17,6 +17,10 @@ import { parseUrl } from 'utils';
 import styles from 'sass/views/add-plaid.scss';
 
 
+const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
+const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').getAttribute('content');
+
+
 class ConnectAccount extends Component {
   constructor() {
     super();
@@ -39,7 +43,7 @@ class ConnectAccount extends Component {
 
     relay.setVariables({ query });
 
-    fetch(`https://${window.ENV.PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
+    fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
         `/institutions/search?p=connect&q=${query}`)
       .then((response)=> response.json())
       .then((results)=> this.setState({ results }));
@@ -48,10 +52,10 @@ class ConnectAccount extends Component {
   selectPlaid(fi) {
     window.Plaid.create({
       clientName: 'Spendwell',
-      key: window.ENV.PLAID_PUBLIC_KEY,
+      key: PLAID_PUBLIC_KEY,
       product: 'connect',
       longtail: true,
-      env: window.ENV.PLAID_PRODUCTION ? 'production' : 'tartan',
+      env: PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess: (publicToken)=> this.connectPlaid({ fi, publicToken }),
     }).open(fi.id);
   }

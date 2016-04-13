@@ -11,7 +11,14 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['app.spendwell.co']
 CSRF_COOKIE_SECURE = True
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+CSP_HEADER = {
+    'default-src': ('https:', "'self'"),
+    'style-src': ('https:', "'self'", "'unsafe-inline'"),
+    'img-src': ('https:', 'data:', "'self'"),
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -25,6 +32,7 @@ INSTALLED_APPS = [
     'graphene.contrib.django',
     'watchman',
     'django_extensions',
+    'security_middleware',
 
     'apps.core',
     'apps.landing',
@@ -49,6 +57,12 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'security_middleware.middleware.SSLMiddleware',
+    'security_middleware.middleware.XSSProtectionMiddleware',
+    'security_middleware.middleware.NoSniffMiddleware',
+    'security_middleware.middleware.ContentSecurityPolicyMiddleware',
+
     'apps.users.middleware.BetaCodeMiddleware',
 ]
 

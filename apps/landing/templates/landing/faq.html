@@ -4,6 +4,8 @@
 
 {% block body_class %}{{ block.super }} faq{% endblock %}
 
+{% block analytics_page_name %}FAQ{% endblock %}
+
 {% block content %}
   <h1 class="color-bar faq-heading">Frequently Asked Questions</h1>
 
@@ -40,6 +42,4 @@
       <p>Email us any time: <a href="mailto:hello@spendwell.co">hello@spendwell.co</a>. We love to hear from our customers and potential ones.</p>
     </div>
   </div>
-
-  <script>window.mixpanel.track('Landing: FAQ');</script>
 {% endblock %}
