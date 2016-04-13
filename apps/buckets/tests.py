@@ -1,4 +1,5 @@
 
+from decimal import Decimal
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -8,6 +9,7 @@ from apps.users.factories import UserFactory
 
 from apps.core.utils import this_month
 from .factories import BucketFactory
+from .models import Bucket
 
 
 class BucktsTestCase(SWTestCase):
@@ -109,3 +111,17 @@ class BucktsTestCase(SWTestCase):
         transaction = TransactionFactory.create(owner=owner, description='transfer')
         account.assign_transactions()
         self.assertTrue(transaction not in account.transactions.all())
+
+    def test_decimal_filter(self):
+        owner = UserFactory.create()
+
+        bucket = BucketFactory.create(
+            owner=owner,
+            type='account',
+            filters=[{'amount_gt': Decimal('25.52')}],
+        )
+
+        fetched_bucket = Bucket.objects.get(id=bucket.id)
+
+        self.assertEqual(bucket.filters[0]['amount_gt'], fetched_bucket.filters[0]['amount_gt'])
+        self.assertTrue(isinstance(fetched_bucket.filters[0]['amount_gt'], Decimal))
