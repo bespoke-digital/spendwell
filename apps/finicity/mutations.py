@@ -2,13 +2,17 @@
 import json
 
 import graphene
-from raven.contrib.django.raven_compat.models import client as raven
 
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 
 from apps.core.utils import instance_for_node_id
 from .client import Finicity, FinicityError
+
+try:
+    from raven.contrib.django.raven_compat.models import client as raven
+except ImportError:
+    raven = None
 
 
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -50,7 +54,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
             for account_data in accounts_data:
                 Account.objects.from_finicity(institution, account_data)
         except FinicityError as e:
-            raven.captureException()
+            if raven:
+                raven.captureException()
             raise e
 
         return ConnectFinicityInstitutionMutation(viewer=Viewer())
