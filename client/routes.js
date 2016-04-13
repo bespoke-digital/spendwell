@@ -14,7 +14,6 @@ import UpdateBucket from 'views/update-bucket';
 import UpdateGoal from 'views/update-goal';
 import Bucket from 'views/bucket';
 import Goal from 'views/goal';
-import Transactions from 'views/transactions';
 import OnboardingAddAccount from 'views/onboarding/add-account';
 import OnboardingAccounts from 'views/onboarding/accounts';
 import OnboardingWalkthrough from 'views/onboarding/walkthrough';
@@ -52,8 +51,6 @@ export default (
       <Route path='labels/new' component={CreateBucket} queries={rootQuery}/>
       <Route path='labels/:id' component={Bucket} queries={rootQuery}/>
       <Route path='labels/:id/edit' component={UpdateBucket} queries={rootQuery}/>
-
-      <Route path='transactions' component={Transactions} queries={rootQuery}/>
 
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/new' component={AddAccount} queries={rootQuery}/>
