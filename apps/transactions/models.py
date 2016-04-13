@@ -112,7 +112,7 @@ class TransactionManager(SWManager):
         transaction.amount = Decimal(data['amount'])
         transaction.date = datetime.fromtimestamp(
             float(data['postedDate']),
-            timezone(institution.owner.timezone),
+            timezone(institution.owner.timezone or 'America/Toronto'),
         )
 
         transaction.save()
