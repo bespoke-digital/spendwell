@@ -31,11 +31,11 @@ def production():
 
 
 @task(alias='stag')
-def staging():
+def staging(branch='develop'):
     env.venv_name = 'spendwell'
     env.domain = 'staging.spendwell.co'
     env.settings = 'spendwell.settings.staging'
-    env.branch = 'develop'
+    env.branch = branch
     env.hosts = ['162.248.180.146']
     configure_env()
 
