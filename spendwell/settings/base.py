@@ -119,13 +119,11 @@ LOGGING = {
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
+            'handlers': ['console', 'sentry'],
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
+            'handlers': ['console', 'sentry'],
         },
     },
 }
