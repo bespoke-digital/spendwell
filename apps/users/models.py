@@ -41,7 +41,7 @@ class User(AbstractBaseUser):
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
-    timezone = models.CharField(max_length=100)
+    timezone = models.CharField(max_length=100, default='America/Toronto')
     dashboard_help = models.BooleanField(default=True)
 
     objects = UserManager()
