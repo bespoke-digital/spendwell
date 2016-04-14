@@ -128,10 +128,34 @@ class TransactionManager(SWManager):
             )
 
         for transaction in transactions:
-            transactions.transfer_pair = None
+            transaction.transfer_pair = None
 
         for transaction in transactions:
-            transaction.detect_transfer()
+            if transaction.transfer_pair:
+                return
+
+            potential_transfers = [txn for txn in transactions if (
+                txn.account != transaction.account and
+                txn.amount == -transaction.amount and
+                txn.transfer_pair is None
+            )]
+
+            if len(potential_transfers) == 0:
+                return
+
+            elif len(potential_transfers) == 1:
+                transfer = potential_transfers[0]
+
+            else:
+                # Fall back on similarity of description. This may miss many cases.
+                # TODO: find a better algo for this.
+                transfer = sorted(
+                    potential_transfers,
+                    key=lambda t: similarity(t.description, transaction.description),
+                )[-1]
+
+            transaction.transfer_pair = transfer
+            transaction.save()
 
 
 class Transaction(SWModel):
@@ -204,47 +228,15 @@ class Transaction(SWModel):
             if self in bucket.transactions():
                 BucketTransaction.objects.get_or_create(bucket=bucket, transaction=self)
 
-    def get_transfer_pair(self):
-        try:
-            return self._transfer_pair.all()[0]
-        except IndexError:
-            return None
+    @property
+    def transfer_pair(self):
+        return self._transfer_pair.first()
 
-    def set_transfer_pair(self, value):
+    @transfer_pair.setter
+    def transfer_pair(self, value):
         self._transfer_pair.clear()
         if value:
             return self._transfer_pair.add(value)
-
-    transfer_pair = property(get_transfer_pair, set_transfer_pair)
-
-    def detect_transfer(self):
-        if self.transfer_pair:
-            return
-
-        potential_transfers = (
-            Transaction.objects
-            .exclude(account=self.account)
-            .filter(owner=self.owner)
-            .filter(amount=(-self.amount))
-            .is_transfer(False)
-        )
-
-        if len(potential_transfers) == 0:
-            return
-
-        elif len(potential_transfers) == 1:
-            transfer = potential_transfers[0]
-
-        else:
-            # Fall back on similarity of description. This may miss many cases.
-            # TODO: find a better algo for this.
-            transfer = sorted(
-                potential_transfers,
-                key=lambda t: similarity(t.description, self.description),
-            )[-1]
-
-        self.transfer_pair = transfer
-        self.save()
 
 
 class BucketTransaction(models.Model):

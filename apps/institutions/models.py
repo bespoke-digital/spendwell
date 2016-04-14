@@ -141,26 +141,27 @@ class Institution(SWModel):
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 
-        tm = log_time(tm, 'transactions synced', self.name)
+        tm = log_time(tm, 'transactions synced')
 
         Transaction.objects.detect_transfers(owner=self.owner)
 
-        tm = log_time(tm, 'detect_transfers', self.name)
+        tm = log_time(tm, 'detect_transfers')
 
         for bucket in Bucket.objects.filter(owner=self.owner):
             bucket.assign_transactions()
 
-        tm = log_time(tm, 'bucket.assign_transactions', self.name)
+        tm = log_time(tm, 'bucket.assign_transactions')
 
         return tm
 
     def sync(self):
         tm = time()
+        print('\n', self.name)
 
         self.sync_accounts()
-        tm = log_time(tm, 'sync_accounts', self.name)
+        tm = log_time(tm, 'sync_accounts')
         tm = self.sync_transactions(tm)
-        tm = log_time(tm, 'sync_transactions', self.name)
+        tm = log_time(tm, 'sync_transactions')
         self.last_sync = timezone.now()
         self.save()
 
