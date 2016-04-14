@@ -6,6 +6,8 @@ from django.conf import settings
 from plaid import Client
 
 from apps.core.utils import instance_for_node_id
+from apps.transactions.models import Transaction
+from apps.buckets.models import Bucket
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -67,7 +69,11 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
         from spendwell.schema import Viewer
 
         for institution in info.request_context.user.institutions.all():
-            institution.sync()
+            institution.sync(finalize=False)
+
+        Transaction.objects.detect_transfers(owner=info.request_context.user)
+        for bucket in Bucket.objects.filter(owner=info.request_context.user):
+            bucket.assign_transactions()
 
         info.request_context.user.estimate_income()
         info.request_context.user.save()

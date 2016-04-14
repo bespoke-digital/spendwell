@@ -157,27 +157,28 @@ class Institution(SWModel):
         print(sum(txn_times) / len(txn_times), '\t', 'avg txn time')
         print(len(txn_times), '\t', 'x txns')
 
-        tm = log_time(tm, 'transactions synced')
-
-        Transaction.objects.detect_transfers(owner=self.owner)
-
-        tm = log_time(tm, 'detect_transfers')
-
-        for bucket in Bucket.objects.filter(owner=self.owner):
-            bucket.assign_transactions()
-
-        tm = log_time(tm, 'bucket.assign_transactions')
-
         return tm
 
-    def sync(self):
+    def sync(self, finalize=True):
         tm = time()
         print('\n', self.name)
 
         self.sync_accounts()
         tm = log_time(tm, 'sync_accounts')
         tm = self.sync_transactions(tm)
+
         tm = log_time(tm, 'sync_transactions')
+
+        if finalize:
+            Transaction.objects.detect_transfers(owner=self.owner)
+
+            tm = log_time(tm, 'detect_transfers')
+
+            for bucket in Bucket.objects.filter(owner=self.owner):
+                bucket.assign_transactions()
+
+            tm = log_time(tm, 'bucket.assign_transactions')
+
         self.last_sync = timezone.now()
         self.save()
 
