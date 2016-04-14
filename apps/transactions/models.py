@@ -63,12 +63,6 @@ class TransactionManager(SWManager):
         transaction.account = account
         transaction.owner = institution.owner
 
-        if data.get('category_id'):
-            try:
-                transaction.category = Category.objects.get(plaid_id=data['category_id'])
-            except Category.DoesNotExist:
-                pass
-
         transaction.description = data['name']
         transaction.amount = -Decimal(data['amount'])
         transaction.date = datetime(

@@ -1,5 +1,4 @@
 
-import sys
 import logging
 from time import time
 
@@ -24,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 def log_time(prev_time, *args):
     cur_time = time()
-    print(cur_time - prev_time, '\t', *args, file=sys.stderr)
+    print(cur_time - prev_time, '\t', *args)
     return cur_time
 
 
@@ -133,14 +132,30 @@ class Institution(SWModel):
                 Account.objects.from_finicity(self, account_data)
 
     def sync_transactions(self, tm):
+        txn_times = []
         if self.plaid_client and self.plaid_data:
+            tm = log_time(tm, 'data fetched')
+            txn_prev = time()
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
 
+                txn_cur = time()
+                txn_times.append(txn_cur - txn_prev)
+                txn_prev = txn_cur
+
         elif self.finicity_client:
             transactions_data = self.finicity_client.list_transactions(self.finicity_id)
+            tm = log_time(tm, 'data fetched')
+            txn_prev = time()
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
+
+                txn_cur = time()
+                txn_times.append(txn_cur - txn_prev)
+                txn_prev = txn_cur
+
+        print(sum(txn_times) / len(txn_times), '\t', 'avg txn time')
+        print(len(txn_times), '\t', 'x txns')
 
         tm = log_time(tm, 'transactions synced')
 
