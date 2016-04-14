@@ -45,19 +45,6 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
         return ConnectPlaidInstitutionMutation(viewer=Viewer())
 
 
-class SyncInstitutionMutation(graphene.relay.ClientIDMutation):
-    class Input:
-        institution_id = graphene.String()
-
-    institution = graphene.Field(InstitutionNode)
-
-    @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        institution = instance_for_node_id(input.get('institution_id'), info)
-        institution.sync()
-        return SyncInstitutionMutation(institution=institution)
-
-
 class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     class Input:
         pass
@@ -68,13 +55,7 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, info):
         from spendwell.schema import Viewer
 
-        for institution in info.request_context.user.institutions.all():
-            institution.sync(finalize=False)
-
-        Transaction.objects.detect_transfers(owner=info.request_context.user)
-        for bucket in Bucket.objects.filter(owner=info.request_context.user):
-            bucket.assign_transactions()
-
+        info.request_context.user.sync()
         info.request_context.user.estimate_income()
         info.request_context.user.save()
 
@@ -83,7 +64,6 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
 
 class InstitutionsMutations(graphene.ObjectType):
     connect_plaid_institution = graphene.Field(ConnectPlaidInstitutionMutation)
-    sync_institution = graphene.Field(SyncInstitutionMutation)
     sync_institutions = graphene.Field(SyncInstitutionsMutation)
 
     class Meta:

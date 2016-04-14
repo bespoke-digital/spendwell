@@ -4,16 +4,13 @@ from time import time
 
 from django.db import models
 from django.conf import settings
-from django.dispatch import receiver
 from django.utils import timezone
 
 from plaid import Client
 from plaid.errors import ResourceNotFoundError, RequestFailedError
 
 from apps.core.models import SWModel, SWManager
-from apps.core.signals import day_start
 from apps.accounts.models import Account
-from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity
 
@@ -131,77 +128,18 @@ class Institution(SWModel):
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync_transactions(self, tm):
-        txn_times = []
+    def sync_transactions(self):
         if self.plaid_client and self.plaid_data:
-            tm = log_time(tm, 'data fetched')
-            txn_prev = time()
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
 
-                txn_cur = time()
-                txn_times.append(txn_cur - txn_prev)
-                txn_prev = txn_cur
-
         elif self.finicity_client:
             transactions_data = self.finicity_client.list_transactions(self.finicity_id)
-            tm = log_time(tm, 'data fetched')
-            txn_prev = time()
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 
-                txn_cur = time()
-                txn_times.append(txn_cur - txn_prev)
-                txn_prev = txn_cur
-
-        print(sum(txn_times) / len(txn_times), '\t', 'avg txn time')
-        print(len(txn_times), '\t', 'x txns')
-
-        return tm
-
-    def sync(self, finalize=True):
-        tm = time()
-        print('\n', self.name)
-
+    def sync(self):
         self.sync_accounts()
-        tm = log_time(tm, 'sync_accounts')
-        tm = self.sync_transactions(tm)
-
-        tm = log_time(tm, 'sync_transactions')
-
-        if finalize:
-            Transaction.objects.detect_transfers(owner=self.owner)
-
-            tm = log_time(tm, 'detect_transfers')
-
-            for bucket in Bucket.objects.filter(owner=self.owner):
-                bucket.assign_transactions()
-
-            tm = log_time(tm, 'bucket.assign_transactions')
-
+        self.sync_transactions()
         self.last_sync = timezone.now()
         self.save()
-
-
-@receiver(day_start)
-def on_day_start(*args, **kwargs):
-    for institution in Institution.objects.filter(
-        access_token__isnull=False,
-        plaid_id__isnull=False,
-    ):
-        try:
-            institution.sync()
-        except:
-            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
-            logger.exception(
-                'Exception occurred while syncing plaid institution {}'.format(institution.id)
-            )
-
-    for institution in Institution.objects.filter(finicity_id__isnull=False):
-        try:
-            institution.sync()
-        except:
-            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
-            logger.exception(
-                'Exception occurred while syncing finicity institution {}'.format(institution.id)
-            )

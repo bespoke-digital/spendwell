@@ -1,12 +1,20 @@
 
+import logging
 from uuid import uuid4
 from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.dispatch import receiver
 from delorean import Delorean
 
+from apps.core.signals import day_start
 from apps.core.utils import months_ago, this_month
+from apps.buckets.models import Bucket
+from apps.transactions.models import Transaction
+
+
+logger = logging.getLogger(__name__)
 
 
 class UserManager(BaseUserManager):
@@ -101,6 +109,25 @@ class User(AbstractBaseUser):
             return self.created
         else:
             return Delorean(first_transaction.date).truncate('month').datetime
+
+    def sync(self):
+        for institution in self.institutions.all():
+            institution.sync()
+
+        Transaction.objects.detect_transfers(owner=self)
+
+        for bucket in Bucket.objects.filter(owner=self):
+            bucket.assign_transactions()
+
+
+@receiver(day_start)
+def on_day_start(*args, **kwargs):
+    for user in User.objects.all():
+        try:
+            user.sync()
+        except:
+            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
+            logger.exception('Exception occurred while syncing {}'.format(user.id))
 
 
 def get_beta_code():

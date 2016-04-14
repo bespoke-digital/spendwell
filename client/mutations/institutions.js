@@ -46,45 +46,6 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
 }
 
 
-export class SyncInstitutionMutation extends Relay.Mutation {
-  static fragments = {
-    institution: ()=> Relay.QL`
-      fragment on InstitutionNode {
-        id
-      }
-    `,
-  };
-
-  getMutation() {
-    return Relay.QL`mutation { syncInstitution }`;
-  }
-
-  getVariables() {
-    return { institutionId: this.props.institution.id };
-  }
-
-  getFatQuery() {
-    return Relay.QL`
-      fragment on SyncInstitutionMutation {
-        institution {
-          lastSync
-          accounts
-        }
-      }
-    `;
-  }
-
-  getConfigs() {
-    return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        institution: this.props.institution.id,
-      },
-    }];
-  }
-}
-
-
 export class SyncInstitutionsMutation extends Relay.Mutation {
   static fragments = {
     viewer: ()=> Relay.QL`

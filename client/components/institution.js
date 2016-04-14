@@ -12,7 +12,6 @@ import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import ListAccount from 'components/list-account';
 
-import { SyncInstitutionMutation } from 'mutations/institutions';
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
 
@@ -32,14 +31,6 @@ class Institution extends Component {
 
   selectAccount({ id }) {
     browserHistory.push({ pathname: `/accounts/${id}` });
-  }
-
-  sync() {
-    const { institution } = this.props;
-    Relay.Store.commitUpdate(new SyncInstitutionMutation({ institution }), {
-      onFailure: handleMutationError,
-      onSuccess: ()=> console.log('Success: SyncInstitutionMutation'),
-    });
   }
 
   enableAccount(account) {
@@ -74,14 +65,11 @@ class Institution extends Component {
           <div>
             <h3>{institution.name}</h3>
 
-            {institution.canSync && isAdmin ? [
-              <div key='last-sync' className='last-sync'>
+            {isAdmin ?
+              <div className='last-sync'>
                 {moment(institution.lastSync).fromNow()}
-              </div>,
-              <div key='sync'>
-                <Button onClick={::this.sync}><i className='fa fa-refresh'/></Button>
-              </div>,
-            ] : null}
+              </div>
+            : null}
           </div>
         }/>
 
