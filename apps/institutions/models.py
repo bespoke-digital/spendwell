@@ -1,5 +1,6 @@
 
 import logging
+from time import time
 
 from django.db import models
 from django.conf import settings
@@ -18,6 +19,12 @@ from apps.finicity.client import Finicity
 
 
 logger = logging.getLogger(__name__)
+
+
+def log_time(prev_time, *args):
+    cur_time = time()
+    print(cur_time - prev_time, '\t', *args)
+    return cur_time
 
 
 class InstitutionManager(SWManager):
@@ -124,7 +131,7 @@ class Institution(SWModel):
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync_transactions(self):
+    def sync_transactions(self, tm):
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
                 Transaction.objects.from_plaid(self, transaction_data)
@@ -134,14 +141,26 @@ class Institution(SWModel):
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 
+        tm = log_time(tm, 'transactions synced', self.name)
+
         Transaction.objects.detect_transfers(owner=self.owner)
+
+        tm = log_time(tm, 'detect_transfers', self.name)
 
         for bucket in Bucket.objects.filter(owner=self.owner):
             bucket.assign_transactions()
 
+        tm = log_time(tm, 'bucket.assign_transactions', self.name)
+
+        return tm
+
     def sync(self):
+        tm = time()
+
         self.sync_accounts()
-        self.sync_transactions()
+        tm = log_time(tm, 'sync_accounts', self.name)
+        tm = self.sync_transactions(tm)
+        tm = log_time(tm, 'sync_transactions', self.name)
         self.last_sync = timezone.now()
         self.save()
 

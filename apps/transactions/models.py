@@ -160,11 +160,11 @@ class Transaction(SWModel):
 
     description = models.CharField(max_length=255, db_index=True)
     amount = models.DecimalField(decimal_places=2, max_digits=12, db_index=True)
-    date = models.DateTimeField()
+    date = models.DateTimeField(db_index=True)
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
-    plaid_id = models.CharField(max_length=255, blank=True, null=True)
-    finicity_id = models.CharField(max_length=255, blank=True, null=True)
+    plaid_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+    finicity_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
     from_savings = models.BooleanField(default=False)
     pending = models.BooleanField(default=False)
     location = JSONField(null=True)
