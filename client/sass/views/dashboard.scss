@@ -3,10 +3,19 @@
 
 :local(.root) {
   .heading {
+    margin: 20px 0 10px;
+
     h1, h2, h3, h4, h5 {
-      line-height: 1;
+      padding-left: 13px;
+
+      line-height: 26px;
+      font-size: 16px;
+      font-weight: normal;
+      color: $gray-4;
 
       small {
+        display: none !important;
+
         @media (min-width: $screen-sm-min) {
           display: inline-block;
           margin-left: 5px;
@@ -23,6 +32,11 @@
         margin-left: 7px;
         font-size: 12px;
       }
+
+    }
+
+    .mui-btn {
+      margin: -5px 0;
     }
   }
 
