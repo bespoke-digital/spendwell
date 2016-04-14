@@ -3,6 +3,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
 import A from 'components/a';
 import TextInput from 'components/text-input';
@@ -23,9 +24,9 @@ class TransactionQuickAdd extends Component {
     const { relay } = this.props;
 
     return {
-      onFailure: ()=> {
-        console.log('Failure: TransactionQuickAddMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: (response)=> {
         console.log('Success: TransactionQuickAddMutation');
@@ -49,9 +50,9 @@ class TransactionQuickAdd extends Component {
       bucket: null,
       bucketName: searchValue,
     }), {
-      onFailure: ()=> {
-        console.log('Failure: TransactionQuickAddMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: (response)=> {
         console.log('Success: TransactionQuickAddMutation');
@@ -90,9 +91,9 @@ class TransactionQuickAdd extends Component {
       transaction,
       bucket,
     }), {
-      onFailure: ()=> {
-        console.log('Failure: TransactionQuickAddMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: TransactionQuickAddMutation');

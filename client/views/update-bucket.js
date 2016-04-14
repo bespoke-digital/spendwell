@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import { Component } from 'react';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import App from 'components/app';
 import BucketForm from 'components/bucket-form';
 import Button from 'components/button';
@@ -29,10 +30,10 @@ class UpdateBucket extends Component {
 
     this.setState({ deleteLoading: true });
     Relay.Store.commitUpdate(new DeleteBucketMutation({ viewer, bucket }), {
-      onFailure: ()=> {
-        console.log('Failure: DeleteBucketMutation');
+      onFailure: (response)=> {
         this.setState({ deleteLoading: false });
         this.setState({ confirmDelete: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: DeleteBucketMutation');

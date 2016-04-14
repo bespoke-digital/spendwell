@@ -4,6 +4,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import TextInput from 'components/text-input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -70,7 +71,7 @@ class ConnectAccount extends Component {
     };
 
     Relay.Store.commitUpdate(new ConnectPlaidInstitutionMutation(mutationInput), {
-      onFailure: ()=> console.log('Failure: ConnectPlaidInstitutionMutation'),
+      onFailure: handleMutationError,
       onSuccess: ()=> {
         console.log('Success: ConnectPlaidInstitutionMutation');
         this.handleConnected();

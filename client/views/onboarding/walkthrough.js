@@ -2,6 +2,7 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
+import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
 import Graphicdialog from 'components/graphic-dialog';
@@ -76,9 +77,9 @@ class OnboardingWalkthrough extends Component {
 
     this.setState({ syncing: true });
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
-      onFailure: ()=> {
-        console.log('Failure: SyncInstitutionsMutation');
+      onFailure: (response)=> {
         this.setState({ syncing: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: SyncInstitutionsMutation');

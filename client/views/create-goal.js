@@ -3,6 +3,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import App from 'components/app';
 import GoalForm from 'components/goal-form';
 import { CreateGoalMutation } from 'mutations/goals';
@@ -21,9 +22,9 @@ class CreateGoal extends Component {
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, name, monthlyAmount }), {
-      onFailure: ()=> {
-        console.log('Failure: CreateGoalMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: CreateGoalMutation');

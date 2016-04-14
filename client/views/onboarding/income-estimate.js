@@ -4,6 +4,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
 import Card from 'components/card';
@@ -32,9 +33,9 @@ class OnboardingIncomeEstimate extends Component {
     this.setState({ loading: true });
 
     Relay.Store.commitUpdate(new SetIncomeEstimateMutation({ viewer, amount }), {
-      onFailure: ()=> {
-        console.log('Failure: SetIncomeEstimateMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: SetIncomeEstimateMutation');

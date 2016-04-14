@@ -5,6 +5,7 @@ import Relay from 'react-relay';
 import moment from 'moment';
 import { Link } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
@@ -40,14 +41,6 @@ class Dashboard extends Component {
     };
   }
 
-  syncBuckets(month) {
-    const { viewer } = this.props;
-    Relay.Store.commitUpdate(new AssignTransactionsMutation({ viewer, month }), {
-      onSuccess: ()=> console.log('AssignTransactionsMutation Success'),
-      onFailure: ()=> console.log('AssignTransactionsMutation Failure'),
-    });
-  }
-
   select(id) {
     const { selected } = this.state;
 
@@ -68,8 +61,8 @@ class Dashboard extends Component {
     const { viewer } = this.props;
 
     Relay.Store.commitUpdate(new SettingsMutation({ viewer, dashboardHelp: !!show }), {
+      onFailure: handleMutationError,
       onSuccess: ()=> console.log('SettingsMutation Success'),
-      onFailure: ()=> console.log('SettingsMutation Failure'),
     });
   }
 

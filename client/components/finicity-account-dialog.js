@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import { handleMutationError } from 'utils/network-layer';
 import TextInput from 'components/text-input';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
@@ -77,6 +78,9 @@ class FinicityAccountDialog extends Component {
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
           });
+
+          if (!invalidCredentials && !userActionRequired)
+            handleMutationError(transaction);
         }
       },
       onSuccess: ()=> {

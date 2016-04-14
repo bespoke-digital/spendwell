@@ -3,6 +3,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import App from 'components/app';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
@@ -42,9 +43,9 @@ class UpdateGoal extends Component {
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new UpdateGoalMutation(args), {
-      onFailure: ()=> {
-        console.log('Failure: UpdateGoalMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: UpdateGoalMutation');

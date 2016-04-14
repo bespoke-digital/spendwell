@@ -4,6 +4,7 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
 import CardList from 'components/card-list';
@@ -31,14 +32,14 @@ class OnboardingAccounts extends Component {
 
   disable(account) {
     Relay.Store.commitUpdate(new DisableAccountMutation({ account, detectTransfers: false }), {
-      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
+      onFailure: handleMutationError,
       onSuccess: ()=> console.log('Success: DisableAccountMutation'),
     });
   }
 
   enable(account) {
     Relay.Store.commitUpdate(new EnableAccountMutation({ account, sync: false }), {
-      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
+      onFailure: handleMutationError,
       onSuccess: ()=> console.log('Success: EnableAccountMutation'),
     });
   }

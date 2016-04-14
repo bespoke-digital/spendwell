@@ -3,6 +3,7 @@ import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 
+import { handleMutationError } from 'utils/network-layer';
 import BucketForm from 'components/bucket-form';
 import App from 'components/app';
 
@@ -27,9 +28,9 @@ class CreateBucket extends Component {
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type }), {
-      onFailure: ()=> {
-        console.log('Failure: CreateBucketMutation');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');

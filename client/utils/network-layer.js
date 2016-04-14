@@ -17,7 +17,7 @@ function finishPromise(arg) {
   return arg;
 }
 
-function loadingPromise(promise) {
+function loadingPromise(promise, errorClbk) {
   nprogress.start();
   pendingRequests++;
 
@@ -34,10 +34,17 @@ const defaultNetworkLayer = new Relay.DefaultNetworkLayer('/graphql', {
 
 
 export default Object.assign({}, defaultNetworkLayer, {
-  sendMutation(arg) {
-    return loadingPromise(defaultNetworkLayer.sendMutation(arg));
+  sendMutation(request) {
+    return loadingPromise(defaultNetworkLayer.sendMutation(request).then(
+      console.log.bind(console, 'success'),
+      console.log.bind(console, 'error'),
+    ));
   },
   sendQueries(arg) {
     return loadingPromise(defaultNetworkLayer.sendQueries(arg));
   },
 });
+
+export const handleMutationError = function(response) {
+  throw response.getError() || new Error('Mutation failed.');
+}

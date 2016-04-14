@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import Relay from 'react-relay';
 import moment from 'moment';
 
+import { handleMutationError } from 'utils/network-layer';
 import Money from 'components/money';
 import CardList from 'components/card-list';
 import Card from 'components/card';
@@ -36,15 +37,15 @@ class Institution extends Component {
   sync() {
     const { institution } = this.props;
     Relay.Store.commitUpdate(new SyncInstitutionMutation({ institution }), {
-      onSuccess: console.log.bind(console, 'onSuccess'),
-      onFailure: console.log.bind(console, 'onFailure'),
+      onFailure: handleMutationError,
+      onSuccess: ()=> console.log('Success: SyncInstitutionMutation'),
     });
   }
 
   enableAccount(account) {
     const { relay } = this.props;
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: EnableAccountMutation'),
+      onFailure: handleMutationError,
       onSuccess: ()=> {
         console.log('Success: EnableAccountMutation');
         relay.forceFetch();
@@ -55,7 +56,7 @@ class Institution extends Component {
   disableAccount(account) {
     const { relay } = this.props;
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
-      onFailure: ()=> console.log('Failure: DisableAccountMutation'),
+      onFailure: handleMutationError,
       onSuccess: ()=> {
         console.log('Success: DisableAccountMutation');
         relay.forceFetch();

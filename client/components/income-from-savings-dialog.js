@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import MoneyInput from 'components/money-input';
 import Dialog from 'components/dialog';
@@ -31,9 +32,9 @@ class IncomeFromSavingsDialog extends Component {
       viewer,
       amount: !_.isUndefined(amount) ? amount : summary.fromSavingsIncome,
     }), {
-      onFailure: ()=> {
-        console.log('AssignTransactionsMutation Failure');
+      onFailure: (response)=> {
         this.setState({ loading: false });
+        handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('AssignTransactionsMutation Success');
