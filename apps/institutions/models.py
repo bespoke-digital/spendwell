@@ -1,4 +1,5 @@
 
+import sys
 import logging
 from time import time
 
@@ -23,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def log_time(prev_time, *args):
     cur_time = time()
-    print(cur_time - prev_time, '\t', *args)
+    print(cur_time - prev_time, '\t', *args, file=sys.stderr)
     return cur_time
 
 
