@@ -126,8 +126,6 @@ Institution = Relay.createContainer(Institution, {
     `,
     institution: ()=> Relay.QL`
       fragment on InstitutionNode {
-        ${SyncInstitutionMutation.getFragment('institution')}
-
         name
         canSync
         lastSync
