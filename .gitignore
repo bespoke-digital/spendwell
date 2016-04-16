@@ -1,4 +1,5 @@
 *.pyc
+/.ackrc
 /venv
 /.env
 /fab-env
