@@ -1,12 +1,13 @@
 
 from decimal import Decimal
+from copy import deepcopy
 
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
-from apps.core.models import SWModel
+from apps.core.models import SWModel, SWManager
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -22,33 +23,35 @@ class Bucket(SWModel):
         ('account', 'External Account'),
     ))
 
-    def __init__(self, *args, **kwargs):
-        super(Bucket, self).__init__(*args, **kwargs)
-
-        if 'filters' in kwargs:
-            self.filters = kwargs['filters']
-
     def __str__(self):
         return self.name
 
     @property
     def filters(self):
-        if not hasattr(self, '_clean_filters'):
-            self._clean_filters = self._filters
-            for filter in self._clean_filters:
+        if not hasattr(self, '_high_filters'):
+            self._high_filters = self._filters
+            for filter in self._high_filters:
                 for key, value in filter.items():
                     if isinstance(value, str) and value.startswith('decimal:'):
                         filter[key] = Decimal(value.split(':')[-1])
-        return self._clean_filters
+        return self._high_filters
 
     @filters.setter
     def filters(self, value):
-        raw_filters = value
-        for filter in raw_filters:
+        # import pdb; pdb.set_trace()
+        low_filters = deepcopy(value)
+        for index, filter in enumerate(low_filters):
             for key, value in filter.items():
                 if isinstance(value, Decimal):
                     filter[key] = 'decimal:{}'.format(value)
-        self._filters = raw_filters
+            low_filters[index] = filter
+
+        self._filters = low_filters
+
+        # Delete and cached filter value
+        if hasattr(self, '_high_filters'):
+            delattr(self, '_high_filters')
+            self.filters
 
     def raw_transactions(self, **filters):
         filters['owner'] = self.owner

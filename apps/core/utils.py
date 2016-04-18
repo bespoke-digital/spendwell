@@ -4,7 +4,8 @@ from decimal import Decimal
 import delorean
 from dateutil.relativedelta import relativedelta
 import graphene
-from graphql_relay.node.node import from_global_id
+from graphene.contrib.django.utils import get_type_for_model
+from graphql_relay import from_global_id, to_global_id
 from graphql_relay.connection.arrayconnection import cursor_for_object_in_connection
 
 
@@ -12,6 +13,7 @@ STUB_SCHEMA = graphene.Schema()
 
 
 def instance_for_node_id(node_id, info, check_owner=True):
+    "Returns a model instance for a relay node id"
     from spendwell.schema import schema
 
     resolved_id = from_global_id(node_id)
@@ -24,6 +26,20 @@ def instance_for_node_id(node_id, info, check_owner=True):
     return node.instance
 
 
+def node_id_from_instance(instance):
+    "Returns a relay node id for a model instance"
+    from spendwell.schema import schema
+    schema.schema.get_type_map()
+
+    schema_type = get_type_for_model(schema, instance.__class__)
+
+    if schema_type is None:
+        raise ValueError('Cannot find GraphQL type for {}'.format(instance.__class__))
+
+    # import pdb; pdb.set_trace()
+    return to_global_id(schema_type.__name__, instance.id)
+
+
 def get_cursor(instance):
     # WARNING: this will scale like shit.
     # See https://github.com/graphql-python/graphene/issues/59
@@ -34,7 +50,7 @@ def get_cursor(instance):
 
 
 def get_core_type(graphene_type):
-    "converts a Graphene scalar type into a graphel-core scalar type"
+    "converts a Graphene scalar type into a graphql-core scalar type"
     return STUB_SCHEMA.T(graphene_type)
 
 

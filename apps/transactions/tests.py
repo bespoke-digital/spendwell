@@ -1,6 +1,9 @@
 
 from apps.core.tests import SWTestCase
+from apps.core.utils import node_id_from_instance
 from apps.users.factories import UserFactory
+from apps.buckets.factories import BucketFactory
+from apps.buckets.models import Bucket
 
 from .models import Transaction
 from .filters import TransactionFilter
@@ -12,10 +15,10 @@ class TransactionsTestCase(SWTestCase):
         owner = UserFactory.create()
 
         transfer_to = TransactionFactory.create(owner=owner, amount=100)
-        # self.assertIsNone(transfer_to.transfer_pair)
+        self.assertIsNone(transfer_to.transfer_pair)
 
         transfer_from = TransactionFactory.create(owner=owner, amount=-100)
-        # self.assertIsNone(transfer_from.transfer_pair)
+        self.assertIsNone(transfer_from.transfer_pair)
 
         Transaction.objects.detect_transfers(owner=owner)
 
@@ -256,3 +259,51 @@ class TransactionsTestCase(SWTestCase):
         }''', user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+
+    def test_quick_add(self):
+        owner = UserFactory.create()
+        bucket = BucketFactory.create(owner=owner)
+        transaction = TransactionFactory.create(owner=owner, amount=-100)
+
+        result = self.graph_query(
+            '''
+            mutation QuickAdd($input: TransactionQuickAddMutationInput!) {
+                transactionQuickAdd(input: $input) {
+                    transaction {
+                        description
+
+                        buckets {
+                            edges {
+                                node {
+                                    name
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ''',
+            args={
+                'input': {
+                    'transactionId': node_id_from_instance(transaction),
+                    'bucketId': node_id_from_instance(bucket),
+                    'clientMutationId': '1',
+                },
+            },
+            user=owner,
+        )
+
+        self.assertEqual(
+            result.data['transactionQuickAdd']['transaction']['description'],
+            transaction.description,
+        )
+
+        bucket = Bucket.objects.get(id=bucket.id)
+
+        self.assertTrue({'description_exact': transaction.description} in bucket.filters)
+        self.assertTrue(transaction in bucket.raw_transactions())
+        self.assertTrue(bucket in transaction.buckets.all())
+        self.assertEqual(
+            len(result.data['transactionQuickAdd']['transaction']['buckets']['edges']),
+            1,
+        )

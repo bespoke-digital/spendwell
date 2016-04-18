@@ -19,7 +19,7 @@ class SWTestCase(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
 
-    def graph_query(self, query, user=None, assert_errors=True, schema=None):
+    def graph_query(self, query, user=None, assert_errors=True, schema=None, **kwargs):
         if user is None:
             user = UserFactory.create()
 
@@ -27,10 +27,9 @@ class SWTestCase(TestCase):
             schema = default_schema
 
         request = self.request_factory.post('/graphql')
-
         request.user = user
 
-        result = schema.execute(query, request_context=request)
+        result = schema.execute(query, request_context=request, **kwargs)
 
         if len(result.errors):
             print('GraphQL Errors:', result.errors)

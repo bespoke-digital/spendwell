@@ -1,11 +1,9 @@
 
-from dateutil.relativedelta import relativedelta
-
 import graphene
 from graphene.relay import ClientIDMutation
 
 from apps.core.types import Month, Money
-from apps.core.utils import instance_for_node_id, unique, months_ago, this_month
+from apps.core.utils import instance_for_node_id, unique
 from apps.buckets.models import Bucket
 
 from .models import Transaction, IncomeFromSavings
