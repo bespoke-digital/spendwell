@@ -65,8 +65,8 @@ class Bucket(SWModel):
 
     def assign_transactions(self):
         BucketTransaction.objects.filter(bucket=self).delete()
-        for transaction in self.raw_transactions():
-            BucketTransaction.objects.get_or_create(bucket=self, transaction=transaction)
+        for transaction_id in self.raw_transactions().values_list('id', flat=True):
+            BucketTransaction.objects.get_or_create(bucket=self, transaction_id=transaction_id)
 
 
 @receiver(post_save, sender=Bucket)
