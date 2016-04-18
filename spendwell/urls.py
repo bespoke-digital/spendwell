@@ -1,4 +1,6 @@
 
+from time import sleep
+
 from django.http import HttpResponse
 from django.conf.urls import url, include
 from django.contrib.auth.decorators import login_required
@@ -23,6 +25,11 @@ auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
 graphiql_view = login_required(GraphiQL.as_view())
 
 
+def take_forever_view(request):
+    while True:
+        sleep(1)
+
+
 urlpatterns = [
     url(r'^admin/', admin_site.urls),
     url(r'^watchman/', include('watchman.urls')),
@@ -33,6 +40,8 @@ urlpatterns = [
     url(r'^app', app_view, name='app'),
     url(r'^onboarding', onboarding_view, name='onboarding'),
     url(r'^calculators', calculators_view, name='calculators'),
+
+    url(r'^take-forever', take_forever_view),
 
     url(r'^', include('apps.users.urls')),
     url(r'^', include('apps.landing.urls', namespace='landing')),
