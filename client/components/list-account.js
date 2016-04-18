@@ -57,7 +57,12 @@ export default class ListAccount extends Component {
           </Card>
         }
       >
-        <TransactionList viewer={viewer} transactions={account.transactions} abs={false}/>
+        <TransactionList
+          viewer={viewer}
+          transactions={account.transactions}
+          abs={false}
+          months={true}
+        />
 
         {account.transactions && account.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
