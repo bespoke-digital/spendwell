@@ -154,18 +154,27 @@ class FilterComponent extends Component {
     onChange: PropTypes.func.isRequired,
   };
 
+  constructor() {
+    super();
+    this.updateTransactionsFilter = _.debounce(this.updateTransactionsFilter.bind(this), 300);
+  }
+
   componentDidMount() {
     this.props.relay.setVariables({ filters: [this.props.filter] });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.filter !== this.props.filter)
-      this.props.relay.setVariables({ filters: [nextProps.filter] });
+      this.updateTransactionsFilter(nextProps.filter);
   }
 
   loadTransactions() {
     const { relay } = this.props;
     relay.setVariables({ count: relay.variables.count + 10 });
+  }
+
+  updateTransactionsFilter(filter) {
+    this.props.relay.setVariables({ filters: [filter] });
   }
 
   render() {

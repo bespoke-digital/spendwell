@@ -112,21 +112,15 @@ class TransactionManager(SWManager):
         transaction.save()
         return transaction
 
-    def detect_transfers(self, owner, month_start=None):
+    def detect_transfers(self, owner):
         transactions = self.filter(owner=owner, account__disabled=False)
-
-        if month_start:
-            transactions = transactions.filter(
-                date__gte=month_start,
-                date__lt=month_start + relativedelta(months=1),
-            )
 
         for transaction in transactions:
             transaction.transfer_pair = None
 
         for transaction in transactions:
             if transaction.transfer_pair:
-                return
+                continue
 
             potential_transfers = [txn for txn in transactions if (
                 txn.account != transaction.account and
@@ -135,7 +129,7 @@ class TransactionManager(SWManager):
             )]
 
             if len(potential_transfers) == 0:
-                return
+                continue
 
             elif len(potential_transfers) == 1:
                 transfer = potential_transfers[0]
@@ -149,7 +143,6 @@ class TransactionManager(SWManager):
                 )[-1]
 
             transaction.transfer_pair = transfer
-            transaction.save()
 
 
 class Transaction(SWModel):
