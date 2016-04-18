@@ -35,10 +35,7 @@ const defaultNetworkLayer = new Relay.DefaultNetworkLayer('/graphql', {
 
 export default Object.assign({}, defaultNetworkLayer, {
   sendMutation(request) {
-    return loadingPromise(defaultNetworkLayer.sendMutation(request).then(
-      console.log.bind(console, 'success'),
-      console.log.bind(console, 'error'),
-    ));
+    return loadingPromise(defaultNetworkLayer.sendMutation(request));
   },
   sendQueries(arg) {
     return loadingPromise(defaultNetworkLayer.sendQueries(arg));
