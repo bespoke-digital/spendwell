@@ -283,24 +283,6 @@ class Dashboard extends Component {
               }/>
             </CardList>
           : null}
-
-          <div className='heading'>
-            <h2>All Transactions</h2>
-          </div>
-
-          <CardList>
-            <TransactionList
-              viewer={viewer}
-              transactions={expenseTransactions}
-              abs={true}
-            />
-
-            {expenseTransactions && expenseTransactions.pageInfo.hasNextPage ?
-              <div className='bottom-buttons'>
-                <Button onClick={::this.loadTransactions} raised>Load More</Button>
-              </div>
-            : null}
-          </CardList>
         </ScrollTrigger>
       </App>
     );
