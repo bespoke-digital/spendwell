@@ -68,10 +68,18 @@ class FinicityAccountDialog extends Component {
         if (mfaError) {
           const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'));
           console.log('Finicity MFA Required', mfaChallenges);
-          this.setState({ mfaChallenges });
+          this.setState({
+            mfaChallenges,
+            invalidCredentials: !!invalidCredentials,
+            userActionRequired: !!userActionRequired,
+          });
 
         } else if (mfaExpired) {
-          this.setState({ mfaChallenges: null });
+          this.setState({
+            mfaChallenges: null,
+            invalidCredentials: !!invalidCredentials,
+            userActionRequired: !!userActionRequired,
+          });
 
         } else {
           this.setState({
