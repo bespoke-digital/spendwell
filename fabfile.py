@@ -100,7 +100,12 @@ def deploy(force=False, interactive=False):
 
     try:
         with cd(env.dir):
-            changed = run('git fetch && git checkout origin/{branch}'.format(**env))
+            old_commit = run('git rev-parse HEAD')
+            run('git fetch')
+            run('git checkout origin/{branch}'.format(**env))
+            new_commit = run('git rev-parse HEAD')
+
+            changed = run('git diff --name-only {} {}'.format(old_commit, new_commit))
 
         if 'requirements.txt' in changed or force:
             if interactive and not console.confirm('Continue with pip_requirements?'):
