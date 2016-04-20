@@ -100,7 +100,7 @@ def deploy(force=False, interactive=False):
 
     try:
         with cd(env.dir):
-            changed = run('git pull origin {branch}'.format(**env))
+            changed = run('git fetch && git checkout origin/{branch}'.format(**env))
 
         if 'requirements.txt' in changed or force:
             if interactive and not console.confirm('Continue with pip_requirements?'):
