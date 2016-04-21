@@ -13,17 +13,7 @@
     font-weight:600;
     margin-bottom:30px;
   }
-
-  .graph-header{
-    padding: 30px;
-    padding-top: 40px;
-    /*display: flex;
-    flex-direction: row;
-    justify-content: space-between;*/
-    background-color:white;
-    width:100%;
-  }
-
+    
   .move-right{ 
     position: absolute;
     text-align:end;
@@ -48,7 +38,7 @@
     font-weight:normal;
     font-size:13px;
     color:$gray-4;
-    line-height:.3;
+    line-height:.8;
 
   }
 

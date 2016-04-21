@@ -9,7 +9,13 @@ import style from 'sass/components/create-graph.scss';
 
 
 var computeSchedule = function(
-  principle, rate, numberOfPayments, payment, paymentsPerYear) {
+  principle, 
+  rate, 
+  numberOfPayments, 
+  payment, 
+  paymentsPerYear
+  ) {
+  
   if (_.isUndefined(paymentsPerYear)) {
     paymentsPerYear = 12;
   }
@@ -23,8 +29,6 @@ var computeSchedule = function(
   const totalAmount = numberOfPayments * payment;
   const yAxisRatio = 100 / totalAmount;
   const xAxisRatio = 100 / numberOfPayments;
-  payment = payment * 1;
-  numberOfPayments = numberOfPayments * 1;
 
   for (let i = 0; i < numberOfPayments; i++) {
     const interest = remaining * (rate / 100 / paymentsPerYear);
@@ -33,21 +37,12 @@ var computeSchedule = function(
     actualTotal +=(remaining > payment ? payment : remaining + interest);
     remaining -=(payment - interest < remaining ? payment - interest : remaining);
     totalInterest += interest;
-    totalSchedule = totalSchedule + 'l' + xAxisRatio + ' ' + 
-      (subFromTotal * yAxisRatio) + ' ';
-    principleSchedule = principleSchedule + 'l' + xAxisRatio + ' ' + 
-      subFromPrinciple * yAxisRatio + ' ';
+    totalSchedule = `${totalSchedule}l${xAxisRatio} ${subFromTotal * yAxisRatio} `;
+    principleSchedule = `${principleSchedule}l${xAxisRatio} ${subFromPrinciple * yAxisRatio} `;
   }
 
-  schedules.totalSchedule = 'M0 0 ' +
-    totalSchedule +
-    ' L0 ' +
-    totalAmount * yAxisRatio;
-  schedules.principleSchedule = 'M0 ' +
-    (totalAmount - principle) * yAxisRatio +
-    principleSchedule +
-    ' L0 ' +
-    totalAmount * yAxisRatio;
+  schedules.totalSchedule = `M0 0 ${totalSchedule} L0 ${totalAmount * yAxisRatio}`;
+  schedules.principleSchedule = `M0 ${(totalAmount - principle) * yAxisRatio}${principleSchedule} L0 ${totalAmount * yAxisRatio}`;
 
   schedules.debtTotal = Math.round(actualTotal * 100) / 100;
   schedules.interestTotal = totalInterest;
@@ -122,7 +117,7 @@ export default class CreateGraph extends React.Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.state.timeout);
+    clearTimeout(this.timeout);
   }
   
   render() {
@@ -155,11 +150,11 @@ export default class CreateGraph extends React.Component {
       <div className = {style.root}>
         <div className='graph-card'>
           <div className='graph-header'>
-            <div className='.offset-card'>
+            <div className>
               <div className='text-small '>Monthly Payments</div>
               <Money amount={calcPayment * 100} abs={true} dollars ={true}/>
             </div>
-            <div className='.offset-card move-right'>
+            <div className='move-right'>
               <div className='text-small'>Total Interest</div>
               <Money amount={interest * 100} abs={true} dollars ={true}/>
             </div>
@@ -189,7 +184,7 @@ export default class CreateGraph extends React.Component {
                 <path 
                   className='principle-line' 
                   strokeDasharray='1, .75' 
-                  d={'M0 ' + principleTop + ' l70 0 l0 ' + principleAdjustment + ' l25 0'}
+                  d={`M0 ${principleTop} l70 0 l0 ${principleAdjustment} l25 0`}
                 />
               </svg>
               <div className='offset-card' style={principlePosition}>

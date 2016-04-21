@@ -1,23 +1,24 @@
 
 import { Component, PropTypes } from 'react';
-import 'sass/app';
 import React from 'react';
 import { render } from 'react-dom';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
 import Container from 'muicss/lib/react/container';
+import _ from 'lodash';
+import 'sass/app';
+
 import CreateGraph from 'components/create-graph';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
-import Dropdown from 'components/dropdown'
-import A from 'components/a'
-import _ from 'lodash';
+import Dropdown from 'components/dropdown';
+import A from 'components/a';
 import style from 'sass/components/calculators.scss';
 
-var yearlyAdjustment= function(time) {
+const yearlyAdjustment = function(time) {
   return time === 'Years' ? 12 : 1;
-}
+};
 
 class DebtManagementCalculator extends React.Component {
   constructor() {
@@ -35,7 +36,7 @@ class DebtManagementCalculator extends React.Component {
   }
 
   handleNumberOfPaymentsChange(numberOfPayments) {
-    this.setState({ numberOfPayments: numberOfPayments, payment: null });
+    this.setState({ numberOfPayments, payment: null });
   }
 
   handleDateToggle(time) {
@@ -49,56 +50,57 @@ class DebtManagementCalculator extends React.Component {
       <div className={style.root}>
         <h2 className="color-bar">Debt Repayment Calculator</h2>
         <Container className='container'>
-          <Row className='top-margin bottom-margin'>
+          <Row className='row'>
             <Col md='3'>
               <CardList>
-                
+
                 <Card>
-                  <TextInput 
-                    label='Amount Owning' 
-                    type='number' 
-                    step='0.01' 
-                    min='0.1' 
-                    value={principle} 
-                    onChange={(principle) => this.setState({ principle })}
+                  <TextInput
+                    label='Amount Owning'
+                    type='number'
+                    step='0.01'
+                    min='0.1'
+                    value={principle}
+                    onChange={(principle)=> this.setState({ principle })}
                     autoFocus={true}
                   />
                 </Card>
-                
+
                 <Card>
-                  <TextInput 
-                    label='Interest Rate' 
-                    type='number' 
-                    step='0.01' 
-                    min='0.1' 
+                  <TextInput
+                    label='Interest Rate'
+                    type='number'
+                    step='0.01'
+                    min='0.1'
                     value={rate}
-                    onChange={(rate) => this.setState({ rate })}
+                    onChange={(rate)=> this.setState({ rate })}
                     autoFocus={true}
                   />
                 </Card>
-                
+
                 <Card>
-                  <TextInput 
-                    label='Monthly Payment' 
-                    type='number' 
-                    step='0.01' 
-                    min='0.1' 
-                    value={payment} 
-                    onChange={::this.handlePaymentsChange} autoFocus={true}
+                  <TextInput
+                    label='Monthly Payment'
+                    type='number'
+                    step='0.01'
+                    min='0.1'
+                    value={payment}
+                    onChange={::this.handlePaymentsChange}
+                    autoFocus={true}
                   />
                   <div className='double-card'>
-                    <TextInput 
-                      label='Term' 
-                      type='number' 
-                      step='1' 
-                      min='1' 
-                      value={numberOfPayments} 
+                    <TextInput
+                      label='Term'
+                      type='number'
+                      step='1'
+                      min='1'
+                      value={numberOfPayments}
                       onChange={::this.handleNumberOfPaymentsChange}
                       autoFocus={true}
                     />
                     <Dropdown className='dropdown' label={time}>
                       <A onClick={this.handleDateToggle.bind(this, 'Months')}>
-                          Months
+                        Months
                       </A>
                       <A onClick={this.handleDateToggle.bind(this, 'Years')}>
                         Years
@@ -110,11 +112,11 @@ class DebtManagementCalculator extends React.Component {
             </Col>
 
             <Col md='9' className='mui-container-fluid'>
-              <CreateGraph 
-                principle={Number(principle)} 
-                rate={Number(rate)} 
-                numberOfPayments={Number(yearlyAdjustment(time) * numberOfPayments)}
-                payment={Number(payment)}
+              <CreateGraph
+            principle={parseFloat(principle)}
+                rate={parseFloat(rate)}
+                    numberOfPayments={parseFloat(yearlyAdjustment(time) * numberOfPayments)}
+                    payment={parseFloat(payment)}
               />
             </Col>
           </Row>
@@ -124,4 +126,4 @@ class DebtManagementCalculator extends React.Component {
   }
 }
 
-window.onload = () => render(<DebtManagementCalculator/>, document.getElementById('root'));
+window.onload = ()=> render(<DebtManagementCalculator/>, document.getElementById('root'));

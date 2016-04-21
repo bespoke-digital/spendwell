@@ -6,13 +6,10 @@
   .container{ 
   }
 
-  .top-margin {
+  .row {
     margin-top:30px;
   }
 
-  .bottom-margin{
-    margin-top:30px;
-  }
   
   // suppresses the up and down arrows 
   input[type="number"]::-webkit-outer-spin-button,
@@ -34,7 +31,3 @@
     }
   }
 }
-
-
-
-   

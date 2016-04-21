@@ -46,7 +46,6 @@ export default class TextInput extends Component {
   render() {
     const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props;
     const _value = _.isUndefined(value) ? this.state.value : value;
-    console.log(_value);
     return (
       <div className={`
         mui-textfield
