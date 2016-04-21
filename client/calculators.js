@@ -7,14 +7,13 @@ import Col from 'muicss/lib/react/col';
 import Container from 'muicss/lib/react/container';
 import _ from 'lodash';
 import 'sass/app';
-
 import CreateGraph from 'components/create-graph';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
 import A from 'components/a';
-import style from 'sass/components/calculators.scss';
+import style from 'sass/views/calculators';
 
 const yearlyAdjustment = function(time) {
   return time === 'Years' ? 12 : 1;
@@ -24,10 +23,8 @@ class DebtManagementCalculator extends React.Component {
   constructor() {
     super();
     this.state = {
-      principle: 550000,
-      rate: 3.75,
-      numberOfPayments: 40,
-      time: 'Years',
+      time: "Years",
+      
     };
   }
 
@@ -45,13 +42,16 @@ class DebtManagementCalculator extends React.Component {
 
   render() {
     const { principle, rate, numberOfPayments, payment, time } = this.state;
-
     return(
       <div className={style.root}>
-        <h2 className="color-bar">Debt Repayment Calculator</h2>
         <Container className='container'>
           <Row className='row'>
             <Col md='3'>
+              <CardList>
+                <Card className="how-to-card">
+                  Fill in your info below! Chart a course to financial freedom
+                </Card>
+              </CardList>
               <CardList>
 
                 <Card>
@@ -74,7 +74,6 @@ class DebtManagementCalculator extends React.Component {
                     min='0.1'
                     value={rate}
                     onChange={(rate)=> this.setState({ rate })}
-                    autoFocus={true}
                   />
                 </Card>
 
@@ -86,8 +85,10 @@ class DebtManagementCalculator extends React.Component {
                     min='0.1'
                     value={payment}
                     onChange={::this.handlePaymentsChange}
-                    autoFocus={true}
                   />
+                  <div className="or-icon">
+                    OR
+                  </div>
                   <div className='double-card'>
                     <TextInput
                       label='Term'
@@ -96,7 +97,6 @@ class DebtManagementCalculator extends React.Component {
                       min='1'
                       value={numberOfPayments}
                       onChange={::this.handleNumberOfPaymentsChange}
-                      autoFocus={true}
                     />
                     <Dropdown className='dropdown' label={time}>
                       <A onClick={this.handleDateToggle.bind(this, 'Months')}>
@@ -112,11 +112,12 @@ class DebtManagementCalculator extends React.Component {
             </Col>
 
             <Col md='9' className='mui-container-fluid'>
-              <CreateGraph
-            principle={parseFloat(principle)}
+              <CreateGraph 
+                className='graph-card'
+                principle={parseFloat(principle)}
                 rate={parseFloat(rate)}
-                    numberOfPayments={parseFloat(yearlyAdjustment(time) * numberOfPayments)}
-                    payment={parseFloat(payment)}
+                numberOfPayments={parseFloat(yearlyAdjustment(time) * numberOfPayments)}
+                payment={parseFloat(payment)}
               />
             </Col>
           </Row>

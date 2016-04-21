@@ -1,12 +1,12 @@
 
 import { Component, PropTypes } from 'react';
-import 'sass/app';
 import React from 'react';
 import { render } from 'react-dom';
-import Money from 'components/money';
 import _ from 'lodash';
-import style from 'sass/components/create-graph.scss';
+import 'sass/app';
 
+import Money from 'components/money';
+import style from 'sass/components/create-graph';
 
 var computeSchedule = function(
   principle, 
@@ -99,6 +99,7 @@ export default class CreateGraph extends React.Component {
     super();
     this.state = {
       animateIn: null,
+      emptyState: true,
     };
   }
 
@@ -107,6 +108,7 @@ export default class CreateGraph extends React.Component {
     this.setState({ animateIn: false });
     if (sufficientInput(principle, payment, rate, numberOfPayments)){
       clearTimeout(this.timeout);
+      this.setState({ emptyState: false, });
       this.timeout = setTimeout(()=> this.setState({ animateIn: true }), 10);
     }
   }
@@ -122,7 +124,7 @@ export default class CreateGraph extends React.Component {
   
   render() {
     const { principle, rate, numberOfPayments, payment } = this.props;
-    const { animateIn } = this.state;
+    const { animateIn, emptyState } = this.state;
     const calcNumber = (_.isFinite(numberOfPayments) && numberOfPayments !== 0)
       ? numberOfPayments
       : timeGivenPayment(principle, rate, payment);
@@ -145,13 +147,22 @@ export default class CreateGraph extends React.Component {
     const interest = debtTotal - principle;
     const principlePosition = {top: principleAdjustment + principleTop + '%'}
     const totalPosition = { top:'0'}
-
+    const emptyStateImg = 1;
     return(
       <div className = {style.root}>
-        <div className='graph-card'>
+        <div className={(emptyState? 'graph-card empty-state': 'hide-me')}>
+        <img className="empty-graphs" src={'/static/img/calculator-es.svg' }/>
+          <div className='empty-text'>
+            Fill out the form to see a beautiful chart.
+            <div className='text-small'>
+              Once you have entered in your debt repayment info, this area will become a chart with your debt broken down in detail.
+            </div>
+          </div>
+        </div>
+        <div className={emptyState? 'hide-me':'graph-card'}>
           <div className='graph-header'>
             <div className>
-              <div className='text-small '>Monthly Payments</div>
+              <div className='text-small'>Monthly Payments</div>
               <Money amount={calcPayment * 100} abs={true} dollars ={true}/>
             </div>
             <div className='move-right'>
@@ -173,8 +184,8 @@ export default class CreateGraph extends React.Component {
                 viewBox='0 0 100 100' 
                 preserveAspectRatio='none slice'
               >
-                <path className='total-schedule' d={totalSchedule} height= '500'/>
-                <path className='principle-schedule' d={principleSchedule}/>
+                <path className='total-schedule' d={emptyState?'':totalSchedule} height= '500'/>
+                <path className='principle-schedule' d={emptyState?'':principleSchedule}/>
                 <line 
                   className='total-line' 
                   strokeDasharray='1, .75' 
@@ -184,7 +195,7 @@ export default class CreateGraph extends React.Component {
                 <path 
                   className='principle-line' 
                   strokeDasharray='1, .75' 
-                  d={`M0 ${principleTop} l70 0 l0 ${principleAdjustment} l25 0`}
+                  d={emptyState?'':`M0 ${principleTop} l70 0 l0 ${principleAdjustment} l25 0`}
                 />
               </svg>
               <div className='offset-card' style={principlePosition}>

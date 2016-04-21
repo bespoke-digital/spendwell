@@ -10,6 +10,9 @@
     margin-top:30px;
   }
 
+  .how-to-card {
+    margin-bottom:30px;
+  }
   
   // suppresses the up and down arrows 
   input[type="number"]::-webkit-outer-spin-button,
@@ -23,6 +26,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items:baseline;
+  }
+
+  .graph-card {
+    
+
   }
 
   @media screen and (max-width: 992px ) {

@@ -12,8 +12,36 @@
     color:$gray-2; 
     font-weight:600;
     margin-bottom:30px;
-  }
+    height: 655px;
     
+  }
+
+  .empty-state {
+    text-align:center;
+  }
+
+  .empty-graphs {
+    width:35%;
+    height:35%;
+    padding-top: 50px;
+  }
+
+  .hide-me{
+    display:none;
+  }
+
+  .empty-state {
+    display:inline-block;
+  }
+
+  .empty-text {
+    padding: 40px 150px 0  150px;
+    .text-small {
+      padding-top:15px;
+      line-height:1.2;
+    }
+  }
+
   .move-right{ 
     position: absolute;
     text-align:end;
@@ -59,10 +87,12 @@
   .principle-schedule{
     fill:lighten($brand-primary, 20%);
   }
-
+  .redme{
+    background-color:red;
+  }
   .before-animation {
     .totalSchedule {
-      fill:$brand-primary;
+      fill:white;
       opacity:.5;
     }
 
@@ -76,7 +106,7 @@
     .totalSchedule {
       fill:$brand-primary; 
       opacity:1;
-      transition: opacity 1.5s;
+      transition: opacity 1.5s, fill 1.5s;
     }
 
     .principle-schedule{
