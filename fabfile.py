@@ -117,17 +117,20 @@ def deploy(force=False, interactive=False):
                 return
             migrate()
 
-        if 'package.json' in changed or force:
+        package_change = 'package.json' in changed
+        if package_change or force:
             if interactive and not console.confirm('Continue with npm_install?'):
                 return
             npm_install()
 
-        if 'client/' in changed or 'webpack' in changed or 'package.json' in changed or force:
+        client_change = package_change or 'client/' in changed or 'webpack' in changed
+        if client_change or force:
             if interactive and not console.confirm('Continue with npm_build?'):
                 return
             npm_build()
 
-        if 'static' in changed or 'client/' in changed or 'webpack' in changed or force:
+        static_change = client_change or 'static' in changed
+        if static_change or force:
             if interactive and not console.confirm('Continue with collectstatic?'):
                 return
             collectstatic()
