@@ -10,6 +10,13 @@
   background-color: black;
   transition: opacity 200ms ease-in;
   opacity: 0.5;
+
+  &.nav-overlay {
+    @media (min-width: $screen-sm-min) {
+      height: 0;
+      width: 0;
+    }
+  }
 }
 
 .overlay-transition-enter {

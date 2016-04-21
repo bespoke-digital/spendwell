@@ -3,29 +3,58 @@
 @import '../depth';
 
 :local(.root) {
-  @extend .depth-z4;
-
   position: fixed;
   top: 0;
   bottom: 0;
   width: 200px;
-  left: -210px;
   z-index: 200;
   transition: 0.5s ease;
-  background-color: white;
 
-  &.open {
+  @media (max-width: $screen-xs-max) {
+    left: -210px;
+
+    // this is .depth-z4; Pasted because you can use @extend inside @media
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    background-color: white;
+
+    &.open {
+      left: 0;
+    }
+  }
+
+  @media (min-width: $screen-sm-min) {
     left: 0;
+    background-color: white;
+    border-right: 1px solid $gray-7;
+  }
+
+  .logo {
+    height: $mui-appbar-height;
+    padding: 15px 0 0 23px;
+
+    @media (max-width: $screen-xs-max) {
+      display: none;
+    }
+
+    > img {
+      width: 140px;
+    }
   }
 
   .account-info {
     position: relative;
-    min-height: 100px;
 
     color: white;
     border-bottom: $gray;
 
-    background-color: darken($brand-primary, 10%);
+    @media (max-width: $screen-xs-max) {
+      height: 100px;
+      background-color: darken($brand-primary, 10%);
+    }
+
+    @media (min-width: $screen-sm-min) {
+      display: none;
+    }
 
     .account-email {
       position: absolute;
@@ -41,7 +70,14 @@
 
   > ul {
     margin: 0;
-    padding-top: 8px;
+
+    @media (max-width: $screen-xs-max) {
+      padding-top: 8px;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      border-top: 1px solid $gray-7;
+    }
 
     li > a {
       display: block;

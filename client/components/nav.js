@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import logo from 'img/logo-green.svg';
 import style from 'sass/components/nav';
 
 
@@ -23,6 +24,10 @@ class Nav extends Component {
 
         <div className='account-info'>
           <div className='account-email'>{viewer.email}</div>
+        </div>
+
+        <div className='logo'>
+          <img src={logo} alt='Spendwell'/>
         </div>
 
         <ul className='list-unstyled'>

@@ -6,8 +6,16 @@
   position: relative;
   background-color: darken($brand-primary, 5%);
 
-  text-align: center;
   color: white;
+
+  @media (max-width: $screen-xs-max) {
+    text-align: center;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    height: $mui-appbar-height;
+    padding-left: 220px;
+  }
 
   .left {
     position: absolute;
@@ -15,6 +23,10 @@
     top: 50%;
     transform: translateY(-50%);
     display: block;
+
+    @media (min-width: $screen-sm-min) {
+      display: none;
+    }
 
     a {
       color: white;

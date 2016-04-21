@@ -60,7 +60,7 @@ class Header extends Component {
         </div>
         {logoLink ?
           <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
-            <img src={logoWhite} alt='Spendwell' className='logo'/>*
+            {/*<img src={logoWhite} alt='Spendwell' className='logo'/>*/}
             <img src={logoIconWhite} alt='Spendwell' className='icon'/>
           </Link>
         :

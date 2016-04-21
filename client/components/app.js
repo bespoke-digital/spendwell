@@ -43,11 +43,11 @@ class App extends Component {
 
         <Nav open={navOpen} toggleNav={::this.toggleNav} viewer={viewer}/>
 
-        <Transition name='overlay' show={navOpen}>
-          <div className='overlay' onClick={::this.closeOverlay}/>
+        <Transition show={navOpen}>
+          <div className='overlay nav-overlay' onClick={::this.closeOverlay}/>
         </Transition>
 
-        {children}
+        <div className='app-children'>{children}</div>
       </div>
     );
   }
