@@ -68,10 +68,7 @@ class Dashboard extends Component {
 
   render() {
     const { params: { year, month }, viewer } = this.props;
-    const {
-      spentFromSavings,
-      expenseTransactions,
-    } = viewer.summary;
+    const { spentFromSavings } = viewer.summary;
 
     const { selected } = this.state;
 
@@ -114,10 +111,7 @@ class Dashboard extends Component {
 
     return (
       <App viewer={viewer}>
-        <ScrollTrigger
-          className={`container ${styles.root}`}
-          onTrigger={::this.loadTransactions}
-        >
+        <div className={`container ${styles.root}`}>
           <DashboardSummary
             viewer={viewer}
             summary={viewer.summary}
@@ -283,7 +277,7 @@ class Dashboard extends Component {
               }/>
             </CardList>
           : null}
-        </ScrollTrigger>
+        </div>
       </App>
     );
   }
@@ -295,7 +289,6 @@ Dashboard = Relay.createContainer(Dashboard, {
   initialVariables: {
     month: now.format('MM'),
     year: now.format('YYYY'),
-    transactionCount: 20,
   },
   prepareVariables: (variables)=> {
     if (variables.year && variables.month)
@@ -360,13 +353,6 @@ Dashboard = Relay.createContainer(Dashboard, {
 
           incomeTransactions: transactions(first: 100, amountGt: 0) {
             ${TransactionList.getFragment('transactions')}
-          }
-
-          expenseTransactions: transactions(first: $transactionCount, amountLt: 0) {
-            ${TransactionList.getFragment('transactions')}
-            pageInfo {
-              hasNextPage
-            }
           }
         }
       }
