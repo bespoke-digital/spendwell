@@ -10,10 +10,6 @@
     margin-top:30px;
   }
 
-  .how-to-card {
-    margin-bottom:30px;
-  }
-  
   // suppresses the up and down arrows 
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
@@ -27,15 +23,27 @@
     justify-content: space-between;
     align-items:baseline;
   }
-
-  .graph-card {
-    
-
+  .circle{
+    fill:$gray;
   }
 
   @media screen and (max-width: 992px ) {
     .double-card {
       flex-wrap:wrap;
     }
+  }
+
+  .or-icon{
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color:$gray-lighter;
+    text-align:center;
+  }
+  .or{
+
+    line-height:1.6;
+    text-align:center;
+    
   }
 }

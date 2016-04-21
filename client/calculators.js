@@ -48,11 +48,6 @@ class DebtManagementCalculator extends React.Component {
           <Row className='row'>
             <Col md='3'>
               <CardList>
-                <Card className="how-to-card">
-                  Fill in your info below! Chart a course to financial freedom
-                </Card>
-              </CardList>
-              <CardList>
 
                 <Card>
                   <TextInput
@@ -87,7 +82,9 @@ class DebtManagementCalculator extends React.Component {
                     onChange={::this.handlePaymentsChange}
                   />
                   <div className="or-icon">
-                    OR
+                    <div className="or">
+                      OR
+                    </div>
                   </div>
                   <div className='double-card'>
                     <TextInput
