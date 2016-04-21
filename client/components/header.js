@@ -46,7 +46,7 @@ class Header extends Component {
     } = this.props;
 
     return (
-      <nav className={`mui-appbar mui--z2 ${style.root}`}>
+      <nav className={`mui-appbar ${style.root}`}>
         <div className='left mui--appbar-height mui--appbar-line-height'>
           {back ? (
             <a href='#' onClick={::this.handleBackClick}>

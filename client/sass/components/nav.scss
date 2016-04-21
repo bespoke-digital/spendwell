@@ -49,7 +49,7 @@
 
     @media (max-width: $screen-xs-max) {
       height: 100px;
-      background-color: darken($brand-primary, 10%);
+      background-color: darken($brand-primary, 5%);
     }
 
     @media (min-width: $screen-sm-min) {
