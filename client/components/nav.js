@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import logo from 'img/logo-green.svg';
 import style from 'sass/components/nav';
 
 
@@ -25,11 +26,21 @@ class Nav extends Component {
           <div className='account-email'>{viewer.email}</div>
         </div>
 
+        <div className='logo'>
+          <img src={logo} alt='Spendwell'/>
+        </div>
+
         <ul className='list-unstyled'>
           <li className={isActive('/app/dashboard') ? 'active' : ''}>
             <Link onClick={toggleNav} to='/app/dashboard'>
               <i className='fa fa-fw fa-tachometer'/>
               Dashboard
+            </Link>
+          </li>
+          <li className={isActive('/app/transactions') ? 'active' : ''}>
+            <Link onClick={toggleNav} to='/app/transactions'>
+              <i className='fa fa-fw fa-list'/>
+              Transactions
             </Link>
           </li>
           <li className={isActive('/app/accounts') ? 'active' : ''}>

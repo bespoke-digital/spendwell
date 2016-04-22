@@ -13,6 +13,11 @@ from apps.core.utils import months_ago, this_month
 from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction
 
+try:
+    from raven.contrib.django.raven_compat.models import client as raven
+except ImportError:
+    raven = None
+
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +131,9 @@ def on_day_start(*args, **kwargs):
         try:
             user.sync()
         except:
+            if raven is not None:
+                raven.captureException()
+
             # Don't fail on exceptions so one bad FI doesn't kill an entire sync
             logger.exception('Exception occurred while syncing {}'.format(user.id))
 

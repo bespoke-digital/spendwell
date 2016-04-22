@@ -57,7 +57,7 @@ export default class Transition extends Component {
   }
 
   render() {
-    const { name, show, out, children, ..._props } = this.props;
+    const { name, show, children, ..._props } = this.props;
     const { visible } = this.state;
 
     return (

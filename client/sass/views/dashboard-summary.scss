@@ -2,21 +2,6 @@
 @import '../variables';
 
 :local(.root) {
-  .month {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    padding: 10px;
-
-    .current {
-      margin: 0px 12px;
-      width: 200px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-    }
-  }
-
   .status {
     padding: 0;
     border-bottom: 0;

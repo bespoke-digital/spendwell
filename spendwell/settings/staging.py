@@ -17,6 +17,8 @@ DATABASES['default'] = {
 
 INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
+MIDDLEWARE_CLASSES.append('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware')
+
 
 LOGGING['handlers']['sentry'] = {
     'level': 'ERROR',

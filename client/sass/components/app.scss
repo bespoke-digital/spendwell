@@ -1,12 +1,20 @@
 
-// @import '../variables';
+@import '../variables';
 
 :local(.root) {
   width: 100%;
   padding-bottom: 80px;
   transition: 0.5s ease;
 
-  > .container {
-    padding-top: 40px;
+  .app-children {
+    @media (min-width: $screen-sm-min) {
+      // for left nav
+      padding: 0 0 0 200px;
+    }
+
+    > .container {
+      padding-top: 40px;
+    }
   }
+
 }

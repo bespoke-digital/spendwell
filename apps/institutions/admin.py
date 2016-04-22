@@ -6,7 +6,7 @@ from .models import Institution
 
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner_secret_id')
+    list_display = ('name', 'owner_secret_id', 'reauth_required')
     readonly_fields = ('owner_secret_id',)
     fields = (
         'owner_secret_id',
@@ -14,6 +14,7 @@ class InstitutionAdmin(admin.ModelAdmin):
         'plaid_id',
         'finicity_id',
         'last_sync',
+        'reauth_required',
     )
 
 admin_site.register(Institution, InstitutionAdmin)
