@@ -47,12 +47,25 @@
   @media screen and (max-width: 768px) {
     .empty-graphs {
       width:75%;
+      height:auto;
       padding-top:20px;
     }
     .empty-text {
       padding:20px 45px 0 45px;
       line-height:1;
       }
+    .graph-card{
+      height:403px;
+    }
+    .scaling-graph{
+
+    }
+    .graphs{ 
+      height:300px;
+    }
+   .end-date {
+      padding-right:20px
+    }
   }
 
   .move-right{ 
