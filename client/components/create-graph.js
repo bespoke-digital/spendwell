@@ -138,16 +138,13 @@ export default class CreateGraph extends React.Component {
     const principleAdjustment = principleRatio > .92 ? 
       7.5 : principleRatio < .15 ? 
       -15 : 0;
-    
     const tempDate = new Date();
     const startDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
     tempDate.setMonth(tempDate.getMonth() + calcNumber);
     const endDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
-    
     const interest = debtTotal - principle;
-    const principlePosition = {top: principleAdjustment + principleTop + '%'}
-    const totalPosition = { top:'0'}
-    const emptyStateImg = 1;
+    const principlePosition = { top: principleAdjustment + principleTop + '%' };
+    const totalPosition = { top: '0' };
     return(
       <div className = {style.root}>
         <div className={(emptyState? 'graph-card empty-state': 'hide-me')}>
@@ -166,7 +163,7 @@ export default class CreateGraph extends React.Component {
               <Money amount={calcPayment * 100} abs={true} dollars ={true}/>
             </div>
             <div className='move-right'>
-              <div className='text-small'>Total Interest</div>
+              <div className='text-small'>Interest Owed</div>
               <Money amount={interest * 100} abs={true} dollars ={true}/>
             </div>
           </div>
@@ -199,7 +196,7 @@ export default class CreateGraph extends React.Component {
                 />
               </svg>
               <div className='offset-card' style={principlePosition}>
-                <div className='text-small'>Amount Owning</div>
+                <div className='text-small'>Debt Amount</div>
                 <Money amount={principle * 100} abs={true} dollars ={true}/>
               </div>
               <div className='offset-card' style={totalPosition}>

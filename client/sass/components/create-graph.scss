@@ -31,10 +31,11 @@
   }
 
   .empty-text {
-    padding: 40px 150px 0  150px;
+    padding: 20px 160px 0 160px;
     .text-small {
-      padding-top:15px;
+      padding-top:5px;
       line-height:1.2;
+      font-size:14px;
     }
   }
 
@@ -54,7 +55,7 @@
     position: absolute;
     text-align:end;
     right:5%;
-    margin-top:20px;
+    margin-top:11px;
  
   }
 
@@ -62,7 +63,7 @@
     font-weight:normal;
     font-size:13px;
     color:$gray-4;
-    line-height:.8;
+    line-height:.6;
 
   }
 
@@ -73,7 +74,7 @@
   }
 
   .graphs{ 
-    padding-top:10px
+    padding-top:1px;
   }
 
   .total-schedule{
@@ -81,11 +82,9 @@
   }
 
   .principle-schedule{
-    fill:lighten($brand-primary, 20%);
+    fill:#4caf50;
   }
-  .redme{
-    background-color:red;
-  }
+
   .before-animation {
     .totalSchedule {
       fill:white;

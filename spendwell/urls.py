@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^graphql', auth_graphql_view, name='graphql'),
     url(r'^app', app_view, name='app'),
     url(r'^onboarding', onboarding_view, name='onboarding'),
-    url(r'^calculators', calculators_view, name='calculators'),
+    url(r'^calculators/debt-repayment-calculator', calculators_view, name='calculators'),
 
     url(r'^', include('apps.users.urls')),
     url(r'^', include('apps.landing.urls', namespace='landing')),

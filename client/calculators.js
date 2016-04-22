@@ -23,8 +23,7 @@ class DebtManagementCalculator extends React.Component {
   constructor() {
     super();
     this.state = {
-      time: "Years",
-      
+      time: "Months",
     };
   }
 
@@ -51,7 +50,7 @@ class DebtManagementCalculator extends React.Component {
 
                 <Card>
                   <TextInput
-                    label='Amount Owning'
+                    label='Debt Amount'
                     type='number'
                     step='0.01'
                     min='0.1'
