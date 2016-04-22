@@ -12,7 +12,7 @@ from plaid.errors import ResourceNotFoundError, RequestFailedError
 from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
-from apps.finicity.client import Finicity
+from apps.finicity.client import Finicity, FinicityError
 
 
 logger = logging.getLogger(__name__)
@@ -124,7 +124,13 @@ class Institution(SWModel):
                 Account.objects.from_plaid(self, account_data)
 
         elif self.finicity_client:
-            accounts_data = self.finicity_client.list_accounts(self.finicity_id)
+            try:
+                accounts_data = self.finicity_client.list_accounts(self.finicity_id)
+            except FinicityError:
+                self.reauth_required = True
+                self.save()
+                raise
+
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
@@ -134,7 +140,13 @@ class Institution(SWModel):
                 Transaction.objects.from_plaid(self, transaction_data)
 
         elif self.finicity_client:
-            transactions_data = self.finicity_client.list_transactions(self.finicity_id)
+            try:
+                transactions_data = self.finicity_client.list_transactions(self.finicity_id)
+            except FinicityError:
+                self.reauth_required = True
+                self.save()
+                raise
+
             for transaction_data in transactions_data:
                 Transaction.objects.from_finicity(self, transaction_data)
 
