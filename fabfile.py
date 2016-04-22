@@ -95,7 +95,7 @@ def gunicorn_restart():
 
 
 @task
-def deploy(force=False, interactive=False):
+def deploy(force=False):
     print(yellow('Deploying to'), blue(env.host))
 
     try:
@@ -108,35 +108,23 @@ def deploy(force=False, interactive=False):
             changed = run('git diff --name-only {} {}'.format(old_commit, new_commit))
 
         if 'requirements.txt' in changed or force:
-            if interactive and not console.confirm('Continue with pip_requirements?'):
-                return
             pip_requirements()
 
         if 'migrations' in changed or force:
-            if interactive and not console.confirm('Continue with migrate?'):
-                return
             migrate()
 
         package_change = 'package.json' in changed
         if package_change or force:
-            if interactive and not console.confirm('Continue with npm_install?'):
-                return
             npm_install()
 
         client_change = package_change or 'client/' in changed or 'webpack' in changed
         if client_change or force:
-            if interactive and not console.confirm('Continue with npm_build?'):
-                return
             npm_build()
 
         static_change = client_change or 'static' in changed
         if static_change or force:
-            if interactive and not console.confirm('Continue with collectstatic?'):
-                return
             collectstatic()
 
-        if interactive and not console.confirm('Continue with gunicorn_restart?'):
-            return
         if not gunicorn_restart():
             raise DeployFailException
 
@@ -148,5 +136,5 @@ def deploy(force=False, interactive=False):
 
 
 @task
-def full_deploy(interactive=False):
-    deploy(force=True, interactive=interactive)
+def full_deploy():
+    deploy(force=True)
