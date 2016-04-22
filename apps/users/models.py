@@ -131,7 +131,7 @@ def on_day_start(*args, **kwargs):
         try:
             user.sync()
         except:
-            if raven:
+            if raven is not None:
                 raven.captureException()
 
             # Don't fail on exceptions so one bad FI doesn't kill an entire sync
