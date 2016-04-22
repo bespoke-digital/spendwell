@@ -37,6 +37,20 @@
       font-size:14px;
     }
   }
+  
+    @media screen and (max-width: 992px) {
+    .empty-text {
+      padding: 20px 70px 0 70px;
+      }
+  }
+
+  
+  @media screen and (max-width: 768px) {
+    .empty-text {
+      padding: 20px 70px 0 70px;
+      }
+  }
+
 
   .move-right{ 
     position: absolute;
