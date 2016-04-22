@@ -25,6 +25,8 @@ class InstitutionNode(SWNode):
             'last_sync',
             'current_balance',
             'reauth_required',
+            'plaid_id',
+            'finicity_id',
         )
 
     def resolve_can_sync(self, args, info):

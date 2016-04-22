@@ -5,9 +5,6 @@ from django.conf import settings
 
 from plaid import Client
 
-from apps.core.utils import instance_for_node_id
-from apps.transactions.models import Transaction
-from apps.buckets.models import Bucket
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -17,6 +14,7 @@ InstitutionEdge = Edge.for_node(InstitutionNode)
 
 class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
+        full_sync = graphene.Boolean()
         public_token = graphene.String()
         plaid_institution_id = graphene.String()
 
@@ -40,7 +38,11 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
             access_token=token_response['access_token'],
             data=institution_response,
         )
-        institution.sync_accounts()
+
+        if 'full_sync' in input and input['full_sync']:
+            institution.sync()
+        else:
+            institution.sync_accounts()
 
         return ConnectPlaidInstitutionMutation(viewer=Viewer())
 

@@ -154,4 +154,5 @@ class Institution(SWModel):
         self.sync_accounts()
         self.sync_transactions()
         self.last_sync = timezone.now()
+        self.reauth_required = False
         self.save()

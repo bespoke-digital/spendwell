@@ -17,6 +17,7 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
 
   getVariables() {
     return {
+      fullSync: this.props.fullSync,
       publicToken: this.props.publicToken,
       plaidInstitutionId: this.props.plaidInstitutionId,
     };

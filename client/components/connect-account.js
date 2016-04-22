@@ -4,7 +4,6 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
-import { handleMutationError } from 'utils/network-layer';
 import TextInput from 'components/text-input';
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -12,14 +11,13 @@ import Transition from 'components/transition';
 import FinicityAccountDialog from 'components/finicity-account-dialog';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
-
+import plaidAccountDialog from 'utils/plaid-account-dialog';
 import { parseUrl } from 'utils';
 
 import styles from 'sass/views/add-plaid.scss';
 
 
 const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
-const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').getAttribute('content');
 
 
 class ConnectAccount extends Component {
@@ -27,16 +25,6 @@ class ConnectAccount extends Component {
     super();
     this.state = { results: [] };
     this.handleSearch = _.debounce(this.handleSearch.bind(this), 300);
-  }
-
-  componentDidMount() {
-    if (!window.Plaid) {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.async = true;
-      script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
-      document.getElementsByTagName('head')[0].appendChild(script);
-    }
   }
 
   handleSearch(query) {
@@ -50,40 +38,16 @@ class ConnectAccount extends Component {
       .then((results)=> this.setState({ results }));
   }
 
-  selectPlaid(fi) {
-    window.Plaid.create({
-      clientName: 'Spendwell',
-      key: PLAID_PUBLIC_KEY,
-      product: 'connect',
-      longtail: true,
-      env: PLAID_PRODUCTION ? 'production' : 'tartan',
-      onSuccess: (publicToken)=> this.connectPlaid({ fi, publicToken }),
-    }).open(fi.id);
-  }
-
-  connectPlaid({ fi, publicToken }) {
-    const { viewer } = this.props;
-
-    const mutationInput = {
-      viewer,
-      publicToken,
-      plaidInstitutionId: fi.id,
-    };
-
-    Relay.Store.commitUpdate(new ConnectPlaidInstitutionMutation(mutationInput), {
-      onFailure: handleMutationError,
-      onSuccess: ()=> {
-        console.log('Success: ConnectPlaidInstitutionMutation');
-        this.handleConnected();
-      },
-    });
-  }
-
   handleConnected() {
     if (document.location.pathname.indexOf('onboarding') !== -1)
       browserHistory.push('/onboarding/accounts');
     else
       browserHistory.push('/app/accounts');
+  }
+
+  selectPlaidInstitution(plaidInstitution) {
+    const { viewer } = this.props;
+    plaidAccountDialog(plaidInstitution.id, viewer, ::this.handleConnected);
   }
 
   render() {
@@ -119,20 +83,28 @@ class ConnectAccount extends Component {
           </Card>
         ) : null}
 
-        {results.length ? results.map((fi)=> (
+        {results.length ? results.map((plaidInstitution)=> (
           <Card
-            className={`fi ${fi.logo ? 'has-logo' : ''}`}
-            onClick={this.selectPlaid.bind(this, fi)}
-            key={fi.id}
-            style={{ borderLeftColor: fi.colors.darker }}
+            className={`fi ${plaidInstitution.logo ? 'has-logo' : ''}`}
+            onClick={()=> this.selectPlaidInstitution(plaidInstitution)}
+            key={plaidInstitution.id}
+            style={{ borderLeftColor: plaidInstitution.colors.darker }}
           >
-            {fi.logo ? <img src={`data:image/png;base64,${fi.logo}`} alt={fi.name}/> : null}
+            {plaidInstitution.logo ?
+              <img src={`data:image/png;base64,${plaidInstitution.logo}`} alt={plaidInstitution.name}/>
+            : null}
 
             <div className='fi-name'>
-              <strong>{fi.nameBreak ? fi.name.slice(0, fi.nameBreak) : fi.name}</strong><br/>
-              {fi.nameBreak ? fi.name.slice(fi.nameBreak) : null}
+              <strong>{plaidInstitution.nameBreak ?
+                plaidInstitution.name.slice(0, plaidInstitution.nameBreak)
+                :
+                plaidInstitution.name
+              }</strong><br/>
+              {plaidInstitution.nameBreak ?
+                plaidInstitution.name.slice(plaidInstitution.nameBreak)
+              : null}
             </div>
-            <div className='fi-domain'>{parseUrl(fi.accountSetup).hostname}</div>
+            <div className='fi-domain'>{parseUrl(plaidInstitution.accountSetup).hostname}</div>
           </Card>
         )) : null}
 
@@ -157,8 +129,8 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
         ${FinicityAccountDialog.getFragment('viewer')}
+        ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
 
         finicityInstitutions(query: $query, first: 10) @include(if: $hasQuery) {
           edges {
