@@ -1,7 +1,7 @@
 
 import graphene
 
-from apps.core.fields import SWNode, SWConnectionField, SWFilterConnectionField
+from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.types import Money
 from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
@@ -17,12 +17,14 @@ class InstitutionNode(SWNode):
     class Meta:
         model = Institution
         filter_order_by = ('name',)
+        filter_fields = ('reauth_required',)
         only_fields = (
             'name',
             'accounts',
             'can_sync',
             'last_sync',
             'current_balance',
+            'reauth_required',
         )
 
     def resolve_can_sync(self, args, info):
@@ -31,7 +33,7 @@ class InstitutionNode(SWNode):
 
 class InstitutionsQuery(graphene.ObjectType):
     institution = graphene.relay.NodeField(InstitutionNode)
-    institutions = SWConnectionField(InstitutionNode)
+    institutions = SWFilterConnectionField(InstitutionNode)
 
     class Meta:
         abstract = True

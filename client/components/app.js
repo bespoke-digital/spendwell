@@ -5,6 +5,7 @@ import Relay from 'react-relay';
 import Transition from 'components/transition';
 import Header from 'components/header';
 import Nav from 'components/nav';
+import InstitutionReauth from 'components/institution-reauth';
 
 import style from 'sass/components/app';
 
@@ -47,7 +48,11 @@ class App extends Component {
           <div className='overlay nav-overlay' onClick={::this.closeOverlay}/>
         </Transition>
 
-        <div className='app-children'>{children}</div>
+        <div className='app-children'>
+          <InstitutionReauth viewer={viewer}/>
+
+          {children}
+        </div>
       </div>
     );
   }
@@ -60,6 +65,7 @@ App = Relay.createContainer(App, {
         fragment on Viewer {
           ${Header.getFragment('viewer')}
           ${Nav.getFragment('viewer')}
+          ${InstitutionReauth.getFragment('viewer')}
         }
       `;
     },
