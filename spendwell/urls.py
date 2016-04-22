@@ -1,6 +1,4 @@
 
-from time import sleep
-
 from django.http import HttpResponse
 from django.conf.urls import url, include
 from django.contrib.auth.decorators import login_required

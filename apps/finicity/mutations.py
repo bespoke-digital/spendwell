@@ -2,6 +2,7 @@
 import json
 
 import graphene
+from django.utils import timezone
 
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
@@ -20,6 +21,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         credentials = graphene.InputField(graphene.String())
         finicity_institution_id = graphene.InputField(graphene.ID())
         mfa_answers = graphene.InputField(graphene.String())
+        full_sync = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
 
@@ -53,6 +55,13 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
 
             for account_data in accounts_data:
                 Account.objects.from_finicity(institution, account_data)
+
+            if 'full_sync' in input and input['full_sync']:
+                institution.sync_transactions()
+                institution.last_sync = timezone.now()
+                institution.reauth_required = False
+                institution.save()
+
         except FinicityError as e:
             if raven:
                 raven.captureException()

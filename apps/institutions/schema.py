@@ -5,6 +5,7 @@ from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.types import Money
 from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
+from apps.finicity.schema import FinicityInstitutionNode
 
 from .models import Institution
 
@@ -13,6 +14,7 @@ class InstitutionNode(SWNode):
     can_sync = graphene.Field(graphene.Boolean())
     current_balance = graphene.Field(Money)
     accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
+    finicity_institution = graphene.Field(FinicityInstitutionNode)
 
     class Meta:
         model = Institution
@@ -27,6 +29,7 @@ class InstitutionNode(SWNode):
             'reauth_required',
             'plaid_id',
             'finicity_id',
+            'finicity_institution',
         )
 
     def resolve_can_sync(self, args, info):

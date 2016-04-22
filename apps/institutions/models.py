@@ -13,6 +13,7 @@ from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity, FinicityError
+from apps.finicity.models import FinicityInstitution
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +57,7 @@ class Institution(SWModel):
     access_token = models.CharField(max_length=255, null=True, blank=True)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     reauth_required = models.BooleanField(default=False)
-    last_sync = models.DateTimeField(null=True)
+    last_sync = models.DateTimeField(null=True, blank=True)
 
     objects = InstitutionManager()
 
@@ -70,6 +71,22 @@ class Institution(SWModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def finicity_institution(self):
+        if not hasattr(self, '_finicity_institution'):
+            if not self.finicity_id:
+                self._finicity_institution = None
+
+            else:
+                try:
+                    self._finicity_institution = FinicityInstitution.objects.get(
+                        finicity_id=self.finicity_id
+                    )
+                except FinicityInstitution.DoesNotExist:
+                    self._finicity_institution = None
+
+        return self._finicity_institution
 
     @property
     def plaid_client(self):
