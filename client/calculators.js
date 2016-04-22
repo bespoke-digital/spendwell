@@ -7,13 +7,16 @@ import Col from 'muicss/lib/react/col';
 import Container from 'muicss/lib/react/container';
 import _ from 'lodash';
 import 'sass/app';
-import CreateGraph from 'components/create-graph';
+
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 import Dropdown from 'components/dropdown';
 import A from 'components/a';
+import CreateGraph from 'components/graph';
+
 import style from 'sass/views/calculators';
+
 
 const yearlyAdjustment = function(time) {
   return time === 'Years' ? 12 : 1;

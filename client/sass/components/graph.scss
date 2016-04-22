@@ -20,9 +20,8 @@
   }
 
   .empty-graphs {
-    width:35%;
-    height:35%;
-    padding-top: 50px;
+    width:75%;
+    padding-top: 20px;
   }
 
   .hide-me{
@@ -43,14 +42,13 @@
       padding: 20px 70px 0 70px;
       }
   }
-
   
   @media screen and (max-width: 768px) {
     .empty-text {
-      padding: 20px 70px 0 70px;
+      padding: 20px 45px 0 45px;
+      line-height:1;
       }
   }
-
 
   .move-right{ 
     position: absolute;
@@ -77,7 +75,6 @@
     font-size:13px;
     color:$gray-4;
     line-height:.6;
-
   }
 
   .scaling-graph{
@@ -107,7 +104,7 @@
     .principle-schedule {
       fill:white;
       opacity:.5;
-      }
+    }
   }
 
   .after-animation {
@@ -118,7 +115,7 @@
     }
 
     .principle-schedule{
-      fill:lighten($brand-primary, 20%);
+      fill:#4caf50;
       opacity:1;
       transition: opacity 1.5s, fill 1.5s;
     }

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import 'sass/app';
 
 import Money from 'components/money';
-import style from 'sass/components/create-graph';
+import style from 'sass/components/graph';
 
 var computeSchedule = function(
   principle, 
