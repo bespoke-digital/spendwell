@@ -12,7 +12,7 @@
     color:$gray-2; 
     font-weight:600;
     margin-bottom:30px;
-    height: 653px;
+    height:653px;
   }
 
   .empty-state {
@@ -20,8 +20,9 @@
   }
 
   .empty-graphs {
-    width:75%;
-    padding-top: 20px;
+    width:35%;
+    height:35%;
+    padding-top: 50px;
   }
 
   .hide-me{
@@ -29,7 +30,7 @@
   }
 
   .empty-text {
-    padding: 20px 160px 0 160px;
+    padding:20px 160px 0 160px;
     .text-small {
       padding-top:5px;
       line-height:1.2;
@@ -39,31 +40,35 @@
   
     @media screen and (max-width: 992px) {
     .empty-text {
-      padding: 20px 70px 0 70px;
+      padding:20px 70px 0 70px;
       }
   }
   
   @media screen and (max-width: 768px) {
+    .empty-graphs {
+      width:75%;
+      padding-top:20px;
+    }
     .empty-text {
-      padding: 20px 45px 0 45px;
+      padding:20px 45px 0 45px;
       line-height:1;
       }
   }
 
   .move-right{ 
-    position: absolute;
+    position:absolute;
     text-align:end;
     right:5%;
   }
 
   .interest{ 
-    position: absolute;
+    position:absolute;
     text-align:end;
     right:5%;
   }
 
   .offset-card {
-    position: absolute;
+    position:absolute;
     text-align:end;
     right:5%;
     margin-top:11px;
