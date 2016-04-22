@@ -1,13 +1,23 @@
 
 from __future__ import print_function
+import json
 
 from fabric.api import env, task, prefix, run, cd, shell_env, sudo
 from fabric.colors import red, yellow, green, blue
-from fabric.contrib import console
+
+import requests
 
 
 class DeployFailException:
     pass
+
+
+@task
+def post_to_slack(message):
+    requests.post(
+        'https://hooks.slack.com/services/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',
+        data={'payload': json.dumps({'text': message})},
+    )
 
 
 def configure_env():
@@ -131,8 +141,10 @@ def deploy(force=False):
     except Exception as e:
         print(red(e.message))
         print(red('DEPLOY FAILED'))
+        post_to_slack('Deploy Failed! {}'.format(e.message))
     else:
         print(green('DEPLOY SUCCEEDED!'))
+        post_to_slack('Successfully deployed branch `{branch}` to `{domain}`.'.format(**env))
 
 
 @task
