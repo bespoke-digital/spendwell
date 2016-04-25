@@ -6,7 +6,7 @@ import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
 import Graphicdialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import FAIcon from 'components/fa-icon';
 
 import { SyncInstitutionsMutation } from 'mutations/institutions';
 
@@ -107,7 +107,7 @@ class OnboardingWalkthrough extends Component {
           paragraph={step.paragraph}
           prev={stepIndex > 0 ?
             <Button fab onClick={()=> this.setState({ stepIndex: stepIndex - 1 })}>
-              <Icon type='arrow-left'/>
+              <FAIcon type='arrow-left'/>
             </Button>
           : null}
           next={stepIndex === STEPS.length - 1 ?
@@ -117,11 +117,11 @@ class OnboardingWalkthrough extends Component {
               disabled={syncing}
               loading={syncing}
             >
-              <Icon type='arrow-right'/>
+              <FAIcon type='arrow-right'/>
             </Button>
           :
             <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
-              <Icon type='arrow-right'/>
+              <FAIcon type='arrow-right'/>
             </Button>
           }
         />

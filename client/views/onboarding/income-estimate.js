@@ -11,7 +11,7 @@ import Card from 'components/card';
 import CardList from 'components/card-list';
 import MoneyInput from 'components/money-input';
 import GraphicDialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import FAIcon from 'components/fa-icon';
 import Transition from 'components/transition';
 
 import { SetIncomeEstimateMutation } from 'mutations/users';
@@ -64,7 +64,7 @@ class OnboardingIncomeEstimate extends Component {
             `}
             next={
               <Button fab onClick={()=> this.setState({ help: false })}>
-                <Icon type='check'/>
+                <FAIcon type='check'/>
               </Button>
             }
             onRequestClose={()=> this.setState({ help: false })}

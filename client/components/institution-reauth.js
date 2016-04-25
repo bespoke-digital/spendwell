@@ -8,6 +8,7 @@ import TextActions from 'components/text-actions';
 import A from 'components/a';
 import Transition from 'components/transition';
 import FinicityAccountDialog from 'components/finicity-account-dialog';
+import WarningIcon from 'components/icons/warning-icon';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';
@@ -56,10 +57,15 @@ class InstitutionReauth extends Component {
 
         {viewer.institutions.edges.map(({ node })=>
           <Card key={node.id}>
-            Your {node.name} connection requires reauthorization.
-            <TextActions>
-              <A onClick={this.reauth.bind(this, node)}>Reauthorize</A>
-            </TextActions>
+            <div className='icon-row'>
+              <div><WarningIcon color='orange'/></div>
+              <div>
+                Your {node.name} connection requires reauthorization.
+                <TextActions>
+                  <A onClick={this.reauth.bind(this, node)}>Reauthorize</A>
+                </TextActions>
+              </div>
+            </div>
           </Card>
         )}
       </Container>

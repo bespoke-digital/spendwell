@@ -8,7 +8,7 @@ import ConnectAccount from 'components/connect-account';
 import Onboarding from 'components/onboarding';
 import Button from 'components/button';
 import GraphicDialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import FAIcon from 'components/fa-icon';
 import Transition from 'components/transition';
 
 import welcomeImage from 'img/views/onboarding/welcome.svg';
@@ -45,7 +45,7 @@ class AddAccountView extends Component {
             `}
             next={
               <Button fab onClick={()=> this.setState({ help: false })}>
-                <Icon type='check'/>
+                <FAIcon type='check'/>
               </Button>
             }
             onRequestClose={()=> this.setState({ help: false })}

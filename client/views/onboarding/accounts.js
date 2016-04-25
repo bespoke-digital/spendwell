@@ -11,7 +11,7 @@ import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
 import GraphicDialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import FAIcon from 'components/fa-icon';
 import Transition from 'components/transition';
 
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
@@ -66,7 +66,7 @@ class OnboardingAccounts extends Component {
             `}
             next={
               <Button fab onClick={()=> this.setState({ help: false })}>
-                <Icon type='check'/>
+                <FAIcon type='check'/>
               </Button>
             }
             onRequestClose={()=> this.setState({ help: false })}
