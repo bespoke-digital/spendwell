@@ -47,7 +47,11 @@ class ConnectAccount extends Component {
 
   selectPlaidInstitution(plaidInstitution) {
     const { viewer } = this.props;
-    plaidAccountDialog(plaidInstitution.id, viewer, ::this.handleConnected);
+    plaidAccountDialog({
+      viewer,
+      plaidInstitutionId: plaidInstitution.id,
+      onConnected: ::this.handleConnected,
+    });
   }
 
   render() {

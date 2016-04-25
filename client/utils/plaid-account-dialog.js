@@ -9,7 +9,13 @@ const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').g
 const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').getAttribute('content');
 
 
-export default function(plaidInstitutionId, viewer, onConnected, fullSync) {
+export default function({
+  plaidInstitutionId,
+  viewer,
+  onConnecing,
+  onConnected,
+  fullSync,
+}) {
   function openPlaid() {
     window.Plaid.create({
       clientName: 'Spendwell',
@@ -18,6 +24,9 @@ export default function(plaidInstitutionId, viewer, onConnected, fullSync) {
       longtail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
       onSuccess(publicToken) {
+        if (onConnecing)
+          onConnecing();
+
         Relay.Store.commitUpdate(new ConnectPlaidInstitutionMutation({
           viewer,
           publicToken,
@@ -27,7 +36,9 @@ export default function(plaidInstitutionId, viewer, onConnected, fullSync) {
           onFailure: handleMutationError,
           onSuccess: ()=> {
             console.log('Success: ConnectPlaidInstitutionMutation');
-            onConnected();
+
+            if (onConnected)
+              onConnected();
           },
         });
       },

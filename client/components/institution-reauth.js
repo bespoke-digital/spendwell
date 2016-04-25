@@ -15,13 +15,22 @@ import plaidAccountDialog from 'utils/plaid-account-dialog';
 
 
 class InstitutionReauth extends Component {
-  state = {};
+  state = { loading: false };
 
   reauth(institution) {
     const { viewer, relay } = this.props;
 
     if (institution.plaidId)
-      plaidAccountDialog(institution.plaidId, viewer, ()=> relay.forceFetch(), true);
+      plaidAccountDialog({
+        viewer,
+        plaidInstitutionId: institution.plaidId,
+        fullSync: true,
+        onConnecing: ()=> this.setState({ loading: true }),
+        onConnected: ()=> {
+          relay.forceFetch();
+          this.setState({ loading: false });
+        },
+      });
 
     else if (institution.finicityId)
       this.setState({ finicityConnect: institution });
@@ -33,12 +42,12 @@ class InstitutionReauth extends Component {
   handleFinicityConnected() {
     const { relay } = this.props;
     relay.forceFetch();
-    this.setState({ finicityConnect: null });
+    this.setState({ finicityConnect: null, loading: false });
   }
 
   render() {
     const { viewer } = this.props;
-    const { finicityConnect } = this.state;
+    const { finicityConnect, loading } = this.state;
 
     if (!viewer.institutions || viewer.institutions.edges.length === 0)
       return null;
@@ -49,7 +58,8 @@ class InstitutionReauth extends Component {
           <FinicityAccountDialog
             viewer={viewer}
             finicityInstitution={finicityConnect ? finicityConnect.finicityInstitution : null}
-            onRequestClose={()=> this.setState({ finicityInstitution: null })}
+            onRequestClose={()=> this.setState({ finicityInstitution: null, loading: false })}
+            onConnecing={()=> this.setState({ loading: true })}
             onConnected={::this.handleFinicityConnected}
             fullSync
           />
@@ -60,10 +70,16 @@ class InstitutionReauth extends Component {
             <div className='icon-row'>
               <div><WarningIcon color='orange'/></div>
               <div>
-                Your {node.name} connection requires reauthorization.
-                <TextActions>
-                  <A onClick={this.reauth.bind(this, node)}>Reauthorize</A>
-                </TextActions>
+                {!loading ?
+                  <span>
+                    Your {node.name} connection requires reauthorization.
+                    <TextActions>
+                      <A onClick={this.reauth.bind(this, node)}>Reauthorize</A>
+                    </TextActions>
+                  </span>
+                :
+                  <span>Syncing your data...</span>
+                }
               </div>
             </div>
           </Card>
