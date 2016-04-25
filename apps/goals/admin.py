@@ -6,7 +6,7 @@ from .models import Goal, GoalMonth
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_displat = ('name', 'owner_secret_id')
+    list_display = ('name', 'owner_secret_id')
     readonly_fields = ('owner_secret_id',)
     fields = (
         'owner_secret_id',
