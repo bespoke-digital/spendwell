@@ -19,12 +19,6 @@ from apps.finicity.models import FinicityInstitution
 logger = logging.getLogger(__name__)
 
 
-def log_time(prev_time, *args):
-    cur_time = time()
-    print(cur_time - prev_time, '\t', *args)
-    return cur_time
-
-
 class InstitutionManager(SWManager):
     def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data):
         institution, created = Institution.objects.get_or_create(
@@ -32,6 +26,13 @@ class InstitutionManager(SWManager):
             plaid_id=plaid_id,
             defaults={'name': data['name']},
         )
+
+        # Make sure reauth for FIs without plaid_public_token causes accounts
+        # to be deleted. This can be removed later, since it only applies to
+        # accounts connected before 1016/04/25
+        if not created and not institution.plaid_public_token:
+            institution.accounts.all().delete()
+
         institution.plaid_public_token = plaid_public_token
         institution.plaid_access_token = plaid_access_token
         institution.save()

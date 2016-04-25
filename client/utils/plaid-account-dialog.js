@@ -24,7 +24,7 @@ export default function({
       product: 'connect',
       longtail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
-      token: plaidPublicToken,
+      token: plaidPublicToken ? plaidPublicToken : undefined,
       onSuccess(publicToken) {
         if (onConnecing)
           onConnecing();

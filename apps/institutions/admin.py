@@ -12,6 +12,7 @@ class InstitutionAdmin(admin.ModelAdmin):
         'owner_secret_id',
         'name',
         'plaid_id',
+        'plaid_public_token',
         'finicity_id',
         'last_sync',
         'reauth_required',
