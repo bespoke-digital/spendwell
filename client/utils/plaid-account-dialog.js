@@ -38,7 +38,7 @@ export default function(plaidInstitutionId, viewer, onConnected, fullSync) {
     const script = document.createElement('script');
     script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
     script.onload = script.onreadystatechange = function() {
-      script.onreadystatechange = script.onload = null;
+      script.onload = script.onreadystatechange = null;
       openPlaid();
     };
     document.getElementsByTagName('head')[0].appendChild(script);
