@@ -26,13 +26,14 @@ def log_time(prev_time, *args):
 
 
 class InstitutionManager(SWManager):
-    def from_plaid(self, owner, plaid_id, access_token, data):
+    def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data):
         institution, created = Institution.objects.get_or_create(
             owner=owner,
             plaid_id=plaid_id,
             defaults={'name': data['name']},
         )
-        institution.access_token = access_token
+        institution.plaid_public_token = plaid_public_token
+        institution.plaid_access_token = plaid_access_token
         institution.save()
         return institution
 
@@ -54,7 +55,8 @@ class Institution(SWModel):
 
     name = models.CharField(max_length=255)
     plaid_id = models.CharField(max_length=255, null=True, blank=True)
-    access_token = models.CharField(max_length=255, null=True, blank=True)
+    plaid_access_token = models.CharField(max_length=255, null=True, blank=True)
+    plaid_public_token = models.CharField(max_length=255, null=True, blank=True)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     reauth_required = models.BooleanField(default=False)
     last_sync = models.DateTimeField(null=True, blank=True)
@@ -90,14 +92,14 @@ class Institution(SWModel):
 
     @property
     def plaid_client(self):
-        if not self.plaid_id or not self.access_token:
+        if not self.plaid_id or not self.plaid_access_token:
             return
 
         if not hasattr(self, '_plaid_client'):
             self._plaid_client = Client(
                 client_id=settings.PLAID_CLIENT_ID,
                 secret=settings.PLAID_SECRET,
-                access_token=self.access_token,
+                access_token=self.plaid_access_token,
             )
         return self._plaid_client
 

@@ -35,7 +35,8 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
         institution = Institution.objects.from_plaid(
             owner=info.request_context.user,
             plaid_id=input['plaid_institution_id'],
-            access_token=token_response['access_token'],
+            plaid_public_token=input['public_token'],
+            plaid_access_token=token_response['access_token'],
             data=institution_response,
         )
 

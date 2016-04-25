@@ -24,6 +24,7 @@ class InstitutionReauth extends Component {
       plaidAccountDialog({
         viewer,
         plaidInstitutionId: institution.plaidId,
+        plaidPublicToken: institution.plaidPublicToken,
         fullSync: true,
         onConnecing: ()=> this.setState({ loading: true }),
         onConnected: ()=> {
@@ -103,6 +104,7 @@ InstitutionReauth = Relay.createContainer(InstitutionReauth, {
                 id
                 name
                 plaidId
+                plaidPublicToken
                 finicityId
 
                 finicityInstitution {

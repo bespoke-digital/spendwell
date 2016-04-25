@@ -11,6 +11,7 @@ const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').g
 
 export default function({
   plaidInstitutionId,
+  plaidPublicToken,
   viewer,
   onConnecing,
   onConnected,
@@ -23,6 +24,7 @@ export default function({
       product: 'connect',
       longtail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
+      token: plaidPublicToken,
       onSuccess(publicToken) {
         if (onConnecing)
           onConnecing();

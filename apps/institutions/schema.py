@@ -28,6 +28,7 @@ class InstitutionNode(SWNode):
             'current_balance',
             'reauth_required',
             'plaid_id',
+            'plaid_public_token',
             'finicity_id',
             'finicity_institution',
         )
