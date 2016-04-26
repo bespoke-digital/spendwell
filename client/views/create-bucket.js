@@ -42,14 +42,14 @@ class CreateBucket extends Component {
   }
 
   render() {
-    const { viewer } = this.props;
+    const { viewer, type } = this.props;
     const { loading } = this.state;
 
     return (
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>New Label</h1>
+            <h1>{type === 'expense' ? 'New Label' : 'New Bill'}</h1>
           </div>
 
           <BucketForm
