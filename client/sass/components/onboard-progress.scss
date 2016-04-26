@@ -8,9 +8,27 @@
   width: 200px;
 
   .appbar-container {
-    position: relative;
-    height: $mui-appbar-height;
-    cursor: pointer;
+    @media (max-width: $screen-xs-max) {
+      @include depth(2);
+
+      position: absolute;
+      top: $mui-appbar-height;
+      height: $mui-appbar-height / 2;
+      width: 100vw;
+      padding: 0 5vw;
+
+      background-color: $brand-primary;
+
+      > .progress {
+        width: 90vw;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      height: $mui-appbar-height;
+      position: relative;
+      cursor: pointer;
+    }
 
     > .progress {
       @extend .depth-z1;
@@ -24,14 +42,24 @@
     @extend .depth-z3;
 
     position: absolute;
-    top: $mui-appbar-height - 10px;
-    left: -10px;
-    width: calc(100% + 20px);
+
     padding: 10px 0 5px;
     z-index: 1;
 
     background-color: white;
     color: $gray-2;
+
+    @media (max-width: $screen-xs-max) {
+      top: ($mui-appbar-height + ($mui-appbar-height / 2)) - 3px;
+      left: 10vw;
+      width: 80vw;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      top: $mui-appbar-height - 10px;
+      left: -10px;
+      width: calc(100% + 20px);
+    }
 
     h4 {
       text-align: center;
@@ -46,9 +74,10 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
-
         padding: 5px 10px;
         margin-bottom: 5px;
+
+        text-align: left;
 
         > :first-child {
           margin: 0 10px 0 0;
