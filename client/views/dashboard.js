@@ -113,7 +113,7 @@ class Dashboard extends Component {
             <h2>Goals <small> for long and short term savings</small></h2>
 
             <div>
-              <Button to='/app/goals/new' flat={true} variant='primary'>New Goal</Button>
+              <Button to='/app/goals/new' variant='primary' flat>New Goal</Button>
             </div>
           </div>
 
@@ -164,9 +164,7 @@ class Dashboard extends Component {
           <div className='heading'>
             <h2>Bills <small> for monthly recurring expenses</small></h2>
             <div>
-              <Button to='/app/labels/new/bill' flat={true} variant='primary'>
-                {' New Label'}
-              </Button>
+              <Button to='/app/labels/new/bill' variant='primary' flat>New Bill</Button>
             </div>
           </div>
 
@@ -202,11 +200,9 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Other Expenses <small> for non-recurring expenses</small></h2>
+            <h2>Labels <small> for non-recurring expenses</small></h2>
             <div>
-              <Button to='/app/labels/new/expense' flat={true} variant='primary'>
-                {' New Label'}
-              </Button>
+              <Button to='/app/labels/new/expense' variant='primary' flat>New Label</Button>
             </div>
           </div>
 

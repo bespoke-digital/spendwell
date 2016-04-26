@@ -14,16 +14,16 @@
       color: $gray-4;
 
       small {
-        display: none !important;
+        font-size: 12px;
+        color: $gray-5;
 
         @media (min-width: $screen-sm-min) {
           display: inline-block;
-          margin-left: 5px;
+          margin-left: 1px;
         }
 
         @media (max-width: $screen-xs-max) {
-          display: block;
-          margin-top: 5px;
+          display: none;
         }
       }
 

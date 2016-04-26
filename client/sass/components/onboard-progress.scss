@@ -5,7 +5,7 @@
 
 :local(.root) {
   position: relative;
-  width: 200px;
+  width: 280px;
 
   .appbar-container {
     @media (max-width: $screen-xs-max) {
@@ -34,7 +34,7 @@
       @extend .depth-z1;
 
       position: absolute;
-      top: 50%;
+      top: calc(50% - 2px);
     }
   }
 

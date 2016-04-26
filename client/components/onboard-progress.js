@@ -9,18 +9,20 @@ import RadioButtonOffIcon from 'components/icons/radio-button-off';
 import DoneIcons from 'components/icons/done';
 import Transition from 'components/transition';
 import ClickOff from 'components/click-off';
+import IncomeEstimateDialog from 'components/income-estimate-dialog';
 
 import style from 'sass/components/onboard-progress';
 
 
 class OnboardProgress extends Component {
-  state = { open: false };
+  state = { open: false, showIncomeEstimateDialog: false };
 
   render() {
     const { viewer } = this.props;
-    const { open } = this.state;
+    const { open, showIncomeEstimateDialog } = this.state;
 
     const status = {
+      estimatedIncomeConfirmed: viewer.settings.estimatedIncomeConfirmed,
       hasGoal: viewer.goals.edges.length > 0,
       hasBill: viewer.bills.edges.length > 0,
       hasLabel: viewer.labels.edges.length > 0,
@@ -41,6 +43,7 @@ class OnboardProgress extends Component {
         >
           <Progress current={progressCurrent + 1} target={progressTarget + 1}/>
         </div>
+
         <Transition show={open}>
           <ClickOff
             className='todos'
@@ -49,13 +52,23 @@ class OnboardProgress extends Component {
             <h4>Get Started</h4>
             <ul>
               <li
+                className={status.estimatedIncomeConfirmed ? 'done' : 'not-done'}
+                onClick={()=> this.setState({ showIncomeEstimateDialog: true })}
+              >
+                <div>{status.estimatedIncomeConfirmed ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div>
+                  <div className='title'>Confirm Income Estimate</div>
+                  <div className='description'>Ensure we calculated your monthly income correctly.</div>
+                </div>
+              </li>
+              <li
                 className={status.hasGoal ? 'done' : 'not-done'}
                 onClick={()=> browserHistory.push('/app/goals/new')}
               >
                 <div>{status.hasGoal ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
                 <div>
-                  <div className='title'>Set A Goal</div>
-                  <div className='description'>For money that you keep</div>
+                  <div className='title'>Create a Goal</div>
+                  <div className='description'>For long and short term savings.</div>
                 </div>
               </li>
               <li
@@ -64,8 +77,8 @@ class OnboardProgress extends Component {
               >
                 <div>{status.hasBill ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
                 <div>
-                  <div className='title'>Add A Bill</div>
-                  <div className='description'>For monthly recurring expenses</div>
+                  <div className='title'>Create a Bill</div>
+                  <div className='description'>For monthly recurring expenses.</div>
                 </div>
               </li>
               <li
@@ -74,8 +87,8 @@ class OnboardProgress extends Component {
               >
                 <div>{status.hasLabel ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
                 <div>
-                  <div className='title'>Add A Label</div>
-                  <div className='description'>For non-recurring expenses</div>
+                  <div className='title'>Create a Label</div>
+                  <div className='description'>For non-recurring expenses.</div>
                 </div>
               </li>
               <li
@@ -84,12 +97,19 @@ class OnboardProgress extends Component {
               >
                 <div>{status.hasExternalAccount ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
                 <div>
-                  <div className='title'>Add An External Account</div>
-                  <div className='description'>Transfers to accounts that aren't connected</div>
+                  <div className='title'>Create an External Account</div>
+                  <div className='description'>For transfers to non-connected accounts.</div>
                 </div>
               </li>
             </ul>
           </ClickOff>
+        </Transition>
+
+        <Transition show={showIncomeEstimateDialog}>
+          <IncomeEstimateDialog
+            viewer={viewer}
+            onRequestClose={()=> this.setState({ showIncomeEstimateDialog: false })}
+          />
         </Transition>
       </div>
     );
@@ -100,6 +120,12 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${IncomeEstimateDialog.getFragment('viewer')}
+
+        settings {
+          estimatedIncomeConfirmed
+        }
+
         goals(first: 1) {
           edges { node { id } }
         }

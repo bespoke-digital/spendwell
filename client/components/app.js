@@ -1,17 +1,20 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
+import { connect } from 'react-redux';
 
 import Transition from 'components/transition';
 import Header from 'components/header';
 import Nav from 'components/nav';
 import InstitutionReauth from 'components/institution-reauth';
+import Progress from 'components/progress';
 
 import style from 'sass/components/app';
 
 
 class App extends Component {
   static propTypes = {
+    loading: PropTypes.number.isRequired,
     onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
   };
@@ -35,11 +38,13 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, back } = this.props;
+    const { children, viewer, back, loading } = this.props;
     const { navOpen } = this.state;
 
     return (
       <div className={style.root}>
+        {loading ? <Progress className='global-loading' indeterminate/> : null}
+
         <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>
 
         <Nav open={navOpen} toggleNav={::this.toggleNav} viewer={viewer}/>
@@ -50,13 +55,14 @@ class App extends Component {
 
         <div className='app-children'>
           <InstitutionReauth viewer={viewer}/>
-
           {children}
         </div>
       </div>
     );
   }
 }
+
+App = connect((state)=> ({ loading: state.loading }))(App);
 
 App = Relay.createContainer(App, {
   fragments: {

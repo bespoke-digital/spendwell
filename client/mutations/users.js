@@ -23,6 +23,10 @@ export class SetIncomeEstimateMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on SetIncomeEstimateMutation {
         viewer {
+          settings {
+            estimatedIncomeConfirmed
+          }
+
           summary {
             income
             incomeEstimated
