@@ -7,6 +7,9 @@ import { browserHistory } from 'react-router';
 import Progress from 'components/progress';
 import RadioButtonOffIcon from 'components/icons/radio-button-off';
 import DoneIcons from 'components/icons/done';
+import Transition from 'components/transition';
+import ClickOff from 'components/click-off';
+
 import style from 'sass/components/onboard-progress';
 
 
@@ -24,19 +27,25 @@ class OnboardProgress extends Component {
       hasExternalAccount: viewer.externalAccounts.edges.length > 0,
     };
 
+    const progressTarget = Object.keys(status).length;
+    const progressCurrent = _.values(status).filter((v)=> v).length;
+
+    if (progressTarget === progressCurrent)
+      return null;
+
     return (
       <div className={style.root}>
         <div
           className='appbar-container'
           onClick={()=> this.setState({ open: !open })}
         >
-          <Progress
-            current={_.values(status).filter((v)=> v).length + 1}
-            target={Object.keys(status).length + 1}
-          />
+          <Progress current={progressCurrent + 1} target={progressTarget + 1}/>
         </div>
-        {open ?
-          <div className='todos'>
+        <Transition show={open}>
+          <ClickOff
+            className='todos'
+            onClickOff={()=> this.setState({ open: false })}
+          >
             <h4>Get Started</h4>
             <ul>
               <li
@@ -80,8 +89,8 @@ class OnboardProgress extends Component {
                 </div>
               </li>
             </ul>
-          </div>
-        : null}
+          </ClickOff>
+        </Transition>
       </div>
     );
   }
