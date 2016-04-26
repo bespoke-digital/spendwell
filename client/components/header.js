@@ -14,17 +14,13 @@ import style from 'sass/components/header';
 class Header extends Component {
   static propTypes = {
     toggleNav: PropTypes.func,
-    navHandle: PropTypes.bool,
-    showSafeToSpend: PropTypes.bool,
+    plain: PropTypes.bool,
     back: PropTypes.bool,
-    logoLink: PropTypes.bool,
   };
 
   static defaultProps = {
-    navHandle: true,
-    showSafeToSpend: true,
+    plain: false,
     back: false,
-    logoLink: true,
   };
 
   handleHandleClick(event) {
@@ -39,31 +35,27 @@ class Header extends Component {
   }
 
   render() {
-    const {
-      viewer,
-      showSafeToSpend,
-      navHandle,
-      back,
-      logoLink,
-    } = this.props;
+    const { viewer, back, plain } = this.props;
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
-        <div className='nav-handle mui--appbar-height mui--appbar-line-height'>
-          {back ? (
-            <a href='#' onClick={::this.handleBackClick}>
-              <i className='fa fa-long-arrow-left'/>
-            </a>
-          ) : navHandle ? (
-            <a href='#' onClick={::this.handleHandleClick}>
-              <i className='fa fa-bars'/>
-            </a>
-          ) : null}
-        </div>
+        {!plain ?
+          <div className='nav-handle mui--appbar-height mui--appbar-line-height'>
+            {back ? (
+              <a href='#' onClick={::this.handleBackClick}>
+                <i className='fa fa-long-arrow-left'/>
+              </a>
+            ) : (
+              <a href='#' onClick={::this.handleHandleClick}>
+                <i className='fa fa-bars'/>
+              </a>
+            )}
+          </div>
+        : null}
 
-        <OnboardProgress viewer={viewer}/>
+        {!plain ? <OnboardProgress viewer={viewer}/> : null}
 
-        {logoLink ?
+        {!plain ?
           <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
             <img src={logoIconWhite} alt='Spendwell'/>
           </Link>
@@ -73,7 +65,7 @@ class Header extends Component {
           </div>
         }
 
-        {showSafeToSpend ?
+        {!plain ?
           <div className='safe-to-spend'>
             <Money amount={viewer.safeToSpend}/>
             <small>safe to spend</small>

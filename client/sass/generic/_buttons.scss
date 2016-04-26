@@ -74,4 +74,22 @@
       background-color: transparent;
     }
   }
+
+  &.mui-btn--fab {
+    > .icon {
+      position: absolute;
+      top: calc(50% - 12px);
+      left: calc(50% - 12px);
+      height: 24px;
+      width: 24px;
+    }
+
+    &.mui-btn--is-loading .icon {
+      display: none;
+    }
+
+    &.mui-btn--can-load:before {
+      left: calc(50% - 9px);
+    }
+  }
 }

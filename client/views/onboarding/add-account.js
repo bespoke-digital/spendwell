@@ -8,7 +8,7 @@ import ConnectAccount from 'components/connect-account';
 import Onboarding from 'components/onboarding';
 import Button from 'components/button';
 import GraphicDialog from 'components/graphic-dialog';
-import FAIcon from 'components/fa-icon';
+import DoneIcon from 'components/icons/done';
 import Transition from 'components/transition';
 
 import welcomeImage from 'img/views/onboarding/welcome.svg';
@@ -44,9 +44,7 @@ class AddAccountView extends Component {
               that you connect all accounts where money comes in or is spent.
             `}
             next={
-              <Button fab onClick={()=> this.setState({ help: false })}>
-                <FAIcon type='check'/>
-              </Button>
+              <Button onClick={()=> this.setState({ help: false })} fab><DoneIcon/></Button>
             }
             onRequestClose={()=> this.setState({ help: false })}
           />

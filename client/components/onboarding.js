@@ -11,14 +11,9 @@ class Onboarding extends Component {
   render() {
     const { viewer, children } = this.props;
     return (
-      <div className={style.root}>
-        <Header
-          viewer={viewer}
-          navHandle={false}
-          showSafeToSpend={false}
-          logoLink={false}
-        />
-        {children}
+      <div className={`${style.root} onboarding`}>
+        <Header viewer={viewer} plain/>
+        <div className='app-children'>{children}</div>
       </div>
     );
   }

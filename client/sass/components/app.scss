@@ -23,4 +23,12 @@
     }
   }
 
+  &.onboarding {
+    .app-children {
+      @media (min-width: $screen-sm-min) {
+        padding: 0;
+      }
+    }
+  }
+
 }
