@@ -23,8 +23,8 @@ class CreateBucket extends Component {
     this.state = { loading: false };
   }
 
-  handleSubmit({ filters, name, type }) {
-    const { viewer } = this.props;
+  handleSubmit({ filters, name }) {
+    const { viewer, type } = this.props;
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type }), {
@@ -42,7 +42,7 @@ class CreateBucket extends Component {
   }
 
   render() {
-    const { viewer, type } = this.props;
+    const { viewer } = this.props;
     const { loading } = this.state;
 
     return (
@@ -58,7 +58,6 @@ class CreateBucket extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
-            initialType={type}
           />
         </div>
       </App>

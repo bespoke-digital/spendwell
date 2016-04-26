@@ -28,20 +28,18 @@ class BucketForm extends Component {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     loading: PropTypes.bool,
-    initialType: PropTypes.oneOf(['bill', 'expense', 'account']),
   };
 
   static defaultProps = {
-    initialType: 'expense',
+    type: 'expense',
   };
 
-  constructor({ initialType, bucket }) {
+  constructor({ bucket }) {
     super();
 
     this.state = {
       filters: bucket ? cleanFilters(bucket.filters) : [],
       name: bucket ? bucket.name : '',
-      type: bucket ? bucket.type : initialType,
     };
   }
 
@@ -52,9 +50,9 @@ class BucketForm extends Component {
 
   handleSubmit() {
     const { onSubmit } = this.props;
-    const { filters, name, type } = this.state;
+    const { filters, name } = this.state;
 
-    onSubmit({ type, name, filters: cleanFilters(filters) });
+    onSubmit({ name, filters: cleanFilters(filters) });
   }
 
   handleAddFilter() {
@@ -90,32 +88,13 @@ class BucketForm extends Component {
 
   render() {
     const { onCancel, viewer, bucket, loading } = this.props;
-    const { name, filters, type } = this.state;
+    const { name, filters } = this.state;
 
     const valid = name.length && filters.length;
 
     return (
       <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
         <CardList>
-          {type !== 'account' ?
-            <Card className='bucket-type-selector'>
-              <div
-                className={`bucket-type ${type === 'bill' ? 'selected' : ''}`}
-                onClick={()=> this.setState({ type: 'bill' })}
-              >
-                <h3>Bill</h3>
-                <div>For monthly recurring expenses</div>
-              </div>
-              <div
-                className={`bucket-type ${type === 'expense' ? 'selected' : ''}`}
-                onClick={()=> this.setState({ type: 'expense' })}
-              >
-                <h3>Other Expense</h3>
-                <div>For non-recurring expenses</div>
-              </div>
-            </Card>
-          : null}
-
           <Card>
             <TextInput
               label='Name'

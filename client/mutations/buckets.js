@@ -165,7 +165,6 @@ export class UpdateBucketMutation extends Relay.Mutation {
     return {
       bucketId: this.props.bucket.id,
       name: this.props.name,
-      type: this.props.type,
       filters: this.props.filters,
     };
   }
@@ -175,7 +174,6 @@ export class UpdateBucketMutation extends Relay.Mutation {
       fragment on UpdateBucketMutation {
         bucket {
           name
-          type
           filters
         }
       }
@@ -196,7 +194,6 @@ export class UpdateBucketMutation extends Relay.Mutation {
       bucket: {
         id: this.props.bucket.id,
         name: this.props.bucket.name,
-        type: this.props.bucket.type,
         filters: this.props.bucket.filters,
       },
     };
