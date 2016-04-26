@@ -3,7 +3,7 @@
 
 :local(.root) {
   position: relative;
-  height: 2px;
+  height: 3px;
   width: 100%;
 
   background-color: $gray-lighter;
@@ -13,7 +13,7 @@
   }
 
   .bar {
-    height: 2px;
+    height: 3px;
     background-color: $brand-warn;
   }
 

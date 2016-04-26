@@ -4,8 +4,10 @@ import Relay from 'react-relay';
 import { Link, browserHistory } from 'react-router';
 
 import Money from 'components/money';
-import logoWhite from 'img/logo-white.svg';
+import OnboardProgress from 'components/onboard-progress';
+
 import logoIconWhite from 'img/logo-icon-white.svg';
+
 import style from 'sass/components/header';
 
 
@@ -38,7 +40,7 @@ class Header extends Component {
 
   render() {
     const {
-      viewer: { safeToSpend },
+      viewer,
       showSafeToSpend,
       navHandle,
       back,
@@ -47,7 +49,7 @@ class Header extends Component {
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
-        <div className='left mui--appbar-height mui--appbar-line-height'>
+        <div className='nav-handle mui--appbar-height mui--appbar-line-height'>
           {back ? (
             <a href='#' onClick={::this.handleBackClick}>
               <i className='fa fa-long-arrow-left'/>
@@ -58,20 +60,22 @@ class Header extends Component {
             </a>
           ) : null}
         </div>
+
+        <OnboardProgress viewer={viewer}/>
+
         {logoLink ?
           <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
-            {/*<img src={logoWhite} alt='Spendwell' className='logo'/>*/}
-            <img src={logoIconWhite} alt='Spendwell' className='icon'/>
+            <img src={logoIconWhite} alt='Spendwell'/>
           </Link>
         :
           <div className='brand mui--appbar-height mui--appbar-line-height'>
-            <img src={logoWhite} alt='Spendwell' className='logo'/>
-            <img src={logoIconWhite} alt='Spendwell' className='icon'/>
+            <img src={logoIconWhite} alt='Spendwell'/>
           </div>
         }
+
         {showSafeToSpend ?
           <div className='safe-to-spend'>
-            <Money amount={safeToSpend}/>
+            <Money amount={viewer.safeToSpend}/>
             <small>safe to spend</small>
           </div>
         : null}
@@ -84,6 +88,8 @@ Header = Relay.createContainer(Header, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
+        ${OnboardProgress.getFragment('viewer')}
+
         safeToSpend
       }
     `,

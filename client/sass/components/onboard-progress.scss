@@ -1,0 +1,83 @@
+
+@import '../variables';
+@import '../depth';
+
+
+:local(.root) {
+  position: relative;
+  width: 200px;
+
+  .appbar-container {
+    position: relative;
+    height: $mui-appbar-height;
+    cursor: pointer;
+
+    > .progress {
+      @extend .depth-z1;
+
+      position: absolute;
+      top: 50%;
+    }
+  }
+
+  .todos {
+    @extend .depth-z3;
+
+    position: absolute;
+    top: $mui-appbar-height - 10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    padding: 10px 0 5px;
+    z-index: 1;
+
+    background-color: white;
+    color: $gray-2;
+
+    h4 {
+      text-align: center;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        padding: 5px 10px;
+        margin-bottom: 5px;
+
+        > :first-child {
+          margin: 0 10px 0 0;
+        }
+
+        > :not(:first-child) {
+          flex: 1;
+        }
+
+        .title {
+          font-weight: 600;
+        }
+
+        &.not-done {
+          cursor: pointer;
+
+          &:hover {
+            background-color: $gray-8;
+          }
+        }
+
+        &.done {
+          color: $gray-4;
+
+          .icon {
+            fill: $brand-primary;
+          }
+        }
+      }
+    }
+  }
+}

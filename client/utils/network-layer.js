@@ -17,7 +17,7 @@ function finishPromise(arg) {
   return arg;
 }
 
-function loadingPromise(promise, errorClbk) {
+function loadingPromise(promise) {
   nprogress.start();
   pendingRequests++;
 
@@ -44,4 +44,4 @@ export default Object.assign({}, defaultNetworkLayer, {
 
 export const handleMutationError = function(response) {
   throw response.getError() || new Error('Mutation failed.');
-}
+};
