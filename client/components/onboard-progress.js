@@ -15,11 +15,15 @@ import style from 'sass/components/onboard-progress';
 
 
 class OnboardProgress extends Component {
-  state = { open: false, showIncomeEstimateDialog: false };
+  state = {
+    todosOpen: false,
+    calloutOpen: true,
+    showIncomeEstimateDialog: false,
+  };
 
   render() {
     const { viewer } = this.props;
-    const { open, showIncomeEstimateDialog } = this.state;
+    const { todosOpen, calloutOpen, showIncomeEstimateDialog } = this.state;
 
     const status = {
       estimatedIncomeConfirmed: viewer.settings.estimatedIncomeConfirmed,
@@ -39,15 +43,24 @@ class OnboardProgress extends Component {
       <div className={style.root}>
         <div
           className='appbar-container'
-          onClick={()=> this.setState({ open: !open })}
+          onClick={()=> this.setState({ todosOpen: !todosOpen, calloutOpen: false })}
         >
           <Progress current={progressCurrent + 1} target={progressTarget + 1}/>
         </div>
 
-        <Transition show={open}>
+        <Transition show={calloutOpen && progressTarget === 0}>
+          <ClickOff
+            className='callout'
+            onClickOff={()=> this.setState({ calloutOpen: false })}
+          >
+            <h4>Get Started</h4>
+          </ClickOff>
+        </Transition>
+
+        <Transition show={todosOpen}>
           <ClickOff
             className='todos'
-            onClickOff={()=> this.setState({ open: false })}
+            onClickOff={()=> this.setState({ todosOpen: false })}
           >
             <h4>Get Started</h4>
             <ul>
