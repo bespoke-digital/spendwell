@@ -7,8 +7,6 @@ import Col from 'muicss/lib/react/col';
 import Card from 'components/card';
 import Money from 'components/money';
 import DateTime from 'components/date-time';
-import Dropdown from 'components/dropdown';
-import Icon from 'components/icon';
 import TransactionQuickAdd from 'components/transaction-quick-add';
 
 import styles from 'sass/components/list-transaction';

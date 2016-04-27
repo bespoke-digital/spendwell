@@ -56,6 +56,7 @@ class User(AbstractBaseUser):
 
     timezone = models.CharField(max_length=100, default='America/Toronto')
     dashboard_help = models.BooleanField(default=True)
+    estimated_income_confirmed = models.BooleanField(default=False)
 
     objects = UserManager()
 

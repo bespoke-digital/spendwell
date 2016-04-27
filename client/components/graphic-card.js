@@ -1,6 +1,6 @@
 
 import Card from 'components/card';
-import Icon from 'components/icon';
+import FAIcon from 'components/fa-icon';
 import A from 'components/a';
 
 import styles from 'sass/components/graphic-card.scss';
@@ -13,7 +13,6 @@ export default (props)=> {
       header,
       paragraphs,
       dismiss,
-      ...childProps,
   } = props;
 
   return (
@@ -29,7 +28,7 @@ export default (props)=> {
 
       {dismiss ?
         <div className='dismiss'>
-          <A onClick={dismiss}><Icon type='times'/></A>
+          <A onClick={dismiss}><FAIcon type='times'/></A>
         </div>
       : null}
     </Card>

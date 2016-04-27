@@ -64,7 +64,7 @@ class IncomeEstimateDialog extends Component {
             onClick={::this.handleSubmit}
             variant='primary'
             loading={loading}
-          >Add</Button>
+          >save</Button>
         </div>
       </Dialog>
     );

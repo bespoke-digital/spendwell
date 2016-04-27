@@ -57,15 +57,6 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
-  hideHelp(show) {
-    const { viewer } = this.props;
-
-    Relay.Store.commitUpdate(new SettingsMutation({ viewer, dashboardHelp: !!show }), {
-      onFailure: handleMutationError,
-      onSuccess: ()=> console.log('SettingsMutation Success'),
-    });
-  }
-
   render() {
     const { params: { year, month }, viewer } = this.props;
     const { spentFromSavings } = viewer.summary;
@@ -118,39 +109,11 @@ class Dashboard extends Component {
             periods={periods}
           />
 
-          <Transition show={viewer.settings.dashboardHelp}>
-            <CardList>
-              <GraphicCard
-                scheme='green'
-                image={labelsImage}
-                header='Get Started With Labels'
-                dismiss={::this.hideHelp}
-                paragraphs={
-                  <span>
-                    <p>
-                      Labels are how you organize your spending with Spendwell.
-                      Use them to track goals, bills, or other expenses
-                      in the way that makes sense for you.
-                    </p>
-                    <p>
-                      Popular labels:
-                      {' '}<Link to='/app/labels/new'>Netflix</Link>,
-                      {' '}<Link to='/app/labels/new'>Lunches</Link>,
-                      {' '}<Link to='/app/labels/new'>Bank Fees</Link>,
-                      {' '}<Link to='/app/labels/new'>Retirement Savings</Link>,
-                      {' '}<Link to='/app/labels/new'>Car Fund</Link>.
-                    </p>
-                  </span>
-                }
-              />
-            </CardList>
-          </Transition>
-
           <div className='heading'>
             <h2>Goals <small> for long and short term savings</small></h2>
 
             <div>
-              <Button to='/app/goals/new' flat={true} variant='primary'>New Goal</Button>
+              <Button to='/app/goals/new' variant='primary' flat>New Goal</Button>
             </div>
           </div>
 
@@ -201,9 +164,7 @@ class Dashboard extends Component {
           <div className='heading'>
             <h2>Bills <small> for monthly recurring expenses</small></h2>
             <div>
-              <Button to='/app/labels/new/bill' flat={true} variant='primary'>
-                {' New Label'}
-              </Button>
+              <Button to='/app/labels/new/bill' variant='primary' flat>New Bill</Button>
             </div>
           </div>
 
@@ -239,11 +200,9 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Other Expenses <small> for non-recurring expenses</small></h2>
+            <h2>Labels <small> for non-recurring expenses</small></h2>
             <div>
-              <Button to='/app/labels/new/expense' flat={true} variant='primary'>
-                {' New Label'}
-              </Button>
+              <Button to='/app/labels/new/expense' variant='primary' flat>New Label</Button>
             </div>
           </div>
 
@@ -309,10 +268,6 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${SettingsMutation.getFragment('viewer')}
 
         firstMonth
-
-        settings {
-          dashboardHelp
-        }
 
         summary(month: $date) {
           ${SpentFromSavings.getFragment('summary')}

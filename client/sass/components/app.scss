@@ -6,6 +6,12 @@
   padding-bottom: 80px;
   transition: 0.5s ease;
 
+  .global-loading {
+    position: fixed;
+    top: 0;
+    z-index: 1;
+  }
+
   .app-children {
     @media (min-width: $screen-sm-min) {
       // for left nav
@@ -14,6 +20,14 @@
 
     > .container {
       padding-top: 40px;
+    }
+  }
+
+  &.onboarding {
+    .app-children {
+      @media (min-width: $screen-sm-min) {
+        padding: 0;
+      }
     }
   }
 

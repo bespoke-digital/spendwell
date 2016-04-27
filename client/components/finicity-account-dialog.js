@@ -17,6 +17,12 @@ class FinicityAccountDialog extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
     onConnected: PropTypes.func.isRequired,
+    onConnecting: PropTypes.func,
+    fullSync: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    fullSync: false,
   };
 
   constructor() {
@@ -42,8 +48,11 @@ class FinicityAccountDialog extends Component {
   handleSubmit(event) {
     if (event) event.preventDefault();
 
-    const { viewer, finicityInstitution, onConnected } = this.props;
+    const { viewer, finicityInstitution, onConnected, onConnecting, fullSync } = this.props;
     const { credentials, mfaAnswers } = this.state;
+
+    if (onConnecting)
+      onConnecting();
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
@@ -51,6 +60,7 @@ class FinicityAccountDialog extends Component {
       finicityInstitution,
       credentials,
       mfaAnswers,
+      fullSync,
     }), {
       onFailure: (transaction)=> {
         console.log('Failure: ConnectFinicityInstitutionMutation');

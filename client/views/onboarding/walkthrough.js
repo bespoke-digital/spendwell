@@ -6,7 +6,9 @@ import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import Onboarding from 'components/onboarding';
 import Graphicdialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import ArrorForwardIcon from 'components/icons/arrow-forward';
+import ArrorBackIcon from 'components/icons/arrow-back';
+import DoneIcon from 'components/icons/done';
 
 import { SyncInstitutionsMutation } from 'mutations/institutions';
 
@@ -107,21 +109,21 @@ class OnboardingWalkthrough extends Component {
           paragraph={step.paragraph}
           prev={stepIndex > 0 ?
             <Button fab onClick={()=> this.setState({ stepIndex: stepIndex - 1 })}>
-              <Icon type='arrow-left'/>
+              <ArrorBackIcon/>
             </Button>
           : null}
           next={stepIndex === STEPS.length - 1 ?
             <Button
-              fab
-              to='/onboarding/income'
+              to='/app/dashboard'
               disabled={syncing}
               loading={syncing}
+              fab
             >
-              <Icon type='arrow-right'/>
+              <DoneIcon/>
             </Button>
           :
             <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
-              <Icon type='arrow-right'/>
+              <ArrorForwardIcon/>
             </Button>
           }
         />

@@ -11,7 +11,7 @@ import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
 import GraphicDialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import DoneIcon from 'components/icons/done';
 import Transition from 'components/transition';
 
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
@@ -65,9 +65,7 @@ class OnboardingAccounts extends Component {
               continuing. You can also disable any unwanted accounts (eg. business).
             `}
             next={
-              <Button fab onClick={()=> this.setState({ help: false })}>
-                <Icon type='check'/>
-              </Button>
+              <Button onClick={()=> this.setState({ help: false })} fab><DoneIcon/></Button>
             }
             onRequestClose={()=> this.setState({ help: false })}
           />

@@ -1,0 +1,15 @@
+
+@import '../variables';
+
+:local(.root) {
+  height: 24px;
+  width: 24px;
+
+  &.icon-color-black {
+    fill: $gray-2;
+  }
+
+  &.icon-color-orange {
+    fill: $brand-warn;
+  }
+}

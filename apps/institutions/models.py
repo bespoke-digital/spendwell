@@ -1,6 +1,5 @@
 
 import logging
-from time import time
 
 from django.db import models
 from django.conf import settings
@@ -13,25 +12,28 @@ from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity, FinicityError
+from apps.finicity.models import FinicityInstitution
 
 
 logger = logging.getLogger(__name__)
 
 
-def log_time(prev_time, *args):
-    cur_time = time()
-    print(cur_time - prev_time, '\t', *args)
-    return cur_time
-
-
 class InstitutionManager(SWManager):
-    def from_plaid(self, owner, plaid_id, access_token, data):
+    def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data):
         institution, created = Institution.objects.get_or_create(
             owner=owner,
             plaid_id=plaid_id,
             defaults={'name': data['name']},
         )
-        institution.access_token = access_token
+
+        # Make sure reauth for FIs without plaid_public_token causes accounts
+        # to be deleted. This can be removed later, since it only applies to
+        # accounts connected before 1016/04/25
+        if not created and not institution.plaid_public_token:
+            institution.accounts.all().delete()
+
+        institution.plaid_public_token = plaid_public_token
+        institution.plaid_access_token = plaid_access_token
         institution.save()
         return institution
 
@@ -53,10 +55,11 @@ class Institution(SWModel):
 
     name = models.CharField(max_length=255)
     plaid_id = models.CharField(max_length=255, null=True, blank=True)
-    access_token = models.CharField(max_length=255, null=True, blank=True)
+    plaid_access_token = models.CharField(max_length=255, null=True, blank=True)
+    plaid_public_token = models.CharField(max_length=255, null=True, blank=True)
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     reauth_required = models.BooleanField(default=False)
-    last_sync = models.DateTimeField(null=True)
+    last_sync = models.DateTimeField(null=True, blank=True)
 
     objects = InstitutionManager()
 
@@ -72,15 +75,31 @@ class Institution(SWModel):
         return self.name
 
     @property
+    def finicity_institution(self):
+        if not hasattr(self, '_finicity_institution'):
+            if not self.finicity_id:
+                self._finicity_institution = None
+
+            else:
+                try:
+                    self._finicity_institution = FinicityInstitution.objects.get(
+                        finicity_id=self.finicity_id
+                    )
+                except FinicityInstitution.DoesNotExist:
+                    self._finicity_institution = None
+
+        return self._finicity_institution
+
+    @property
     def plaid_client(self):
-        if not self.plaid_id or not self.access_token:
+        if not self.plaid_id or not self.plaid_access_token:
             return
 
         if not hasattr(self, '_plaid_client'):
             self._plaid_client = Client(
                 client_id=settings.PLAID_CLIENT_ID,
                 secret=settings.PLAID_SECRET,
-                access_token=self.access_token,
+                access_token=self.plaid_access_token,
             )
         return self._plaid_client
 
@@ -154,4 +173,5 @@ class Institution(SWModel):
         self.sync_accounts()
         self.sync_transactions()
         self.last_sync = timezone.now()
+        self.reauth_required = False
         self.save()

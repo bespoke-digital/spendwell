@@ -1,26 +1,17 @@
 
 import Relay from 'react-relay';
-import nprogress from 'nprogress';
 
 import { getCookie } from 'utils/cookies';
-
-
-let pendingRequests = 0;
+import store from 'store';
 
 
 function finishPromise(arg) {
-  pendingRequests--;
-
-  if (pendingRequests === 0)
-    nprogress.done();
-
+  store.dispatch({ type: 'LOADING_START' });
   return arg;
 }
 
-function loadingPromise(promise, errorClbk) {
-  nprogress.start();
-  pendingRequests++;
-
+function loadingPromise(promise) {
+  store.dispatch({ type: 'LOADING_STOP' });
   return promise.then(finishPromise, finishPromise);
 }
 
@@ -44,4 +35,4 @@ export default Object.assign({}, defaultNetworkLayer, {
 
 export const handleMutationError = function(response) {
   throw response.getError() || new Error('Mutation failed.');
-}
+};

@@ -4,9 +4,11 @@ import 'utils/moment-as-utc';
 
 import { render } from 'react-dom';
 import Relay from 'react-relay';
+import { Provider } from 'react-redux';
 
 import networkLayer from 'utils/network-layer';
 import routes from 'routes';
+import store from 'store';
 
 
 const userID = document.querySelector('meta[name=user-id]').getAttribute('content');
@@ -16,7 +18,10 @@ const userEmail = document.querySelector('meta[name=user-email]').getAttribute('
 Relay.injectNetworkLayer(networkLayer);
 
 
-window.onload = ()=> render(routes, document.getElementById('root'));
+window.onload = ()=> render(
+  <Provider store={store}>{routes}</Provider>,
+  document.getElementById('root')
+);
 
 
 // Chatlio

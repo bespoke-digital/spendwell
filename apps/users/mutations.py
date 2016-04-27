@@ -16,6 +16,7 @@ class SetIncomeEstimateMutation(ClientIDMutation):
         from spendwell.schema import Viewer
 
         info.request_context.user.estimated_income = input['amount']
+        info.request_context.user.estimated_income_confirmed = True
         info.request_context.user.save()
 
         return Cls(viewer=Viewer())

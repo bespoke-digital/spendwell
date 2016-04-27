@@ -62,6 +62,7 @@ class Summary(graphene.ObjectType):
 class Settings(graphene.ObjectType):
     timezone = graphene.Field(graphene.String())
     dashboard_help = graphene.Field(graphene.Boolean())
+    estimated_income_confirmed = graphene.Field(graphene.Boolean())
 
 
 class UsersQuery(graphene.ObjectType):

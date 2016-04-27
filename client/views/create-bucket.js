@@ -23,8 +23,8 @@ class CreateBucket extends Component {
     this.state = { loading: false };
   }
 
-  handleSubmit({ filters, name, type }) {
-    const { viewer } = this.props;
+  handleSubmit({ filters, name }) {
+    const { viewer, type } = this.props;
 
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type }), {
@@ -49,7 +49,7 @@ class CreateBucket extends Component {
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
           <div className='heading'>
-            <h1>New Label</h1>
+            <h1>{type === 'expense' ? 'New Label' : 'New Bill'}</h1>
           </div>
 
           <BucketForm
@@ -58,7 +58,6 @@ class CreateBucket extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
-            initialType={type}
           />
         </div>
       </App>

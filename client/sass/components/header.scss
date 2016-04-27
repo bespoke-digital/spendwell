@@ -4,8 +4,9 @@
 
 :local(.root), .header {
   position: relative;
-  background-color: darken($brand-primary, 5%);
+  height: $mui-appbar-height;
 
+  background-color: darken($brand-primary, 5%);
   color: white;
 
   @media (max-width: $screen-xs-max) {
@@ -13,16 +14,17 @@
   }
 
   @media (min-width: $screen-sm-min) {
-    height: $mui-appbar-height;
     padding-left: 220px;
   }
 
-  .left {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: block;
+  .nav-handle {
+    @media (max-width: $screen-xs-max) {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: block;
+    }
 
     @media (min-width: $screen-sm-min) {
       display: none;
@@ -44,22 +46,16 @@
   }
 
   .brand {
-    display: inline-block;
+    @media (max-width: $screen-xs-max) {
+      display: inline-block;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      display: none;
+    }
 
     img {
       max-height: calc(100% - 24px);
-
-      &.logo {
-        @media (max-width: $screen-xs-max) {
-          display: none;
-        }
-      }
-
-      &.icon {
-        @media (min-width: $screen-sm-min) {
-          display: none;
-        }
-      }
     }
   }
 

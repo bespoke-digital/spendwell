@@ -64,7 +64,6 @@
         text-align: right;
       }
 
-
       > .fw {
         min-width: 80px;
       }
@@ -124,7 +123,7 @@
       line-height: 1.1;
     }
 
-    .icon-times {
+    .fa-times {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -141,5 +140,24 @@
 
   .media {
     margin: -20px -20px 20px;
+  }
+
+  > .icon:first-child {
+    float: left;
+    margin-right: 10px;
+  }
+
+  > .icon-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    > :first-child {
+      margin: -3px 10px 0 0;
+    }
+
+    > :not(:first-child) {
+      flex: 1;
+    }
   }
 }

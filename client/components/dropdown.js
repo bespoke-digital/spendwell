@@ -1,7 +1,7 @@
 
 import { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
 
+import ClickOff from 'components/click-off';
 import Button from 'components/button';
 
 
@@ -16,31 +16,17 @@ export default class Dropdown extends Component {
     disabled: false,
   };
 
-  constructor() {
-    super();
-    this.state = { open: false };
-    this.handleDocumentClick = this.handleDocumentClick.bind(this);
-  }
-
-  componentDidMount() {
-    document.addEventListener('click', this.handleDocumentClick, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleDocumentClick, false);
-  }
-
-  handleDocumentClick(event) {
-    if (this.state.open && !findDOMNode(this).contains(event.target))
-      this.setState({ open: false });
-  }
+  state = { open: false };
 
   render() {
     const { label, children, variant, disabled } = this.props;
     const { open } = this.state;
 
     return (
-      <div className='mui-dropdown dropdown'>
+      <ClickOff
+        className='mui-dropdown dropdown'
+        onClickOff={()=> this.setState({ open: false })}
+      >
         <Button
           onClick={this.setState.bind(this, { open: !open }, null)}
           variant={variant}
@@ -54,7 +40,7 @@ export default class Dropdown extends Component {
             <li key={index} onClick={this.setState.bind(this, { open: false }, null)}>{child}</li>
           ))}
         </ul>
-      </div>
+      </ClickOff>
     );
   }
 }

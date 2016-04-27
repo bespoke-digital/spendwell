@@ -1,24 +1,43 @@
+
+@mixin depth($z) {
+  @if $z == 1 {
+    box-shadow: 0 1px 3px rgba(mui-color('black'), 0.12),
+                0 1px 2px rgba(mui-color('black'), 0.24);
+
+  } @else if $z == 2 {
+    box-shadow: 0 3px 6px rgba(mui-color('black'), 0.16),
+                0 3px 6px rgba(mui-color('black'), 0.23);
+
+  } @else if $z == 3 {
+    box-shadow: 0 10px 20px rgba(mui-color('black'), 0.19),
+                0 6px 6px rgba(mui-color('black'), 0.23);
+
+  } @else if $z == 4 {
+    box-shadow: 0 14px 28px rgba(mui-color('black'), 0.25),
+                0 10px 10px rgba(mui-color('black'), 0.22);
+
+  } @else if $z == 5 {
+    box-shadow: 0 19px 38px rgba(mui-color('black'), 0.30),
+                0 15px 12px rgba(mui-color('black'), 0.22);
+  }
+}
+
 .depth-z1 {
-  box-shadow: 0 1px 3px rgba(mui-color('black'), 0.12),
-              0 1px 2px rgba(mui-color('black'), 0.24);
+  @include depth(1);
 }
 
 .depth-z2 {
-  box-shadow: 0 3px 6px rgba(mui-color('black'), 0.16),
-              0 3px 6px rgba(mui-color('black'), 0.23);
+  @include depth(2);
 }
 
 .depth-z3 {
-  box-shadow: 0 10px 20px rgba(mui-color('black'), 0.19),
-              0 6px 6px rgba(mui-color('black'), 0.23);
+  @include depth(3);
 }
 
 .depth-z4 {
-  box-shadow: 0 14px 28px rgba(mui-color('black'), 0.25),
-              0 10px 10px rgba(mui-color('black'), 0.22);
+  @include depth(4);
 }
 
 .depth-z5 {
-  box-shadow: 0 19px 38px rgba(mui-color('black'), 0.30),
-              0 15px 12px rgba(mui-color('black'), 0.22);
+  @include depth(5);
 }

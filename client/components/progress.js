@@ -9,20 +9,23 @@ const percent = (v, t)=> parseInt((Math.abs(v) / Math.abs(t)) * 100);
 
 export default class Progress extends Component {
   static propTypes = {
-    current: PropTypes.number.isRequired,
+    current: PropTypes.number,
     target: PropTypes.number,
-    marker: PropTypes.number,
     className: PropTypes.string,
+    indeterminate: PropTypes.bool,
+    marker: PropTypes.number,
     color: PropTypes.string,
   };
 
   static defaultProps = {
+    current: 1,
     target: 100,
     className: '',
+    indeterminate: false,
   };
 
   render() {
-    const { current, target, marker, className, color } = this.props;
+    const { current, target, marker, className, color, indeterminate } = this.props;
 
     let progress = percent(current, target);
     const full = progress === 100;
@@ -38,14 +41,15 @@ export default class Progress extends Component {
         progress
         ${className}
         ${style.root}
-        ${over ? 'progress-over' : ''}
-        ${full ? 'progress-full' : ''}
+        ${!indeterminate && over ? 'progress-over' : ''}
+        ${!indeterminate && full ? 'progress-full' : ''}
         ${color ? `progress-${color}` : ''}
+        ${indeterminate ? 'progress-indeterminate' : ''}
       `}>
-        <div className='bar' style={{
+        <div className='bar' style={!indeterminate ? {
           width: `${progress === 100 ? 100 : progress % 100}%`,
-        }}/>
-        {marker ?
+        } : null}/>
+        {!indeterminate && marker ?
           <div className='marker' style={{
             left: `${marker === 100 ? 100 : marker % 100}%`,
           }}/>
