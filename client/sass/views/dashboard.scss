@@ -3,10 +3,16 @@
 
 :local(.root) {
   .heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
     margin: 20px 0 10px;
 
     h1, h2, h3, h4, h5 {
+      flex: 1;
       padding-left: 13px;
+      margin: 0;
 
       line-height: 26px;
       font-size: 16px;

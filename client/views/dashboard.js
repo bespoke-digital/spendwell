@@ -200,7 +200,7 @@ class Dashboard extends Component {
           : null}
 
           <div className='heading'>
-            <h2>Labels <small> for non-recurring expenses</small></h2>
+            <h2>Labels <small> for tracking spending</small></h2>
             <div>
               <Button to='/app/labels/new/expense' variant='primary' flat>New Label</Button>
             </div>

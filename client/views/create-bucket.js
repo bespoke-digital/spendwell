@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 import { handleMutationError } from 'utils/network-layer';
 import BucketForm from 'components/bucket-form';
 import App from 'components/app';
+import PageHeading from 'components/page-heading';
 
 import { CreateBucketMutation } from 'mutations/buckets';
 
@@ -48,9 +49,16 @@ class CreateBucket extends Component {
     return (
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
-          <div className='heading'>
-            <h1>{type === 'expense' ? 'New Label' : 'New Bill'}</h1>
-          </div>
+          <PageHeading>
+            <h1>{type === 'expense' ? 'Create a Label' : 'Create a Bill'}</h1>
+            <p>{type === 'expense' ? `
+              Labels are for tracking spending. We'll show you your average spend
+              and if you're on track to be over or under.
+            ` : `
+              Bills are for monthly recurring expenses. We'll track if the bill has been
+              paid and take unpaid bills out of safe-to-spend.
+            `}</p>
+          </PageHeading>
 
           <BucketForm
             onSubmit={::this.handleSubmit}

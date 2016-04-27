@@ -5,3 +5,7 @@ rules:
     - 0
   single-line-per-selector:
     - 0
+  no-color-keywords:
+    - 0
+  border-zero:
+    - 0
