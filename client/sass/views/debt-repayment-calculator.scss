@@ -3,16 +3,13 @@
 @import '../depth';
 
 :local(.root) {
-  .container{ 
-  }
-
   .row {
-    margin-top:30px;
+    margin-top: 30px;
   }
 
-  // suppresses the up and down arrows 
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
+  // suppresses the up and down arrows
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -23,37 +20,37 @@
     justify-content: space-between;
   }
 
-  .dropdown{
+  .dropdown {
     padding-top: 15px;
   }
 
   @media screen and (max-width: 992px ) {
     .double-card {
-      flex-wrap:wrap;
+      flex-wrap: wrap;
     }
   }
 
-  .or-icon{
+  .or-icon {
     border-radius: 50%;
     width: 25px;
     height: 25px;
-    background-color:$gray-8;
+    background-color: $gray-8;
     margin-left: 35%;
-    color:$gray-5;
-    margin-top:20px;
+    color: $gray-5;
+    margin-top: 20px;
   }
-     @media screen and (max-width: 992px) {
-        .or-icon{
-          margin: auto;
-          margin-top:20px;
-          }
-   }
-  .or{
-    margin:auto;
-    line-height:1.95;
-    text-align:center;
-    font-size:13px;
-    
+  @media screen and (max-width: 992px) {
+    or-icon {
+      margin: auto;
+      margin-top: 20px;
+    }
+  }
+
+  .or {
+    margin: auto;
+    line-height: 1.95;
+    text-align: center;
+    font-size: 13px;
   }
 
 }

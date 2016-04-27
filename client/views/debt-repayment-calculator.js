@@ -16,7 +16,6 @@ import A from 'components/a';
 import CreateGraph from 'components/graph';
 import style from 'sass/views/debt-repayment-calculator';
 
-
 const yearlyAdjustment = function(time) {
   return time === 'Years' ? 12 : 1;
 };
