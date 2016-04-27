@@ -1,6 +1,5 @@
 
 import { Component, PropTypes } from 'react';
-import React from 'react';
 import { render } from 'react-dom';
 import _ from 'lodash';
 import 'sass/app';
