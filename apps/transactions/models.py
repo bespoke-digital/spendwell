@@ -32,8 +32,8 @@ class TransactionsQuerySet(SWQuerySet):
             method = 'exclude'
 
         return getattr(queryset, method)(
-            models.Q(_transfer_pair__count__gt=0)
-            | models.Q(buckets__type='account')
+            models.Q(_transfer_pair__count__gt=0) |
+            models.Q(buckets__type='account')
         )
 
 
@@ -192,7 +192,7 @@ class Transaction(SWModel):
         ordering = ('-date',)
 
     def __str__(self):
-        return '{} - ${}'.format(self.description, self.amount)
+        return self.description
 
     def toggle_from_savings(self):
         if self.amount > 0:

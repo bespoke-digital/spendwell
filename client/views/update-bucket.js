@@ -94,16 +94,18 @@ class UpdateBucket extends Component {
           {confirmDelete ?
             <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
               <div className='body'>
-                Are you sure? You can't take it back.
+                Are you sure you'd like to perminantly delete {viewer.bucket.name}?
               </div>
               <div className='actions'>
                 <Button
                   onClick={()=> this.setState({ confirmDelete: false })}
+                  flat
                 >Cancel</Button>
                 <Button
                   onClick={::this.deleteBucket}
-                  variant='danger'
                   loading={deleteLoading}
+                  variant='danger'
+                  flat
                 >Delete</Button>
               </div>
             </Dialog>

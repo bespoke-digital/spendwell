@@ -8,7 +8,7 @@ import 'sass/app';
 import Money from 'components/money';
 import style from 'sass/components/graph';
 
-var computeSchedule = function(
+function computeSchedule(
   principle,
   rate,
   numberOfPayments,
@@ -47,14 +47,14 @@ var computeSchedule = function(
   schedules.debtTotal = Math.round(actualTotal * 100) / 100;
   schedules.interestTotal = totalInterest;
   return schedules;
-};
+}
 
 
 function paymentsGivenTime(principle, rate, numberOfPayments) {
   const monthlyRate = rate / 1200;
   const pvif = Math.pow(1 + monthlyRate, numberOfPayments);
   let payment = monthlyRate / (pvif - 1) * (principle * pvif);
-  payment = payment < (principle * monthlyRate + .01) ? null : payment;
+  payment = payment < (principle * monthlyRate + 0.01) ? null : payment;
   return payment;
 }
 
@@ -87,7 +87,7 @@ const monthNames = [
   'Nov', 'Dec',
 ];
 
-export default class CreateGraph extends React.Component {
+export default class CreateGraph extends Component {
   static propTypes = {
     principle: PropTypes.number.isRequired,
     rate: PropTypes.number.isRequired,
@@ -135,15 +135,15 @@ export default class CreateGraph extends React.Component {
     const { debtTotal, totalSchedule, principleSchedule } = schedule;
     const principleTop = (1 - principle / debtTotal) * 100;
     const principleRatio = principle / debtTotal;
-    const principleAdjustment = principleRatio > .92 ?
-      7.5 : principleRatio < .15 ?
+    const principleAdjustment = principleRatio > 0.92 ?
+      7.5 : principleRatio < 0.15 ?
       -15 : 0;
     const tempDate = new Date();
     const startDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
     tempDate.setMonth(tempDate.getMonth() + calcNumber);
     const endDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
     const interest = debtTotal - principle;
-    const mobileAdj = window.matchMedia('(max-width: 768px)').matches ? .818 : 1;
+    const mobileAdj = window.matchMedia('(max-width: 768px)').matches ? 0.818 : 1;
     const principlePosition = { top: (principleAdjustment + principleTop) * mobileAdj + '%' };
 
     const totalPosition = { top: '0' };

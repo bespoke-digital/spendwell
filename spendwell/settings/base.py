@@ -18,6 +18,14 @@ CSP_HEADER = {
     'default-src': ('https:', "'self'"),
     'style-src': ('https:', "'self'", "'unsafe-inline'"),
     'img-src': ('https:', 'data:', "'self'"),
+    'script-src': (
+        'https:',
+        "'self'",
+
+        # For admin:
+        "'sha256-SO5rB6tTgkF8Namqb9qX6e/002waGiA2OtxE2Xp73I0='",
+        "'sha256-xEaRLIZeA00IlEr5z9q6SQv+Cm8XursiQETnjCD1his='",
+    )
 }
 
 INSTALLED_APPS = [

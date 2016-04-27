@@ -6,10 +6,10 @@ from .models import Bucket
 
 
 class BucketAdmin(admin.ModelAdmin):
-    list_displat = ('name', 'owner_secret_id')
-    readonly_fields = ('owner_secret_id',)
+    list_displat = ('name', 'owner')
+    readonly_fields = ('owner',)
     fields = (
-        'owner_secret_id',
+        'owner',
         'name',
         'filters',
         'type',

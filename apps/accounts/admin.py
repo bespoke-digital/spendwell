@@ -6,17 +6,14 @@ from .models import Account
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'disabled', 'owner_secret_id')
-    readonly_fields = ('owner_secret_id',)
+    list_display = ('name', 'disabled', 'owner')
+    readonly_fields = ('owner',)
     fields = (
-        'owner_secret_id',
+        'owner',
         'institution',
         'name',
         'type',
         'subtype',
-        'current_balance',
-        'available_balance',
-        'number_snippet',
         'plaid_id',
         'finicity_id',
         'disabled',

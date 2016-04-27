@@ -6,10 +6,10 @@ from .models import Institution
 
 
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner_secret_id', 'reauth_required')
-    readonly_fields = ('owner_secret_id',)
+    list_display = ('name', 'owner', 'reauth_required')
+    readonly_fields = ('owner',)
     fields = (
-        'owner_secret_id',
+        'owner',
         'name',
         'plaid_id',
         'plaid_public_token',

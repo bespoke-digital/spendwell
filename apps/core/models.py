@@ -1,7 +1,6 @@
 
 from django.db import models
 from django.conf import settings
-from django.core.signing import Signer
 
 from plaid import Client
 
@@ -63,7 +62,3 @@ class SWModel(models.Model):
 
     def as_json(self):
         return self.as_serializer().as_json()
-
-    def owner_secret_id(self):
-        if hasattr(self, 'owner'):
-            return Signer().sign(self.owner.email).split(':')[-1]
