@@ -73,6 +73,7 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^4.0.0",
     "eslint-plugin-react": "^3.16.1",
+    "sass-lint": "^1.6.2",
     "webpack-dev-server": "^1.14.1"
   }
 }

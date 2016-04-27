@@ -1,0 +1,7 @@
+rules:
+  property-sort-order:
+    - 0
+  placeholder-in-extend:
+    - 0
+  single-line-per-selector:
+    - 0
