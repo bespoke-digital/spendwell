@@ -6,12 +6,11 @@ from .models import Goal, GoalMonth
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner_secret_id')
-    readonly_fields = ('owner_secret_id',)
+    list_display = ('name', 'owner')
+    readonly_fields = ('owner',)
     fields = (
-        'owner_secret_id',
+        'owner',
         'name',
-        'monthly_amount',
     )
 
 admin_site.register(Goal, GoalAdmin)
@@ -19,5 +18,11 @@ admin_site.register(Goal, GoalAdmin)
 
 class GoalMonthAdmin(admin.ModelAdmin):
     list_display = ('goal', 'month_start')
+    readonly_fields = ('goal',)
+    fields = (
+        'owner',
+        'goal',
+        'month_start',
+    )
 
 admin_site.register(GoalMonth, GoalMonthAdmin)

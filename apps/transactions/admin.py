@@ -7,17 +7,15 @@ from .models import Transaction
 
 
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('description', 'amount', 'date', 'account', 'owner_secret_id')
-    search_fields = ('description', 'amount')
-    readonly_fields = ('owner_secret_id',)
+    list_display = ('description', 'date', 'account', 'owner')
+    search_fields = ('description',)
+    readonly_fields = ('owner', 'account')
     fields = (
-        'owner_secret_id',
+        'owner',
         'account',
         'category',
         'description',
-        'amount',
         'date',
-        'balance',
         'plaid_id',
         'from_savings',
         'pending',
