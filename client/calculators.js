@@ -111,7 +111,7 @@ class DebtManagementCalculator extends React.Component {
             </Col>
 
             <Col md='9' className='mui-container-fluid'>
-              <CreateGraph 
+              <CreateGraph
                 className='graph-card'
                 principle={parseFloat(principle)}
                 rate={parseFloat(rate)}

@@ -5,11 +5,11 @@
 :local(.root) {
 
   .graph-card{
-    position:relative; 
+    position:relative;
     @extend .depth-z1;
     background-color:white;
     font-size:20px;
-    color:$gray-2; 
+    color:$gray-2;
     font-weight:600;
     margin-bottom:30px;
     height:653px;
@@ -37,13 +37,13 @@
       font-size:14px;
     }
   }
-  
+
     @media screen and (max-width: 992px) {
     .empty-text {
       padding:20px 70px 0 70px;
       }
   }
-  
+
   @media screen and (max-width: 768px) {
     .empty-graphs {
       width:75%;
@@ -60,21 +60,22 @@
     .scaling-graph{
 
     }
-    .graphs{ 
+    .graphs{
       height:450px;
     }
+
    .end-date {
       padding-right:20px
     }
   }
 
-  .move-right{ 
+  .move-right{
     position:absolute;
     text-align:end;
     right:5%;
   }
 
-  .interest{ 
+  .interest{
     position:absolute;
     text-align:end;
     right:5%;
@@ -85,7 +86,7 @@
     text-align:end;
     right:5%;
     margin-top:11px;
- 
+
   }
 
   .text-small{
@@ -101,7 +102,7 @@
     height:550px;
   }
 
-  .graphs{ 
+  .graphs{
     padding-top:1px;
   }
 
@@ -127,7 +128,7 @@
 
   .after-animation {
     .totalSchedule {
-      fill:$brand-primary; 
+      fill:$brand-primary;
       opacity:1;
       transition: opacity 1.5s, fill 1.5s;
     }
@@ -185,7 +186,3 @@
   }
 
 }
-
-
-
-   
