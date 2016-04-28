@@ -1,0 +1,8 @@
+﻿{
+  "version": "2.2.1",
+  "ignore": [],
+  "options": {
+    "es6": true
+  },
+  "globalVariables": []
+}

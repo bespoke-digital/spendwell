@@ -1,0 +1,15 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">VISIBLE_FILES</s:String>
+	<s:String x:Key="/Default/CodeInspection/JsInspections/LanguageLevel/@EntryValue">Experimental</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2D23BC20DB373F43BEACE5088BF5FA4A/AbsolutePath/@EntryValue">C:\Users\Tim\Downloads\eslintrc</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2D23BC20DB373F43BEACE5088BF5FA4A/RelativePath/@EntryValue">..\..\..\..\Downloads\eslintrc</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2D23BC20DB373F43BEACE5088BF5FA4A/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=78381D44AD3EF547BA2C2FD314A03A3C/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=78381D44AD3EF547BA2C2FD314A03A3C/AbsolutePath/@EntryValue">C:\Users\Tim\Source\Repos\spendwell\.eslintrc</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=78381D44AD3EF547BA2C2FD314A03A3C/RelativePath/@EntryValue">..\.eslintrc</s:String>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2D23BC20DB373F43BEACE5088BF5FA4A/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2D23BC20DB373F43BEACE5088BF5FA4A/IsOn/@EntryValue">False</s:Boolean>
+	
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2D23BC20DB373F43BEACE5088BF5FA4A/RelativePriority/@EntryValue">1</s:Double>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File78381D44AD3EF547BA2C2FD314A03A3C/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File78381D44AD3EF547BA2C2FD314A03A3C/RelativePriority/@EntryValue">0.5</s:Double></wpf:ResourceDictionary>
