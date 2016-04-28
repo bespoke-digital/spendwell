@@ -10,11 +10,9 @@ export default ({ toasts, className, ...props })=>
       willEnter={()=> ({ opacity: 0, marginBottom: -20 })}
       styles={toasts.map((toast)=> ({
         toast,
-        styles: { opacity: 1, marginBottom: 0, marginTop: 20 }
+        styles: { opacity: 1, marginBottom: 0, marginTop: 20 },
       }))}
-    >
-      {(styles)=> styles.map(({ toast, styles })=>
-        <li key={toast.id} styles={styles}>{toast.message}</li>
-      )}
-    </TransitionMotion>
+    >{(styles)=> styles.map(({ toast, styles })=>
+      <li key={toast.id} styles={styles}>{toast.message}</li>
+    )}</TransitionMotion>
   </ul>;
