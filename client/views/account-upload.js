@@ -18,9 +18,6 @@ import { UploadCsvMutation } from 'mutations/transactions';
 import styles from 'sass/views/account-upload.scss';
 
 
-setInterval(()=> sendToast('Testing 1 2 3'), 3000);
-
-
 class AccountUpload extends Component {
   state = { loading: false };
 

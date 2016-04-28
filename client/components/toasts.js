@@ -1,20 +1,29 @@
 
 import { TransitionMotion, spring } from 'react-motion';
 
-import styles from 'sass/components/toasts';
+import { root } from 'sass/components/toasts';
 
-export default ({ toasts, className, ...props })=>
-  <TransitionMotion
-    willLeave={()=> ({ opacity: spring(0), marginTop: spring(0) })}
-    willEnter={()=> ({ opacity: 0, marginBottom: -20 })}
-    styles={toasts.map((toast)=> ({
-      toast,
-      styles: { opacity: 1, marginBottom: 0, marginTop: 20 },
-    }))}
-  >{(styles)=> (
-    <ul className={`${styles.root} ${className || ''}`} {...props}>
-      {styles.map(({ toast, styles })=>
-        <li key={toast.id} style={styles}>{toast.message}</li>
-      )}
-    </ul>
-  )}</TransitionMotion>;
+export default function({ toasts, className, ...props }) {
+  return (
+    <TransitionMotion
+      willLeave={()=> ({ opacity: spring(0) })}
+      willEnter={()=> ({ opacity: 0 })}
+      styles={toasts.map((toast)=> ({
+        key: toast.id,
+        data: toast,
+        style: { opacity: spring(1) },
+      }))}
+    >{(styles)=> (
+      <ul className={`${root} ${className || ''}`} {...props}>
+        {styles.map(({ key, data, style })=>
+          <li
+            key={key}
+            style={style}
+          >
+            {data.message}
+          </li>
+        )}
+      </ul>
+    )}</TransitionMotion>
+  );
+}
