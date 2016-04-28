@@ -1,6 +1,5 @@
 
 import { Component, PropTypes } from 'react';
-import { render } from 'react-dom';
 import _ from 'lodash';
 import 'sass/app';
 
@@ -64,8 +63,8 @@ function timeGivenPayment(principle, rate, payment) {
   return numberOfPayments;
 }
 
-function sufficientInput(principle, payment, rate, numberOfPayments) {
-  //make sure enough fields are populated and that the loan can eventually be paid off
+function solvable(principle, payment, rate, numberOfPayments) {
+  // ensure loan can be paid off.
   const tempPayment = paymentsGivenTime(principle, rate, numberOfPayments);
   const tempNumberOfPayments = timeGivenPayment(principle, rate, payment);
   const resultOfComplexIfStatment =
@@ -75,6 +74,17 @@ function sufficientInput(principle, payment, rate, numberOfPayments) {
       (_.isFinite(tempPayment) &&
       _.round(tempPayment, 2) > 0) ||
       _.isFinite(tempNumberOfPayments)
+    );
+  return !resultOfComplexIfStatment;
+}
+
+function sufficientInput(principle, payment, rate, numberOfPayments) {
+  //make sure enough fields are populated .
+  const resultOfComplexIfStatment =
+    _.isFinite(principle) &&
+    _.isFinite(rate) &&
+    (
+      (payment > 0 || numberOfPayments > 0)
     );
   return resultOfComplexIfStatment;
 }
@@ -113,8 +123,10 @@ export default class CreateGraph extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    const { animateIn } = this.state;
     const{ principle, payment, rate, numberOfPayments } = nextProps;
-    return sufficientInput(principle, payment, rate, numberOfPayments);
+    return (sufficientInput(principle, payment, rate, numberOfPayments) && ((!_.isEqual(nextProps, this.props)) || !animateIn));
+
   }
 
   componentWillUnmount() {
@@ -144,73 +156,86 @@ export default class CreateGraph extends Component {
     const interest = debtTotal - principle;
     const mobileAdj = window.matchMedia('(max-width: 768px)').matches ? 0.818 : 1;
     const principlePosition = { top: (principleAdjustment + principleTop) * mobileAdj + '%' };
-
+    const ableToPayOff = solvable(principle, payment, rate, numberOfPayments);
     const totalPosition = { top: '0' };
     return(
       <div className = {style.root}>
-        <div className={(emptyState ? 'graph-card empty-state' : 'hide-me')}>
-        <img className="empty-graphs" src={'/static/img/calculator-es.svg' }/>
-          <div className='empty-text'>
-            Fill out the form to see a beautiful chart.
-            <div className='text-small'>
-              Once you have entered in your debt repayment info, this area will become a chart with your debt broken down in detail.
+        {emptyState ?
+          <div className='graph-card empty-state'>
+            <img className='empty-graphs' src={'/static/img/calculator-es.svg' }/>
+            <div className='empty-text'>
+              Fill out the form to see a beautiful chart.
+              <div className='text-small'>
+                Once you have entered in your debt repayment info, this area will become a chart with your debt broken down in detail.
+              </div>
             </div>
           </div>
-        </div>
-        <div className={emptyState ? 'hide-me' : 'graph-card'}>
-          <div className='graph-header'>
-            <div className>
-              <div className='text-small'>Monthly Payments</div>
-              <Money amount={calcPayment * 100} abs={true} dollars ={true}/>
-            </div>
-            <div className='move-right'>
-              <div className='text-small'>Interest Owed</div>
-              <Money amount={interest * 100} abs={true} dollars ={true}/>
+          : ableToPayOff ?
+          <div className='graph-card empty-state'>
+            <img className='empty-graphs' src={'/static/img/hour-glass.svg' }/>
+            <div className='empty-text'>
+              Give it another shot
+              <div className='text-small'>
+                With the numbers you have entered, this debt cannot be payed off.
+              </div>
             </div>
           </div>
-          <div
-            className={_.isNull(animateIn) ?
-              '' : animateIn ?
-              'after-animation' : 'before-animation'
-              }
-            >
-            <div className='scaling-graph'>
-              <svg
-                className='graphs'
-                width = '100%'
-                height='100%'
-                viewBox='0 0 100 100'
-                preserveAspectRatio='none slice'
+          :
+          <div className='graph-card'>
+            <div className='graph-header'>
+              <div className>
+                <div className='text-small'>Monthly Payments</div>
+                <Money amount={calcPayment * 100} abs={true} dollars ={true}/>
+              </div>
+              <div className='move-right'>
+                <div className='text-small'>Interest Owed</div>
+                <Money amount={interest * 100} abs={true} dollars ={true}/>
+              </div>
+            </div>
+            <div
+              className={_.isNull(animateIn) ?
+                '' : animateIn ?
+                'after-animation' : 'before-animation'
+                }
               >
-                <path className='total-schedule' d={emptyState ? '' : totalSchedule} height= '500'/>
-                <path className='principle-schedule' d={emptyState ? '' : principleSchedule}/>
-                <line
-                  className='total-line'
-                  strokeDasharray='1, .75'
-                  x1='0' y1='0'
-                  x2='95' y2='0'
-                />
-                <path
-                  className='principle-line'
-                  strokeDasharray='1, .75'
-                  d={emptyState ? '' : `M0 ${principleTop} l65 0 l0 ${principleAdjustment} l30 0`}
-                />
-              </svg>
-              <div className='offset-card' style={principlePosition}>
-                <div className='text-small'>Debt Amount</div>
-                <Money amount={principle * 100} abs={true} dollars ={true}/>
+              <div className='scaling-graph'>
+                <svg
+                  className='graphs'
+                  width = '100%'
+                  height='100%'
+                  viewBox='0 0 100 100'
+                  preserveAspectRatio='none slice'
+                >
+                  <path className='total-schedule' d={emptyState ? '' : totalSchedule} height= '500'/>
+                  <path className='principle-schedule' d={emptyState ? '' : principleSchedule}/>
+                  <line
+                    className='total-line'
+                    strokeDasharray='1, .75'
+                    x1='0' y1='0'
+                    x2='95' y2='0'
+                  />
+                  <path
+                    className='principle-line'
+                    strokeDasharray='1, .75'
+                    d={emptyState ? '' : `M0 ${principleTop} l65 0 l0 ${principleAdjustment} l30 0`}
+                  />
+                </svg>
+                <div className='offset-card' style={principlePosition}>
+                  <div className='text-small'>Debt Amount</div>
+                  <Money amount={principle * 100} abs={true} dollars ={true}/>
+                </div>
+                <div className='offset-card' style={totalPosition}>
+                  <div className='text-small'>Total Owing</div>
+                  <Money amount={debtTotal * 100} abs={true} dollars ={true}/>
+                </div>
               </div>
-              <div className='offset-card' style={totalPosition}>
-                <div className='text-small'>Total Owing</div>
-                <Money amount={debtTotal * 100} abs={true} dollars ={true}/>
+              <div className='dates'>
+                <div className='start-date'>{startDate}</div>
+                <div className='offset-card end-date'>{endDate}</div>
               </div>
-            </div>
-            <div className='dates'>
-              <div className='start-date'>{startDate}</div>
-              <div className='offset-card end-date'>{endDate}</div>
             </div>
           </div>
-        </div>
+        }
       </div>
     );
   }

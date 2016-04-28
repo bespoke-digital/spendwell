@@ -1,7 +1,5 @@
 
-import { Component, PropTypes } from 'react';
-import React from 'react';
-import { render } from 'react-dom';
+import { Component } from 'react';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
 import Container from 'muicss/lib/react/container';
@@ -20,20 +18,53 @@ const yearlyAdjustment = function(time) {
   return time === 'Years' ? 12 : 1;
 };
 
+const delay = 300;
+
 export default class DebtRepaymentCalculator extends Component {
   constructor() {
     super();
     this.state = {
       time: 'Months',
     };
+    this.setPrincipleGraph = _.debounce(::this.setPrincipleGraph, delay);
+    this.setRateGraph = _.debounce(::this.setRateGraph, delay);
+    this.setPaymentGraph = _.debounce(::this.setPaymentGraph, delay);
+    this.setNumberOfPaymentsGraph = _.debounce(::this.setNumberOfPaymentsGraph, delay);
+  }
+
+  handlePrincipleChange(principle) {
+    this.setState({ principle });
+    this.setPrincipleGraph(principle);
+  }
+
+  setPrincipleGraph(principleGraph) {
+    this.setState({ principleGraph });
+  }
+
+  handleRateChange(rate) {
+    this.setState({ rate });
+    this.setRateGraph(rate);
+  }
+  setRateGraph(rateGraph) {
+    this.setState({ rateGraph });
   }
 
   handlePaymentsChange(payment) {
-    this.setState({ payment, numberOfPayments: null });
+    this.setState({ payment, numberOfPayments: null, numberOfPaymentsGraph: null });
+    this.setPaymentGraph(payment);
+  }
+
+  setPaymentGraph(paymentGraph) {
+    this.setState({ paymentGraph });
   }
 
   handleNumberOfPaymentsChange(numberOfPayments) {
-    this.setState({ numberOfPayments, payment: null });
+    this.setState({ numberOfPayments, payment: null, paymentGraph: null });
+    this.setNumberOfPaymentsGraph(numberOfPayments);
+  }
+
+  setNumberOfPaymentsGraph(numberOfPaymentsGraph) {
+    this.setState({ numberOfPaymentsGraph });
   }
 
   handleDateToggle(time) {
@@ -42,6 +73,8 @@ export default class DebtRepaymentCalculator extends Component {
 
   render() {
     const { principle, rate, numberOfPayments, payment, time } = this.state;
+    const { principleGraph, rateGraph, numberOfPaymentsGraph, paymentGraph } = this.state;
+    console.log(this.state);
     return(
       <div className={style.root}>
         <Container className='container'>
@@ -56,7 +89,7 @@ export default class DebtRepaymentCalculator extends Component {
                     step='0.01'
                     min='0.1'
                     value={principle}
-                    onChange={(principle)=> this.setState({ principle })}
+                    onChange={::this.handlePrincipleChange}
                     autoFocus={true}
                   />
                 </Card>
@@ -68,32 +101,19 @@ export default class DebtRepaymentCalculator extends Component {
                     step='0.01'
                     min='0.1'
                     value={rate}
-                    onChange={(rate)=> this.setState({ rate })}
+                    onChange={::this.handleRateChange}
                   />
                 </Card>
 
                 <Card>
-                  <TextInput
-                    label='Monthly Payment'
-                    type='number'
-                    step='0.01'
-                    min='0.1'
-                    value={payment}
-                    onChange={::this.handlePaymentsChange}
-                  />
-                  <div className="or-icon">
-                    <div className="or">
-                      OR
-                    </div>
-                  </div>
                   <div className='double-card'>
-                    <TextInput
-                      label='Term'
-                      type='number'
-                      step='1'
-                      min='1'
-                      value={numberOfPayments}
-                      onChange={::this.handleNumberOfPaymentsChange}
+                    <TextInput className = 'term'
+                    label='Term'
+                    type='number'
+                    step='1'
+                    min='1'
+                    value={numberOfPayments}
+                    onChange={::this.handleNumberOfPaymentsChange}
                     />
                     <Dropdown className='dropdown' label={time}>
                       <A onClick={this.handleDateToggle.bind(this, 'Months')}>
@@ -104,6 +124,20 @@ export default class DebtRepaymentCalculator extends Component {
                       </A>
                     </Dropdown>
                   </div>
+                  <div className='or-icon'>
+                    <div className='or'>
+                      OR
+                    </div>
+                  </div>
+                  <TextInput
+                    label='Monthly Payment'
+                    type='number'
+                    step='0.01'
+                    min='0.1'
+                    value={payment}
+                    onChange={::this.handlePaymentsChange}
+                  />
+
                 </Card>
               </CardList>
             </Col>
@@ -111,12 +145,13 @@ export default class DebtRepaymentCalculator extends Component {
             <Col md='9' className='mui-container-fluid'>
               <CreateGraph
                 className='graph-card'
-                principle={parseFloat(principle)}
-                rate={parseFloat(rate)}
-                numberOfPayments={parseFloat(yearlyAdjustment(time) * numberOfPayments)}
-                payment={parseFloat(payment)}
+                principle={parseFloat(principleGraph)}
+                rate={parseFloat(rateGraph)}
+                numberOfPayments={parseFloat(yearlyAdjustment(time) * numberOfPaymentsGraph)}
+                payment={parseFloat(paymentGraph)}
               />
             </Col>
+
           </Row>
         </Container>
       </div>
