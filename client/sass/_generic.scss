@@ -70,7 +70,6 @@ a:focus {
   }
 }
 
-.heading,
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -95,6 +94,7 @@ a:focus {
     &:before {
       content: '(';
     }
+
     &:after {
       content: ')';
     }

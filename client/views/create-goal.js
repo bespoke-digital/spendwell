@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 import { handleMutationError } from 'utils/network-layer';
 import App from 'components/app';
 import GoalForm from 'components/goal-form';
+import PageHeading from 'components/page-heading';
 import { CreateGoalMutation } from 'mutations/goals';
 
 import styles from 'sass/views/create-bucket.scss';
@@ -41,9 +42,13 @@ class CreateGoal extends Component {
     return (
       <App viewer={viewer} back={true}>
         <div className={`container ${styles.root}`}>
-          <div className='heading'>
-            <h1>New Goal</h1>
-          </div>
+          <PageHeading>
+            <h1>Create a Goal</h1>
+            <p>
+              Goals are for saving. They come out of safe-to-spend at the
+              beginning of the month so you're paying yourself first.
+            </p>
+          </PageHeading>
 
           <GoalForm
             onSubmit={::this.handleSubmit}
