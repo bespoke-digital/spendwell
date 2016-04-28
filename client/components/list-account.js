@@ -6,7 +6,9 @@ import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import Money from 'components/money';
+import A from 'components/a';
 import TransactionList from 'components/transaction-list';
+import TextActions from 'components/text-actions';
 
 
 export default class ListAccount extends Component {
@@ -51,9 +53,10 @@ export default class ListAccount extends Component {
               </div>
             </div>
           }>
-            <div className='disable'>
-              <Button onClick={onDisable}>Disable</Button>
-            </div>
+            <TextActions>
+              <A onClick={onDisable} className='deemphasize'>Disable</A>
+              <A href={`/app/accounts/${account.id}/upload`}>Upload CSV</A>
+            </TextActions>
           </Card>
         }
       >

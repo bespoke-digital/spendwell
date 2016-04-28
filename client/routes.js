@@ -6,6 +6,7 @@ import { RelayRouter } from 'react-router-relay';
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
 import AddAccount from 'views/add-account';
+import AccountUpload from 'views/account-upload';
 import CreateGoal from 'views/create-goal';
 import CreateBucket from 'views/create-bucket';
 import CreateExternalAccount from 'views/create-external-account';
@@ -53,7 +54,7 @@ export default (
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
       <Route path='accounts/new' component={AddAccount} queries={rootQuery}/>
       <Route path='accounts/new/external' component={CreateExternalAccount} queries={rootQuery}/>
-      <Route path='accounts/:accountId' component={Accounts} queries={rootQuery}/>
+      <Route path='accounts/:id/upload' component={AccountUpload} queries={rootQuery}/>
 
       <Route path='transactions' component={Transactions} queries={rootQuery}/>
     </Route>

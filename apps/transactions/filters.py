@@ -20,6 +20,7 @@ class TransactionFilter(filters.FilterSet):
     date_lte = filters.DateTimeFilter(name='date', lookup_type='lte')
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     is_transfer = BooleanMethodFilter()
+    source_exact = filters.CharFilter(name='source', lookup_type='exact')
 
     class Meta:
         model = Transaction
@@ -33,6 +34,7 @@ class TransactionFilter(filters.FilterSet):
             'date_gte',
             'from_savings',
             'is_transfer',
+            'source_exact',
         )
 
     def filter_category(self, queryset, value):

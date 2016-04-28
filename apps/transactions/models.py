@@ -4,13 +4,10 @@ from datetime import datetime
 from pytz import timezone
 import logging
 
-from dateutil.relativedelta import relativedelta
-
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
-from apps.categories.models import Category
 from apps.accounts.models import Account
 
 from .utils import similarity
@@ -73,6 +70,8 @@ class TransactionManager(SWManager):
         transaction.location = data['meta'].get('location', {})
         transaction.location['score'] = data.get('score')
 
+        transaction.source = 'plaid'
+
         transaction.save()
 
         return transaction
@@ -108,6 +107,8 @@ class TransactionManager(SWManager):
             float(data['postedDate']),
             timezone(institution.owner.timezone),
         )
+
+        transaction.source = 'finicity'
 
         transaction.save()
         return transaction
@@ -182,7 +183,8 @@ class Transaction(SWModel):
 
     source = models.CharField(max_length=255, default='plaid', choices=(
         ('csv', 'CSV'),
-        ('plaid', 'Plaid Connect'),
+        ('plaid', 'Plaid'),
+        ('finicity', 'Finicity'),
         ('demo', 'Demo Data'),
     ))
 

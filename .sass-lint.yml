@@ -9,3 +9,7 @@ rules:
     - 0
   border-zero:
     - 0
+  nesting-depth:
+    - 0
+  force-element-nesting:
+    - 0

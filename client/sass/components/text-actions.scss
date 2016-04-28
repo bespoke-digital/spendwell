@@ -1,4 +1,6 @@
 
+@import '../variables';
+
 :local(.root) {
   margin-top: 5px;
 
@@ -11,6 +13,14 @@
 
     &:hover {
       text-decoration: none;
+    }
+
+    &.deemphasize {
+      color: $gray-4;
+
+      &:hover {
+        color: $gray-3;
+      }
     }
   }
 }

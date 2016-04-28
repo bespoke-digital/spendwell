@@ -1,5 +1,4 @@
 
-import { Component } from 'react';
 import styles from 'sass/components/page-heading.scss';
 
 

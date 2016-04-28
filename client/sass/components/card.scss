@@ -160,4 +160,12 @@
       flex: 1;
     }
   }
+
+  &.loading {
+    > .card-progress {
+      margin: 0 -15px -15px;
+      width: calc(100% + 30px);
+      margin-top: 15px;
+    }
+  }
 }

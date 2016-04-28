@@ -1,0 +1,20 @@
+
+@import '../variables';
+
+:local(.root) {
+  margin-bottom: 10px;
+
+  h2 {
+    display: inline;
+
+    line-height: 26px;
+    font-size: 16px;
+    font-weight: normal;
+    color: $gray-4;
+  }
+
+  small {
+    font-size: 12px;
+    color: $gray-5;
+  }
+}

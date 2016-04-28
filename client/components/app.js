@@ -8,6 +8,7 @@ import Header from 'components/header';
 import Nav from 'components/nav';
 import InstitutionReauth from 'components/institution-reauth';
 import Progress from 'components/progress';
+import Toasts from 'components/toasts';
 
 import style from 'sass/components/app';
 
@@ -38,7 +39,7 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, back, loading } = this.props;
+    const { children, viewer, back, loading, toasts } = this.props;
     const { navOpen } = this.state;
 
     return (
@@ -53,6 +54,8 @@ class App extends Component {
           <div className='overlay nav-overlay' onClick={::this.closeOverlay}/>
         </Transition>
 
+        <Toasts toasts={toasts}/>
+
         <div className='app-children'>
           <InstitutionReauth viewer={viewer}/>
           {children}
@@ -62,7 +65,10 @@ class App extends Component {
   }
 }
 
-App = connect((state)=> ({ loading: state.loading }))(App);
+App = connect((state)=> ({
+  loading: state.loading,
+  toasts: state.toasts,
+}))(App);
 
 App = Relay.createContainer(App, {
   fragments: {
