@@ -1,0 +1,189 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+
+  .graph-card {
+    position: relative;
+    @extend .depth-z1;
+    background-color: white;
+    font-size: 20px;
+    color: $gray-2;
+    font-weight: 600;
+    margin-bottom: 30px;
+    height: 653px;
+  }
+
+  .empty-state {
+    text-align: center;
+  }
+
+  .empty-graphs {
+    width: 35%;
+    height: 35%;
+    padding-top: 50px;
+  }
+
+  .hide-me {
+    display: none;
+  }
+
+  .empty-text {
+    padding: 20px 160px 0;
+
+    .text-small {
+      padding-top: 5px;
+      line-height: 1.2;
+      font-size: 14px;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    .empty-text {
+      padding: 20px 70px 0;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .empty-graphs {
+      width: 75%;
+      height: auto;
+      padding-top: 20px;
+    }
+
+    .empty-text {
+      padding: 20px 45px 0;
+      line-height: 1;
+      }
+
+    .graph-card {
+      height: 553px;
+    }
+
+    .graphs {
+      height: 450px;
+    }
+
+    .end-date {
+      padding-right: 20px;
+    }
+  }
+
+  .move-right {
+    position: absolute;
+    text-align: end;
+    right: 5%;
+  }
+
+  .interest {
+    position: absolute;
+    text-align: end;
+    right: 5%;
+  }
+
+  .offset-card {
+    position: absolute;
+    text-align: end;
+    right: 5%;
+    margin-top: 11px;
+
+  }
+
+  .text-small {
+    font-weight: normal;
+    font-size: 13px;
+    color: $gray-4;
+    line-height: .6;
+  }
+
+  .scaling-graph {
+    position: relative;
+    max-width: 100%;
+    height: 550px;
+  }
+
+  .graphs {
+    padding-top: 1px;
+  }
+
+  .total-schedule {
+    fill: $brand-primary;
+  }
+
+  .principle-schedule {
+    fill: #4caf50;
+  }
+
+  .before-animation {
+    .total-schedule {
+      fill: white;
+      opacity: .5;
+    }
+
+    .principle-schedule {
+      fill: white;
+      opacity: .5;
+    }
+  }
+
+  .after-animation {
+    .total-schedule {
+      fill: $brand-primary;
+      opacity: 1;
+      transition: opacity 1.5s, fill 1.5s;
+    }
+
+    .principle-schedule {
+      fill: #4caf50;
+      opacity: 1;
+      transition: opacity 1.5s, fill 1.5s;
+    }
+  }
+
+  .total-line {
+    stroke-width: .2px;
+    stroke: $gray-6;
+  }
+
+  .principle-line {
+    stroke-width: .2px;
+    stroke: $gray-6;
+    fill: none;
+  }
+
+  .graph-header {
+    padding: 30px;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+    font-size: 20px;
+    width: 100%;
+  }
+
+  .dates {
+    position: absolute;
+    bottom: 5px;
+    color: white;
+    width: 100%;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  .total {
+    position: absolute;
+    text-align: end;
+    right: 5%;
+  }
+
+  .start-date {
+    padding-left: 30px;
+  }
+
+  .end-date {
+    bottom: 0;
+  }
+
+}

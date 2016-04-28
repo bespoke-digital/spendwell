@@ -1,0 +1,62 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  .row {
+    margin-top: 30px;
+  }
+
+  // suppresses the up and down arrows
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .double-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .dropdown {
+    padding-top: 15px;
+  }
+
+  .term {
+    width: 33%;
+  }
+
+  .or-icon {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: $gray-8;
+    color: $gray-5;
+    margin: 20px auto 5px;
+  }
+  @media screen and (max-width: 992px) {
+
+    .double-card {
+      flex-direction: column;
+    }
+
+    or-icon {
+      margin: auto;
+      margin-top: 20px;
+    }
+
+    .term {
+      width: 100%;
+    }
+  }
+
+  .or {
+    margin: auto;
+    line-height: 1.95;
+    text-align: center;
+    font-size: 13px;
+  }
+}

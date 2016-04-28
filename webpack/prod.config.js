@@ -14,7 +14,7 @@ config.module.loaders[config.module.loaders.length - 2] = {
 
 config.module.loaders[config.module.loaders.length - 1] = {
   test: /\.scss$/,
-  loader: ExtractTextPlugin.extract('style', 'css?localIdentName=[hash:base64:10]!postcss!sass'),
+  loader: ExtractTextPlugin.extract('style', 'css?localIdentName=[name]_[hash:base64:5]!postcss!sass'),
 };
 
 config.plugins = config.plugins.concat([
