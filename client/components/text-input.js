@@ -46,7 +46,6 @@ export default class TextInput extends Component {
   render() {
     const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props;
     const _value = _.isUndefined(value) ? this.state.value : value;
-
     return (
       <div className={`
         mui-textfield
@@ -60,7 +59,7 @@ export default class TextInput extends Component {
           onChange={::this.changeValue}
           value={_value}
           className={`
-            ${_value ? 'mui--is-not-empty' : ''}
+            ${_value ? 'mui--is-not-empty' : 'mui--is-empty'}
             ${error ? 'mui--is-invalid' : ''}
           `}
           autoFocus={autoFocus}
