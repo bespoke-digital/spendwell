@@ -74,7 +74,6 @@ export default class DebtRepaymentCalculator extends Component {
   render() {
     const { principle, rate, numberOfPayments, payment, time } = this.state;
     const { principleGraph, rateGraph, numberOfPaymentsGraph, paymentGraph } = this.state;
-    console.log(this.state);
     return(
       <div className={style.root}>
         <Container className='container'>
