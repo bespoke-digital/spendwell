@@ -40,7 +40,8 @@ function computeSchedule(
   }
 
   schedules.totalSchedule = `M0 0 ${totalSchedule} L0 ${totalAmount * yAxisRatio}`;
-  schedules.principleSchedule = `M0 ${(totalAmount - principle) * yAxisRatio}${principleSchedule} L0 ${totalAmount * yAxisRatio}`;
+  schedules.principleSchedule = `M0 ${(totalAmount - principle) * yAxisRatio}${principleSchedule} 
+    L0 ${totalAmount * yAxisRatio}`;
 
   schedules.debtTotal = Math.round(actualTotal * 100) / 100;
   schedules.interestTotal = totalInterest;
@@ -125,7 +126,8 @@ export default class CreateGraph extends Component {
   shouldComponentUpdate(nextProps) {
     const { animateIn } = this.state;
     const{ principle, payment, rate, numberOfPayments } = nextProps;
-    return (sufficientInput(principle, payment, rate, numberOfPayments) && ((!_.isEqual(nextProps, this.props)) || !animateIn));
+    return (sufficientInput(principle, payment, rate, numberOfPayments) && 
+      ((!_.isEqual(nextProps, this.props)) || !animateIn));
 
   }
 
@@ -166,7 +168,8 @@ export default class CreateGraph extends Component {
             <div className='empty-text'>
               Fill out the form to see a beautiful chart.
               <div className='text-small'>
-                Once you have entered in your debt repayment info, this area will become a chart with your debt broken down in detail.
+                Once you have entered in your debt repayment info, this area will 
+      become a chart with your debt broken down in detail.
               </div>
             </div>
           </div>
@@ -206,8 +209,15 @@ export default class CreateGraph extends Component {
                   viewBox='0 0 100 100'
                   preserveAspectRatio='none slice'
                 >
-                  <path className='total-schedule' d={emptyState ? '' : totalSchedule} height= '500'/>
-                  <path className='principle-schedule' d={emptyState ? '' : principleSchedule}/>
+                  <path 
+                    className='total-schedule' 
+                    d={emptyState ? '' : totalSchedule} 
+                    height= '500'
+                  />
+                  <path 
+                    className='principle-schedule' 
+                    d={emptyState ? '' : principleSchedule}
+                  />
                   <line
                     className='total-line'
                     strokeDasharray='1, .75'
