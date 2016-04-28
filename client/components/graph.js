@@ -177,9 +177,9 @@ export default class CreateGraph extends Component {
           <div className='graph-card empty-state'>
             <img className='empty-graphs' src={'/static/img/hour-glass.svg' }/>
             <div className='empty-text'>
-              Give it another shot
+              Let's give it another shot.
               <div className='text-small'>
-                With the numbers you have entered, this debt cannot be payed off.
+                With the numbers you've entered, this debt can't be payed off.
               </div>
             </div>
           </div>
