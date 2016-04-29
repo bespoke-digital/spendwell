@@ -123,6 +123,8 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
                 source='csv',
             )
 
+        Transaction.objects.detect_transfers(owner=info.request_context.user)
+
         return UploadCsvMutation(account=account)
 
 
