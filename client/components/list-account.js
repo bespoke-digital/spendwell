@@ -54,7 +54,7 @@ export default class ListAccount extends Component {
             </div>
           }>
             <TextActions>
-              <A onClick={onDisable} className='deemphasize'>Disable</A>
+              <A onClick={onDisable}>Disable</A>
               <A href={`/app/accounts/${account.id}/upload`}>Upload CSV</A>
             </TextActions>
           </Card>

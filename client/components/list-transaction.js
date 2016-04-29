@@ -1,8 +1,6 @@
 
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
 
 import Card from 'components/card';
 import Money from 'components/money';
@@ -10,6 +8,14 @@ import DateTime from 'components/date-time';
 import TransactionQuickAdd from 'components/transaction-quick-add';
 import A from 'components/a';
 import TextActions from 'components/text-actions';
+import TodayIcon from 'components/icons/today';
+import AttachMoneyIcon from 'components/icons/attach-money';
+import AccountBalanceWalletIcon from 'components/icons/account-balance-wallet';
+import PaymentIcon from 'components/icons/payment';
+import BookmarkOutlineIcon from 'components/icons/bookmark-outline';
+import InputIcon from 'components/icons/input';
+
+import { handleMutationError } from 'utils/network-layer';
 import { DeleteTransactionMutation } from 'mutations/transactions';
 
 import styles from 'sass/components/list-transaction';
@@ -27,19 +33,42 @@ class ListTransaction extends Component {
     expanded: false,
   };
 
+  state = {
+    loading: false,
+  };
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.expanded !== this.props.expanded)
       this.props.relay.setVariables({ open: nextProps.expanded });
   }
 
+  handleDelete() {
+    const { transaction, relay } = this.props;
+
+    this.setState({ loading: true });
+    Relay.Store.commitUpdate(new DeleteTransactionMutation({ transaction }), {
+      onFailure: (response)=> {
+        this.setState({ loading: false });
+        handleMutationError(response);
+      },
+      onSuccess: ()=> {
+        console.log('Success: DeleteTransactionMutation');
+        this.setState({ loading: false });
+        relay.forceFetch();
+      },
+    });
+  }
+
   render() {
     const { viewer, transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
+    const { loading } = this.state;
 
     return (
       <Card
         className={`transaction ${styles.root}`}
         expanded={expanded}
         onSummaryClick={onClick}
+        loading={loading}
         summary={
           <div>
             <div className='name'>
@@ -61,35 +90,50 @@ class ListTransaction extends Component {
       >
         {relay.variables.open ?
           <div>
-            <Row>
-              <Col md='6'>
-                <div><strong>{'Date: '}</strong><DateTime value={transaction.date}/></div>
-                <div><strong>{'Amount: '}</strong><Money amount={transaction.amount}/></div>
-                {transaction.buckets.edges.length ?
-                  <div>
-                    <strong>{'Labels: '}</strong>
-                    <span className='buckets'>
-                      {transaction.buckets.edges.map(({ node })=>
-                        <span key={node.id}>{node.name}</span>
-                      )}
-                    </span>
+            <div className='icon-list'>
+              <div>
+                <TodayIcon/>
+                <div className='content'><DateTime value={transaction.date}/></div>
+              </div>
+              <div>
+                <AttachMoneyIcon/>
+                <div className='content'><Money amount={transaction.amount}/></div>
+              </div>
+              {transaction.buckets.edges.length ?
+                <div>
+                  <BookmarkOutlineIcon/>
+                  <div className='content buckets'>
+                    {transaction.buckets.edges.map(({ node })=>
+                      <span key={node.id}>{node.name}</span>
+                    )}
                   </div>
-                : null}
-              </Col>
-              <Col md='6'>
-                <div><strong>{'Account: '}</strong>{transaction.account.name}</div>
-                <div><strong>{'Institution: '}</strong>{transaction.account.institution.name}</div>
-                {transaction.transferPair ?
-                  <div><strong>{'Transfer To: '}</strong>{transaction.transferPair.account.name}</div>
-                : null}
-              </Col>
-            </Row>
-
-            <TextActions>
-              <A className='deemphasize'>Delete</A>
-            </TextActions>
+                  <div className='label'>Labels</div>
+                </div>
+              : null}
+              <div>
+                <PaymentIcon/>
+                <div className='content'>{transaction.account.name}</div>
+                <div className='label'>Account</div>
+              </div>
+              <div>
+                <AccountBalanceWalletIcon/>
+                <div className='content'>{transaction.account.institution.name}</div>
+                <div className='label'>Institution</div>
+              </div>
+              {transaction.transferPair ?
+                <div>
+                  <InputIcon/>
+                  <div className='content'>{transaction.transferPair.account.name}</div>
+                  <div className='label'>Transfer To</div>
+                </div>
+              : null}
+            </div>
 
             <TransactionQuickAdd viewer={viewer} transaction={transaction}/>
+
+            <TextActions>
+              <A onClick={::this.handleDelete}>Delete</A>
+            </TextActions>
           </div>
         : null}
       </Card>
@@ -105,7 +149,6 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionQuickAdd.getFragment('viewer')}
-        ${DeleteTransactionMutation.getFragment('viewer')}
       }
     `,
     transaction: ()=> Relay.QL`

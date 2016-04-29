@@ -2,6 +2,23 @@
 @import '../variables';
 
 :local(.root) {
+  .summary {
+    .buckets, .no-bucket {
+      color: mui-color('grey', '600');
+    }
+
+    .date {
+      width: 110px;
+      text-align: right;
+      color: mui-color('grey', '600');
+    }
+
+    .amount {
+      width: 60px;
+      text-align: right;
+    }
+  }
+
   .buckets {
     > span:after {
       content: ', ';
@@ -12,33 +29,33 @@
     }
   }
 
-  .summary .buckets, .no-bucket {
-    color: mui-color('grey', '600');
-  }
+  .icon-list {
+    > div {
+      position: relative;
+      padding: 16px 0 16px 56px;
 
-  .date {
-    width: 110px;
-    text-align: right;
-    color: mui-color('grey', '600');
-  }
+      .icon {
+        position: absolute;
+        left: 0;
+        vertical-align: middle;
+      }
 
-  .amount {
-    width: 60px;
-    text-align: right;
-  }
+      .content {
+        font-size: 16px;
+      }
 
-  .from-savings-toggle {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
-    cursor: pointer;
-
-    .from-savings-check {
-      padding: 2px 5px 0 0;
+      .label {
+        font-size: 14px;
+        color: $gray-4;
+      }
     }
+  }
 
-    .from-savings-copy {
-      flex: 1;
-    }
+  .transaction-quick-add {
+    margin-top: 5px;
+  }
+
+  .text-actions {
+    margin-top: 15px;
   }
 }

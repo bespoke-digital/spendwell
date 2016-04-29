@@ -116,7 +116,7 @@ class TransactionQuickAdd extends Component {
     const { focus, searchValue } = this.state;
 
     return (
-      <div className={styles.root}>
+      <div className={`transaction-quick-add ${styles.root}`}>
         <TextInput
           ref='input'
           label='Add To Label'
