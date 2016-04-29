@@ -162,10 +162,12 @@
   }
 
   &.loading {
+    position: relative;
+
     > .card-progress {
-      margin: 0 -15px -15px;
-      width: calc(100% + 30px);
-      margin-top: 15px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
   }
 }

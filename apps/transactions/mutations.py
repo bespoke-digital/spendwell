@@ -125,6 +125,9 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
 
         Transaction.objects.detect_transfers(owner=info.request_context.user)
 
+        for bucket in Bucket.objects.filter(owner=info.request_context.user):
+            bucket.assign_transactions()
+
         return UploadCsvMutation(account=account)
 
 
