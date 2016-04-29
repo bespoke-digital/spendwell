@@ -181,7 +181,7 @@ class Transaction(SWModel):
     pending = models.BooleanField(default=False)
     location = JSONField(null=True)
 
-    source = models.CharField(max_length=255, default='plaid', choices=(
+    source = models.CharField(max_length=255, choices=(
         ('csv', 'CSV'),
         ('plaid', 'Plaid'),
         ('finicity', 'Finicity'),

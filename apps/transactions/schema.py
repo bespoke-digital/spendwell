@@ -14,7 +14,8 @@ class TransactionNode(SWNode):
     amount = graphene.Field(Money)
     buckets = DjangoConnectionField('BucketNode')
     transfer_pair = graphene.Field('TransactionNode')
-    djid = graphene.Int()
+    djid = graphene.Field(graphene.Int())
+    source = graphene.Field(graphene.String())
 
     class Meta:
         model = Transaction
@@ -31,6 +32,7 @@ class TransactionNode(SWNode):
             'savings',
             'balance',
             'from_savings',
+            'source',
         )
 
     @staticmethod

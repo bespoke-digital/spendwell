@@ -8,6 +8,9 @@ import Card from 'components/card';
 import Money from 'components/money';
 import DateTime from 'components/date-time';
 import TransactionQuickAdd from 'components/transaction-quick-add';
+import A from 'components/a';
+import TextActions from 'components/text-actions';
+import { DeleteTransactionMutation } from 'mutations/transactions';
 
 import styles from 'sass/components/list-transaction';
 
@@ -82,10 +85,11 @@ class ListTransaction extends Component {
               </Col>
             </Row>
 
-            <div className='actions'>
-              <TransactionQuickAdd viewer={viewer} transaction={transaction}/>
-            </div>
+            <TextActions>
+              <A className='deemphasize'>Delete</A>
+            </TextActions>
 
+            <TransactionQuickAdd viewer={viewer} transaction={transaction}/>
           </div>
         : null}
       </Card>
@@ -101,15 +105,18 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionQuickAdd.getFragment('viewer')}
+        ${DeleteTransactionMutation.getFragment('viewer')}
       }
     `,
     transaction: ()=> Relay.QL`
       fragment on TransactionNode {
         ${TransactionQuickAdd.getFragment('transaction')}
+        ${DeleteTransactionMutation.getFragment('transaction')}
 
         description
         amount
         date
+        source
 
         category {
           name

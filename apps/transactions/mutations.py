@@ -12,6 +12,7 @@ from apps.core.types import Month, Money
 from apps.core.utils import instance_for_node_id, unique
 from apps.buckets.models import Bucket
 from apps.accounts.schema import AccountNode
+from apps.buckets.schema import BucketNode
 
 from .models import Transaction, IncomeFromSavings
 
@@ -125,11 +126,42 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
         return UploadCsvMutation(account=account)
 
 
+class DeleteTransactionMutation(ClientIDMutation):
+    class Input:
+        transaction_id = graphene.InputField(graphene.ID())
+
+    viewer = graphene.Field('Viewer')
+    account = graphene.Field(AccountNode)
+    buckets = graphene.Field(graphene.List(BucketNode))
+    transaction_id = graphene.Field(graphene.ID())
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
+        transaction = instance_for_node_id(input.get('transaction_id'), info)
+
+        if not transaction.source == 'csv':
+            raise ValueError('Only CSV transactions can be deleted.')
+
+        response = Cls(
+            viewer=Viewer(),
+            account=transaction.account,
+            buckets=transaction.buckets,
+            transaction_id=transaction.id,
+        )
+
+        transaction.delete()
+
+        return response
+
+
 class TransactionsMutations(graphene.ObjectType):
     detect_transfers = graphene.Field(DetectTransfersMutation)
     set_income_from_savings = graphene.Field(SetIncomeFromSavingsMutation)
     transaction_quick_add = graphene.Field(TransactionQuickAddMutation)
     upload_csv = graphene.Field(UploadCsvMutation)
+    delete_transaction = graphene.Field(DeleteTransactionMutation)
 
     class Meta:
         abstract = True

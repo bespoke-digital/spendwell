@@ -178,3 +178,92 @@ export class UploadCsvMutation extends Relay.Mutation {
     }];
   }
 }
+
+
+export class DeleteTransactionMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+    transaction: ()=> Relay.QL`
+      fragment on TransactionNode {
+        id
+
+        account {
+          id
+        }
+
+        buckets(first: 100) {
+          edges {
+            node {
+              id
+            }
+          }
+        }
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { deleteTransaction }`;
+  }
+
+  getVariables() {
+    return {
+      transactionId: this.props.transaction.id,
+    };
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on DeleteTransactionMutation {
+
+        account {
+          transactions
+        }
+
+        buckets {
+          transactions
+        }
+
+        viewer {
+          transactions
+
+          summary {
+            transactions
+          }
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    const { viewer, transaction } = this.props;
+
+    const configs = [{
+      type: 'NODE_DELETE',
+      parentName: 'account',
+      parentID: transaction.account.id,
+      connectionName: 'transactions',
+      deletedIDFieldName: 'transactionId',
+    }, {
+      type: 'NODE_DELETE',
+      parentName: 'viewer',
+      parentID: viewer.id,
+      connectionName: 'transactions',
+      deletedIDFieldName: 'transactionId',
+    }];
+
+    configs.concat(transaction.buckets.edges.map(({ node })=> ({
+      type: 'NODE_DELETE',
+      parentName: 'buckets',
+      parentID: node.id,
+      connectionName: 'transactions',
+      deletedIDFieldName: 'transactionId',
+    })));
+
+    return configs;
+  }
+}
