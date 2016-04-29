@@ -107,7 +107,6 @@ def gunicorn_restart():
 @task
 def deploy(force=False):
     print(yellow('Deploying to'), blue(env.host))
-    post_to_slack('Deploying branch `{branch}` to `{domain}`'.format(**env))
 
     try:
         with cd(env.dir):
@@ -142,10 +141,10 @@ def deploy(force=False):
     except Exception as e:
         print(red(e.message))
         print(red('DEPLOY FAILED'))
-        post_to_slack('Deploy Failed! {}'.format(e.message))
+        post_to_slack('Deploy Failed! `{branch}` to `{domain}`: {}'.format(e.message, **env))
     else:
         print(green('DEPLOY SUCCEEDED!'))
-        post_to_slack('Successfully deployed'.format(**env))
+        post_to_slack('Deployed branch `{branch}` to `{domain}`'.format(**env))
 
 
 @task
