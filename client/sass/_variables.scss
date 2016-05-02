@@ -2,12 +2,14 @@
 @import './color';
 
 
-$brand-primary: color('green', '800');
-$mui-primary-color: $brand-primary;
+$primary: color('green', '800');
+$brand-primary: $primary;
+$mui-primary-color: $primary;
 $mui-primary-color-dark: color('green', '900');
 $mui-primary-color-light: color('green', '700');
 
-$mui-accent-color: color('amber', '600');
+$accent: color('amber', '600');
+$mui-accent-color: $accent;
 $mui-accent-color-dark: color('amber', '700');
 $mui-accent-color-light: color('amber', '500');
 
