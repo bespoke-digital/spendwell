@@ -2,6 +2,12 @@
 @import '../variables';
 
 :local(.root) {
+  &.expanded .summary .amount {
+    @media (max-width: $screen-xs-max) {
+      display: none;
+    }
+  }
+
   .summary {
     .buckets, .no-bucket {
       color: mui-color('grey', '600');
@@ -17,6 +23,7 @@
       width: 60px;
       text-align: right;
     }
+
   }
 
   .buckets {
@@ -38,6 +45,7 @@
         position: absolute;
         left: 0;
         vertical-align: middle;
+        fill: $gray-4;
       }
 
       .content {

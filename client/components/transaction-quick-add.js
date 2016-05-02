@@ -1,11 +1,12 @@
 
-import { Component } from 'react';
+import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
 import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
 import A from 'components/a';
+import CloseIcon from 'components/icons/close';
 import TextInput from 'components/text-input';
 import Transition from 'components/transition';
 
@@ -15,6 +16,10 @@ import styles from 'sass/components/transaction-quick-add';
 
 
 class TransactionQuickAdd extends Component {
+  static propTypes = {
+    onRemove: PropTypes.func.isRequired,
+  };
+
   constructor() {
     super();
     this.state = { loading: false };
@@ -112,7 +117,7 @@ class TransactionQuickAdd extends Component {
   }
 
   render() {
-    const { viewer } = this.props;
+    const { viewer, onRemove } = this.props;
     const { focus, searchValue } = this.state;
 
     return (
@@ -125,6 +130,9 @@ class TransactionQuickAdd extends Component {
           onFocus={()=> this.setState({ focus: true })}
           onBlur={()=> this.setState({ focus: false })}
         />
+
+        <A onClick={onRemove} className='close'><CloseIcon/></A>
+
         <Transition show={!!viewer.buckets && focus} out={true}>
           <Card className='options'>
             {viewer.buckets && viewer.buckets.edges.length ?

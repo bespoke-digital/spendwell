@@ -5,6 +5,16 @@
 :local(.root) {
   position: relative;
 
+  > .close {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    .icon {
+      fill: $gray-4;
+    }
+  }
+
   .options {
     @extend .depth-z3;
 

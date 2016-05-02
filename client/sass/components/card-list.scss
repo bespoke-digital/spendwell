@@ -7,4 +7,26 @@
   &.last {
     margin-bottom: 10px;
   }
+
+  .card,
+  .super-card > .summary > .card {
+    border-radius: 0;
+  }
+
+  .card:not(.last-child),
+  .super-card:not(.last-child) > .summary > .card {
+    border-bottom: 1px solid $gray-lighter;
+  }
+
+  .card:first-child,
+  .super-card:first-child > .summary > .card {
+    border-top-right-radius: 2px;
+    border-top-left-radius: 2px;
+  }
+
+  .card:last-child,
+  .super-card:last-child > .summary > .card {
+    border-top-right-radius: 2px;
+    border-top-left-radius: 2px;
+  }
 }

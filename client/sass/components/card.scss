@@ -6,9 +6,8 @@
   @extend .depth-z1;
 
   padding: 16px;
-
   background-color: white;
-  border-bottom: 1px solid $gray-lighter;
+  border-radius: 2px;
 
   &:last-child {
     border-bottom: none;
@@ -25,6 +24,7 @@
   &.can-expand.expanded {
     @extend .depth-z2;
     margin: 20px -10px;
+    border-radius: 2px;
   }
 
   &.card-list-heading {

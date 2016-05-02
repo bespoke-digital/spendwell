@@ -6,8 +6,8 @@ import Card from 'components/card';
 import Money from 'components/money';
 import DateTime from 'components/date-time';
 import TransactionQuickAdd from 'components/transaction-quick-add';
-import A from 'components/a';
-import TextActions from 'components/text-actions';
+import Button from 'components/button';
+import CardActions from 'components/card-actions';
 import TodayIcon from 'components/icons/today';
 import AttachMoneyIcon from 'components/icons/attach-money';
 import AccountBalanceWalletIcon from 'components/icons/account-balance-wallet';
@@ -35,6 +35,7 @@ class ListTransaction extends Component {
 
   state = {
     loading: false,
+    quickAdd: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -61,7 +62,7 @@ class ListTransaction extends Component {
 
   render() {
     const { viewer, transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
-    const { loading } = this.state;
+    const { loading, quickAdd } = this.state;
 
     return (
       <Card
@@ -92,12 +93,14 @@ class ListTransaction extends Component {
           <div>
             <div className='icon-list'>
               <div>
-                <TodayIcon/>
-                <div className='content'><DateTime value={transaction.date}/></div>
-              </div>
-              <div>
                 <AttachMoneyIcon/>
                 <div className='content'><Money amount={transaction.amount}/></div>
+                <div className='label'>Amount</div>
+              </div>
+              <div>
+                <TodayIcon/>
+                <div className='content'><DateTime value={transaction.date}/></div>
+                <div className='label'>Date</div>
               </div>
               {transaction.buckets.edges.length ?
                 <div>
@@ -129,11 +132,20 @@ class ListTransaction extends Component {
               : null}
             </div>
 
-            <TransactionQuickAdd viewer={viewer} transaction={transaction}/>
-
-            <TextActions>
-              <A onClick={::this.handleDelete}>Delete</A>
-            </TextActions>
+            {quickAdd ?
+              <TransactionQuickAdd
+                viewer={viewer}
+                transaction={transaction}
+                onRemove={()=> this.setState({ quickAdd: false })}
+              />
+            :
+              <CardActions>
+                <Button onClick={()=> this.setState({ quickAdd: true })}>Quick Add</Button>
+                {transaction.source === 'csv' ?
+                  <Button onClick={::this.handleDelete}>Delete</Button>
+                : null}
+              </CardActions>
+            }
           </div>
         : null}
       </Card>
