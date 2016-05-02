@@ -8,6 +8,7 @@ export default class Button extends Component {
   static propTypes = {
     className: PropTypes.string,
     variant: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent']),
+    color: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent']),
     raised: PropTypes.bool,
     fab: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -23,7 +24,7 @@ export default class Button extends Component {
 
   static defaultProps = {
     className: '',
-    variant: 'primary',
+    color: 'primary',
     raised: false,
     fab: false,
     disabled: false,
@@ -34,29 +35,38 @@ export default class Button extends Component {
     type: 'button',
   };
 
-  render() {
+  onClick(event, ...args) {
+    const { propagateClick, loading, onClick } = this.props;
+
+    if (propagateClick === false)
+      event.stopPropagation();
+
+    if (loading) {
+      event.preventDefault();
+      return;
+    }
+
+    if (onClick)
+      onClick(event, ...args);
+  }
+
+  classes() {
     const {
       className,
       variant,
+      color,
       raised,
       fab,
       disabled,
       flat,
       plain,
-      type,
-      propagateClick,
       loading,
-      children,
-      onClick,
-      to,
-      href,
-      ...extraProps,
     } = this.props;
 
     let classes = className || '';
     classes += ' mui-btn btn';
-    if (variant)
-      classes += ` mui-btn--${variant}`;
+    if (variant || color)
+      classes += ` mui-btn--${variant || color}`;
     if (raised)
       classes += ' mui-btn--raised';
     if (flat || plain)
@@ -72,29 +82,24 @@ export default class Button extends Component {
     if (loading)
       classes += ' mui-btn--is-loading';
 
-    extraProps.onClick = function(event, ...args) {
-      if (propagateClick === false)
-        event.stopPropagation();
+    return classes;
+  }
 
-      if (loading) {
-        event.preventDefault();
-        return;
-      }
+  render() {
+    const { disabled, type, to, href, children } = this.props;
 
-      if (onClick)
-        onClick(event, ...args);
+    const props = {
+      onClick: ::this.onClick,
+      className: this.classes(),
+      children,
     };
 
-    if (to)
-      return <Link className={classes} to={to} {...extraProps}>{children}</Link>;
-    else if (href)
-      return <a className={classes} href={href} {...extraProps}>{children}</a>;
-    else
-      return <button
-        className={classes}
-        disabled={!!disabled}
-        type={type || 'button'}
-        {...extraProps}
-      >{children}</button>;
+    return (to ?
+      <Link to={to} {...props}/>
+    : href ?
+      <a href={href} {...props}/>
+    :
+      <button disabled={disabled} type={type} {...props}/>
+    );
   }
 }

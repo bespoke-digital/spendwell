@@ -72,8 +72,8 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
           <CardActions>
-            <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
-            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}`} flat>View All</Button>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`} flat>Edit</Button>
           </CardActions>
         </Card>
       }>
@@ -86,15 +86,16 @@ class BucketMonth extends Component {
             <Button onClick={relay.setVariables.bind(relay, {
               transactionCount: transactionCount + 20,
             })} flat>Load More</Button>
+          : bucketMonth.transactions && bucketMonth.transactions.edges ?
+            <Button
+              to={`/app/labels/${bucketMonth.bucket.id}`}
+              className='bottom-load-button-right'
+              color='primary'
+              flat
+            >
+              View All Months
+            </Button>
           : null}
-          <Button
-            to={`/app/labels/${bucketMonth.bucket.id}`}
-            flat
-            variant='primary'
-            className='bottom-load-button-right'
-          >
-            View All Months
-          </Button>
         </div>
       </SuperCard>
     );

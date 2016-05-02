@@ -41,8 +41,8 @@ class GoalMonth extends Component {
         <Money abs={true} amount={goalMonth.targetAmount * 12}/>
 
         <CardActions>
-          <Button to={`/app/goals/${goalMonth.goal.id}`}>View</Button>
-          <Button to={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</Button>
+          <Button to={`/app/goals/${goalMonth.goal.id}`} flat>View</Button>
+          <Button to={`/app/goals/${goalMonth.goal.id}/edit`} flat>Edit</Button>
         </CardActions>
       </Card>
     );

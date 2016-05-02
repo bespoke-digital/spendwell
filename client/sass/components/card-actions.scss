@@ -1,11 +1,9 @@
 
 @import '../variables';
+@import '../color';
+@import '~muicss/lib/sass/mui/mixins/buttons';
 
 :local(.root) {
   margin: 16px -16px -16px;
   padding: 8px;
-
-  .btn {
-    color: $primary;
-  }
 }

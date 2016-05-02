@@ -49,8 +49,6 @@ export default class PrimaryFab extends Component {
           variant='accent'
           className='primary'
           onClick={()=> this.setState({ open: !open })}
-          onMouseOver={()=> this.setState({ open: true })}
-          onMouseOut={()=> this.setState({ open: false })}
         >
           <Icon type={icon}/>
         </Button>

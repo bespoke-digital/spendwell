@@ -67,7 +67,7 @@
     }
   }
 
-  &.primary-fab-open {
+  @mixin hover {
     &.primary-fab-rotate > .primary {
       .icon {
         transform: rotate(45deg);
@@ -89,6 +89,18 @@
           transition: height 500ms, width 500ms, opacity 500ms;
         }
       }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    &.primary-fab-open {
+      @include hover;
+    }
+  }
+
+  @media (min-width: $screen-sm-min) {
+    &:hover {
+      @include hover;
     }
   }
 }

@@ -31,6 +31,8 @@ export default class MonthSelector extends Component {
         <Button
           onClick={()=> onChange(periods.previous)}
           disabled={first ? periods.previous.isSame(first) : false}
+          color='default'
+          flat
         >
           <i className='fa fa-chevron-left'/>
         </Button>
@@ -40,6 +42,8 @@ export default class MonthSelector extends Component {
         <Button
           onClick={()=> onChange(periods.next)}
           disabled={periods.next.isAfter(now)}
+          color='default'
+          flat
         >
           <i className='fa fa-chevron-right'/>
         </Button>
