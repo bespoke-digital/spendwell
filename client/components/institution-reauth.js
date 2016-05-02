@@ -8,7 +8,7 @@ import TextActions from 'components/text-actions';
 import A from 'components/a';
 import Transition from 'components/transition';
 import FinicityAccountDialog from 'components/finicity-account-dialog';
-import Icon from 'components/icons/warning';
+import Icon from 'components/icon';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';

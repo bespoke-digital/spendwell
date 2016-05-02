@@ -9,6 +9,7 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import App from 'components/app';
 import MonthSelector from 'components/month-selector';
+import ListHeading from 'components/list-heading';
 
 import styles from 'sass/views/dashboard.scss';
 
@@ -34,17 +35,19 @@ class Dashboard extends Component {
           className={`container ${styles.root}`}
           onTrigger={::this.loadTransactions}
         >
-          <MonthSelector
-            month={relay.variables.month}
-            first={moment(viewer.firstMonth, 'YYYY/MM')}
-            onChange={(m)=> relay.setVariables({ month: m })}
-          />
-
-          <div className='heading'>
-            <h2>All Transactions</h2>
-          </div>
+          <CardList>
+            <MonthSelector
+              month={relay.variables.month}
+              first={moment(viewer.firstMonth, 'YYYY/MM')}
+              onChange={(m)=> relay.setVariables({ month: m })}
+            />
+          </CardList>
 
           <CardList>
+            <ListHeading>
+              <h2>All Transactions</h2>
+            </ListHeading>
+
             <TransactionList
               viewer={viewer}
               transactions={viewer.summary.transactions}
