@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
 import A from 'components/a';
-import CloseIcon from 'components/icons/close';
+import Icon from 'components/icon';
 import TextInput from 'components/text-input';
 import Transition from 'components/transition';
 
@@ -131,7 +131,7 @@ class TransactionQuickAdd extends Component {
           onBlur={()=> this.setState({ focus: false })}
         />
 
-        <A onClick={onRemove} className='close'><CloseIcon/></A>
+        <A onClick={onRemove} className='close'><Icon type='close'/></A>
 
         <Transition show={!!viewer.buckets && focus} out={true}>
           <Card className='options'>

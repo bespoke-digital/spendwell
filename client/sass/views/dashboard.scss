@@ -2,50 +2,6 @@
 @import '../variables';
 
 :local(.root) {
-  .heading {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-
-    margin: 20px 0 10px;
-
-    h1, h2, h3, h4, h5 {
-      flex: 1;
-      padding-left: 13px;
-      margin: 0;
-
-      line-height: 26px;
-      font-size: 16px;
-      font-weight: normal;
-      color: $gray-4;
-
-      small {
-        font-size: 12px;
-        color: $gray-5;
-
-        @media (min-width: $screen-sm-min) {
-          display: inline-block;
-          margin-left: 1px;
-        }
-
-        @media (max-width: $screen-xs-max) {
-          display: none;
-        }
-      }
-
-      .help-icon {
-        color: $gray-lightish;
-        margin-left: 7px;
-        font-size: 12px;
-      }
-
-    }
-
-    .mui-btn {
-      margin: -5px 0;
-    }
-  }
-
   .card.help {
     margin-bottom: 40px;
   }

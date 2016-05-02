@@ -3,9 +3,7 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
-import { Link } from 'react-router';
 
-import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import Button from 'components/button';
@@ -15,16 +13,13 @@ import BucketMonth from 'components/bucket-month';
 import BillMonth from 'components/bill-month';
 import SpentFromSavings from 'components/spent-from-savings';
 import TransactionList from 'components/transaction-list';
-import ScrollTrigger from 'components/scroll-trigger';
 import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
-import Transition from 'components/transition';
-import GraphicCard from 'components/graphic-card';
+import ListHeading from 'components/list-heading';
+import Icon from 'components/icon.js';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
-
-import labelsImage from 'img/views/dashboard/labels.svg';
 
 import styles from 'sass/views/dashboard.scss';
 
@@ -109,17 +104,12 @@ class Dashboard extends Component {
             periods={periods}
           />
 
-          <div className='heading'>
-            <h2>Goals <small> for long and short term savings</small></h2>
-
-            <div>
-              <Button to='/app/goals/new' variant='primary' flat>New Goal</Button>
-            </div>
-          </div>
-
-
           {goalMonths.length > 0 ?
             <CardList className='month-list'>
+              <ListHeading>
+                <h2>Goals <small> for long and short term savings</small></h2>
+              </ListHeading>
+
               <Card className='card-list-heading'>
                 <div></div>
                 <div className='amount avg'>Target</div>
@@ -161,15 +151,12 @@ class Dashboard extends Component {
             </CardList>
           : null}
 
-          <div className='heading'>
-            <h2>Bills <small> for monthly recurring expenses</small></h2>
-            <div>
-              <Button to='/app/labels/new/bill' variant='primary' flat>New Bill</Button>
-            </div>
-          </div>
-
           {billMonths.length > 0 ?
             <CardList className='month-list'>
+              <ListHeading>
+                <h2>Bills <small> for monthly recurring expenses</small></h2>
+              </ListHeading>
+
               <Card className='card-list-heading'>
                 <div></div>
                 <div className='amount avg'>Average</div>
@@ -199,15 +186,12 @@ class Dashboard extends Component {
             </CardList>
           : null}
 
-          <div className='heading'>
-            <h2>Labels <small> for tracking spending</small></h2>
-            <div>
-              <Button to='/app/labels/new/expense' variant='primary' flat>New Label</Button>
-            </div>
-          </div>
-
           {bucketMonths.length > 0 ?
             <CardList className='month-list'>
+              <ListHeading>
+                <h2>Labels <small> for tracking spending</small></h2>
+              </ListHeading>
+
               <Card className='card-list-heading'>
                 <div></div>
                 <div className='amount avg'>Average</div>
@@ -236,6 +220,8 @@ class Dashboard extends Component {
               }/>
             </CardList>
           : null}
+
+          <Button fab><Icon type='add'/></Button>
         </div>
       </App>
     );

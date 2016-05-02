@@ -6,27 +6,33 @@ import style from 'sass/components/icon';
 
 export default class Icon extends Component {
   static propTypes = {
+    type: PropTypes.string.isRequired,
+    color: PropTypes.oneOf(['dark', 'light']),
+    size: PropTypes.oneOf([18, 24, 36, 48]),
+    inactive: PropTypes.bool,
     className: PropTypes.string,
-    color: PropTypes.string,
   };
 
   static defaultProps = {
+    color: 'dark',
+    size: 24,
+    inactive: false,
     className: '',
-    color: 'black',
   };
 
   render() {
-    const { color, className } = this.props;
+    const { color, size, inactive, className, type } = this.props;
 
     return (
-      <svg
-        viewBox='0 0 24 24'
-        preserveAspectRatio='xMidYMid meet'
-        className={`${style.root} icon icon-${this.type} icon-color-${color} ${className}`}
-        fit
-      >
-        {this.renderInternal()}
-      </svg>
+      <i className={`
+        ${style.root}
+        material-icons
+        icon
+        icon-size-${size}
+        icon-color-${color}
+        ${inactive ? 'icon-inactive' : ''}
+        ${className}
+      `}>{type.replace(/\s/g, '_')}</i>
     );
   }
 }

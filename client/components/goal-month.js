@@ -5,6 +5,7 @@ import Relay from 'react-relay';
 import Card from 'components/card';
 import Money from 'components/money';
 import Button from 'components/button';
+import CardActions from 'components/card-actions';
 
 
 class GoalMonth extends Component {
@@ -39,10 +40,10 @@ class GoalMonth extends Component {
         {' '}
         <Money abs={true} amount={goalMonth.targetAmount * 12}/>
 
-        <div className='actions'>
+        <CardActions>
           <Button to={`/app/goals/${goalMonth.goal.id}`}>View</Button>
           <Button to={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</Button>
-        </div>
+        </CardActions>
       </Card>
     );
   }

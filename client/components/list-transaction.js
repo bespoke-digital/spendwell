@@ -8,12 +8,7 @@ import DateTime from 'components/date-time';
 import TransactionQuickAdd from 'components/transaction-quick-add';
 import Button from 'components/button';
 import CardActions from 'components/card-actions';
-import TodayIcon from 'components/icons/today';
-import AttachMoneyIcon from 'components/icons/attach-money';
-import AccountBalanceWalletIcon from 'components/icons/account-balance-wallet';
-import PaymentIcon from 'components/icons/payment';
-import BookmarkOutlineIcon from 'components/icons/bookmark-outline';
-import InputIcon from 'components/icons/input';
+import Icon from 'components/icon';
 
 import { handleMutationError } from 'utils/network-layer';
 import { DeleteTransactionMutation } from 'mutations/transactions';
@@ -93,18 +88,18 @@ class ListTransaction extends Component {
           <div>
             <div className='icon-list'>
               <div>
-                <AttachMoneyIcon/>
+                <Icon type='attach money'/>
                 <div className='content'><Money amount={transaction.amount}/></div>
                 <div className='label'>Amount</div>
               </div>
               <div>
-                <TodayIcon/>
+                <Icon type='today'/>
                 <div className='content'><DateTime value={transaction.date}/></div>
                 <div className='label'>Date</div>
               </div>
               {transaction.buckets.edges.length ?
                 <div>
-                  <BookmarkOutlineIcon/>
+                  <Icon type='bookmark outline'/>
                   <div className='content buckets'>
                     {transaction.buckets.edges.map(({ node })=>
                       <span key={node.id}>{node.name}</span>
@@ -114,18 +109,18 @@ class ListTransaction extends Component {
                 </div>
               : null}
               <div>
-                <PaymentIcon/>
+                <Icon type='account balance wallet'/>
                 <div className='content'>{transaction.account.name}</div>
                 <div className='label'>Account</div>
               </div>
               <div>
-                <AccountBalanceWalletIcon/>
+                <Icon type='account balance'/>
                 <div className='content'>{transaction.account.institution.name}</div>
                 <div className='label'>Institution</div>
               </div>
               {transaction.transferPair ?
                 <div>
-                  <InputIcon/>
+                  <Icon type='input'/>
                   <div className='content'>{transaction.transferPair.account.name}</div>
                   <div className='label'>Transfer To</div>
                 </div>

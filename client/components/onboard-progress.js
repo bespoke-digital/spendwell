@@ -5,8 +5,7 @@ import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
 import Progress from 'components/progress';
-import RadioButtonOffIcon from 'components/icons/radio-button-off';
-import DoneIcons from 'components/icons/done';
+import Icon from 'components/icon';
 import Transition from 'components/transition';
 import ClickOff from 'components/click-off';
 import IncomeEstimateDialog from 'components/income-estimate-dialog';
@@ -68,7 +67,7 @@ class OnboardProgress extends Component {
                 className={status.estimatedIncomeConfirmed ? 'done' : 'not-done'}
                 onClick={()=> this.setState({ showIncomeEstimateDialog: true })}
               >
-                <div>{status.estimatedIncomeConfirmed ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div><Icon type={status.estimatedIncomeConfirmed ? 'done' : 'radio button off'}/></div>
                 <div>
                   <div className='title'>Confirm Income Estimate</div>
                   <div className='description'>Ensure we calculated your monthly income correctly.</div>
@@ -78,7 +77,7 @@ class OnboardProgress extends Component {
                 className={status.hasGoal ? 'done' : 'not-done'}
                 onClick={()=> browserHistory.push('/app/goals/new')}
               >
-                <div>{status.hasGoal ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div><Icon type={status.hasGoal ? 'done' : 'radio button off'}/></div>
                 <div>
                   <div className='title'>Create a Goal</div>
                   <div className='description'>For long and short term savings.</div>
@@ -88,7 +87,7 @@ class OnboardProgress extends Component {
                 className={status.hasBill ? 'done' : 'not-done'}
                 onClick={()=> browserHistory.push('/app/labels/new/bill')}
               >
-                <div>{status.hasBill ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div><Icon type={status.hasBill ? 'done' : 'radio button off'}/></div>
                 <div>
                   <div className='title'>Create a Bill</div>
                   <div className='description'>For monthly recurring expenses.</div>
@@ -98,7 +97,7 @@ class OnboardProgress extends Component {
                 className={status.hasLabel ? 'done' : 'not-done'}
                 onClick={()=> browserHistory.push('/app/labels/new/expense')}
               >
-                <div>{status.hasLabel ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div><Icon type={status.hasLabel ? 'done' : 'radio button off'}/></div>
                 <div>
                   <div className='title'>Create a Label</div>
                   <div className='description'>For non-recurring expenses.</div>
@@ -108,7 +107,7 @@ class OnboardProgress extends Component {
                 className={status.hasExternalAccount ? 'done' : 'not-done'}
                 onClick={()=> browserHistory.push('/app/labels/new/account')}
               >
-                <div>{status.hasExternalAccount ? <DoneIcons/> : <RadioButtonOffIcon/>}</div>
+                <div><Icon type={status.hasExternalAccount ? 'done' : 'radio button off'}/></div>
                 <div>
                   <div className='title'>Create an External Account</div>
                   <div className='description'>For transfers to non-connected accounts.</div>

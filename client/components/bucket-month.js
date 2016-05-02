@@ -9,6 +9,7 @@ import Money from 'components/money';
 import Progress from 'components/progress';
 import TransactionList from 'components/transaction-list';
 import Button from 'components/button';
+import CardActions from 'components/card-actions';
 
 
 class BucketMonth extends Component {
@@ -70,9 +71,10 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
-          <div className='actions'>
+          <CardActions>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
             <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
-          </div>
+          </CardActions>
         </Card>
       }>
         {bucketMonth.transactions ?

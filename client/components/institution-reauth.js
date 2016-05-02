@@ -8,7 +8,7 @@ import TextActions from 'components/text-actions';
 import A from 'components/a';
 import Transition from 'components/transition';
 import FinicityAccountDialog from 'components/finicity-account-dialog';
-import WarningIcon from 'components/icons/warning';
+import Icon from 'components/icons/warning';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';
@@ -69,7 +69,7 @@ class InstitutionReauth extends Component {
         {viewer.institutions.edges.map(({ node })=>
           <Card key={node.id}>
             <div className='icon-row'>
-              <div><WarningIcon color='orange'/></div>
+              <div><Icon type='warning'/></div>
               <div>
                 {!loading ?
                   <span>

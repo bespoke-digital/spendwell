@@ -2,14 +2,37 @@
 @import '../variables';
 
 :local(.root) {
-  height: 24px;
-  width: 24px;
-
-  &.icon-color-black {
-    fill: $gray-2;
+  &.icon-size-18 {
+    font-size: 18px;
   }
 
-  &.icon-color-orange {
-    fill: $brand-warn;
+  &.icon-size-24 {
+    font-size: 24px;
+  }
+
+  &.icon-size-36 {
+    font-size: 36px;
+  }
+
+  &.icon-size-48 {
+    font-size: 48px;
+  }
+
+
+  &.icon-color-dark {
+    color: rgba(0, 0, 0, .54);
+  }
+
+  &.icon-color-dark.icon-inactive {
+    color: rgba(0, 0, 0, .26);
+  }
+
+
+  &.icon-color-light {
+    color: rgba(255, 255, 255, 1);
+  }
+
+  &.icon-color-light.icon-inactive {
+    color: rgba(255, 255, 255, .3);
   }
 }

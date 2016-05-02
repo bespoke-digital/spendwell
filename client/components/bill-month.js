@@ -6,6 +6,7 @@ import SuperCard from 'components/super-card';
 import Card from 'components/card';
 import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
+import CardActions from 'components/card-actions';
 import Button from 'components/button';
 
 
@@ -61,9 +62,11 @@ class BillMonth extends Component {
           }
         >
           <div>Average is based on the last 3 months activity</div>
-          <div className='actions'>
+
+          <CardActions>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
             <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
-          </div>
+          </CardActions>
         </Card>
       }>
         {bucketMonth.transactions ?
