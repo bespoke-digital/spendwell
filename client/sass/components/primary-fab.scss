@@ -4,8 +4,16 @@
 
 :local(.root) {
   position: fixed;
-  bottom: 100px;
-  right: 100px;
+
+  @media (max-width: $screen-xs-max) {
+    bottom: 32px;
+    right: 32px;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    bottom: 100px;
+    right: 100px;
+  }
 
   .btn,
   .tooltip {
@@ -57,10 +65,9 @@
         transition: height 500ms 100ms, width 500ms 100ms, opacity 500ms 100ms;
       }
     }
-
   }
 
-  &:hover {
+  &.primary-fab-open {
     &.primary-fab-rotate > .primary {
       .icon {
         transform: rotate(45deg);

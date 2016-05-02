@@ -114,3 +114,9 @@ a:focus {
   color: $brand-danger;
   line-height: 1.2;
 }
+
+#chatlio-widget {
+  @media (max-width: $screen-xs-max) {
+    display: none;
+  }
+}

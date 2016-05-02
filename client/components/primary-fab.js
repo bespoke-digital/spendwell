@@ -28,17 +28,30 @@ export default class PrimaryFab extends Component {
     className: '',
   };
 
+  state = {
+    open: false,
+  };
+
   render() {
     const { className, rotate, icon, actions } = this.props;
+    const { open } = this.state;
 
     return (
       <div className={`
         primary-fab
         ${styles.root}
         ${rotate ? 'primary-fab-rotate' : ''}
+        ${open ? 'primary-fab-open' : ''}
         ${className ? className : ''}
       `}>
-        <Button fab variant='accent' className='primary'>
+        <Button
+          fab
+          variant='accent'
+          className='primary'
+          onClick={()=> this.setState({ open: !open })}
+          onMouseOver={()=> this.setState({ open: true })}
+          onMouseOut={()=> this.setState({ open: false })}
+        >
           <Icon type={icon}/>
         </Button>
 
