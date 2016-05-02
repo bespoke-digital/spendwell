@@ -3,10 +3,10 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
+import { browserHistory } from 'react-router';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
-import Button from 'components/button';
 import Money from 'components/money';
 import GoalMonth from 'components/goal-month';
 import BucketMonth from 'components/bucket-month';
@@ -16,10 +16,11 @@ import TransactionList from 'components/transaction-list';
 import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
 import ListHeading from 'components/list-heading';
-import Icon from 'components/icon.js';
+import PrimaryFab from 'components/primary-fab';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
+import color from 'utils/color';
 
 import styles from 'sass/views/dashboard.scss';
 
@@ -221,7 +222,27 @@ class Dashboard extends Component {
             </CardList>
           : null}
 
-          <Button fab><Icon type='add'/></Button>
+          <PrimaryFab actions={[
+            {
+              label: 'New Goal',
+              iconColor: 'light',
+              color: color('purple', 600),
+              onClick: ()=> browserHistory.push('/app/goals/new'),
+            },
+            {
+              label: 'New Bill',
+              iconColor: 'light',
+              color: color('pink', 600),
+              onClick: ()=> browserHistory.push('/app/labels/new/bill'),
+            },
+            {
+              default: true,
+              label: 'New Label',
+              iconColor: 'light',
+              color: color('brown', 600),
+              onClick: ()=> browserHistory.push('/app/labels/new/expense'),
+            },
+          ]}/>
         </div>
       </App>
     );

@@ -41,7 +41,6 @@
     "moment-timezone": "^0.5.3",
     "muicss": "^0.5.1",
     "node-sass": "^3.4.2",
-    "nprogress": "^0.2.0",
     "null-loader": "^0.1.1",
     "papaparse": "^4.1.2",
     "postcss-loader": "^0.8.0",

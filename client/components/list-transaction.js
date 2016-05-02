@@ -135,9 +135,9 @@ class ListTransaction extends Component {
               />
             :
               <CardActions>
-                <Button onClick={()=> this.setState({ quickAdd: true })}>Quick Add</Button>
+                <Button onClick={()=> this.setState({ quickAdd: true })} flat variant='accent'>Quick Add</Button>
                 {transaction.source === 'csv' ?
-                  <Button onClick={::this.handleDelete}>Delete</Button>
+                  <Button onClick={::this.handleDelete} flat variant='accent'>Delete</Button>
                 : null}
               </CardActions>
             }

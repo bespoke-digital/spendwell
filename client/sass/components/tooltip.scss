@@ -1,0 +1,15 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  @extend .depth-z2;
+
+  padding: 7px 16px;
+  border-radius: 2px;
+  font-size: 14px;
+  background-color: rgba(color('grey', '700'), .9);
+  color: white;
+
+  white-space: nowrap;
+}

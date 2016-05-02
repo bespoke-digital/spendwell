@@ -4,9 +4,9 @@
 
 :local(.root), .header {
   position: relative;
-  height: $mui-appbar-height;
+  height: $appbar-height;
 
-  background-color: darken($brand-primary, 5%);
+  background-color: $brand-primary;
   color: white;
 
   @media (max-width: $screen-xs-max) {

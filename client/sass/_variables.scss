@@ -1,60 +1,39 @@
 
-@import "~muicss/lib/sass/mui/colors";
+@import './color';
 
 
-$brand-primary:   #388A48;
-$brand-secordary: #d69e3a;
+$brand-primary: color('green', '800');
+$mui-primary-color: $brand-primary;
+$mui-primary-color-dark: color('green', '900');
+$mui-primary-color-light: color('green', '700');
+
+$mui-accent-color: color('amber', '600');
+$mui-accent-color-dark: color('amber', '700');
+$mui-accent-color-light: color('amber', '500');
 
 $brand-success: $brand-primary;
-$brand-warn: $brand-secordary;
-$brand-danger: mui-color('red', '600');
+$brand-danger: color('red', '600');
+$brand-warn: $mui-accent-color;
+$mui-danger-color: color('red', '600');
 
-$muted-primary: lighten($brand-primary, 55%);
+$appbar-height: 64px;
+$mui-appbar-height: $appbar-height;
 
-$gray-darker:   lighten(#000, 13.5%); // #222
-$gray-dark:     lighten(#000, 20%);   // #333
-$gray:          lighten(#000, 33.5%); // #555
-$gray-light:    lighten(#000, 46.7%); // #777
-$gray-lightish: lighten(#000, 60%);   // #999
-$gray-lighter:  #E7E7E7;
-$gray-lightest: #F8F8F8;
+$screen-xs: 480px;
+$screen-xs-min: $screen-xs;
 
-$gray-1: lighten(#000, 13.5%); // #222
-$gray-2: lighten(#000, 20%);   // #333
-$gray-3: lighten(#000, 33.5%); // #555
-$gray-4: lighten(#000, 46.7%); // #777
-$gray-5: lighten(#000, 60%);   // #999
-$gray-6: lighten(#000, 80%);   // #ccc
-$gray-7: #E7E7E7;
-$gray-8: #F8F8F8;
+$screen-sm: 768px;
+$screen-sm-min: $screen-sm;
 
+$screen-md: 992px;
+$screen-md-min: $screen-md;
 
-$mui-primary-color:       $brand-primary;
-$mui-primary-color-dark:  darken($brand-primary, 10%);
-$mui-primary-color-light: lighten($brand-primary, 10%);
+$screen-lg: 1200px;
+$screen-lg-min: $screen-lg;
 
-$mui-accent-color:        mui-color('pink', 'A200') !default;
-$mui-accent-color-dark:   mui-color('pink', 'A100') !default;
-$mui-accent-color-light:  mui-color('pink', 'A400') !default;
-
-$mui-danger-color:        mui-color('red', '500') !default;
-
-
-$screen-xs: 480px !default;
-$screen-xs-min: $screen-xs !default;
-
-$screen-sm: 768px !default;
-$screen-sm-min: $screen-sm !default;
-
-$screen-md: 992px !default;
-$screen-md-min: $screen-md !default;
-
-$screen-lg: 1200px !default;
-$screen-lg-min: $screen-lg !default;
-
-$screen-xs-max: ($screen-sm-min - 1) !default;
-$screen-sm-max: ($screen-md-min - 1) !default;
-$screen-md-max: ($screen-lg-min - 1) !default;
+$screen-xs-max: ($screen-sm-min - 1);
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);
 
 $grid-gutter-width: 30px;
 
@@ -62,4 +41,22 @@ $container-sm: (720px + $grid-gutter-width);
 $container-md: (940px + $grid-gutter-width);
 $container-lg: (1140px + $grid-gutter-width);
 
-@import "~muicss/lib/sass/mui/variables";
+
+
+// gray's are depricated. Use color('grey', 'n')
+$gray-darker:   lighten(#000, 13.5%); // #222
+$gray-dark:     lighten(#000, 20%);   // #333
+$gray:          lighten(#000, 33.5%); // #555
+$gray-light:    lighten(#000, 46.7%); // #777
+$gray-lightish: lighten(#000, 60%);   // #999
+$gray-lighter:  #e7e7e7;
+$gray-lightest: #f8f8f8;
+
+$gray-1: lighten(#000, 13.5%); // #222
+$gray-2: lighten(#000, 20%);   // #333
+$gray-3: lighten(#000, 33.5%); // #555
+$gray-4: lighten(#000, 46.7%); // #777
+$gray-5: lighten(#000, 60%);   // #999
+$gray-6: lighten(#000, 80%);   // #ccc
+$gray-7: #e7e7e7;
+$gray-8: #f8f8f8;

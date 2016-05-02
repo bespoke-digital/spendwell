@@ -7,14 +7,14 @@
   top: 0;
   bottom: 0;
   width: 200px;
-  transition: 0.5s ease;
+  transition: .5s ease;
 
   @media (max-width: $screen-xs-max) {
     left: -210px;
     z-index: 200;
 
     // this is .depth-z4; Pasted because you can use @extend inside @media
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
     background-color: white;
 
     &.open {

@@ -1,4 +1,5 @@
 
+@import '../color';
 @import '../variables';
 
 :local(.root) {
@@ -10,13 +11,13 @@
 
   .summary {
     .buckets, .no-bucket {
-      color: mui-color('grey', '600');
+      color: color('grey', '600');
     }
 
     .date {
       width: 110px;
       text-align: right;
-      color: mui-color('grey', '600');
+      color: color('grey', '600');
     }
 
     .amount {
@@ -39,7 +40,7 @@
   .icon-list {
     > div {
       position: relative;
-      padding: 16px 0 16px 56px;
+      padding: 8px 0 8px 56px;
 
       .icon {
         position: absolute;

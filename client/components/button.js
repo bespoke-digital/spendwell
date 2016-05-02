@@ -24,7 +24,7 @@ export default (props)=> {
   const _children = children;
 
   let classes = className || '';
-  classes += ' mui-btn';
+  classes += ' mui-btn btn';
   if (variant)
     classes += ` mui-btn--${variant}`;
   if (raised)

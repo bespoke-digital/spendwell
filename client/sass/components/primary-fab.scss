@@ -1,0 +1,87 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+
+  .btn,
+  .tooltip {
+    @extend .depth-z3;
+  }
+
+  &.primary-fab-rotate > .primary {
+    .icon {
+      transition: 200ms ease-in-out;
+    }
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 55px;
+
+    .action {
+      position: relative;
+      height: 40px;
+      width: 55px;
+      margin-bottom: 16px;
+
+      text-align: center;
+
+      .tooltip,
+      .btn {
+        transition-timing-function: ease-in-out;
+      }
+
+      .tooltip {
+        position: absolute;
+        right: calc(100% + 17px);
+        top: 50%;
+        transform: translateY(-50%);
+
+        opacity: 0;
+        transition: opacity 500ms;
+      }
+
+      .btn {
+        display: inline-block;
+        height: 0;
+        width: 0;
+        opacity: 0;
+        line-height: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+
+        transition: height 500ms 100ms, width 500ms 100ms, opacity 500ms 100ms;
+      }
+    }
+
+  }
+
+  &:hover {
+    &.primary-fab-rotate > .primary {
+      .icon {
+        transform: rotate(45deg);
+      }
+    }
+
+    .actions {
+      .action {
+        .tooltip {
+          opacity: 1;
+          transition: opacity 500ms 100ms;
+        }
+
+        .btn {
+          height: 40px;
+          width: 40px;
+          opacity: 1;
+
+          transition: height 500ms, width 500ms, opacity 500ms;
+        }
+      }
+    }
+  }
+}

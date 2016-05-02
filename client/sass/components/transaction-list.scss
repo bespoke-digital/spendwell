@@ -1,15 +1,15 @@
 
-@import '../variables';
+@import '../color';
 
 
 :local(.root) {
   .month {
-    background-color: mui-color('grey', '600');
-    color: mui-color('grey', '100');
+    background-color: color('grey', '600');
+    color: color('grey', '100');
   }
 
   .total {
-    background-color: mui-color('grey', '600');
-    color: mui-color('grey', '100');
+    background-color: color('grey', '600');
+    color: color('grey', '100');
   }
 }
