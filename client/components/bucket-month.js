@@ -17,10 +17,12 @@ class BucketMonth extends Component {
     month: PropTypes.object.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     expanded: false,
+    className: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -29,7 +31,7 @@ class BucketMonth extends Component {
   }
 
   render() {
-    const { viewer, bucketMonth, month, onClick, relay } = this.props;
+    const { viewer, bucketMonth, month, onClick, className, relay } = this.props;
     const { transactionCount, open } = relay.variables;
 
     const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
@@ -46,7 +48,7 @@ class BucketMonth extends Component {
             progress > 100 ? 'bucket-danger' :
             progress > monthProgress ? 'bucket-warn' :
             'bucket-success'
-          }`}
+          } ${className}`}
           summary={
             <div>
               <div>{bucketMonth.bucket.name}</div>

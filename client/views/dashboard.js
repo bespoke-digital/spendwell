@@ -123,6 +123,7 @@ class Dashboard extends Component {
                   goalMonth={node}
                   selected={selected === node.id}
                   onClick={this.select.bind(this, node.id)}
+                  className='month'
                 />
               )}
 
@@ -171,6 +172,7 @@ class Dashboard extends Component {
                   month={periods.current}
                   expanded={selected === node.id}
                   onClick={this.select.bind(this, node.id)}
+                  className='month'
                 />
               )}
               <Card summary={
@@ -206,6 +208,7 @@ class Dashboard extends Component {
                   month={periods.current}
                   expanded={selected === node.id}
                   onClick={this.select.bind(this, node.id)}
+                  className='month'
                 />
               )}
               <Card summary={

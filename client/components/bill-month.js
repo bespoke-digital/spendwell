@@ -15,10 +15,12 @@ class BillMonth extends Component {
     month: PropTypes.object.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     expanded: false,
+    className: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -34,7 +36,7 @@ class BillMonth extends Component {
   }
 
   render() {
-    const { viewer, bucketMonth, onClick, relay } = this.props;
+    const { viewer, bucketMonth, onClick, className, relay } = this.props;
     const { open } = relay.variables;
 
     return (
@@ -46,7 +48,7 @@ class BillMonth extends Component {
             bucketMonth.avgAmount < bucketMonth.amount ?
               'bucket-warn' :
               'bucket-success'
-          }`}
+          } ${className}`}
           summary={
             <div>
               <div>{bucketMonth.bucket.name}</div>

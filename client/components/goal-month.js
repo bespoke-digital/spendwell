@@ -12,14 +12,16 @@ class GoalMonth extends Component {
   static propTypes = {
     onClick: PropTypes.func,
     selected: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     selected: false,
+    className: '',
   };
 
   render() {
-    const { goalMonth, onClick, selected } = this.props;
+    const { goalMonth, onClick, selected, className } = this.props;
 
     const full = goalMonth.targetAmount === goalMonth.filledAmount;
     const empty = goalMonth.filledAmount === 0;
@@ -29,6 +31,7 @@ class GoalMonth extends Component {
         goal
         ${empty ? 'goal-danger' : ''}
         ${!empty && !full ? 'goal-warn' : ''}
+        ${className}
       `} summary={
         <div>
           <div>{goalMonth.name}</div>
