@@ -51,7 +51,7 @@ class ListExternalAccount extends Component {
 
         {bucket.transactions && bucket.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
-            <Button onClick={::this.loadTransactions} flat variant='primary'>Load More</Button>
+            <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
       </SuperCard>

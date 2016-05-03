@@ -7,6 +7,7 @@ import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import MoneyInput from 'components/money-input';
 import Dialog from 'components/dialog';
+import DialogActions from 'components/dialog-actions';
 
 import { SetIncomeFromSavingsMutation } from 'mutations/transactions';
 
@@ -64,14 +65,10 @@ class IncomeFromSavingsDialog extends Component {
             select
           />
         </div>
-        <div className='actions'>
+        <DialogActions>
           <Button onClick={onRequestClose}>Cancel</Button>
-          <Button
-            onClick={::this.handleAddFromSavingsSubmit}
-            variant='primary'
-            loading={loading}
-          >Add</Button>
-        </div>
+          <Button onClick={::this.handleAddFromSavingsSubmit} loading={loading}>Add</Button>
+        </DialogActions>
       </Dialog>
     );
   }

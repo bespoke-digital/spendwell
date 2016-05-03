@@ -253,7 +253,7 @@ class FilterComponent extends Component {
 
         {viewer.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
-            <Button flat variant='primary' onClick={::this.loadTransactions}>Load More</Button>
+            <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
       </SuperCard>

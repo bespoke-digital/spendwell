@@ -1,0 +1,23 @@
+
+@import '../variables';
+
+:local(.root) {
+  .line-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    &.bold {
+      font-weight: 600;
+    }
+
+    .name {
+      flex: 1;
+      text-align: left;
+    }
+
+    .value {
+      text-align: right;
+    }
+  }
+}

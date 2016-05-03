@@ -7,6 +7,7 @@ import { handleMutationError } from 'utils/network-layer';
 import TextInput from 'components/text-input';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
+import DialogActions from 'components/dialog-actions';
 
 import { ConnectFinicityInstitutionMutation } from 'mutations/finicity';
 
@@ -205,10 +206,10 @@ class FinicityAccountDialog extends Component {
             )}
           </div>
 
-          <div className='actions'>
+          <DialogActions>
             <Button onClick={onRequestClose}>Cancel</Button>
-            <Button variant='primary' type='submit' loading={loading}>Submit</Button>
-          </div>
+            <Button type='submit' loading={loading}>Submit</Button>
+          </DialogActions>
         </form>
       </Dialog>
     );

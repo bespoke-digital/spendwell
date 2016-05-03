@@ -1,0 +1,27 @@
+
+@import '../variables';
+
+:local(.root) {
+  .line-item {
+    &.bold {
+      font-weight: 600;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .name {
+        flex: 1;
+        text-align: left;
+      }
+
+      .value {
+        text-align: right;
+      }
+      @media (min-width: $screen-sm-min) {
+      }
+    }
+  }
+}

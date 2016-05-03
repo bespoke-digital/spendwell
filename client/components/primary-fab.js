@@ -47,7 +47,7 @@ export default class PrimaryFab extends Component {
         <Button
           onClick={()=> this.setState({ open: !open })}
           className='primary'
-          variant='accent'
+          color='accent'
           fab
         >
           <Icon type={icon} color='light'/>
@@ -57,7 +57,7 @@ export default class PrimaryFab extends Component {
           {actions.map(({ label, onClick, icon, className }, index)=>
             <div className={`action ${className ? className : ''}`} key={index}>
               {label ? <Tooltip>{label}</Tooltip> : null}
-              <Button onClick={onClick} variant='primary' fab>{icon}</Button>
+              <Button onClick={onClick} color='primary' fab>{icon}</Button>
             </div>
           )}
         </div>

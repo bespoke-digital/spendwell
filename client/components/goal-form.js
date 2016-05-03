@@ -65,11 +65,7 @@ class GoalForm extends Component {
           />
         </Card>
         <Card>
-          <Button
-            onClick={::this.handleSubmit}
-            loading={loading}
-            variant='primary'
-          >Save</Button>
+          <Button onClick={::this.handleSubmit} loading={loading}>Save</Button>
           <Button onClick={onCancel}>Cancel</Button>
         </Card>
       </CardList>

@@ -6,6 +6,8 @@ import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import Money from 'components/money';
 
+import style from 'sass/components/outgoing-summary';
+
 
 class OutgoingSummary extends Component {
   render() {
@@ -18,43 +20,33 @@ class OutgoingSummary extends Component {
     } = summary;
 
     return (
-      <SuperCard className='status-details' expanded={true} summary={
+      <SuperCard className={style.root} expanded={true} summary={
         <Card>
           {billsUnpaidTotal !== 0 ?
             <div><strong>*</strong>Includes estimates for unpaid bills</div>
           : null}
         </Card>
       }>
-        <Card summary={
-          <div>
-            <div>Goals</div>
-            <div><Money amount={goalsTotal} abs={true}/></div>
-          </div>
-        }/>
-        <Card summary={
-          <div>
-            <div>Unpaid Bills</div>
-            <div><Money amount={billsUnpaidTotal} abs={true}/></div>
-          </div>
-        }/>
-        <Card summary={
-          <div>
-            <div>Paid Bills</div>
-            <div><Money amount={billsPaidTotal} abs={true}/></div>
-          </div>
-        }/>
-        <Card summary={
-          <div>
-            <div>Money Spent</div>
-            <div><Money amount={spent - billsPaidTotal} abs={true}/></div>
-          </div>
-        }/>
-        <Card summary={
-          <div>
-            <div><strong>Total</strong></div>
-            <div><strong><Money amount={goalsTotal + billsUnpaidTotal + spent} abs={true}/></strong></div>
-          </div>
-        }/>
+        <Card className='line-item'>
+          <div className='name'>Goals</div>
+          <div className='value'><Money amount={goalsTotal} abs={true}/></div>
+        </Card>
+        <Card className='line-item'>
+          <div className='name'>Unpaid Bills</div>
+          <div className='value'><Money amount={billsUnpaidTotal} abs={true}/></div>
+        </Card>
+        <Card className='line-item'>
+          <div className='name'>Paid Bills</div>
+          <div className='value'><Money amount={billsPaidTotal} abs={true}/></div>
+        </Card>
+        <Card className='line-item'>
+          <div className='name'>Money Spent</div>
+          <div className='value'><Money amount={spent - billsPaidTotal} abs={true}/></div>
+        </Card>
+        <Card className='line-item bold'>
+          <div className='name'>Total</div>
+          <div className='value'><Money amount={goalsTotal + billsUnpaidTotal + spent} abs={true}/></div>
+        </Card>
       </SuperCard>
     );
   }

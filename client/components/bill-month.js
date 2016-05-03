@@ -85,8 +85,6 @@ class BillMonth extends Component {
           <div>
             <Button
               to={`/app/labels/${bucketMonth.bucket.id}`}
-              flat
-              variant='primary'
               className='bottom-load-button-right'
             >
               View All Months

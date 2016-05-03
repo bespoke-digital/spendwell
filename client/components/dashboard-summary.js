@@ -97,27 +97,21 @@ class DashboardSummary extends Component {
         </Transition>
 
         <Transition name='fade' show={statusOpen === 'net'}>
-          <SuperCard className='status-details' expanded={true} summary={
+          <SuperCard className='net-summary' expanded={true} summary={
             <Card></Card>
           }>
-            <Card summary={
-              <div>
-                <div>In</div>
-                <div><Money amount={income}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div>Out</div>
-                <div><Money amount={allocated}/></div>
-              </div>
-            }/>
-            <Card summary={
-              <div>
-                <div><strong>Total</strong></div>
-                <div><strong><Money amount={income + allocated}/></strong></div>
-              </div>
-            }/>
+            <Card className='line-item'>
+              <div className='name'>In</div>
+              <div className='value'><Money amount={income}/></div>
+            </Card>
+            <Card className='line-item'>
+              <div className='name'>Out</div>
+              <div className='value'><Money amount={allocated}/></div>
+            </Card>
+            <Card className='line-item bold'>
+              <div className='name'>Total</div>
+              <div className='value'><Money amount={income + allocated}/></div>
+            </Card>
           </SuperCard>
         </Transition>
       </CardList>
