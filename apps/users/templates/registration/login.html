@@ -21,9 +21,6 @@
         </div>
       {% endfor %}
 
-      <div class="form-group">
-        <button type="submit" class="mui-btn mui-btn--primary">{% trans "Submit" %}</button>
-      </div>
       <p class="help-block">
         {% trans "Don't have an account?" %}
         <a href="{% url 'signup' %}">{% trans 'Sign Up' %}</a>.
@@ -34,6 +31,8 @@
         <a href="{% url 'password_reset' %}">{% trans 'Reset it' %}</a>.
       </p>
       {% endcomment %}
+
+      <button type="submit" class="mui-btn mui-btn--primary mui-btn--flat">{% trans "Submit" %}</button>
     </form>
   </div>
 </div>
