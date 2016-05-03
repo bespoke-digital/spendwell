@@ -8,11 +8,14 @@ import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 
+import style from 'sass/components/goal-form';
+
 
 class GoalForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     loading: PropTypes.bool,
   };
 
@@ -42,11 +45,11 @@ class GoalForm extends Component {
   }
 
   render() {
-    const { onCancel, loading } = this.props;
+    const { onCancel, onDelete, loading } = this.props;
     const { name, monthlyAmount } = this.state;
 
     return (
-      <CardList>
+      <CardList className={style.root}>
         <Card>
           <TextInput
             label='Name'
@@ -67,6 +70,7 @@ class GoalForm extends Component {
         <Card>
           <Button onClick={::this.handleSubmit} loading={loading}>Save</Button>
           <Button onClick={onCancel}>Cancel</Button>
+          <Button onClick={onDelete} color='danger' className='delete'>delete</Button>
         </Card>
       </CardList>
     );

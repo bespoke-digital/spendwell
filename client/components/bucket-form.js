@@ -10,6 +10,7 @@ import TextInput from 'components/text-input';
 import Filters from 'components/filters';
 import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
+import ListHeading from 'components/list-heading';
 
 import style from 'sass/components/bucket-form';
 
@@ -27,6 +28,7 @@ class BucketForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
     loading: PropTypes.bool,
   };
 
@@ -87,7 +89,7 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { onCancel, viewer, bucket, loading } = this.props;
+    const { onCancel, onDelete, viewer, bucket, loading } = this.props;
     const { name, filters } = this.state;
 
     const valid = name.length && filters.length;
@@ -117,12 +119,15 @@ class BucketForm extends Component {
               {bucket ? 'Save Label' : 'Create Label'}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>
+            {bucket ?
+              <Button onClick={onDelete} className='delete' color='danger'>Delete</Button>
+            : null}
           </Card>
         </CardList>
 
-        <div className='heading'>
+        <ListHeading>
           <h2>All Transactions</h2>
-        </div>
+        </ListHeading>
 
         <CardList>
           <TransactionList

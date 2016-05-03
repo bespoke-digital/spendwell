@@ -8,6 +8,7 @@ import App from 'components/app';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
 import GoalForm from 'components/goal-form';
+import PageHeading from 'components/page-heading';
 
 import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
 
@@ -62,15 +63,7 @@ class UpdateGoal extends Component {
     return (
       <App viewer={viewer} back={true}>
         <div className='container'>
-          <div className='heading'>
-            <h1>Edit {viewer.goal.name}</h1>
-
-            <Button
-              onClick={()=> this.setState({ confirmDelete: true })}
-              variant='danger'
-              flat
-            >Delete</Button>
-          </div>
+          <PageHeading><h1>Edit {viewer.goal.name}</h1></PageHeading>
 
           {confirmDelete ?
             <Dialog size='sm'>
@@ -88,6 +81,7 @@ class UpdateGoal extends Component {
             viewer={viewer}
             goal={viewer.goal}
             onSubmit={::this.updateGoal}
+            onDelete={()=> this.setState({ confirmDelete: true })}
             onCancel={()=> browserHistory.goBack()}
             loading={loading}
           />

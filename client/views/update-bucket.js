@@ -8,6 +8,7 @@ import App from 'components/app';
 import BucketForm from 'components/bucket-form';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
+import PageHeading from 'components/page-heading';
 
 import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
 
@@ -81,15 +82,7 @@ class UpdateBucket extends Component {
         onOverlayClose={()=> this.setState({ confirmDelete: false })}
       >
         <div className={`container ${styles.root}`}>
-          <div className='heading'>
-            <h1>Edit {viewer.bucket.name}</h1>
-
-            <Button
-              onClick={()=> this.setState({ confirmDelete: true })}
-              variant='danger'
-              flat
-            >Delete</Button>
-          </div>
+          <PageHeading><h1>Edit {viewer.bucket.name}</h1></PageHeading>
 
           {confirmDelete ?
             <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
@@ -115,6 +108,7 @@ class UpdateBucket extends Component {
             viewer={viewer}
             bucket={viewer.bucket}
             onSubmit={::this.updateBucket}
+            onDelete={()=> this.setState({ confirmDelete: true })}
             onCancel={()=> browserHistory.goBack()}
             loading={updateLoading}
           />
