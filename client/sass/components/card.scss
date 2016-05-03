@@ -33,70 +33,13 @@
 
   .summary {
     // hack out to the edges of card to enable click surface
-    margin: -15px;
-    padding: 15px;
+    margin: -16px;
+    padding: 16px;
 
     .mui-btn {
       @media (min-width: $screen-sm-min) {
         margin-top: -10px;
         margin-bottom: -10px;
-      }
-    }
-  }
-
-  &.card-list-heading,
-  .summary > div {
-    &.bold {
-      font-weight: 600;
-    }
-
-    @media (min-width: $screen-sm-min) {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-
-      > :first-child {
-        flex: 1;
-      }
-
-      > :not(:first-child) {
-        margin-left: 20px;
-        text-align: right;
-      }
-
-      > .fw {
-        min-width: 80px;
-      }
-    }
-
-    @media (max-width: $screen-xs-max) {
-      > * {
-        margin-bottom: 5px;
-      }
-
-      > :first-child {
-        width: 100%;
-      }
-
-      > :not(:first-child) {
-        width: 50%;
-        float: left;
-        margin-left: 0;
-        margin-right: 0;
-        text-align: right;
-      }
-
-      > :nth-child(even) {
-        text-align: left;
-      }
-
-      &:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: " ";
-        clear: both;
-        height: 0;
       }
     }
   }

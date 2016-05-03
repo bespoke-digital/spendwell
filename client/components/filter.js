@@ -240,7 +240,7 @@ class FilterComponent extends Component {
           : null)}
 
           <Card className='save-card'>
-            <Button onClick={onCollapse} variant='primary'>Save</Button>
+            <Button onClick={onCollapse}>Save</Button>
             <FilterDropdown
               discludeFields={filter.fields()}
               label='New Field'

@@ -17,10 +17,10 @@ import App from 'components/app';
 import DashboardSummary from 'components/dashboard-summary';
 import ListHeading from 'components/list-heading';
 import PrimaryFab from 'components/primary-fab';
+import Icon from 'components/icon';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
-import color from 'utils/color';
 
 import styles from 'sass/views/dashboard.scss';
 
@@ -113,7 +113,7 @@ class Dashboard extends Component {
 
               <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount avg'>Target</div>
+                <div className='amount'>Target</div>
                 <div className='amount'>Funded</div>
               </Card>
 
@@ -127,17 +127,15 @@ class Dashboard extends Component {
                 />
               )}
 
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div className='amount avg'>
-                    <Money amount={goalTargetTotal} abs={true}/>
-                  </div>
-                  <div className='amount'>
-                    <Money amount={goalFilledTotal} abs={true}/>
-                  </div>
+              <Card className='card-list-heading'>
+                <div><strong>Total</strong></div>
+                <div className='amount avg'>
+                  <Money amount={goalTargetTotal} abs={true}/>
                 </div>
-              }/>
+                <div className='amount'>
+                  <Money amount={goalFilledTotal} abs={true}/>
+                </div>
+              </Card>
             </CardList>
           : null}
 
@@ -161,9 +159,10 @@ class Dashboard extends Component {
 
               <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount avg'>Average</div>
+                <div className='amount'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
+
               {billMonths.map((node)=>
                 <BillMonth
                   key={node.id}
@@ -175,17 +174,16 @@ class Dashboard extends Component {
                   className='month'
                 />
               )}
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div className='amount avg'>
-                    <Money amount={billAvgTotal} abs={true}/>
-                  </div>
-                  <div className='amount'>
-                    <Money amount={billTotal} abs={true}/>
-                  </div>
+
+              <Card className='card-list-heading'>
+                <div><strong>Total</strong></div>
+                <div className='amount avg'>
+                  <Money amount={billAvgTotal} abs={true}/>
                 </div>
-              }/>
+                <div className='amount'>
+                  <Money amount={billTotal} abs={true}/>
+                </div>
+              </Card>
             </CardList>
           : null}
 
@@ -197,9 +195,10 @@ class Dashboard extends Component {
 
               <Card className='card-list-heading'>
                 <div></div>
-                <div className='amount avg'>Average</div>
+                <div className='amount'>Average</div>
                 <div className='amount'>Spent</div>
               </Card>
+
               {bucketMonths.map((node)=>
                 <BucketMonth
                   key={node.id}
@@ -211,38 +210,37 @@ class Dashboard extends Component {
                   className='month'
                 />
               )}
-              <Card summary={
-                <div>
-                  <div><strong>Total</strong></div>
-                  <div className='amount avg'>
-                    <Money amount={bucketAvgTotal} abs={true}/>
-                  </div>
-                  <div className='amount'>
-                    <Money amount={bucketTotal} abs={true}/>
-                  </div>
+
+              <Card className='card-list-heading'>
+                <div><strong>Total</strong></div>
+                <div className='amount avg'>
+                  <Money amount={bucketAvgTotal} abs={true}/>
                 </div>
-              }/>
+                <div className='amount'>
+                  <Money amount={bucketTotal} abs={true}/>
+                </div>
+              </Card>
             </CardList>
           : null}
 
           <PrimaryFab actions={[
             {
               label: 'New Goal',
-              iconColor: 'light',
-              color: color('purple', 600),
+              className: 'goal-fab',
+              icon: <Icon type='show chart' color='light'/>,
               onClick: ()=> browserHistory.push('/app/goals/new'),
             },
             {
               label: 'New Bill',
-              iconColor: 'light',
-              color: color('pink', 600),
+              className: 'bill-fab',
+              icon: <Icon type='receipt' color='light'/>,
               onClick: ()=> browserHistory.push('/app/labels/new/bill'),
             },
             {
               default: true,
               label: 'New Label',
-              iconColor: 'light',
-              color: color('brown', 600),
+              className: 'label-fab',
+              icon: <Icon type='local offer' color='light'/>,
               onClick: ()=> browserHistory.push('/app/labels/new/expense'),
             },
           ]}/>

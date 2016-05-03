@@ -45,29 +45,19 @@ export default class PrimaryFab extends Component {
         ${className ? className : ''}
       `}>
         <Button
-          fab
-          variant='accent'
-          className='primary'
           onClick={()=> this.setState({ open: !open })}
+          className='primary'
+          variant='accent'
+          fab
         >
-          <Icon type={icon}/>
+          <Icon type={icon} color='light'/>
         </Button>
 
         <div className='actions'>
-          {actions.map(({ label, onClick, icon, iconColor, color }, index)=>
-            <div className='action' key={index}>
+          {actions.map(({ label, onClick, icon, className }, index)=>
+            <div className={`action ${className ? className : ''}`} key={index}>
               {label ? <Tooltip>{label}</Tooltip> : null}
-              <Button
-                fab
-                variant='primary'
-                style={color ? { backgroundColor: color } : null}
-                onClick={onClick}
-              >
-                <Icon
-                  type={icon || 'add'}
-                  color={iconColor ? iconColor : null}
-                />
-              </Button>
+              <Button onClick={onClick} variant='primary' fab>{icon}</Button>
             </div>
           )}
         </div>

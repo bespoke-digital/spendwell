@@ -113,12 +113,7 @@ class BucketForm extends Component {
           />
 
           <Card>
-            <Button
-              variant='primary'
-              disabled={!valid}
-              onClick={::this.handleSubmit}
-              loading={loading}
-            >
+            <Button disabled={!valid} onClick={::this.handleSubmit} loading={loading}>
               {bucket ? 'Save Label' : 'Create Label'}
             </Button>
             <Button onClick={onCancel}>Cancel</Button>

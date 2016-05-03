@@ -20,15 +20,16 @@ export default class Button extends Component {
     onClick: PropTypes.func,
     to: PropTypes.string,
     href: PropTypes.string,
+    style: PropTypes.object,
   };
 
   static defaultProps = {
     className: '',
-    color: 'primary',
+    color: 'accent',
     raised: false,
     fab: false,
     disabled: false,
-    flat: false,
+    flat: true,
     plain: false,
     propagateClick: false,
     loading: false,
@@ -69,7 +70,7 @@ export default class Button extends Component {
       classes += ` mui-btn--${variant || color}`;
     if (raised)
       classes += ' mui-btn--raised';
-    if (flat || plain)
+    if ((flat || plain) && !fab)
       classes += ' mui-btn--flat';
     if (plain)
       classes += ' mui-btn--plain';
@@ -86,12 +87,13 @@ export default class Button extends Component {
   }
 
   render() {
-    const { disabled, type, to, href, children } = this.props;
+    const { disabled, type, to, href, style, children } = this.props;
 
     const props = {
       onClick: ::this.onClick,
       className: this.classes(),
       children,
+      style,
     };
 
     return (to ?

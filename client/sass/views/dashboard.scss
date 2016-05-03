@@ -1,5 +1,6 @@
 
 @import '../variables';
+@import '../mixins';
 
 :local(.root) {
   .card.help {
@@ -23,17 +24,83 @@
       border-right-color: $brand-warn;
     }
 
+    &.goal .icon > div {
+      background-color: $goal;
+    }
+
+    &.bill .icon > div {
+      background-color: $bill;
+    }
+
+    &.bucket .icon > div {
+      background-color: $label;
+    }
+
     &.card-list-heading {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      font-weight: 600;
+
       .amount.avg {
-        color: $gray-dark;
+        color: color('grey', '600');
+      }
+
+      > :first-child {
+        flex: 1;
+      }
+
+      > :nth-child(1n+2) {
+        margin-left: 16px;
+        text-align: right;
+      }
+    }
+
+    .summary > div {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .icon > div {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border-radius: 12px;
+
+        text-align: center;
+        vertical-align: middle;
+        font-size: 18px;
+        text-transform: uppercase;
+        color: white;
+      }
+
+      > :nth-child(2) {
+        flex: 1;
+        margin-left: 16px;
+        height: 24px;
+        line-height: 24px;
+        vertical-align: middle;
+      }
+
+      > :nth-child(1n+3) {
+        margin-left: 16px;
+        text-align: right;
+        height: 24px;
+        line-height: 24px;
+        vertical-align: middle;
+      }
+
+      > .fw {
+        min-width: 60px;
       }
     }
 
     .amount {
-      min-width: 80px;
+      min-width: 60px;
 
       &.avg {
-        color: $gray-light;
+        color: color('grey', '600');
       }
     }
 
@@ -74,5 +141,17 @@
   .bottom-buttons {
     margin-top: 10px;
     text-align: center;
+  }
+
+  .goal-fab .btn {
+    background-color: $goal;
+  }
+
+  .bill-fab .btn {
+    background-color: $bill;
+  }
+
+  .label-fab .btn {
+    background-color: $label;
   }
 }

@@ -34,6 +34,7 @@ class GoalMonth extends Component {
         ${className}
       `} summary={
         <div>
+          <div className='icon'><div>{goalMonth.name[0]}</div></div>
           <div>{goalMonth.name}</div>
           <div className='amount avg'><Money abs={true} amount={goalMonth.targetAmount}/></div>
           <div className='amount'><Money abs={true} amount={goalMonth.filledAmount}/></div>
@@ -44,8 +45,8 @@ class GoalMonth extends Component {
         <Money abs={true} amount={goalMonth.targetAmount * 12}/>
 
         <CardActions>
-          <Button to={`/app/goals/${goalMonth.goal.id}`} flat>View</Button>
-          <Button to={`/app/goals/${goalMonth.goal.id}/edit`} flat>Edit</Button>
+          <Button to={`/app/goals/${goalMonth.goal.id}`}>View</Button>
+          <Button to={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</Button>
         </CardActions>
       </Card>
     );

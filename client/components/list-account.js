@@ -8,7 +8,7 @@ import Button from 'components/button';
 import Money from 'components/money';
 import A from 'components/a';
 import TransactionList from 'components/transaction-list';
-import TextActions from 'components/text-actions';
+import CardActions from 'components/card-actions';
 
 
 export default class ListAccount extends Component {
@@ -53,10 +53,10 @@ export default class ListAccount extends Component {
               </div>
             </div>
           }>
-            <TextActions>
-              <A onClick={onDisable}>Disable</A>
-              <A href={`/app/accounts/${account.id}/upload`}>Upload CSV</A>
-            </TextActions>
+            <CardActions>
+              <Button onClick={onDisable} color='accent' flat>Disable</Button>
+              <Button href={`/app/accounts/${account.id}/upload`} color='accent' flat>Upload CSV</Button>
+            </CardActions>
           </Card>
         }
       >

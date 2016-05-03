@@ -67,7 +67,7 @@ class ListTransaction extends Component {
         loading={loading}
         summary={
           <div>
-            <div className='name'>
+            <div className='description'>
               {transaction.description}
             </div>
             <div className='buckets'>
@@ -135,9 +135,9 @@ class ListTransaction extends Component {
               />
             :
               <CardActions>
-                <Button onClick={()=> this.setState({ quickAdd: true })} color='primary' flat>Quick Add</Button>
+                <Button onClick={()=> this.setState({ quickAdd: true })}>Quick Add</Button>
                 {transaction.source === 'csv' ?
-                  <Button onClick={::this.handleDelete} color='primary' flat>Delete</Button>
+                  <Button onClick={::this.handleDelete}>Delete</Button>
                 : null}
               </CardActions>
             }

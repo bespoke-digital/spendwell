@@ -1,6 +1,7 @@
 
 @import '../color';
 @import '../variables';
+@import '../mixins';
 
 :local(.root) {
   &.expanded .summary .amount {
@@ -10,6 +11,70 @@
   }
 
   .summary {
+
+    > div {
+      @media (min-width: $screen-sm-min) {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        height: 24px;
+        line-height: 24px;
+        vertical-align: middle;
+
+        .description {
+          flex: 1;
+          text-align: left;
+        }
+
+        .date,
+        .amount {
+          margin-left: 16px;
+          text-align: right;
+        }
+
+        .buckets {
+          margin-left: 16px;
+          text-align: right;
+        }
+      }
+
+      @media (max-width: $screen-xs-max) {
+        position: relative;
+        height: 16px + 8px + 14px; // line 1 height, padding, line 2 height
+
+        .description,
+        .buckets,
+        .date,
+        .amount {
+          position: absolute;
+        }
+
+        .description,
+        .amount {
+          top: 0;
+          font-size: 16px;
+        }
+
+        .date,
+        .buckets {
+          top: 16px + 8px; // line 1 height, padding
+          font-size: 14px;
+        }
+
+        .description,
+        .buckets {
+          left: 0;
+        }
+
+        .date,
+        .amount {
+          right: 0;
+        }
+      }
+    }
+
+
     .buckets, .no-bucket {
       color: color('grey', '600');
     }
@@ -24,7 +89,6 @@
       width: 60px;
       text-align: right;
     }
-
   }
 
   .buckets {

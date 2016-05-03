@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
+import { browserHistory } from 'react-router';
 
 import CardList from 'components/card-list';
 import Card from 'components/card';
@@ -10,6 +11,10 @@ import Button from 'components/button';
 import Institution from 'components/institution';
 import App from 'components/app';
 import ExternalAccounts from 'components/external-accounts';
+import PrimaryFab from 'components/primary-fab';
+import ListHeading from 'components/list-heading';
+import PageHeading from 'components/page-heading';
+import Icon from 'components/icon';
 
 import styles from 'sass/views/accounts';
 
@@ -21,12 +26,9 @@ class Accounts extends Component {
     return (
       <App viewer={viewer}>
         <div className={`container ${styles.root}`}>
-          <div className='heading'>
+          <PageHeading>
             <h1>Bank Accounts</h1>
-            <Button to='/app/accounts/new' flat variant='primary'>
-              New Bank
-            </Button>
-          </div>
+          </PageHeading>
 
           {viewer.institutions.edges.map(({ node })=>
             <Institution
@@ -49,14 +51,25 @@ class Accounts extends Component {
             }/>
           </CardList>
 
-          <div className='heading'>
-            <h3>External Accounts</h3>
-            <Button to='/app/accounts/new/external' flat variant='primary'>
-              New Account
-            </Button>
-          </div>
+          <ListHeading>
+            <h2>External Accounts</h2>
+          </ListHeading>
 
           <ExternalAccounts viewer={viewer}/>
+
+          <PrimaryFab actions={[
+            {
+              label: 'New External Account',
+              icon: <Icon type='open in new' color='light'/>,
+              onClick: ()=> browserHistory.push('/app/accounts/new/external'),
+            },
+            {
+              default: true,
+              label: 'New Bank',
+              icon: <Icon type='account balance' color='light'/>,
+              onClick: ()=> browserHistory.push('/app/accounts/new'),
+            },
+          ]}/>
         </div>
       </App>
     );

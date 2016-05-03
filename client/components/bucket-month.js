@@ -44,13 +44,14 @@ class BucketMonth extends Component {
         <Card
           onSummaryClick={onClick}
           expanded={open}
-          className={` bucket ${
+          className={`bucket ${
             progress > 100 ? 'bucket-danger' :
             progress > monthProgress ? 'bucket-warn' :
             'bucket-success'
           } ${className}`}
           summary={
             <div>
+              <div className='icon'><div>{bucketMonth.bucket.name[0]}</div></div>
               <div>{bucketMonth.bucket.name}</div>
               <div className='amount avg'>
                 {bucketMonth.avgAmount ?
@@ -74,8 +75,8 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
           <CardActions>
-            <Button to={`/app/labels/${bucketMonth.bucket.id}`} flat>View All</Button>
-            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`} flat>Edit</Button>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
+            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
           </CardActions>
         </Card>
       }>
