@@ -111,12 +111,17 @@ body.home {
 
   }
 
+  .color-bar-security {
+    background-color: $accent;
+  }
+
   .security-section {
     padding: 60px 0;
     text-align: center;
 
     .material-icons {
       margin-bottom: 30px;
+      color: $accent;
     }
 
     .col-sm-4 {
@@ -134,6 +139,6 @@ body.home {
 
   .material-icons {
     font-size: 90px;
-    color: $accent;
+    color: $primary;
   }
 }
