@@ -12,10 +12,9 @@ export default class PrimaryFab extends Component {
   static propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({
       onClick: PropTypes.func.isRequired,
-      color: PropTypes.string,
+      icon: PropTypes.object.isRequired,
       label: PropTypes.string,
-      icon: PropTypes.string,
-      iconColor: PropTypes.oneOf(['dark', 'light']),
+      className: PropTypes.string,
     })).isRequired,
     icon: PropTypes.string,
     rotate: PropTypes.bool,
