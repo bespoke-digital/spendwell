@@ -9,7 +9,7 @@
   color: white;
 
   @media (min-width: $screen-sm-min) {
-    @include clearfix();
+    @include clearfix;
   }
 
   .image img {
