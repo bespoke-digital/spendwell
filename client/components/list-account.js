@@ -55,7 +55,7 @@ export default class ListAccount extends Component {
           }>
             <CardActions>
               <Button onClick={onDisable} color='accent' flat>Disable</Button>
-              <Button href={`/app/accounts/${account.id}/upload`} color='accent' flat>Upload CSV</Button>
+              <Button to={`/app/accounts/${account.id}/upload`} color='accent' flat>Upload CSV</Button>
             </CardActions>
           </Card>
         }

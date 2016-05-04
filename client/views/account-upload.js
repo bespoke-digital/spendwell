@@ -3,7 +3,6 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 
 import App from 'components/app';
-import PageHeading from 'components/page-heading';
 import ListHeading from 'components/list-heading';
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -51,13 +50,8 @@ class AccountUpload extends Component {
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} title={`Upload CSV for ${viewer.account.name}`}>
         <div className={`container ${styles.root}`}>
-          <PageHeading>
-            <h1>Upload CSV for {viewer.account.name}</h1>
-            <p>This can be helpful to backfill missing transactions.</p>
-          </PageHeading>
-
           <CardList>
             <Card loading={loading}>
               <TextActions>

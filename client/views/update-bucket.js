@@ -8,7 +8,6 @@ import App from 'components/app';
 import BucketForm from 'components/bucket-form';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
-import PageHeading from 'components/page-heading';
 
 import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
 
@@ -80,9 +79,9 @@ class UpdateBucket extends Component {
         viewer={viewer}
         back={true}
         onOverlayClose={()=> this.setState({ confirmDelete: false })}
+        title={`Edit ${viewer.bucket.name}`}
       >
         <div className={`container ${styles.root}`}>
-          <PageHeading><h1>Edit {viewer.bucket.name}</h1></PageHeading>
 
           {confirmDelete ?
             <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
