@@ -11,6 +11,8 @@ import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import ListAccount from 'components/list-account';
+import TextActions from 'components/text-actions';
+import A from 'components/a';
 
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
@@ -101,14 +103,12 @@ class Institution extends Component {
             className='disabled'
           >
             {institution.disabledAccounts.edges.map(({ node })=>
-              <Card key={node.id} className='account' summary={
-                <div>
-                  <div>{node.name}</div>
-                  <Button onClick={this.enableAccount.bind(this, node)}>
-                    Enable
-                  </Button>
-                </div>
-              }/>
+              <Card key={node.id} className='account'>
+                <div>{node.name}</div>
+                <TextActions>
+                  <A onClick={this.enableAccount.bind(this, node)}>Enable</A>
+                </TextActions>
+              </Card>
             )}
           </SuperCard>
         : null}

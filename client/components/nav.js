@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
+import A from 'components/a';
+import Icon from 'components/icon';
 import logo from 'img/logo-green.svg';
 import style from 'sass/components/nav';
 
@@ -32,27 +34,27 @@ class Nav extends Component {
 
         <ul className='list-unstyled'>
           <li className={isActive('/app/dashboard') ? 'active' : ''}>
-            <Link onClick={toggleNav} to='/app/dashboard'>
-              <i className='fa fa-fw fa-tachometer'/>
-              Dashboard
-            </Link>
+            <A onClick={toggleNav} href='/app/dashboard'>
+              <Icon type='dashboard'/>
+              <div className='label'>Dashboard</div>
+            </A>
           </li>
           <li className={isActive('/app/transactions') ? 'active' : ''}>
-            <Link onClick={toggleNav} to='/app/transactions'>
-              <i className='fa fa-fw fa-list'/>
-              Transactions
-            </Link>
+            <A onClick={toggleNav} href='/app/transactions'>
+              <Icon type='view list'/>
+              <div className='label'>Transactions</div>
+            </A>
           </li>
           <li className={isActive('/app/accounts') ? 'active' : ''}>
-            <Link onClick={toggleNav} to='/app/accounts'>
-              <i className='fa fa-fw fa-university'/>
-              Accounts
-            </Link>
+            <A onClick={toggleNav} href='/app/accounts'>
+              <Icon type='account balance'/>
+              <div className='label'>Accounts</div>
+            </A>
           </li>
           <li>
             <a href='/logout?next=/login'>
-              <i className='fa fa-fw fa-power-off'/>
-              Logout
+              <Icon type='power settings new'/>
+              <div className='label'>Logout</div>
             </a>
           </li>
         </ul>
