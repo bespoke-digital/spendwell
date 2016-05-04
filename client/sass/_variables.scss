@@ -3,14 +3,16 @@
 
 
 $primary: color('green', '500');
-$accent: color('indigo', 'A400');
+$primary-dark: color('green', '700');
+$primary-light: color('green', '100');
+$accent: color('blue', 'A200');
 
-$goal: color('purple', '500');
-$bill: color('pink', '500');
+$goal: color('deep-orange', '500');
+$bill: color('amber', '500');
 $label: $accent;
 
 $brand-success: $primary;
-$brand-danger: color('red', '600');
+$brand-danger: color('red', '500');
 $brand-warn: $accent;
 
 
@@ -42,13 +44,7 @@ $container-lg: (1140px + $grid-gutter-width);
 
 $brand-primary: $primary;
 $mui-primary-color: $primary;
-$mui-primary-color-dark: darken($primary, 5%);
-$mui-primary-color-light: lighten($primary, 5%);
-
 $mui-accent-color: $accent;
-$mui-accent-color-dark: darken($accent, 5%);
-$mui-accent-color-light: lighten($accent, 5%);
-
 $mui-danger-color: $brand-danger;
 
 

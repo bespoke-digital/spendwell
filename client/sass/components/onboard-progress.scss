@@ -1,6 +1,7 @@
 
 @import '../variables';
 @import '../depth';
+@import '../color';
 
 
 :local(.root) {
@@ -35,6 +36,12 @@
 
       position: absolute;
       top: calc(50% - 2px);
+    }
+
+    .progress {
+      .bar {
+        background-color: color('amber', '500');
+      }
     }
   }
 

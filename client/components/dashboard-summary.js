@@ -2,6 +2,7 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
+import moment from 'moment';
 
 import Card from 'components/card';
 import SuperCard from 'components/super-card';
@@ -83,7 +84,9 @@ class DashboardSummary extends Component {
             onClick={this.handleStatusClick.bind(this, 'net')}
             href='#'
           >
-            <div className='title'>Net</div>
+            <div className='title'>
+              {periods.current.isSame(new Date(), 'month') ? 'Safe To Spend' : 'Net'}
+            </div>
             <div className='amount'><Money amount={net}/></div>
           </a>
         </Card>

@@ -6,7 +6,7 @@
   position: relative;
   height: $appbar-height;
 
-  background-color: $brand-primary;
+  background-color: $primary-dark;
   color: white;
 
   @media (max-width: $screen-xs-max) {
@@ -60,8 +60,6 @@
   }
 
   .safe-to-spend {
-    @extend .depth-z1;
-
     position: absolute;
     padding: 2px 6px;
     top: 50%;
@@ -69,14 +67,13 @@
     transform: translateY(-50%);
     float: right;
 
-    background-color: white;
     text-align: center;
 
     small {
       display: block;
       font-size: 12px;
       line-height: 1;
-      color: $gray-4;
+      color: rgba(black, .56);
     }
 
     .money {
@@ -84,7 +81,11 @@
       font-weight: 600;
 
       &.money--positive {
-        color: $gray-2;
+        color: rgba(black, .56);
+      }
+
+      &.money--negative {
+        color: color('red', '600');
       }
     }
   }

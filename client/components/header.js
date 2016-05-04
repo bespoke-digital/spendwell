@@ -64,13 +64,6 @@ class Header extends Component {
             <img src={logoIconWhite} alt='Spendwell'/>
           </div>
         }
-
-        {!plain ?
-          <div className='safe-to-spend'>
-            <Money amount={viewer.safeToSpend}/>
-            <small>safe to spend</small>
-          </div>
-        : null}
       </nav>
     );
   }

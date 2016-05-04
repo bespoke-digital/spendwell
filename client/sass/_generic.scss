@@ -1,9 +1,11 @@
 
 @import 'generic/buttons';
 @import 'generic/overlay';
+@import 'color';
 
 body, html {
-  background-color: $gray-lightest;
+  background-color: color('grey', '100');
+  color: color('grey', '900');
 }
 
 body {

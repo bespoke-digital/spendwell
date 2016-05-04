@@ -101,12 +101,9 @@
     .active > a {
       background-color: color('grey', '100');
 
+      .label,
       .icon {
-        fill: $primary;
-      }
-
-      .label {
-        color: $primary;
+        color: $accent;
       }
     }
   }
