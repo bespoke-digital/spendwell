@@ -15,9 +15,9 @@ $brand-success: $primary;
 $brand-danger: color('red', '500');
 $brand-warn: $accent;
 
-
 $appbar-height: 64px;
-$mui-appbar-height: $appbar-height;
+$nav-width-desktop: 230px;
+
 
 $screen-xs: 480px;
 $screen-xs-min: $screen-xs;
@@ -46,6 +46,7 @@ $brand-primary: $primary;
 $mui-primary-color: $primary;
 $mui-accent-color: $accent;
 $mui-danger-color: $brand-danger;
+$mui-appbar-height: $appbar-height;
 
 
 // gray's are depricated. Use color('grey', 'n')

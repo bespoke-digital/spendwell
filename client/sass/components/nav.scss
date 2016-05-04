@@ -22,7 +22,7 @@
   }
 
   @media (min-width: $screen-sm-min) {
-    width: 200px;
+    width: $nav-width-desktop;
     left: 0;
     border-right: 1px solid $gray-7;
   }

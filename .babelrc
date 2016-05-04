@@ -1,7 +1,7 @@
 {
   "presets": ["stage-0", "es2015", "react"],
   "plugins": [
-    "./webpack/babel-relay-plugin",
+    "./webpack/babel-relay-plugin.js",
     "transform-class-properties",
     "transform-decorators-legacy"
   ],

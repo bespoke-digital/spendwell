@@ -14,8 +14,7 @@
 
   .app-children {
     @media (min-width: $screen-sm-min) {
-      // for left nav
-      padding: 0 0 0 200px;
+      padding: 0 0 0 $nav-width-desktop;
     }
 
     > .container {
