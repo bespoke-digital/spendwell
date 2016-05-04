@@ -2,7 +2,7 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
-import Header from 'components/header';
+import OnboradingHeader from 'components/onboarding-header';
 
 import style from 'sass/components/app';
 
@@ -12,7 +12,7 @@ class Onboarding extends Component {
     const { viewer, children } = this.props;
     return (
       <div className={`${style.root} onboarding`}>
-        <Header viewer={viewer} plain/>
+        <OnboradingHeader viewer={viewer} plain/>
         <div className='app-children'>{children}</div>
       </div>
     );
@@ -23,7 +23,7 @@ Onboarding = Relay.createContainer(Onboarding, {
   fragments: {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
-        ${Header.getFragment('viewer')}
+        safeToSpend
       }
     `,
   },

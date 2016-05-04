@@ -48,4 +48,27 @@
       float: left;
     }
   }
+
+  &.onboarding-header {
+    text-align: center;
+    padding-left: 0;
+
+    .logo,
+    .logo-icon {
+      margin: 12px;
+      height: $appbar-height - 24px;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      .logo {
+        display: none;
+      }
+    }
+
+    @media (min-width: $screen-sm-min) {
+      .logo-icon {
+        display: none;
+      }
+    }
+  }
 }
