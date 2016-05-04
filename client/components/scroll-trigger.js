@@ -11,7 +11,7 @@ export default class ScrollTrigger extends Component {
   };
 
   static defaultProps = {
-    fromBottom: 1000,
+    fromBottom: 2000,
   };
 
   constructor() {
