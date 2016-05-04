@@ -61,11 +61,13 @@ $gray-lightish: lighten(#000, 60%);   // #999
 $gray-lighter:  #e7e7e7;
 $gray-lightest: #f8f8f8;
 
-$gray-1: lighten(#000, 13.5%); // #222
-$gray-2: lighten(#000, 20%);   // #333
-$gray-3: lighten(#000, 33.5%); // #555
-$gray-4: lighten(#000, 46.7%); // #777
-$gray-5: lighten(#000, 60%);   // #999
-$gray-6: lighten(#000, 80%);   // #ccc
-$gray-7: #e7e7e7;
-$gray-8: #f8f8f8;
+$gray-1: lighten(#000, 13.5%); // #222 - 900 #212121
+$gray-2: lighten(#000, 20%);   // #333 - 800 #424242
+$gray-3: lighten(#000, 33.5%); // #555 - 700 #616161
+$gray-4: lighten(#000, 46.7%); // #777 - 600 #757575
+$gray-5: lighten(#000, 60%);   // #999 - 500 #9E9E9E
+$gray-6: lighten(#000, 80%);   // #ccc - 400 #BDBDBD
+// 300 #E0E0E0
+$gray-7: #e7e7e7; // 200 #EEEEEE
+// 100 #F5F5F5
+$gray-8: #f8f8f8; // 50 #FAFAFA

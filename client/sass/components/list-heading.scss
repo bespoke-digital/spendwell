@@ -1,20 +1,17 @@
 
 @import '../variables';
+@import '../color';
 
 :local(.root) {
   margin-bottom: 10px;
 
-  h2 {
-    display: inline;
-
-    line-height: 26px;
-    font-size: 16px;
-    font-weight: normal;
-    color: $gray-4;
-  }
+  line-height: 26px;
+  font-size: 16px;
+  font-weight: normal;
+  color: color('grey', '600');
 
   small {
     font-size: 12px;
-    color: $gray-5;
+    color: color('grey', '500');
   }
 }

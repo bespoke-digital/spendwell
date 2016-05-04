@@ -108,7 +108,7 @@ class Dashboard extends Component {
           {goalMonths.length > 0 ?
             <CardList className='month-list'>
               <ListHeading>
-                <h2>Goals <small> for long and short term savings</small></h2>
+                Goals <small> for long and short term savings</small>
               </ListHeading>
 
               <Card className='card-list-heading'>
@@ -154,7 +154,7 @@ class Dashboard extends Component {
           {billMonths.length > 0 ?
             <CardList className='month-list'>
               <ListHeading>
-                <h2>Bills <small> for monthly recurring expenses</small></h2>
+                Bills <small> for monthly recurring expenses</small>
               </ListHeading>
 
               <Card className='card-list-heading'>
@@ -190,7 +190,7 @@ class Dashboard extends Component {
           {bucketMonths.length > 0 ?
             <CardList className='month-list'>
               <ListHeading>
-                <h2>Labels <small> for tracking spending</small></h2>
+                Labels <small> for tracking spending</small>
               </ListHeading>
 
               <Card className='card-list-heading'>

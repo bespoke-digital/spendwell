@@ -45,9 +45,7 @@ class Accounts extends Component {
             }/>
           </CardList>
 
-          <ListHeading>
-            <h2>External Accounts</h2>
-          </ListHeading>
+          <ListHeading>External Accounts</ListHeading>
 
           <ExternalAccounts viewer={viewer}/>
 

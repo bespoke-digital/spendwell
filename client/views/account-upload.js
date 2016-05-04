@@ -68,9 +68,7 @@ class AccountUpload extends Component {
           />
 
           {viewer.account.transactions ?
-            <ListHeading>
-              <h2>Uploaded Transactions</h2>
-            </ListHeading>
+            <ListHeading>Uploaded Transactions</ListHeading>
           : null}
           <TransactionList
             transactions={viewer.account.transactions}

@@ -59,7 +59,7 @@ class IncomingSummary extends Component {
         {incomeEstimated ?
           <div>
             <ListHeading>
-              <h3><span className='asterisk'>*</span>Estimated</h3>
+              <span className='asterisk'>*</span> Estimated
             </ListHeading>
 
             <CardList>
@@ -73,7 +73,7 @@ class IncomingSummary extends Component {
             </CardList>
 
             <ListHeading>
-              <h2>Actual <small>We'll use this total once it's higher than the estimate</small></h2>
+              Actual <small>We'll use this total once it's higher than the estimate</small>
             </ListHeading>
           </div>
         : null}

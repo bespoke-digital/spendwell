@@ -125,9 +125,7 @@ class BucketForm extends Component {
           </Card>
         </CardList>
 
-        <ListHeading>
-          <h2>Filtered Transactions</h2>
-        </ListHeading>
+        <ListHeading>Filtered Transactions</ListHeading>
 
         <CardList>
           <TransactionList
