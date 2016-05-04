@@ -4,8 +4,10 @@ import Relay from 'react-relay';
 
 import A from 'components/a';
 import Icon from 'components/icon';
-import logo from 'img/logo-green.svg';
 import style from 'sass/components/nav';
+
+import logoGreen from 'img/logo-green.svg';
+import logoWhite from 'img/logo-white.svg';
 
 
 const isActive = (path)=> document.location.pathname.indexOf(path) === 0;
@@ -24,11 +26,12 @@ class Nav extends Component {
       <div className={`${style.root} ${open ? 'open' : ''}`}>
 
         <div className='account-info'>
+          <img src={logoWhite} alt='Spendwell' className='logo'/>
           <div className='account-email'>{viewer.email}</div>
         </div>
 
-        <div className='logo'>
-          <img src={logo} alt='Spendwell'/>
+        <div className='logo-green'>
+          <img src={logoGreen} alt='Spendwell'/>
         </div>
 
         <ul className='list-unstyled'>

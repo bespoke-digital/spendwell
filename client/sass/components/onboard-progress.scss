@@ -6,28 +6,24 @@
 
 :local(.root) {
   position: relative;
-  width: 280px;
+
+  @media (max-width: $screen-xs-max) {
+    width: 30vw;
+    float: right;
+    margin-right: 32px;
+  }
 
   @media (min-width: $screen-sm-min) {
+    width: 280px;
     float: right;
     margin-right: 32px;
   }
 
   .appbar-container {
     @media (max-width: $screen-xs-max) {
-      @include depth(2);
-
-      position: absolute;
-      top: $appbar-height;
-      height: $appbar-height / 2;
-      width: 100vw;
-      padding: 0 5vw;
-
-      background-color: $brand-primary;
-
-      > .progress {
-        width: 90vw;
-      }
+      height: $appbar-height;
+      position: relative;
+      cursor: pointer;
     }
 
     @media (min-width: $screen-sm-min) {
@@ -58,15 +54,15 @@
     padding: 15px;
     z-index: 1;
 
-    background-color: rgba($gray-2, 0.9);
+    background-color: rgba($gray-2, .9);
     color: white;
     text-align: center;
     line-height: 1;
 
     @media (max-width: $screen-xs-max) {
-      top: ($appbar-height + ($appbar-height / 2)) - 3px;
-      left: 10vw;
-      width: 80vw;
+      top: $appbar-height - 10px;
+      left: 0;
+      width: 100%;
     }
 
     @media (min-width: $screen-sm-min) {
@@ -79,13 +75,13 @@
       bottom: 100%;
       left: 50%;
       border: solid transparent;
-      content: " ";
+      content: ' ';
       height: 0;
       width: 0;
       position: absolute;
       pointer-events: none;
       border-color: none;
-      border-bottom-color: rgba($gray-2, 0.9);
+      border-bottom-color: rgba($gray-2, .9);
       border-width: 10px;
       margin-left: -10px;
     }
@@ -107,8 +103,8 @@
     color: $gray-2;
 
     @media (max-width: $screen-xs-max) {
-      top: ($appbar-height + ($appbar-height / 2)) - 3px;
-      left: 10vw;
+      top: $appbar-height - 10px;
+      right: 0;
       width: 80vw;
     }
 
@@ -154,13 +150,17 @@
           &:hover {
             background-color: $gray-8;
           }
+
+          .icon {
+            color: $accent;
+          }
         }
 
         &.done {
           color: $gray-4;
 
           .icon {
-            fill: $brand-primary;
+            color: $primary;
           }
         }
       }

@@ -6,16 +6,15 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 200px;
   transition: .5s ease;
+  background-color: white;
 
   @media (max-width: $screen-xs-max) {
-    left: -210px;
-    z-index: 200;
+    @include depth(4);
 
-    // this is .depth-z4; Pasted because you can use @extend inside @media
-    box-shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
-    background-color: white;
+    width: 80vw;
+    left: -85vw;
+    z-index: 200;
 
     &.open {
       left: 0;
@@ -23,13 +22,13 @@
   }
 
   @media (min-width: $screen-sm-min) {
+    width: 200px;
     left: 0;
-    background-color: white;
     border-right: 1px solid $gray-7;
   }
 
-  .logo {
-    height: $mui-appbar-height;
+  .logo-green {
+    height: $appbar-height;
     padding: 15px 0 0 23px;
 
     @media (max-width: $screen-xs-max) {
@@ -43,25 +42,28 @@
 
   .account-info {
     position: relative;
-
     color: white;
-    border-bottom: $gray;
-
-    @media (max-width: $screen-xs-max) {
-      height: 100px;
-      background-color: darken($brand-primary, 5%);
-    }
+    background-color: $primary-dark;
+    height: $appbar-height + 56px;
 
     @media (min-width: $screen-sm-min) {
       display: none;
     }
 
+    .logo {
+      height: $appbar-height - 16px;
+      margin: 16px 16px 0;
+    }
+
     .account-email {
       position: absolute;
       bottom: 0;
-      padding: 10px 16px;
       width: 100%;
+      height: 56px;
+      padding: 0 16px;
 
+      line-height: 56px;
+      vertical-align: middle;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

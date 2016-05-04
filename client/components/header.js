@@ -1,11 +1,10 @@
 
 import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 import OnboardProgress from 'components/onboard-progress';
-
-import logoIconWhite from 'img/logo-icon-white.svg';
+import Icon from 'components/icon';
 
 import style from 'sass/components/header';
 
@@ -40,31 +39,21 @@ class Header extends Component {
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
-        {!plain ? <div className='title'>{title}</div> : null}
-
         {!plain ?
-          <div className='nav-handle mui--appbar-height mui--appbar-line-height'>
+          <div className='nav-handle'>
             {back ? (
               <a href='#' onClick={::this.handleBackClick}>
-                <i className='fa fa-long-arrow-left'/>
+                <Icon type='arrow back' color='light'/>
               </a>
             ) : (
               <a href='#' onClick={::this.handleHandleClick}>
-                <i className='fa fa-bars'/>
+                <Icon type='menu' color='light'/>
               </a>
             )}
           </div>
         : null}
 
-        {!plain ?
-          <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
-            <img src={logoIconWhite} alt='Spendwell'/>
-          </Link>
-        :
-          <div className='brand mui--appbar-height mui--appbar-line-height'>
-            <img src={logoIconWhite} alt='Spendwell'/>
-          </div>
-        }
+        <div className='title'>{title}</div>
 
         {!plain ? <OnboardProgress viewer={viewer}/> : null}
       </nav>
