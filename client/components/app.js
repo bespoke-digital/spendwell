@@ -16,6 +16,7 @@ import style from 'sass/components/app';
 class App extends Component {
   static propTypes = {
     loading: PropTypes.number.isRequired,
+    title: PropTypes.string,
     onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
   };
@@ -39,14 +40,14 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, back, loading, toasts } = this.props;
+    const { children, viewer, back, loading, toasts, title } = this.props;
     const { navOpen } = this.state;
 
     return (
       <div className={style.root}>
         {loading ? <Progress className='global-loading' indeterminate/> : null}
 
-        <Header toggleNav={::this.toggleNav} viewer={viewer} back={back}/>
+        <Header toggleNav={::this.toggleNav} viewer={viewer} back={back} title={title}/>
 
         <Nav open={navOpen} toggleNav={::this.toggleNav} viewer={viewer}/>
 

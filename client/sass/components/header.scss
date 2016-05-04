@@ -17,6 +17,20 @@
     padding-left: 220px;
   }
 
+  .title {
+    @media (max-width: $screen-xs-max) {
+      display: none;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      height: $appbar-height;
+      line-height: $appbar-height;
+      float: left;
+      vertical-align: middle;
+      font-size: 22px;
+    }
+  }
+
   .nav-handle {
     @media (max-width: $screen-xs-max) {
       position: absolute;
@@ -56,37 +70,6 @@
 
     img {
       max-height: calc(100% - 24px);
-    }
-  }
-
-  .safe-to-spend {
-    position: absolute;
-    padding: 2px 6px;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    float: right;
-
-    text-align: center;
-
-    small {
-      display: block;
-      font-size: 12px;
-      line-height: 1;
-      color: rgba(black, .56);
-    }
-
-    .money {
-      font-size: 18px;
-      font-weight: 600;
-
-      &.money--positive {
-        color: rgba(black, .56);
-      }
-
-      &.money--negative {
-        color: color('red', '600');
-      }
     }
   }
 }

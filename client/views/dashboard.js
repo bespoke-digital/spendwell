@@ -97,7 +97,7 @@ class Dashboard extends Component {
     const bucketTotal = _.sum(bucketMonths, 'amount');
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} title='Dashboard'>
         <div className={`container ${styles.root}`}>
           <DashboardSummary
             viewer={viewer}

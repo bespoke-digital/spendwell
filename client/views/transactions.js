@@ -9,7 +9,6 @@ import TransactionList from 'components/transaction-list';
 import ScrollTrigger from 'components/scroll-trigger';
 import App from 'components/app';
 import MonthSelector from 'components/month-selector';
-import ListHeading from 'components/list-heading';
 
 import styles from 'sass/views/dashboard.scss';
 
@@ -30,7 +29,7 @@ class Dashboard extends Component {
     const { viewer, relay } = this.props;
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} title='Transactions'>
         <ScrollTrigger
           className={`container ${styles.root}`}
           onTrigger={::this.loadTransactions}
@@ -44,10 +43,6 @@ class Dashboard extends Component {
           </CardList>
 
           <CardList>
-            <ListHeading>
-              <h2>All Transactions</h2>
-            </ListHeading>
-
             <TransactionList
               viewer={viewer}
               transactions={viewer.summary.transactions}

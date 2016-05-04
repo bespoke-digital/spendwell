@@ -7,13 +7,11 @@ import { browserHistory } from 'react-router';
 import CardList from 'components/card-list';
 import Card from 'components/card';
 import Money from 'components/money';
-import Button from 'components/button';
 import Institution from 'components/institution';
 import App from 'components/app';
 import ExternalAccounts from 'components/external-accounts';
 import PrimaryFab from 'components/primary-fab';
 import ListHeading from 'components/list-heading';
-import PageHeading from 'components/page-heading';
 import Icon from 'components/icon';
 
 import styles from 'sass/views/accounts';
@@ -24,12 +22,8 @@ class Accounts extends Component {
     const { viewer } = this.props;
 
     return (
-      <App viewer={viewer}>
+      <App viewer={viewer} title='Accounts'>
         <div className={`container ${styles.root}`}>
-          <PageHeading>
-            <h1>Bank Accounts</h1>
-          </PageHeading>
-
           {viewer.institutions.edges.map(({ node })=>
             <Institution
               key={node.id}

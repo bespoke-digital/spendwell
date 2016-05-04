@@ -8,6 +8,11 @@
   position: relative;
   width: 280px;
 
+  @media (min-width: $screen-sm-min) {
+    float: right;
+    margin-right: 32px;
+  }
+
   .appbar-container {
     @media (max-width: $screen-xs-max) {
       @include depth(2);

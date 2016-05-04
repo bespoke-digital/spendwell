@@ -3,7 +3,6 @@ import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
 import { Link, browserHistory } from 'react-router';
 
-import Money from 'components/money';
 import OnboardProgress from 'components/onboard-progress';
 
 import logoIconWhite from 'img/logo-icon-white.svg';
@@ -13,12 +12,14 @@ import style from 'sass/components/header';
 
 class Header extends Component {
   static propTypes = {
+    title: PropTypes.string,
     toggleNav: PropTypes.func,
     plain: PropTypes.bool,
     back: PropTypes.bool,
   };
 
   static defaultProps = {
+    title: '',
     plain: false,
     back: false,
   };
@@ -35,10 +36,12 @@ class Header extends Component {
   }
 
   render() {
-    const { viewer, back, plain } = this.props;
+    const { viewer, back, plain, title } = this.props;
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
+        {!plain ? <div className='title'>{title}</div> : null}
+
         {!plain ?
           <div className='nav-handle mui--appbar-height mui--appbar-line-height'>
             {back ? (
@@ -53,8 +56,6 @@ class Header extends Component {
           </div>
         : null}
 
-        {!plain ? <OnboardProgress viewer={viewer}/> : null}
-
         {!plain ?
           <Link className='brand mui--appbar-height mui--appbar-line-height' to='/app/dashboard'>
             <img src={logoIconWhite} alt='Spendwell'/>
@@ -64,6 +65,8 @@ class Header extends Component {
             <img src={logoIconWhite} alt='Spendwell'/>
           </div>
         }
+
+        {!plain ? <OnboardProgress viewer={viewer}/> : null}
       </nav>
     );
   }
