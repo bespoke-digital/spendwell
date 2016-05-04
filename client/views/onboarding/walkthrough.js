@@ -114,7 +114,7 @@ class OnboardingWalkthrough extends Component {
             <Button
               to='/app/dashboard'
               disabled={syncing}
-              loading={true || syncing}
+              loading={syncing}
               fab
             >
               <Icon type='done'/>
