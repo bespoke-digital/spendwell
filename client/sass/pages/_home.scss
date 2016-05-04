@@ -31,7 +31,7 @@ body.home {
   }
 
   .section {
-    img.icon {
+    .material-icons {
       margin-bottom: 10px;
     }
 
@@ -115,8 +115,7 @@ body.home {
     padding: 60px 0;
     text-align: center;
 
-    img.icon {
-      height: 90px;
+    .material-icons {
       margin-bottom: 30px;
     }
 
@@ -130,5 +129,11 @@ body.home {
   .cta-bar {
     margin-bottom: 60px;
     text-align: center;
+  }
+
+
+  .material-icons {
+    font-size: 90px;
+    color: $accent;
   }
 }
