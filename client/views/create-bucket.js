@@ -6,9 +6,13 @@ import { browserHistory } from 'react-router';
 import { handleMutationError } from 'utils/network-layer';
 import BucketForm from 'components/bucket-form';
 import App from 'components/app';
-import PageHeading from 'components/page-heading';
+import Card from 'components/card';
+import CardList from 'components/card-list';
+import TextActions from 'components/text-actions';
+import A from 'components/a';
 
 import { CreateBucketMutation } from 'mutations/buckets';
+import { SettingsMutation } from 'mutations/users';
 
 import styles from 'sass/views/create-bucket.scss';
 
@@ -42,23 +46,38 @@ class CreateBucket extends Component {
     });
   }
 
+  dismissHelp() {
+    const { viewer, type } = this.props;
+
+    Relay.Store.commitUpdate(new SettingsMutation({
+      viewer,
+      [type === 'expense' ? 'createLabelHelp' : 'createBillHelp']: false,
+    }), { onFailure: handleMutationError });
+  }
+
   render() {
     const { viewer, type } = this.props;
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} back={true}>
+      <App viewer={viewer} back={true} title={type === 'expense' ? 'New Label' : 'New Bill'}>
         <div className={`container ${styles.root}`}>
-          <PageHeading>
-            <h1>{type === 'expense' ? 'Create a Label' : 'Create a Bill'}</h1>
-            <p>{type === 'expense' ? `
-              Labels are for tracking spending. We'll show you your average spend
-              and if you're on track to be over or under.
-            ` : `
-              Bills are for monthly recurring expenses. We'll track if the bill has been
-              paid and take unpaid bills out of safe-to-spend.
-            `}</p>
-          </PageHeading>
+          {(type === 'expense' && viewer.settings.createLabelHelp) || (type === 'bill' && viewer.settings.createBillHelp) ?
+            <CardList>
+              <Card>
+                {type === 'expense' ? `
+                  Labels are for tracking spending. We'll show you your average spend
+                  and if you're on track to be over or under.
+                ` : `
+                  Bills are for monthly recurring expenses. We'll track if the bill has been
+                  paid and take unpaid bills out of safe-to-spend.
+                `}
+                <TextActions>
+                  <A onClick={::this.dismissHelp}>Dismiss</A>
+                </TextActions>
+              </Card>
+            </CardList>
+          : null}
 
           <BucketForm
             onSubmit={::this.handleSubmit}
@@ -82,8 +101,14 @@ CreateBucket = Relay.createContainer(CreateBucket, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
-        ${CreateBucketMutation.getFragment('viewer')}
         ${BucketForm.getFragment('viewer')}
+        ${CreateBucketMutation.getFragment('viewer')}
+        ${SettingsMutation.getFragment('viewer')}
+
+        settings {
+          createLabelHelp
+          createBillHelp
+        }
       }
     `,
   },

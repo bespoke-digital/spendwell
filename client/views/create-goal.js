@@ -3,11 +3,16 @@ import { Component } from 'react';
 import Relay from 'react-relay';
 import { browserHistory } from 'react-router';
 
-import { handleMutationError } from 'utils/network-layer';
 import App from 'components/app';
 import GoalForm from 'components/goal-form';
-import PageHeading from 'components/page-heading';
+import Card from 'components/card';
+import CardList from 'components/card-list';
+import TextActions from 'components/text-actions';
+import A from 'components/a';
+
+import { handleMutationError } from 'utils/network-layer';
 import { CreateGoalMutation } from 'mutations/goals';
+import { SettingsMutation } from 'mutations/users';
 
 import styles from 'sass/views/create-bucket.scss';
 
@@ -35,20 +40,33 @@ class CreateGoal extends Component {
     });
   }
 
+  dismissHelp() {
+    const { viewer } = this.props;
+
+    Relay.Store.commitUpdate(new SettingsMutation({
+      viewer,
+      createGoalHelp: false,
+    }), { onFailure: handleMutationError });
+  }
+
   render() {
     const { viewer } = this.props;
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} back={true}>
+      <App viewer={viewer} back={true} title='Create a Goal'>
         <div className={`container ${styles.root}`}>
-          <PageHeading>
-            <h1>Create a Goal</h1>
-            <p>
-              Goals are for saving. They come out of safe-to-spend at the
-              beginning of the month so you're paying yourself first.
-            </p>
-          </PageHeading>
+          {viewer.settings.createGoalHelp ?
+            <CardList>
+              <Card>
+                Goals are for saving. They come out of safe-to-spend at the
+                beginning of the month so you're paying yourself first.
+                <TextActions>
+                  <A onClick={::this.dismissHelp}>Dismiss</A>
+                </TextActions>
+              </Card>
+            </CardList>
+          : null}
 
           <GoalForm
             onSubmit={::this.handleSubmit}
@@ -68,6 +86,11 @@ CreateGoal = Relay.createContainer(CreateGoal, {
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${CreateGoalMutation.getFragment('viewer')}
+        ${SettingsMutation.getFragment('viewer')}
+
+        settings {
+          createGoalHelp
+        }
       }
     `,
   },

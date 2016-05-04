@@ -15,7 +15,7 @@ class GoalForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    onDelete: PropTypes.func,
     loading: PropTypes.bool,
   };
 

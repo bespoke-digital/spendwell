@@ -28,7 +28,7 @@ class BucketForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    onDelete: PropTypes.func,
     loading: PropTypes.bool,
   };
 
@@ -126,7 +126,7 @@ class BucketForm extends Component {
         </CardList>
 
         <ListHeading>
-          <h2>All Transactions</h2>
+          <h2>Filtered Transactions</h2>
         </ListHeading>
 
         <CardList>

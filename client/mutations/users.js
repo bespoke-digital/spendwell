@@ -65,6 +65,9 @@ export class SettingsMutation extends Relay.Mutation {
   getVariables() {
     return {
       dashboardHelp: this.props.dashboardHelp,
+      createLabelHelp: this.props.createLabelHelp,
+      createBillHelp: this.props.createBillHelp,
+      createGoalHelp: this.props.createGoalHelp,
     };
   }
 
@@ -72,9 +75,7 @@ export class SettingsMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on SettingsMutation {
         viewer {
-          settings {
-            dashboardHelp
-          }
+          settings
         }
       }
     `;

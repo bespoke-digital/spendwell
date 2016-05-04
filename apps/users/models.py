@@ -55,8 +55,12 @@ class User(AbstractBaseUser):
     estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
 
     timezone = models.CharField(max_length=100, default='America/Toronto')
-    dashboard_help = models.BooleanField(default=True)
     estimated_income_confirmed = models.BooleanField(default=False)
+
+    dashboard_help = models.BooleanField(default=True)
+    create_label_help = models.BooleanField(default=True)
+    create_bill_help = models.BooleanField(default=True)
+    create_goal_help = models.BooleanField(default=True)
 
     objects = UserManager()
 

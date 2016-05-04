@@ -37,7 +37,7 @@ class Nav extends Component {
         <ul className='list-unstyled'>
           <li className={isActive('/app/dashboard') ? 'active' : ''}>
             <A onClick={toggleNav} href='/app/dashboard'>
-              <Icon type='local atm'/>
+              <Icon type='network check'/>
               <div className='label'>Dashboard</div>
             </A>
           </li>
