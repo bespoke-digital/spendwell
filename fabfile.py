@@ -115,7 +115,7 @@ def deploy(force=False):
             run('git checkout origin/{branch}'.format(**env))
             new_commit = run('git rev-parse HEAD')
 
-            changed = run('git diff --name-only {} {}'.format(old_commit, new_commit))
+            changed = run('git --no-pager diff --name-only {} {}'.format(old_commit, new_commit))
 
         if 'requirements.txt' in changed or force:
             pip_requirements()
