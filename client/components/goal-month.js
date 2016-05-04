@@ -4,8 +4,8 @@ import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Money from 'components/money';
-import Button from 'components/button';
-import CardActions from 'components/card-actions';
+import A from 'components/a';
+import TextActions from 'components/text-actions';
 
 
 class GoalMonth extends Component {
@@ -40,14 +40,9 @@ class GoalMonth extends Component {
           <div className='amount'><Money abs={true} amount={goalMonth.filledAmount}/></div>
         </div>
       }>
-        <strong>Projected annual amount:</strong>
-        {' '}
-        <Money abs={true} amount={goalMonth.targetAmount * 12}/>
-
-        <CardActions>
-          <Button to={`/app/goals/${goalMonth.goal.id}`}>View</Button>
-          <Button to={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</Button>
-        </CardActions>
+        <TextActions>
+          <A href={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</A>
+        </TextActions>
       </Card>
     );
   }
