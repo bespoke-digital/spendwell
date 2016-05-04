@@ -65,8 +65,10 @@
       .icon > div {
         width: 24px;
         height: 24px;
-        line-height: 24px;
         border-radius: 12px;
+
+        line-height: 23px;
+        padding: 1px 0 0 1px;
 
         text-align: center;
         vertical-align: middle;
