@@ -1,5 +1,4 @@
 
-import { Link } from 'react-router';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
@@ -35,7 +34,7 @@ class Nav extends Component {
         <ul className='list-unstyled'>
           <li className={isActive('/app/dashboard') ? 'active' : ''}>
             <A onClick={toggleNav} href='/app/dashboard'>
-              <Icon type='dashboard'/>
+              <Icon type='local atm'/>
               <div className='label'>Dashboard</div>
             </A>
           </li>

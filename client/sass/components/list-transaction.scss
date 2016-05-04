@@ -4,14 +4,7 @@
 @import '../mixins';
 
 :local(.root) {
-  &.expanded .summary .amount {
-    @media (max-width: $screen-xs-max) {
-      display: none;
-    }
-  }
-
   .summary {
-
     > div {
       @media (min-width: $screen-sm-min) {
         display: flex;
@@ -74,7 +67,6 @@
       }
     }
 
-
     .buckets, .no-bucket {
       color: color('grey', '600');
     }
@@ -109,6 +101,7 @@
       .icon {
         position: absolute;
         left: 0;
+        color: $primary;
       }
 
       .content {
@@ -118,6 +111,18 @@
       .label {
         font-size: 14px;
         color: $gray-4;
+      }
+
+      &.divider {
+        padding-top: 16px;
+        margin-top: 8px;
+
+        .content {
+          margin: -16px -16px 0 0;
+          padding-top: 16px;
+
+          border-top: 1px solid color('grey', '300');
+        }
       }
     }
   }

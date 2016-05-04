@@ -92,29 +92,17 @@ class ListTransaction extends Component {
                 <div className='content'><Money amount={transaction.amount}/></div>
                 <div className='label'>Amount</div>
               </div>
-              <div>
+              <div className='divider'>
                 <Icon type='today'/>
                 <div className='content'><DateTime value={transaction.date}/></div>
                 <div className='label'>Date</div>
               </div>
-              {transaction.buckets.edges.length ?
-                <div>
-                  <Icon type='bookmark outline'/>
-                  <div className='content buckets'>
-                    {transaction.buckets.edges.map(({ node })=>
-                      <span key={node.id}>{node.name}</span>
-                    )}
-                  </div>
-                  <div className='label'>Labels</div>
-                </div>
-              : null}
-              <div>
-                <Icon type='account balance wallet'/>
+              <div className='divider'>
+                <Icon type='account balance'/>
                 <div className='content'>{transaction.account.name}</div>
                 <div className='label'>Account</div>
               </div>
               <div>
-                <Icon type='account balance'/>
                 <div className='content'>{transaction.account.institution.name}</div>
                 <div className='label'>Institution</div>
               </div>
@@ -123,6 +111,17 @@ class ListTransaction extends Component {
                   <Icon type='input'/>
                   <div className='content'>{transaction.transferPair.account.name}</div>
                   <div className='label'>Transfer To</div>
+                </div>
+              : null}
+              {transaction.buckets.edges.length ?
+                <div className='divider'>
+                  <Icon type='local offer'/>
+                  <div className='content buckets'>
+                    {transaction.buckets.edges.map(({ node })=>
+                      <span key={node.id}>{node.name}</span>
+                    )}
+                  </div>
+                  <div className='label'>Labels</div>
                 </div>
               : null}
             </div>
