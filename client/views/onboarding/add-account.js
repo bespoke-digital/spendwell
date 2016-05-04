@@ -62,7 +62,7 @@ class AddAccountView extends Component {
               <div className='flex-row'>
                 <div/>
                 {hasInstitutions ?
-                  <Button to='/onboarding/accounts' variant='primary'>Skip</Button>
+                  <Button to='/onboarding/accounts'>Skip</Button>
                 : null}
               </div>
             </Col>

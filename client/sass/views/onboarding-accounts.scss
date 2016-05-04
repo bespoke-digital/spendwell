@@ -1,5 +1,8 @@
 
-@import '~sass/variables';
+@import '../color';
 
 :local(.root) {
+  .account.disabled {
+    background-color: color('grey', '200');
+  }
 }

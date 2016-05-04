@@ -64,19 +64,23 @@
   .control-next {
     position: absolute;
 
-    @media (min-width: $screen-sm-min) {
-      top: 185px;
-    }
-
     @media (max-width: $screen-xs-max) {
       bottom: 75px;
     }
 
+    @media (min-width: $screen-sm-min) {
+      top: 185px;
+    }
+
     .mui-btn {
       @media (max-width: $screen-xs-max) {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, .3);
         color: white;
         box-shadow: none;
+      }
+
+      @media (min-width: $screen-sm-min) {
+        background-color: white;
       }
     }
   }

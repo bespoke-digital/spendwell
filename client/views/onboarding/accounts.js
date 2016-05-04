@@ -13,11 +13,13 @@ import Money from 'components/money';
 import GraphicDialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 import Transition from 'components/transition';
+import TextActions from 'components/text-actions';
+import A from 'components/a';
 
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
 import connectImage from 'img/views/onboarding/connect.svg';
-import styles from 'sass/views/accounts';
+import styles from 'sass/views/onboarding-accounts';
 
 
 class OnboardingAccounts extends Component {
@@ -81,18 +83,20 @@ class OnboardingAccounts extends Component {
               <Card summary={<div><h3>{node.name}</h3></div>}/>
 
               {this.orderedAccounts(node).map((account)=>
-                <Card key={account.id} className={`account ${account.disabled ? 'disabled' : ''}`} summary={
-                  <div>
+                <Card key={account.id} className={`account ${account.disabled ? 'disabled' : ''}`}>
+                  <div className='flex-row'>
                     <div>{account.name}</div>
                     <div><Money amount={account.currentBalance}/></div>
-                    <Button onClick={account.disabled ?
+                  </div>
+                  <TextActions>
+                    <A onClick={account.disabled ?
                       this.enable.bind(this, account) :
                       this.disable.bind(this, account)
                     }>
                       {account.disabled ? 'Enable' : 'Disable'}
-                    </Button>
-                  </div>
-                }/>
+                    </A>
+                  </TextActions>
+                </Card>
               )}
             </CardList>
           )}
@@ -100,7 +104,7 @@ class OnboardingAccounts extends Component {
           <div className='flex-row'>
             <div/>
             <Button to='/onboarding/connect' flat>Add Another</Button>
-            <Button variant='primary' onClick={::this.continue}>
+            <Button onClick={::this.continue}>
               Next
             </Button>
           </div>

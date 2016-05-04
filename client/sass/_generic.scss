@@ -27,7 +27,7 @@ div.checkbox {
 }
 
 label {
-  transition: 0.15s ease-out;
+  transition: .15s ease-out;
 }
 
 a:focus {
@@ -77,15 +77,8 @@ a:focus {
   flex-direction: row;
   justify-content: flex-end;
 
-  margin-bottom: 20px;
-
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0;
+  > :first-child {
     flex: 1;
-  }
-
-  .back {
-    margin-right: 10px;
   }
 }
 
