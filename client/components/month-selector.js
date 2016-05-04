@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import Card from 'components/card';
 import Button from 'components/button';
+import Icon from 'components/icon';
 
 import styles from 'sass/components/month-selector.scss';
 
@@ -34,7 +35,7 @@ export default class MonthSelector extends Component {
           color='default'
           flat
         >
-          <i className='fa fa-chevron-left'/>
+          <Icon type='chevron left'/>
         </Button>
 
         <div className='current'>{periods.current.format('MMMM YYYY')}</div>
@@ -45,7 +46,7 @@ export default class MonthSelector extends Component {
           color='default'
           flat
         >
-          <i className='fa fa-chevron-right'/>
+          <Icon type='chevron right'/>
         </Button>
       </Card>
     );

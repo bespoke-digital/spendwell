@@ -32,7 +32,6 @@ export default class Button extends Component {
     flat: true,
     plain: false,
     propagateClick: false,
-    loading: false,
     type: 'button',
   };
 
