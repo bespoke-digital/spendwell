@@ -11,9 +11,9 @@ $goal: color('deep-orange', '500');
 $bill: color('amber', '500');
 $label: $accent;
 
-$brand-success: $primary;
-$brand-danger: color('red', '500');
-$brand-warn: $accent;
+$success: $primary;
+$danger: color('red', '500');
+$warn: color('amber', '500');
 
 $appbar-height: 64px;
 $nav-width-desktop: 230px;
@@ -43,6 +43,9 @@ $container-lg: (1140px + $grid-gutter-width);
 
 
 $brand-primary: $primary;
+$brand-success: $success;
+$brand-danger: $danger;
+$brand-warn: $warn;
 $mui-primary-color: $primary;
 $mui-accent-color: $accent;
 $mui-danger-color: $brand-danger;

@@ -93,8 +93,12 @@
     }
   }
 
-  &:not(.mui-btn--fab) > .icon {
-    height: 36px;
-    line-height: 36px;
+  &:not(.mui-btn--fab) {
+    padding: 0 16px;
+
+    > .icon {
+      height: 36px;
+      line-height: 36px;
+    }
   }
 }

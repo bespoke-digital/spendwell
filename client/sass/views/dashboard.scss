@@ -11,17 +11,17 @@
     position: relative;
 
     &.bucket, &.goal {
-      border-right: 2px solid $brand-success;
+      border-right: 2px solid $success;
     }
 
     &.bucket-danger,
     &.goal-danger {
-      border-right-color: $brand-danger;
+      border-right-color: $danger;
     }
 
     &.bucket-warn,
     &.goal-warn {
-      border-right-color: $brand-warn;
+      border-right-color: $warn;
     }
 
     &.goal .icon > div {
