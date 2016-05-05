@@ -77,6 +77,12 @@
         color: white;
       }
 
+      .icon > img {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+      }
+
       > :nth-child(2) {
         flex: 1;
         margin-left: 16px;

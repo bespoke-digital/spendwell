@@ -16,6 +16,7 @@ class BucketNode(SWNode):
     transactions = TransactionConnectionField(TransactionNode)
     filters = filter_list_schema(TransactionFilter, name='BucketFilters', input=False)
     type = graphene.Field(graphene.String())
+    avatar = graphene.Field(graphene.String())
 
     class Meta:
         model = Bucket
@@ -35,6 +36,10 @@ class BucketNode(SWNode):
             namedtuple('Filter', filter.keys())(**filter)
             for filter in self.instance.filters
         ]
+
+    def resolve_avatar(self, args, info):
+        if self.instance.avatar:
+            return self.instance.avatar.url
 
 
 class BucketsQuery(graphene.ObjectType):

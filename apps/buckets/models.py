@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
-from apps.core.models import SWModel, SWManager
+from apps.core.models import SWModel
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -22,6 +22,8 @@ class Bucket(SWModel):
         ('bill', 'Bill'),
         ('account', 'External Account'),
     ))
+
+    avatar = models.ImageField(upload_to='buckets/bucket/avatar', blank=True, null=True)
 
     def __str__(self):
         return self.name

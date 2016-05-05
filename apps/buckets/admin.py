@@ -11,8 +11,9 @@ class BucketAdmin(admin.ModelAdmin):
     fields = (
         'owner',
         'name',
-        'filters',
+        '_filters',
         'type',
+        'avatar',
     )
 
 admin_site.register(Bucket, BucketAdmin)
