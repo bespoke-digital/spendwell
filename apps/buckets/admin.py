@@ -6,7 +6,8 @@ from .models import Bucket
 
 
 class BucketAdmin(admin.ModelAdmin):
-    list_displat = ('name', 'owner')
+    list_display = ('name', 'owner')
+    search_fields = ('name',)
     readonly_fields = ('owner',)
     fields = (
         'owner',
