@@ -151,14 +151,14 @@
   }
 
   .goal-fab .btn {
-    background-color: $goal;
+    @include button-variant(white, $goal);
   }
 
   .bill-fab .btn {
-    background-color: $bill;
+    @include button-variant(white, $bill);
   }
 
   .label-fab .btn {
-    background-color: $label;
+    @include button-variant(white, $label);
   }
 }

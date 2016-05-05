@@ -33,6 +33,7 @@
   .primary {
     .icon {
       transition: 200ms ease-in-out;
+      transform: rotate(180deg);
     }
 
     .icon.initial {
