@@ -10,7 +10,7 @@
   .month-list .card {
     position: relative;
 
-    &.bucket, &.goal {
+    &.bucket, &.bill, &.goal {
       border-right: 2px solid $success;
     }
 
