@@ -51,7 +51,13 @@ class BillMonth extends Component {
           } ${className}`}
           summary={
             <div>
-              <div className='icon'><div>{bucketMonth.bucket.name[0]}</div></div>
+              <div className='icon'>
+                {bucketMonth.bucket.avatar ?
+                  <img src={bucketMonth.bucket.avatar} alt={bucketMonth.bucket.name}/>
+                :
+                  <div>{bucketMonth.bucket.name[0]}</div>
+                }
+              </div>
               <div>{bucketMonth.bucket.name}</div>
               <div className='amount avg'>
                 {bucketMonth.avgAmount ?
@@ -115,6 +121,7 @@ BillMonth = Relay.createContainer(BillMonth, {
         bucket {
           id
           name
+          avatar
         }
 
         transactions(first: $transactionCount) @include(if: $open) {
