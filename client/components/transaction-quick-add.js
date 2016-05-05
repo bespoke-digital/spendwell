@@ -106,7 +106,7 @@ class TransactionQuickAdd extends Component {
         this.setState({ loading: false, searchValue: '' });
         relay.setVariables({ searchValue: '' });
 
-        relay.forceReload();
+        relay.forceFetch();
       },
     });
   }
