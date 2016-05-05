@@ -24,15 +24,11 @@ class Bucket extends Component {
       return this.render404();
 
     return (
-      <App viewer={viewer} back={true}>
+      <App viewer={viewer} back={true} title={viewer.bucket.name}>
         <ScrollTrigger
           className={`container ${styles.root}`}
           onTrigger={::this.loadTransactions}
         >
-          <div className='heading'>
-            <h1>{viewer.bucket.name}</h1>
-          </div>
-
           <TransactionList
             viewer={viewer}
             transactions={viewer.bucket.transactions}
