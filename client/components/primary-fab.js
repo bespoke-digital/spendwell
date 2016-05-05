@@ -5,7 +5,9 @@ import { Component, PropTypes } from 'react';
 import Button from 'components/button';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
+import ClickOff from 'components/click-off';
 
+import isMobile from 'utils/is-mobile';
 import styles from 'sass/components/primary-fab.scss';
 
 
@@ -30,25 +32,33 @@ export default class PrimaryFab extends Component {
     open: false,
   };
 
+  handleOpen() {
+    this.setState({ open: true });
+  }
+
   render() {
     const { className, icon, actions } = this.props;
     const { open } = this.state;
 
-    const defaultAction = _.find(actions, 'default');
+    const defaultAction = _.find(actions, (a)=> a.default);
     const otherActions = _.filter(actions, (a)=> !a.default);
 
     return (
-      <div className={`
-        primary-fab
-        ${styles.root}
-        ${open ? 'primary-fab-open' : ''}
-        ${className}
-      `}>
+      <div
+        onClickOff={()=> this.setState({ open: false })}
+        className={`
+          primary-fab
+          ${styles.root}
+          ${open ? 'primary-fab-open' : ''}
+          ${className}
+        `}
+      >
         {defaultAction.label ?
-          <Tooltip className='default-tooltip'>{defaultAction.label}</Tooltip>
+          <Tooltip className='default'>{defaultAction.label}</Tooltip>
         : null}
+
         <Button
-          onClick={defaultAction.onClick}
+          onClick={isMobile() && !open ? ::this.handleOpen : defaultAction.onClick}
           className={`primary ${defaultAction.className || ''}`}
           color='accent'
           fab
@@ -65,6 +75,10 @@ export default class PrimaryFab extends Component {
             </div>
           )}
         </div>
+
+        {open ?
+          <div className='overlay' onClick={()=> this.setState({ open: false })}/>
+        : null}
       </div>
     );
   }

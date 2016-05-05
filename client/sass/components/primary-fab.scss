@@ -3,24 +3,23 @@
 @import '../depth';
 
 :local(.root) {
+  $padding-right-left: 10px;
+  $padding-bottom: 20px;
+
   position: fixed;
-
-  @media (max-width: $screen-xs-max) {
-    bottom: 32px;
-    right: 32px;
-  }
-
-  @media (min-width: $screen-sm-min) {
-    bottom: 100px;
-    right: 100px;
-  }
+  padding: 0 $padding-right-left $padding-bottom;
+  overflow: hidden;
+  right: 32px - $padding-right-left;
+  bottom: 32px - $padding-bottom;
 
   .btn,
   .tooltip {
     @extend .depth-z3;
+    z-index: 1;
+    transition-timing-function: ease-in-out;
   }
 
-  .default-tooltip {
+  .tooltip {
     position: absolute;
     right: calc(100% + 17px);
     top: 50%;
@@ -28,12 +27,16 @@
 
     opacity: 0;
     transition: opacity 500ms;
+
+    &.default {
+      right: calc(100% + #{17px - $padding-right-left});
+      top: calc(50% - #{$padding-bottom / 2});
+    }
   }
 
   .primary {
     .icon {
       transition: 200ms ease-in-out;
-      transform: rotate(180deg);
     }
 
     .icon.initial {
@@ -42,12 +45,13 @@
 
     .icon:not(.initial) {
       opacity: 0;
+      transform: rotate(180deg);
     }
   }
 
   .actions {
     position: absolute;
-    bottom: 55px;
+    bottom: 55px + $padding-bottom;
 
     .action {
       position: relative;
@@ -56,21 +60,6 @@
       margin-bottom: 16px;
 
       text-align: center;
-
-      .tooltip,
-      .btn {
-        transition-timing-function: ease-in-out;
-      }
-
-      .tooltip {
-        position: absolute;
-        right: calc(100% + 17px);
-        top: 50%;
-        transform: translateY(-50%);
-
-        opacity: 0;
-        transition: opacity 500ms;
-      }
 
       .btn {
         display: inline-block;
@@ -86,31 +75,33 @@
     }
   }
 
+  .overlay {
+    z-index: 0;
+    background-color: white;
+  }
+
   @mixin hover {
-    .default-tooltip {
+    overflow: visible;
+
+    .tooltip {
       opacity: 1;
+      transition: opacity 500ms 100ms;
     }
 
     .primary {
-      .icon {
-        transform: rotate(360deg);
-      }
-
       .icon.initial {
         opacity: 0;
+        transform: rotate(180deg);
       }
 
       .icon:not(.initial) {
         opacity: 1;
+        transform: rotate(360deg);
       }
     }
 
     .actions {
       .action {
-        .tooltip {
-          opacity: 1;
-          transition: opacity 500ms 100ms;
-        }
 
         .btn {
           height: 40px;
