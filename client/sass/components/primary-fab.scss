@@ -20,9 +20,27 @@
     @extend .depth-z3;
   }
 
-  &.primary-fab-rotate > .primary {
+  .default-tooltip {
+    position: absolute;
+    right: calc(100% + 17px);
+    top: 50%;
+    transform: translateY(-50%);
+
+    opacity: 0;
+    transition: opacity 500ms;
+  }
+
+  .primary {
     .icon {
       transition: 200ms ease-in-out;
+    }
+
+    .icon.initial {
+      opacity: 1;
+    }
+
+    .icon:not(.initial) {
+      opacity: 0;
     }
   }
 
@@ -68,9 +86,21 @@
   }
 
   @mixin hover {
-    &.primary-fab-rotate > .primary {
+    .default-tooltip {
+      opacity: 1;
+    }
+
+    .primary {
       .icon {
-        transform: rotate(45deg);
+        transform: rotate(360deg);
+      }
+
+      .icon.initial {
+        opacity: 0;
+      }
+
+      .icon:not(.initial) {
+        opacity: 1;
       }
     }
 

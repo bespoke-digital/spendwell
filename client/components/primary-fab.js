@@ -1,4 +1,5 @@
 
+import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 
 import Button from 'components/button';
@@ -17,13 +18,11 @@ export default class PrimaryFab extends Component {
       className: PropTypes.string,
     })).isRequired,
     icon: PropTypes.string,
-    rotate: PropTypes.bool,
     className: PropTypes.string,
   };
 
   static defaultProps = {
     icon: 'add',
-    rotate: true,
     className: '',
   };
 
@@ -32,29 +31,35 @@ export default class PrimaryFab extends Component {
   };
 
   render() {
-    const { className, rotate, icon, actions } = this.props;
+    const { className, icon, actions } = this.props;
     const { open } = this.state;
+
+    const defaultAction = _.find(actions, 'default');
+    const otherActions = _.filter(actions, (a)=> !a.default);
 
     return (
       <div className={`
         primary-fab
         ${styles.root}
-        ${rotate ? 'primary-fab-rotate' : ''}
         ${open ? 'primary-fab-open' : ''}
-        ${className ? className : ''}
+        ${className}
       `}>
+        {defaultAction.label ?
+          <Tooltip className='default-tooltip'>{defaultAction.label}</Tooltip>
+        : null}
         <Button
-          onClick={()=> this.setState({ open: !open })}
-          className='primary'
+          onClick={defaultAction.onClick}
+          className={`primary ${defaultAction.className || ''}`}
           color='accent'
           fab
         >
-          <Icon type={icon} color='light'/>
+          <Icon type={icon} color='light' className='initial'/>
+          {defaultAction.icon}
         </Button>
 
         <div className='actions'>
-          {actions.map(({ label, onClick, icon, className }, index)=>
-            <div className={`action ${className ? className : ''}`} key={index}>
+          {otherActions.map(({ label, onClick, icon, className }, index)=>
+            <div className={`action ${className || ''}`} key={index}>
               {label ? <Tooltip>{label}</Tooltip> : null}
               <Button onClick={onClick} color='primary' fab>{icon}</Button>
             </div>
