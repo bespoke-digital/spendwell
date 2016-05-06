@@ -71,4 +71,20 @@
       }
     }
   }
+
+  .chatlio-btn {
+    float: right;
+    margin-right: 32px;
+
+    .icon {
+      height: $appbar-height;
+      line-height: $appbar-height;
+    }
+
+    &.open {
+      .icon {
+        color: rgba(black, .5);
+      }
+    }
+  }
 }

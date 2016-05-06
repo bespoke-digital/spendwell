@@ -80,38 +80,36 @@ class UpdateBucket extends Component {
         back={true}
         onOverlayClose={()=> this.setState({ confirmDelete: false })}
         title={`Edit ${viewer.bucket.name}`}
+        className={styles.root}
       >
-        <div className={`container ${styles.root}`}>
+        {confirmDelete ?
+          <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
+            <div className='body'>
+              Are you sure you'd like to perminantly delete {viewer.bucket.name}?
+            </div>
+            <div className='actions'>
+              <Button
+                onClick={()=> this.setState({ confirmDelete: false })}
+                flat
+              >Cancel</Button>
+              <Button
+                onClick={::this.deleteBucket}
+                loading={deleteLoading}
+                variant='danger'
+                flat
+              >Delete</Button>
+            </div>
+          </Dialog>
+        : null}
 
-          {confirmDelete ?
-            <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
-              <div className='body'>
-                Are you sure you'd like to perminantly delete {viewer.bucket.name}?
-              </div>
-              <div className='actions'>
-                <Button
-                  onClick={()=> this.setState({ confirmDelete: false })}
-                  flat
-                >Cancel</Button>
-                <Button
-                  onClick={::this.deleteBucket}
-                  loading={deleteLoading}
-                  variant='danger'
-                  flat
-                >Delete</Button>
-              </div>
-            </Dialog>
-          : null}
-
-          <BucketForm
-            viewer={viewer}
-            bucket={viewer.bucket}
-            onSubmit={::this.updateBucket}
-            onDelete={()=> this.setState({ confirmDelete: true })}
-            onCancel={()=> browserHistory.goBack()}
-            loading={updateLoading}
-          />
-        </div>
+        <BucketForm
+          viewer={viewer}
+          bucket={viewer.bucket}
+          onSubmit={::this.updateBucket}
+          onDelete={()=> this.setState({ confirmDelete: true })}
+          onCancel={()=> browserHistory.goBack()}
+          loading={updateLoading}
+        />
       </App>
     );
   }

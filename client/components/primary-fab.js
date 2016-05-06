@@ -1,17 +1,17 @@
 
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import Button from 'components/button';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
-import ClickOff from 'components/click-off';
 
 import isMobile from 'utils/is-mobile';
 import styles from 'sass/components/primary-fab.scss';
 
 
-export default class PrimaryFab extends Component {
+class PrimaryFab extends Component {
   static propTypes = {
     actions: PropTypes.arrayOf(PropTypes.shape({
       onClick: PropTypes.func.isRequired,
@@ -19,6 +19,7 @@ export default class PrimaryFab extends Component {
       label: PropTypes.string,
       className: PropTypes.string,
     })).isRequired,
+    chatlioOpen: PropTypes.bool.isRequired,
     icon: PropTypes.string,
     className: PropTypes.string,
   };
@@ -37,7 +38,7 @@ export default class PrimaryFab extends Component {
   }
 
   render() {
-    const { className, icon, actions } = this.props;
+    const { className, icon, actions, chatlioOpen } = this.props;
     const { open } = this.state;
 
     const defaultAction = _.find(actions, (a)=> a.default);
@@ -50,6 +51,7 @@ export default class PrimaryFab extends Component {
           primary-fab
           ${styles.root}
           ${open ? 'primary-fab-open' : ''}
+          ${chatlioOpen ? 'chatlio-open' : ''}
           ${className}
         `}
       >
@@ -83,3 +85,10 @@ export default class PrimaryFab extends Component {
     );
   }
 }
+
+
+PrimaryFab = connect((state)=> ({
+  chatlioOpen: state.chatlioOpen,
+}))(PrimaryFab);
+
+export default PrimaryFab;

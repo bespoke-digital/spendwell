@@ -33,7 +33,6 @@ class AddAccountView extends Component {
 
     return (
       <Onboarding viewer={viewer}>
-
         <Transition show={!!(help && !hasInstitutions)}>
           <GraphicDialog
             scheme='green'
@@ -50,7 +49,7 @@ class AddAccountView extends Component {
           />
         </Transition>
 
-        <div className={`container skinny ${style.root}`}>
+        <div className={style.root}>
           <Row>
             <Col md='8' className={`connect ${connectStyles.root}`}>
               <div className='heading'>

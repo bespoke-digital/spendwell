@@ -19,27 +19,14 @@ $appbar-height: 64px;
 $nav-width-desktop: 230px;
 
 
+$screen-sm: 860px;
 $screen-xs: 480px;
+
 $screen-xs-min: $screen-xs;
-
-$screen-sm: 768px;
 $screen-sm-min: $screen-sm;
-
-$screen-md: 992px;
-$screen-md-min: $screen-md;
-
-$screen-lg: 1200px;
-$screen-lg-min: $screen-lg;
-
 $screen-xs-max: ($screen-sm-min - 1);
-$screen-sm-max: ($screen-md-min - 1);
-$screen-md-max: ($screen-lg-min - 1);
 
-$grid-gutter-width: 30px;
-
-$container-sm: (720px + $grid-gutter-width);
-$container-md: (940px + $grid-gutter-width);
-$container-lg: (1140px + $grid-gutter-width);
+$grid-gutter-width: 24px;
 
 
 $brand-primary: $primary;

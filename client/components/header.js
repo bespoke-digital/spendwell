@@ -5,7 +5,9 @@ import { browserHistory } from 'react-router';
 
 import OnboardProgress from 'components/onboard-progress';
 import Icon from 'components/icon';
+import A from 'components/a';
 
+import store from 'store';
 import style from 'sass/components/header';
 
 
@@ -15,6 +17,7 @@ class Header extends Component {
     toggleNav: PropTypes.func,
     plain: PropTypes.bool,
     back: PropTypes.bool,
+    chatlioOpen: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -34,8 +37,19 @@ class Header extends Component {
     browserHistory.goBack();
   }
 
+  handleChatlio() {
+    const { chatlioOpen } = this.props;
+    const expanded = !chatlioOpen;
+
+    window._chatlio.show({ expanded });
+    if (expanded)
+      store.dispatch({ type: 'CHATLIO_OPEN' });
+    else
+      store.dispatch({ type: 'CHATLIO_CLOSED' });
+  }
+
   render() {
-    const { viewer, back, plain, title } = this.props;
+    const { viewer, back, plain, title, chatlioOpen } = this.props;
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
@@ -54,6 +68,12 @@ class Header extends Component {
         : null}
 
         <div className='title'>{title}</div>
+
+        <A
+          onClick={::this.handleChatlio}
+          className={`chatlio-btn ${chatlioOpen ? 'open' : ''}`}
+          plain
+        ><Icon type='chat' color='light'/></A>
 
         {!plain ? <OnboardProgress viewer={viewer}/> : null}
       </nav>

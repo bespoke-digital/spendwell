@@ -60,33 +60,36 @@ class CreateBucket extends Component {
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} back={true} title={type === 'expense' ? 'New Label' : 'New Bill'}>
-        <div className={`container ${styles.root}`}>
-          {(type === 'expense' && viewer.settings.createLabelHelp) || (type === 'bill' && viewer.settings.createBillHelp) ?
-            <CardList>
-              <Card>
-                {type === 'expense' ? `
-                  Labels are for tracking spending. We'll show you your average spend
-                  and if you're on track to be over or under.
-                ` : `
-                  Bills are for monthly recurring expenses. We'll track if the bill has been
-                  paid and take unpaid bills out of safe-to-spend.
-                `}
-                <TextActions>
-                  <A onClick={::this.dismissHelp}>Dismiss</A>
-                </TextActions>
-              </Card>
-            </CardList>
-          : null}
+      <App
+        viewer={viewer}
+        back={true}
+        title={type === 'expense' ? 'New Label' : 'New Bill'}
+        className={styles.root}
+      >
+        {(type === 'expense' && viewer.settings.createLabelHelp) || (type === 'bill' && viewer.settings.createBillHelp) ?
+          <CardList>
+            <Card>
+              {type === 'expense' ? `
+                Labels are for tracking spending. We'll show you your average spend
+                and if you're on track to be over or under.
+              ` : `
+                Bills are for monthly recurring expenses. We'll track if the bill has been
+                paid and take unpaid bills out of safe-to-spend.
+              `}
+              <TextActions>
+                <A onClick={::this.dismissHelp}>Dismiss</A>
+              </TextActions>
+            </Card>
+          </CardList>
+        : null}
 
-          <BucketForm
-            onSubmit={::this.handleSubmit}
-            onCancel={()=> browserHistory.goBack()}
-            viewer={viewer}
-            bucket={null}
-            loading={loading}
-          />
-        </div>
+        <BucketForm
+          onSubmit={::this.handleSubmit}
+          onCancel={()=> browserHistory.goBack()}
+          viewer={viewer}
+          bucket={null}
+          loading={loading}
+        />
       </App>
     );
   }

@@ -9,8 +9,8 @@
   position: fixed;
   padding: 0 $padding-right-left $padding-bottom;
   overflow: hidden;
-  right: 32px - $padding-right-left;
-  bottom: 32px - $padding-bottom;
+  right: 23px - $padding-right-left;
+  bottom: 23px - $padding-bottom;
 
   .btn,
   .tooltip {
@@ -102,7 +102,6 @@
 
     .actions {
       .action {
-
         .btn {
           height: 40px;
           width: 40px;
@@ -124,5 +123,9 @@
     &:hover {
       @include hover;
     }
+  }
+
+  &.chatlio-open {
+    right: 23px - $padding-right-left + 300px;
   }
 }

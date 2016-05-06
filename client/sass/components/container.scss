@@ -1,0 +1,11 @@
+
+@import '../variables';
+
+:local(.root) {
+  padding: 32px;
+  margin: auto;
+
+  @media (min-width: $screen-sm-min) {
+    max-width: 970px;
+  }
+}

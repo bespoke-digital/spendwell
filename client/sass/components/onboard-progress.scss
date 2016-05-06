@@ -5,18 +5,16 @@
 
 
 :local(.root) {
-  position: relative;
+  float: right;
+  margin-right: 32px;
 
   @media (max-width: $screen-xs-max) {
-    width: 30vw;
-    float: right;
-    margin-right: 32px;
+    width: 20vw;
   }
 
   @media (min-width: $screen-sm-min) {
+    position: relative;
     width: 280px;
-    float: right;
-    margin-right: 32px;
   }
 
   .appbar-container {
@@ -104,7 +102,7 @@
 
     @media (max-width: $screen-xs-max) {
       top: $appbar-height - 10px;
-      right: 0;
+      left: 10vw;
       width: 80vw;
     }
 

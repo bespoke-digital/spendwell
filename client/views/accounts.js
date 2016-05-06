@@ -22,47 +22,45 @@ class Accounts extends Component {
     const { viewer } = this.props;
 
     return (
-      <App viewer={viewer} title='Accounts'>
-        <div className={`container ${styles.root}`}>
-          {viewer.institutions.edges.map(({ node })=>
-            <Institution
-              key={node.id}
-              viewer={viewer}
-              institution={node}
-              isAdmin={viewer.isAdmin}
-            />
-          )}
+      <App viewer={viewer} title='Accounts' className={`${styles.root}`}>
+        {viewer.institutions.edges.map(({ node })=>
+          <Institution
+            key={node.id}
+            viewer={viewer}
+            institution={node}
+            isAdmin={viewer.isAdmin}
+          />
+        )}
 
-          <CardList>
-            <Card summary={
-              <div>
-                <div><strong>Total</strong></div>
-                <div><Money amount={_.sum(
-                  viewer.institutions.edges,
-                  ({ node })=> node.currentBalance
-                )}/></div>
-              </div>
-            }/>
-          </CardList>
+        <CardList>
+          <Card summary={
+            <div>
+              <div><strong>Total</strong></div>
+              <div><Money amount={_.sum(
+                viewer.institutions.edges,
+                ({ node })=> node.currentBalance
+              )}/></div>
+            </div>
+          }/>
+        </CardList>
 
-          <ListHeading>External Accounts</ListHeading>
+        <ListHeading>External Accounts</ListHeading>
 
-          <ExternalAccounts viewer={viewer}/>
+        <ExternalAccounts viewer={viewer}/>
 
-          <PrimaryFab actions={[
-            {
-              label: 'New External Account',
-              icon: <Icon type='open in new' color='light'/>,
-              onClick: ()=> browserHistory.push('/app/accounts/new/external'),
-            },
-            {
-              default: true,
-              label: 'New Bank',
-              icon: <Icon type='account balance' color='light'/>,
-              onClick: ()=> browserHistory.push('/app/accounts/new'),
-            },
-          ]}/>
-        </div>
+        <PrimaryFab actions={[
+          {
+            label: 'New External Account',
+            icon: <Icon type='open in new' color='light'/>,
+            onClick: ()=> browserHistory.push('/app/accounts/new/external'),
+          },
+          {
+            default: true,
+            label: 'New Bank',
+            icon: <Icon type='account balance' color='light'/>,
+            onClick: ()=> browserHistory.push('/app/accounts/new'),
+          },
+        ]}/>
       </App>
     );
   }

@@ -13,28 +13,22 @@ class CreateGoal extends Component {
     const { viewer } = this.props;
 
     return (
-      <App viewer={viewer} back={true}>
-        <div className='container'>
-          <div className='heading'>
-            <h1>{viewer.goal.name}</h1>
-          </div>
-
-          {viewer.goal.months.edges.map(({ node })=>
-            <Card key={node.id}>
-              <div><strong>
-                {moment(node.monthStart).asUtc().format('MMMM YYYY')}
-              </strong></div>
-              <div>
-                <strong>{'target: '}</strong>
-                <Money amount={node.targetAmount}/>
-              </div>
-              <div>
-                <strong>{'filled: '}</strong>
-                <Money amount={node.filledAmount}/>
-              </div>
-            </Card>
-          )}
-        </div>
+      <App viewer={viewer} back={true} title={viewer.goal.name}>
+        {viewer.goal.months.edges.map(({ node })=>
+          <Card key={node.id}>
+            <div><strong>
+              {moment(node.monthStart).asUtc().format('MMMM YYYY')}
+            </strong></div>
+            <div>
+              <strong>{'target: '}</strong>
+              <Money amount={node.targetAmount}/>
+            </div>
+            <div>
+              <strong>{'filled: '}</strong>
+              <Money amount={node.filledAmount}/>
+            </div>
+          </Card>
+        )}
       </App>
     );
   }

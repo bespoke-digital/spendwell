@@ -50,32 +50,30 @@ class AccountUpload extends Component {
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} title={`Upload CSV for ${viewer.account.name}`}>
-        <div className={`container ${styles.root}`}>
-          <CardList>
-            <Card loading={loading}>
-              <TextActions>
-                <A onClick={()=> this.refs.fileInput.click()}>Upload CSV</A>
-              </TextActions>
-            </Card>
-          </CardList>
+      <App viewer={viewer} title={`Upload CSV for ${viewer.account.name}`} className={styles.root}>
+        <CardList>
+          <Card loading={loading}>
+            <TextActions>
+              <A onClick={()=> this.refs.fileInput.click()}>Upload CSV</A>
+            </TextActions>
+          </Card>
+        </CardList>
 
-          <input
-            type='file'
-            ref='fileInput'
-            onChange={::this.handleFileUpload}
-            style={{ display: 'none' }}
-          />
+        <input
+          type='file'
+          ref='fileInput'
+          onChange={::this.handleFileUpload}
+          style={{ display: 'none' }}
+        />
 
-          {viewer.account.transactions ?
-            <ListHeading>Uploaded Transactions</ListHeading>
-          : null}
-          <TransactionList
-            transactions={viewer.account.transactions}
-            viewer={viewer}
-            months
-          />
-        </div>
+        {viewer.account.transactions ?
+          <ListHeading>Uploaded Transactions</ListHeading>
+        : null}
+        <TransactionList
+          transactions={viewer.account.transactions}
+          viewer={viewer}
+          months
+        />
       </App>
     );
   }

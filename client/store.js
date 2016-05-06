@@ -6,6 +6,7 @@ import { createStore } from 'redux';
 const defaultState = {
   loading: 0,
   toasts: [],
+  chatlioOpen: false,
 };
 
 function reducer(state = defaultState, action) {
@@ -29,6 +30,16 @@ function reducer(state = defaultState, action) {
     return {
       ...state,
       toasts: _.without(state.toasts, action.toast),
+    };
+  case 'CHATLIO_OPEN':
+    return {
+      ...state,
+      chatlioOpen: true,
+    };
+  case 'CHATLIO_CLOSED':
+    return {
+      ...state,
+      chatlioOpen: false,
     };
   default:
     return state;

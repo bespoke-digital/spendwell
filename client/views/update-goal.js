@@ -61,28 +61,26 @@ class UpdateGoal extends Component {
 
     return (
       <App viewer={viewer} back={true} title={`Edit ${viewer.goal.name}`}>
-        <div className='container'>
-          {confirmDelete ?
-            <Dialog size='sm'>
-              <div className='body'>
-                Are you sure? You can't take it back.
-              </div>
-              <div className='actions'>
-                <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
-                <Button onClick={::this.deleteGoal} variant='danger'>Delete</Button>
-              </div>
-            </Dialog>
-          : null}
+        {confirmDelete ?
+          <Dialog size='sm'>
+            <div className='body'>
+              Are you sure? You can't take it back.
+            </div>
+            <div className='actions'>
+              <Button onClick={()=> this.setState({ confirmDelete: false })}>Cancel</Button>
+              <Button onClick={::this.deleteGoal} variant='danger'>Delete</Button>
+            </div>
+          </Dialog>
+        : null}
 
-          <GoalForm
-            viewer={viewer}
-            goal={viewer.goal}
-            onSubmit={::this.updateGoal}
-            onDelete={()=> this.setState({ confirmDelete: true })}
-            onCancel={()=> browserHistory.goBack()}
-            loading={loading}
-          />
-        </div>
+        <GoalForm
+          viewer={viewer}
+          goal={viewer.goal}
+          onSubmit={::this.updateGoal}
+          onDelete={()=> this.setState({ confirmDelete: true })}
+          onCancel={()=> browserHistory.goBack()}
+          loading={loading}
+        />
       </App>
     );
   }

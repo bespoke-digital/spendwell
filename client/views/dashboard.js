@@ -97,154 +97,152 @@ class Dashboard extends Component {
     const bucketTotal = _.sum(bucketMonths, 'amount');
 
     return (
-      <App viewer={viewer} title='Dashboard'>
-        <div className={`container ${styles.root}`}>
-          <DashboardSummary
-            viewer={viewer}
-            summary={viewer.summary}
-            periods={periods}
-          />
+      <App viewer={viewer} title='Dashboard' className={styles.root}>
+        <DashboardSummary
+          viewer={viewer}
+          summary={viewer.summary}
+          periods={periods}
+        />
 
-          {goalMonths.length > 0 ?
-            <CardList className='month-list'>
-              <ListHeading>
-                Goals <small> for long and short term savings</small>
-              </ListHeading>
+        {goalMonths.length > 0 ?
+          <CardList className='month-list'>
+            <ListHeading>
+              Goals <small> for long and short term savings</small>
+            </ListHeading>
 
-              <Card className='card-list-heading'>
-                <div></div>
-                <div className='amount'>Target</div>
-                <div className='amount'>Funded</div>
-              </Card>
+            <Card className='card-list-heading'>
+              <div></div>
+              <div className='amount'>Target</div>
+              <div className='amount'>Funded</div>
+            </Card>
 
-              {goalMonths.map((node)=>
-                <GoalMonth
-                  key={node.id}
-                  goalMonth={node}
-                  selected={selected === node.id}
-                  onClick={this.select.bind(this, node.id)}
-                  className='month'
-                />
-              )}
-
-              <Card className='card-list-heading'>
-                <div><strong>Total</strong></div>
-                <div className='amount avg'>
-                  <Money amount={goalTargetTotal} abs={true}/>
-                </div>
-                <div className='amount'>
-                  <Money amount={goalFilledTotal} abs={true}/>
-                </div>
-              </Card>
-            </CardList>
-          : null}
-
-          {spentFromSavings > 0 ?
-            <CardList>
-              <SpentFromSavings
-                viewer={viewer}
-                summary={viewer.summary}
-                month={periods.current}
-                selected={selected === 'spentFromSavings'}
-                onClick={this.select.bind(this, 'spentFromSavings')}
+            {goalMonths.map((node)=>
+              <GoalMonth
+                key={node.id}
+                goalMonth={node}
+                selected={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+                className='month'
               />
-            </CardList>
-          : null}
+            )}
 
-          {billMonths.length > 0 ?
-            <CardList className='month-list'>
-              <ListHeading>
-                Bills <small> for monthly recurring expenses</small>
-              </ListHeading>
+            <Card className='card-list-heading'>
+              <div><strong>Total</strong></div>
+              <div className='amount avg'>
+                <Money amount={goalTargetTotal} abs={true}/>
+              </div>
+              <div className='amount'>
+                <Money amount={goalFilledTotal} abs={true}/>
+              </div>
+            </Card>
+          </CardList>
+        : null}
 
-              <Card className='card-list-heading'>
-                <div></div>
-                <div className='amount'>Average</div>
-                <div className='amount'>Spent</div>
-              </Card>
+        {spentFromSavings > 0 ?
+          <CardList>
+            <SpentFromSavings
+              viewer={viewer}
+              summary={viewer.summary}
+              month={periods.current}
+              selected={selected === 'spentFromSavings'}
+              onClick={this.select.bind(this, 'spentFromSavings')}
+            />
+          </CardList>
+        : null}
 
-              {billMonths.map((node)=>
-                <BillMonth
-                  key={node.id}
-                  viewer={viewer}
-                  bucketMonth={node}
-                  month={periods.current}
-                  expanded={selected === node.id}
-                  onClick={this.select.bind(this, node.id)}
-                  className='month'
-                />
-              )}
+        {billMonths.length > 0 ?
+          <CardList className='month-list'>
+            <ListHeading>
+              Bills <small> for monthly recurring expenses</small>
+            </ListHeading>
 
-              <Card className='card-list-heading'>
-                <div><strong>Total</strong></div>
-                <div className='amount avg'>
-                  <Money amount={billAvgTotal} abs={true}/>
-                </div>
-                <div className='amount'>
-                  <Money amount={billTotal} abs={true}/>
-                </div>
-              </Card>
-            </CardList>
-          : null}
+            <Card className='card-list-heading'>
+              <div></div>
+              <div className='amount'>Average</div>
+              <div className='amount'>Spent</div>
+            </Card>
 
-          {bucketMonths.length > 0 ?
-            <CardList className='month-list'>
-              <ListHeading>
-                Labels <small> for tracking spending</small>
-              </ListHeading>
+            {billMonths.map((node)=>
+              <BillMonth
+                key={node.id}
+                viewer={viewer}
+                bucketMonth={node}
+                month={periods.current}
+                expanded={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+                className='month'
+              />
+            )}
 
-              <Card className='card-list-heading'>
-                <div></div>
-                <div className='amount'>Average</div>
-                <div className='amount'>Spent</div>
-              </Card>
+            <Card className='card-list-heading'>
+              <div><strong>Total</strong></div>
+              <div className='amount avg'>
+                <Money amount={billAvgTotal} abs={true}/>
+              </div>
+              <div className='amount'>
+                <Money amount={billTotal} abs={true}/>
+              </div>
+            </Card>
+          </CardList>
+        : null}
 
-              {bucketMonths.map((node)=>
-                <BucketMonth
-                  key={node.id}
-                  viewer={viewer}
-                  bucketMonth={node}
-                  month={periods.current}
-                  expanded={selected === node.id}
-                  onClick={this.select.bind(this, node.id)}
-                  className='month'
-                />
-              )}
+        {bucketMonths.length > 0 ?
+          <CardList className='month-list'>
+            <ListHeading>
+              Labels <small> for tracking spending</small>
+            </ListHeading>
 
-              <Card className='card-list-heading'>
-                <div><strong>Total</strong></div>
-                <div className='amount avg'>
-                  <Money amount={bucketAvgTotal} abs={true}/>
-                </div>
-                <div className='amount'>
-                  <Money amount={bucketTotal} abs={true}/>
-                </div>
-              </Card>
-            </CardList>
-          : null}
+            <Card className='card-list-heading'>
+              <div></div>
+              <div className='amount'>Average</div>
+              <div className='amount'>Spent</div>
+            </Card>
 
-          <PrimaryFab actions={[
-            {
-              label: 'New Goal',
-              className: 'goal-fab',
-              icon: <Icon type='show chart' color='light'/>,
-              onClick: ()=> browserHistory.push('/app/goals/new'),
-            },
-            {
-              label: 'New Bill',
-              className: 'bill-fab',
-              icon: <Icon type='receipt' color='light'/>,
-              onClick: ()=> browserHistory.push('/app/labels/new/bill'),
-            },
-            {
-              default: true,
-              label: 'New Label',
-              className: 'label-fab',
-              icon: <Icon type='local offer' color='light'/>,
-              onClick: ()=> browserHistory.push('/app/labels/new/expense'),
-            },
-          ]}/>
-        </div>
+            {bucketMonths.map((node)=>
+              <BucketMonth
+                key={node.id}
+                viewer={viewer}
+                bucketMonth={node}
+                month={periods.current}
+                expanded={selected === node.id}
+                onClick={this.select.bind(this, node.id)}
+                className='month'
+              />
+            )}
+
+            <Card className='card-list-heading'>
+              <div><strong>Total</strong></div>
+              <div className='amount avg'>
+                <Money amount={bucketAvgTotal} abs={true}/>
+              </div>
+              <div className='amount'>
+                <Money amount={bucketTotal} abs={true}/>
+              </div>
+            </Card>
+          </CardList>
+        : null}
+
+        <PrimaryFab actions={[
+          {
+            label: 'New Goal',
+            className: 'goal-fab',
+            icon: <Icon type='show chart' color='light'/>,
+            onClick: ()=> browserHistory.push('/app/goals/new'),
+          },
+          {
+            label: 'New Bill',
+            className: 'bill-fab',
+            icon: <Icon type='receipt' color='light'/>,
+            onClick: ()=> browserHistory.push('/app/labels/new/bill'),
+          },
+          {
+            default: true,
+            label: 'New Label',
+            className: 'label-fab',
+            icon: <Icon type='local offer' color='light'/>,
+            onClick: ()=> browserHistory.push('/app/labels/new/expense'),
+          },
+        ]}/>
       </App>
     );
   }

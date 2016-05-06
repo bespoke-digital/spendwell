@@ -24,11 +24,8 @@ class Bucket extends Component {
       return this.render404();
 
     return (
-      <App viewer={viewer} back={true} title={viewer.bucket.name}>
-        <ScrollTrigger
-          className={`container ${styles.root}`}
-          onTrigger={::this.loadTransactions}
-        >
+      <App viewer={viewer} back={true} title={viewer.bucket.name} className={styles.root}>
+        <ScrollTrigger onTrigger={::this.loadTransactions}>
           <TransactionList
             viewer={viewer}
             transactions={viewer.bucket.transactions}
@@ -42,13 +39,7 @@ class Bucket extends Component {
   render404() {
     const { viewer } = this.props;
     return (
-      <App viewer={viewer} back={true}>
-        <div className='container'>
-          <div className='heading'>
-            <h1>Bucket Not Found</h1>
-          </div>
-        </div>
-      </App>
+      <App viewer={viewer} back={true} title='Bucket Not Found'/>
     );
   }
 }

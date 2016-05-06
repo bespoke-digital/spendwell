@@ -16,9 +16,15 @@ import style from 'sass/components/app';
 class App extends Component {
   static propTypes = {
     loading: PropTypes.number.isRequired,
+    chatlioOpen: PropTypes.bool.isRequired,
     title: PropTypes.string,
     onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
+    className: PropTypes.string,
+  };
+
+  static defaultProps = {
+    className: '',
   };
 
   constructor() {
@@ -40,14 +46,20 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, back, loading, toasts, title } = this.props;
+    const { children, viewer, back, loading, toasts, title, chatlioOpen, className } = this.props;
     const { navOpen } = this.state;
 
     return (
-      <div className={style.root}>
+      <div className={`${style.root} ${chatlioOpen ? 'chatlio-open' : ''}`}>
         {loading ? <Progress className='global-loading' indeterminate/> : null}
 
-        <Header toggleNav={::this.toggleNav} viewer={viewer} back={back} title={title}/>
+        <Header
+          toggleNav={::this.toggleNav}
+          viewer={viewer}
+          back={back}
+          title={title}
+          chatlioOpen={chatlioOpen}
+        />
 
         <Nav open={navOpen} toggleNav={::this.toggleNav} viewer={viewer}/>
 
@@ -57,7 +69,7 @@ class App extends Component {
 
         <Toasts toasts={toasts}/>
 
-        <div className='app-children'>
+        <div className={`app-container ${className}`}>
           <InstitutionReauth viewer={viewer}/>
           {children}
         </div>
@@ -69,6 +81,7 @@ class App extends Component {
 App = connect((state)=> ({
   loading: state.loading,
   toasts: state.toasts,
+  chatlioOpen: state.chatlioOpen,
 }))(App);
 
 App = Relay.createContainer(App, {

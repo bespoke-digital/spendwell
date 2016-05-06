@@ -40,21 +40,20 @@ class CreateExternalAccount extends Component {
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} back={true}>
-        <div className={`container ${styles.root}`}>
-          <div className='heading'>
-            <h1>New External Account</h1>
-          </div>
-
-          <BucketForm
-            onSubmit={::this.handleSubmit}
-            onCancel={()=> browserHistory.goBack()}
-            viewer={viewer}
-            bucket={null}
-            loading={loading}
-            type='account'
-          />
-        </div>
+      <App
+        viewer={viewer}
+        back={true}
+        className={styles.root}
+        title='New External Account'
+      >
+        <BucketForm
+          onSubmit={::this.handleSubmit}
+          onCancel={()=> browserHistory.goBack()}
+          viewer={viewer}
+          bucket={null}
+          loading={loading}
+          type='account'
+        />
       </App>
     );
   }

@@ -13,7 +13,7 @@ class Onboarding extends Component {
     return (
       <div className={`${style.root} onboarding`}>
         <OnboradingHeader viewer={viewer} plain/>
-        <div className='app-children'>{children}</div>
+        <div className='app-container'>{children}</div>
       </div>
     );
   }

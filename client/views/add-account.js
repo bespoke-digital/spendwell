@@ -13,12 +13,12 @@ class AddAccountView extends Component {
     const { viewer } = this.props;
 
     return (
-      <App viewer={viewer}>
-        <div className={`container skinny ${styles.root}`}>
-          <h1>Connect Accounts</h1>
-
-          <ConnectAccount viewer={viewer}/>
-        </div>
+      <App
+        viewer={viewer}
+        className={`container skinny ${styles.root}`}
+        title='Connect Accounts'
+      >
+        <ConnectAccount viewer={viewer}/>
       </App>
     );
   }

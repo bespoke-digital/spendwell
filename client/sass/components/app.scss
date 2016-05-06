@@ -2,6 +2,9 @@
 @import '../variables';
 
 :local(.root) {
+  $container-padding: 32px;
+  $container-width: 960px + $nav-width-desktop + ($container-padding * 2);
+
   width: 100%;
   padding-bottom: 160px;
   transition: .5s ease;
@@ -12,20 +15,42 @@
     z-index: 1;
   }
 
-  .app-children {
-    @media (min-width: $screen-sm-min) {
-      padding: 0 0 0 $nav-width-desktop;
+  .app-container {
+    padding: $container-padding;
+    margin: auto;
+
+    @media (max-width: $screen-xs-max) {
+      padding-left: 16px;
+      padding-right: 16px;
     }
 
-    > .container {
-      padding-top: 20px;
+    @media (min-width: $screen-sm-min) {
+      padding-left: $nav-width-desktop + $container-padding;
+      max-width: $container-width;
+    }
+
+    @media (min-width: $screen-sm-min) and (max-width: $container-width + 48px + 55px) {
+      padding-right: 48px + 55px;
     }
   }
 
   &.onboarding {
-    .app-children {
+    .app-container {
       @media (min-width: $screen-sm-min) {
-        padding: 0;
+        max-width: 650px;
+        padding: 24px 0 0;
+      }
+    }
+  }
+
+  &.chatlio-open {
+    @media (min-width: $screen-sm-min) {
+      padding-right: 300px;
+    }
+
+    .app-container {
+      @media (min-width: $screen-sm-min) and (max-width: $container-width + 48px + 55px) {
+        padding-right: 24px;
       }
     }
   }

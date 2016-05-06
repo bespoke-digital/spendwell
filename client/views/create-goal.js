@@ -54,27 +54,25 @@ class CreateGoal extends Component {
     const { loading } = this.state;
 
     return (
-      <App viewer={viewer} back={true} title='Create a Goal'>
-        <div className={`container ${styles.root}`}>
-          {viewer.settings.createGoalHelp ?
-            <CardList>
-              <Card>
-                Goals are for saving. They come out of safe-to-spend at the
-                beginning of the month so you're paying yourself first.
-                <TextActions>
-                  <A onClick={::this.dismissHelp}>Dismiss</A>
-                </TextActions>
-              </Card>
-            </CardList>
-          : null}
+      <App viewer={viewer} back={true} title='Create a Goal' className={styles.root}>
+        {viewer.settings.createGoalHelp ?
+          <CardList>
+            <Card>
+              Goals are for saving. They come out of safe-to-spend at the
+              beginning of the month so you're paying yourself first.
+              <TextActions>
+                <A onClick={::this.dismissHelp}>Dismiss</A>
+              </TextActions>
+            </Card>
+          </CardList>
+        : null}
 
-          <GoalForm
-            onSubmit={::this.handleSubmit}
-            onCancel={()=> browserHistory.goBack()}
-            loading={loading}
-            goal={null}
-          />
-        </div>
+        <GoalForm
+          onSubmit={::this.handleSubmit}
+          onCancel={()=> browserHistory.goBack()}
+          loading={loading}
+          goal={null}
+        />
       </App>
     );
   }
