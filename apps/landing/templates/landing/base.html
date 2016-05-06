@@ -39,10 +39,14 @@
           </ul>
         </div>
         <div class="col-sm-4 hidden-xs">
-          <ul class="list-inline">
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Signup</a></li>
-          </ul>
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'app' %}" class="mui-btn mui-btn--primary">Dashboard</a>
+          {% else %}
+            <ul class="list-inline">
+              <li><a href="{% url 'login' %}">Login</a></li>
+              <li><a href="javascript:;" class="mui-btn mui-btn--primary landing-cta">Signup</a></li>
+            </ul>
+          {% endif %}
         </div>
       </div>
     </div>
