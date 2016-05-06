@@ -1,12 +1,14 @@
 
 @import '../variables';
+@import '../color';
 @import '../depth';
 
 :local(.root) {
 
   .graph-card {
-    position: relative;
     @extend .depth-z1;
+
+    position: relative;
     background-color: white;
     font-size: 20px;
     color: $gray-2;
@@ -30,7 +32,7 @@
   }
 
   .empty-text {
-    padding: 20px 160px 0;
+    padding: 20px 150px 0;
 
     .text-small {
       padding-top: 5px;
@@ -107,12 +109,14 @@
     padding-top: 1px;
   }
 
-  .total-schedule {
-    fill: $brand-primary;
+  .total-schedule,
+  .after-animation .total-schedule {
+    fill: color('amber', '300');
   }
 
-  .principle-schedule {
-    fill: #4caf50;
+  .principle-schedule,
+  .after-animation .principle-schedule {
+    fill: color('green', '500');
   }
 
   .before-animation {
@@ -129,13 +133,11 @@
 
   .after-animation {
     .total-schedule {
-      fill: $brand-primary;
       opacity: 1;
       transition: opacity 1.5s, fill 1.5s;
     }
 
     .principle-schedule {
-      fill: #4caf50;
       opacity: 1;
       transition: opacity 1.5s, fill 1.5s;
     }
