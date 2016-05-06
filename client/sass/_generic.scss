@@ -110,6 +110,11 @@ a:focus {
   line-height: 1.2;
 }
 
+::selection {
+  background: $primary;
+  color: white;
+}
+
 #chatlio-widget .chatlio-widget.closed {
   display: none;
 }
