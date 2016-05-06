@@ -7,7 +7,7 @@
     margin-bottom: 40px;
   }
 
-  .month-list .card {
+  .month-list .card:not(.transaction) {
     position: relative;
 
     &.bucket, &.bill, &.goal {

@@ -111,8 +111,8 @@ a:focus {
 }
 
 ::selection {
-  background: $primary;
-  color: white;
+  background: color('green', '100');
+  color: rgba(black, .5);
 }
 
 #chatlio-widget .chatlio-widget.closed {
