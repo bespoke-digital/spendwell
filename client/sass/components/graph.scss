@@ -116,30 +116,24 @@
 
   .principle-schedule,
   .after-animation .principle-schedule {
-    fill: color('green', '500');
+    fill: $primary;
   }
 
   .before-animation {
     .total-schedule {
-      fill: white;
       opacity: .5;
     }
 
     .principle-schedule {
-      fill: white;
       opacity: .5;
     }
   }
 
   .after-animation {
-    .total-schedule {
-      opacity: 1;
-      transition: opacity 1.5s, fill 1.5s;
-    }
-
+    .total-schedule,
     .principle-schedule {
       opacity: 1;
-      transition: opacity 1.5s, fill 1.5s;
+      transition: opacity 1500ms;
     }
   }
 
