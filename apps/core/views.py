@@ -16,7 +16,6 @@ class ClientView(TemplateView):
         context = super(ClientView, self).get_context_data()
         context['PLAID_PRODUCTION'] = settings.PLAID_PRODUCTION
         context['PLAID_PUBLIC_KEY'] = settings.PLAID_PUBLIC_KEY
-        # context['loading_quote'] = LoadingQuote.objects.get(id=2)
         context['loading_quote'] = LoadingQuote.objects.all()[
             randint(0, LoadingQuote.objects.count() - 1)
         ]
