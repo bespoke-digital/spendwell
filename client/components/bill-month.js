@@ -8,6 +8,8 @@ import Money from 'components/money';
 import TransactionList from 'components/transaction-list';
 import CardActions from 'components/card-actions';
 import Button from 'components/button';
+import Icon from 'components/icon';
+import IconList from 'components/icon-list';
 
 
 class BillMonth extends Component {
@@ -39,16 +41,22 @@ class BillMonth extends Component {
     const { viewer, bucketMonth, onClick, className, relay } = this.props;
     const { open } = relay.variables;
 
+    const hasTransaction = (
+      bucketMonth.transactions &&
+      bucketMonth.transactions.edges &&
+      bucketMonth.transactions.edges.length > 0
+    );
+
+    const paid = bucketMonth.amount !== 0 && (
+      (Math.abs(bucketMonth.avgAmount - bucketMonth.amount) / bucketMonth.avgAmount) < 0.10
+    );
+
     return (
       <SuperCard expanded={open} summary={
         <Card
           onSummaryClick={onClick}
           expanded={open}
-          className={`bill ${
-            bucketMonth.avgAmount < bucketMonth.amount ?
-              'bucket-warn' :
-              'bucket-success'
-          } ${className}`}
+          className={`bill ${paid ? 'bucket-success' : 'bucket-warn'} ${className}`}
           summary={
             <div>
               <div className='icon'>
@@ -70,7 +78,12 @@ class BillMonth extends Component {
             </div>
           }
         >
-          <div>Average is based on the last 3 months activity</div>
+          <IconList>
+            <div className={`${paid ? '' : 'warn'}`}>
+              <Icon type={paid ? 'done' : 'alarm' }/>
+              <div className='content'>{paid ? 'Paid' : 'Unpaid'}</div>
+            </div>
+          </IconList>
 
           <CardActions>
             <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
@@ -78,25 +91,15 @@ class BillMonth extends Component {
           </CardActions>
         </Card>
       }>
-        {bucketMonth.transactions ?
+        {hasTransaction ?
           <TransactionList viewer={viewer} transactions={bucketMonth.transactions}/>
         : null}
 
-        <div className='bottom-buttons'>
-          {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
-            <div>
-              <Button onClick={::this.loadTransactions}>Load More</Button>
-            </div>
-          : null}
-          <div>
-            <Button
-              to={`/app/labels/${bucketMonth.bucket.id}`}
-              className='bottom-load-button-right'
-            >
-              View All Months
-            </Button>
+        {hasTransaction && bucketMonth.transactions.pageInfo.hasNextPage ?
+          <div className='bottom-buttons'>
+            <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
-        </div>
+        : null}
       </SuperCard>
     );
   }
@@ -126,6 +129,12 @@ BillMonth = Relay.createContainer(BillMonth, {
 
         transactions(first: $transactionCount) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
+
+          edges {
+            node {
+              id
+            }
+          }
 
           pageInfo {
             hasNextPage

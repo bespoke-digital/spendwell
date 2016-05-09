@@ -88,7 +88,6 @@ class Dashboard extends Component {
     );
 
     const goalTargetTotal = _.sum(goalMonths, 'targetAmount');
-    const goalFilledTotal = _.sum(goalMonths, 'filledAmount');
 
     const billAvgTotal = _.sum(billMonths, 'avgAmount');
     const billTotal = _.sum(billMonths, 'amount');
@@ -110,12 +109,6 @@ class Dashboard extends Component {
               Goals <small> for long and short term savings</small>
             </ListHeading>
 
-            <Card className='card-list-heading'>
-              <div></div>
-              <div className='amount'>Target</div>
-              <div className='amount'>Funded</div>
-            </Card>
-
             {goalMonths.map((node)=>
               <GoalMonth
                 key={node.id}
@@ -128,11 +121,8 @@ class Dashboard extends Component {
 
             <Card className='card-list-heading'>
               <div><strong>Total</strong></div>
-              <div className='amount avg'>
-                <Money amount={goalTargetTotal} abs={true}/>
-              </div>
               <div className='amount'>
-                <Money amount={goalFilledTotal} abs={true}/>
+                <Money amount={goalTargetTotal} abs={true}/>
               </div>
             </Card>
           </CardList>

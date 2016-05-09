@@ -13,12 +13,14 @@ export default (props)=> {
     ...childProps,
   } = props;
 
+  const canExpand = !_.isUndefined(expanded) && _.any(children);
+
   return (
     <div {...childProps} className={`
       super-card
       ${styles.root}
-      ${!_.isUndefined(expanded) ? 'can-expand' : ''}
-      ${expanded ? 'expanded' : ''}
+      ${canExpand ? 'can-expand' : ''}
+      ${canExpand && expanded ? 'expanded' : ''}
       ${className ? className : ''}
     `}>
       <div className='summary' onClick={onSummaryClick}>{summary}</div>

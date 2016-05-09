@@ -23,21 +23,12 @@ class GoalMonth extends Component {
   render() {
     const { goalMonth, onClick, selected, className } = this.props;
 
-    const full = goalMonth.targetAmount === goalMonth.filledAmount;
-    const empty = goalMonth.filledAmount === 0;
-
     return (
-      <Card onClick={onClick} expanded={selected} className={`
-        goal
-        ${empty ? 'goal-danger' : ''}
-        ${!empty && !full ? 'goal-warn' : ''}
-        ${className}
-      `} summary={
+      <Card onClick={onClick} expanded={selected} className={`goal ${className}`} summary={
         <div>
           <div className='icon'><div>{goalMonth.name[0]}</div></div>
           <div>{goalMonth.name}</div>
-          <div className='amount avg'><Money abs={true} amount={goalMonth.targetAmount}/></div>
-          <div className='amount'><Money abs={true} amount={goalMonth.filledAmount}/></div>
+          <div className='amount'><Money abs={true} amount={goalMonth.targetAmount}/></div>
         </div>
       }>
         <TextActions>
@@ -54,7 +45,6 @@ GoalMonth = Relay.createContainer(GoalMonth, {
       fragment on GoalMonthNode {
         name
         targetAmount
-        filledAmount
         goal {
           id
         }

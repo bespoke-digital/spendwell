@@ -14,9 +14,29 @@
       border-right: 2px solid $success;
     }
 
-    &.bucket-danger,
-    &.goal-danger {
-      border-right-color: $danger;
+    &.bucket, &.bill {
+      .summary {
+        @media (max-width: $screen-xs-max) {
+          padding: 16px 16px 24px;
+        }
+
+        > div {
+          > :nth-child(4) {
+            @media (max-width: $screen-xs-max) {
+              position: absolute;
+              top: 16px;
+              right: 16px;
+            }
+          }
+
+          > :nth-child(3) {
+            @media (max-width: $screen-xs-max) {
+              padding-top: 16px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
     }
 
     &.bucket-warn,
@@ -24,27 +44,39 @@
       border-right-color: $warn;
     }
 
-    &.goal .icon > div {
-      background-color: $goal;
+    &.goal {
+      .icon > div {
+        background-color: $goal;
+      }
     }
 
-    &.bill .icon > div {
-      background-color: $bill;
+    &.bill {
+      .icon > div {
+        background-color: $bill;
+      }
     }
 
-    &.bucket .icon > div {
-      background-color: $label;
+    &.bucket {
+      .icon > div {
+        background-color: $label;
+      }
+    }
+
+    &.bucket-danger,
+    &.goal-danger {
+      border-right-color: $danger;
     }
 
     &.card-list-heading {
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+      flex-wrap: wrap;
 
       font-weight: 500;
 
-      .amount.avg {
-        color: color('grey', '600');
+      @media (max-width: $screen-xs-max) {
+        display: none;
       }
 
       > :first-child {
@@ -61,25 +93,29 @@
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+      flex-wrap: wrap;
+      font-size: 16px;
 
-      .icon > div {
-        width: 24px;
-        height: 24px;
-        border-radius: 12px;
+      .icon {
+        > div {
+          width: 24px;
+          height: 24px;
+          border-radius: 12px;
 
-        line-height: 23px;
-        padding: 1px 0 0 1px;
+          line-height: 23px;
+          padding: 1px 0 0 1px;
 
-        text-align: center;
-        vertical-align: middle;
-        font-size: 18px;
-        text-transform: uppercase;
-        color: white;
-      }
+          text-align: center;
+          vertical-align: middle;
+          font-size: 18px;
+          text-transform: uppercase;
+          color: white;
+        }
 
-      .icon > img {
-        width: 24px;
-        height: 24px;
+        > img {
+          width: 24px;
+          height: 24px;
+        }
       }
 
       > :nth-child(2) {
@@ -91,15 +127,11 @@
       }
 
       > :nth-child(1n+3) {
-        margin-left: 16px;
-        text-align: right;
         height: 24px;
         line-height: 24px;
         vertical-align: middle;
-      }
-
-      > .fw {
-        min-width: 60px;
+        text-align: right;
+        margin-left: 16px;
       }
     }
 

@@ -39,6 +39,12 @@ class BucketMonth extends Component {
       parseInt((moment().date() / month.clone().endOf('month').date()) * 100)
     );
 
+    const hasTransaction = (
+      bucketMonth.transactions &&
+      bucketMonth.transactions.edges &&
+      bucketMonth.transactions.edges.length > 0
+    );
+
     return (
       <SuperCard expanded={open} summary={
         <Card
@@ -86,26 +92,17 @@ class BucketMonth extends Component {
           </CardActions>
         </Card>
       }>
-        {bucketMonth.transactions ?
+        {hasTransaction ?
           <TransactionList viewer={viewer} transactions={bucketMonth.transactions}/>
         : null}
 
-        <div className='bottom-buttons'>
-          {bucketMonth.transactions && bucketMonth.transactions.pageInfo.hasNextPage ?
+        {hasTransaction && bucketMonth.transactions.pageInfo.hasNextPage ?
+          <div className='bottom-buttons'>
             <Button onClick={relay.setVariables.bind(relay, {
               transactionCount: transactionCount + 20,
             })} flat>Load More</Button>
-          : bucketMonth.transactions && bucketMonth.transactions.edges ?
-            <Button
-              to={`/app/labels/${bucketMonth.bucket.id}`}
-              className='bottom-load-button-right'
-              color='primary'
-              flat
-            >
-              View All Months
-            </Button>
-          : null}
-        </div>
+          </div>
+        : null}
       </SuperCard>
     );
   }
@@ -135,6 +132,12 @@ BucketMonth = Relay.createContainer(BucketMonth, {
 
         transactions(first: 20) @include(if: $open) {
           ${TransactionList.getFragment('transactions')}
+
+          edges {
+            node {
+              id
+            }
+          }
 
           pageInfo {
             hasNextPage

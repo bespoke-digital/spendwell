@@ -9,6 +9,7 @@ import TransactionQuickAdd from 'components/transaction-quick-add';
 import Button from 'components/button';
 import CardActions from 'components/card-actions';
 import Icon from 'components/icon';
+import IconList from 'components/icon-list';
 
 import { handleMutationError } from 'utils/network-layer';
 import { DeleteTransactionMutation } from 'mutations/transactions';
@@ -86,7 +87,7 @@ class ListTransaction extends Component {
       >
         {relay.variables.open ?
           <div>
-            <div className='icon-list'>
+            <IconList>
               <div>
                 <Icon type='attach money'/>
                 <div className='content'><Money amount={transaction.amount}/></div>
@@ -124,7 +125,7 @@ class ListTransaction extends Component {
                   <div className='label'>Labels</div>
                 </div>
               : null}
-            </div>
+            </IconList>
 
             {quickAdd ?
               <TransactionQuickAdd

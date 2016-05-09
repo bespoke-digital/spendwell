@@ -33,7 +33,7 @@ body.home {
   }
 
   .section {
-    .material-icons {
+    .material-icons.large-icons {
       margin-bottom: 10px;
     }
 
@@ -121,7 +121,7 @@ body.home {
     padding: 60px 0;
     text-align: center;
 
-    .material-icons {
+    .material-icons.large-icons {
       margin-bottom: 30px;
       color: $accent;
     }
@@ -138,8 +138,7 @@ body.home {
     text-align: center;
   }
 
-
-  .material-icons {
+  .material-icons.large-icons {
     font-size: 90px;
     color: $primary;
   }
