@@ -2,12 +2,12 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import Modernizr from 'modernizr';
 
 import Button from 'components/button';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 
-import isMobile from 'utils/is-mobile';
 import styles from 'sass/components/primary-fab.scss';
 
 
@@ -60,7 +60,7 @@ class PrimaryFab extends Component {
         : null}
 
         <Button
-          onClick={isMobile() && !open ? ::this.handleOpen : defaultAction.onClick}
+          onClick={Modernizr.touchevents && !open ? ::this.handleOpen : defaultAction.onClick}
           className={`primary ${defaultAction.className || ''}`}
           color='accent'
           fab
