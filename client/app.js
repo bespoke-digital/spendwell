@@ -19,11 +19,11 @@ const userEmail = document.querySelector('meta[name=user-email]').getAttribute('
 Relay.injectNetworkLayer(networkLayer);
 
 
-// window.onload = ()=> render(
-//   <Provider store={store}>{routes}</Provider>,
-//   document.getElementById('root'),
-//   ()=> document.getElementById('loading').remove()
-// );
+window.onload = ()=> render(
+  <Provider store={store}>{routes}</Provider>,
+  document.getElementById('root'),
+  ()=> document.getElementById('loading').remove()
+);
 
 // Sentry
 if (window.Raven)
