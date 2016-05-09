@@ -62,3 +62,11 @@ class SWModel(models.Model):
 
     def as_json(self):
         return self.as_serializer().as_json()
+
+
+class LoadingQuote(models.Model):
+    author = models.CharField(max_length=255)
+    quote = models.TextField()
+
+    def __str__(self):
+        return self.author

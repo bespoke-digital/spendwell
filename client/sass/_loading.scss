@@ -1,0 +1,71 @@
+
+@import 'color';
+
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100vw;
+  transform: translateY(-50%);
+  text-align: center;
+
+  img {
+    height: 70px;
+    margin-bottom: 32px;
+  }
+
+  .quote,
+  .author {
+    margin: auto;
+    padding: 0 8px;
+  }
+
+  .quote {
+    margin-bottom: 8px;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .author {
+    margin-bottom: 32px;
+    font-size: 18px;
+    color: color('grey', '600');
+  }
+
+  $offset: 187;
+  $duration: 1.4s;
+
+  .spinner {
+    animation: rotator $duration linear infinite;
+  }
+
+  .path {
+    stroke-dasharray: $offset;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    stroke: $accent;
+    animation: dash $duration ease-in-out infinite;
+  }
+
+  @keyframes rotator {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(270deg); }
+  }
+
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: $offset;
+    }
+
+    50% {
+      stroke-dashoffset: $offset / 4;
+      transform: rotate(135deg);
+    }
+
+    100% {
+      stroke-dashoffset: $offset;
+      transform: rotate(450deg);
+    }
+  }
+
+}
