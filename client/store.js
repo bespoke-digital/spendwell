@@ -7,6 +7,7 @@ const defaultState = {
   loading: 0,
   toasts: [],
   chatlioOpen: false,
+  scrollLock: false,
 };
 
 function reducer(state = defaultState, action) {
@@ -40,6 +41,18 @@ function reducer(state = defaultState, action) {
     return {
       ...state,
       chatlioOpen: false,
+    };
+  case 'LOCK_SCROLL':
+    document.body.classList.add('scroll-lock');
+    return {
+      ...state,
+      scrollLock: true,
+    };
+  case 'RELEASE_SCROLL':
+    document.body.classList.remove('scroll-lock');
+    return {
+      ...state,
+      scrollLock: false,
     };
   default:
     return state;

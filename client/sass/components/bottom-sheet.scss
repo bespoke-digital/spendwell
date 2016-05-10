@@ -1,0 +1,86 @@
+
+@import '../variables';
+@import '../depth';
+
+:local(.root) {
+  transition: background-color 500ms;
+
+  > .card {
+    @extend .depth-z4;
+
+    position: absolute;
+    padding: 0;
+
+    transition: background-color 500ms;
+
+    @media (max-width: $screen-xs-max) {
+      left: 0;
+      width: 100%;
+      height: 100vh;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 970px;
+      min-height: 80vh;
+
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .bottom-sheet-actionbar {
+      @extend .depth-z1;
+
+      height: $appbar-height;
+      width: 100%;
+      background-color: $primary;
+
+      > a {
+        padding: 0 16px;
+
+        .icon {
+          line-height: $appbar-height;
+        }
+      }
+    }
+
+    .bottom-sheet-children {
+      padding: 16px;
+
+      @media (max-width: $screen-xs-max) {
+        height: calc(100% - #{$appbar-height});
+        overflow-y: scroll;
+      }
+    }
+  }
+
+  &.visible {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
+    @media (min-width: $screen-sm-min) {
+      overflow-y: scroll;
+      background-color: rgba(black, .6);
+    }
+
+    > .card {
+      @media (max-width: $screen-xs-max) {
+      }
+
+      @media (min-width: $screen-sm-min) {
+        top: 20vh;
+      }
+    }
+  }
+
+  &.hidden {
+    > .card {
+
+    }
+  }
+}

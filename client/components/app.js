@@ -46,7 +46,16 @@ class App extends Component {
   }
 
   render() {
-    const { children, viewer, back, loading, toasts, title, chatlioOpen, className } = this.props;
+    const {
+      children,
+      viewer,
+      back,
+      loading,
+      toasts,
+      title,
+      chatlioOpen,
+      className,
+    } = this.props;
     const { navOpen } = this.state;
 
     return (
