@@ -16,16 +16,10 @@ export default class Transition extends Component {
     name: 'fade',
   };
 
+
   constructor({ show }) {
     super();
     this.state = { visible: show };
-    this.animationComplete = ::this.animationComplete;
-  }
-
-  componentDidMount() {
-    this.refs.root.addEventListener('webkitAnimationEnd', this.animationComplete, false);
-    this.refs.root.addEventListener('animationend', this.animationComplete, false);
-    this.refs.root.addEventListener('oanimationend', this.animationComplete, false);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,16 +38,6 @@ export default class Transition extends Component {
   componentWillUnmount() {
     if (self.timeout)
       clearTimeout(self.timeout);
-
-    this.refs.root.removeEventListener('webkitAnimationEnd', this.animationComplete);
-    this.refs.root.removeEventListener('animationend', this.animationComplete);
-    this.refs.root.removeEventListener('oanimationend', this.animationComplete);
-  }
-
-  animationComplete() {
-    const { show, out } = this.props;
-    if (out)
-      this.setState({ visible: show });
   }
 
   render() {

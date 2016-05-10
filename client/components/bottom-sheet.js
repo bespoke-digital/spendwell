@@ -21,14 +21,34 @@ export default class BottomSheet extends Component {
     className: '',
   };
 
+  state = {
+    transitioned: false,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visible !== this.props.visible)
+      self.timeout = setTimeout(()=> {
+        this.setState({ transitioned: nextProps.visible });
+        self.timeout = null;
+      }, nextProps.visible ? 100 : 300);
+  }
+
+  componentWillUnmount() {
+    if (self.timeout)
+      clearTimeout(self.timeout);
+  }
+
   render() {
     const { onRequestClose, className, visible, children } = this.props;
+    const { transitioned } = this.state;
 
     return (
       <SubtreeContainer stealScroll={visible}>
         <div onClick={onRequestClose} className={`
+          bottom-sheet
           ${style.root}
-          ${visible ? 'visible' : 'hidden'}
+          ${visible || transitioned ? 'in' : ''}
+          ${visible && transitioned ? 'visible' : ''}
           ${className}
         `}>
           <Card onClick={(e)=> e.stopPropagation()}>

@@ -3,60 +3,16 @@
 @import '../depth';
 
 :local(.root) {
-  transition: background-color 500ms;
+  transition: background-color 300ms ease;
+  display: none;
+  background-color: rgba(black, 0);
 
   > .card {
-    @extend .depth-z4;
-
-    position: absolute;
-    padding: 0;
-
-    transition: background-color 500ms;
-
-    @media (max-width: $screen-xs-max) {
-      left: 0;
-      width: 100%;
-      height: 100vh;
-    }
-
-    @media (min-width: $screen-sm-min) {
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 970px;
-      min-height: 80vh;
-
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    .bottom-sheet-actionbar {
-      @extend .depth-z1;
-
-      height: $appbar-height;
-      width: 100%;
-      background-color: $primary;
-
-      > a {
-        padding: 0 16px;
-
-        .icon {
-          line-height: $appbar-height;
-        }
-      }
-    }
-
-    .bottom-sheet-children {
-      padding: 16px;
-
-      @media (max-width: $screen-xs-max) {
-        height: calc(100% - #{$appbar-height});
-        overflow-y: scroll;
-      }
-    }
+    transition: top 300ms ease;
   }
 
-  &.visible {
+  &.in {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -65,22 +21,70 @@
 
     @media (min-width: $screen-sm-min) {
       overflow-y: scroll;
-      background-color: rgba(black, .6);
     }
 
     > .card {
+      @extend .depth-z4;
+
+      position: absolute;
+      padding: 0;
+      top: 100vh;
+
       @media (max-width: $screen-xs-max) {
+        left: 0;
+        width: 100%;
+        height: 100vh;
+      }
+
+      @media (min-width: $screen-sm-min) {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80vh;
+        max-width: 970px;
+        min-height: 80vh;
+
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .bottom-sheet-actionbar {
+        @extend .depth-z1;
+
+        height: $appbar-height;
+        width: 100%;
+        background-color: $primary;
+
+        > a {
+          padding: 0 16px;
+
+          .icon {
+            line-height: $appbar-height;
+          }
+        }
+      }
+
+      .bottom-sheet-children {
+        padding: 16px;
+
+        @media (max-width: $screen-xs-max) {
+          height: calc(100% - #{$appbar-height});
+          overflow-y: scroll;
+        }
+      }
+    }
+  }
+
+  &.visible {
+    background-color: rgba(black, .5);
+
+    > .card {
+      @media (max-width: $screen-xs-max) {
+        top: 0;
       }
 
       @media (min-width: $screen-sm-min) {
         top: 20vh;
       }
-    }
-  }
-
-  &.hidden {
-    > .card {
-
     }
   }
 }

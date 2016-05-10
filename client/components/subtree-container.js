@@ -49,7 +49,6 @@ export default class SubtreeContainer extends Component {
     // sure the node is still mounted when we render.
     setTimeout(()=> this.mounted ? renderSubtreeIntoContainer(this, this.subtreeRender(), this.node) : null, 0);
 
-    console.log('stealScroll', stealScroll);
     if (stealScroll)
       store.dispatch({ type: 'LOCK_SCROLL' });
     else
