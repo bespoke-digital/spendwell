@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from graphene.contrib.django.views import GraphQLView
 from django_graphiql.views import GraphiQL
 
-from apps.core.views import app_view, onboarding_view, calculators_view
+from apps.core.views import app_view, onboarding_view, calculators_view, manifest_view
 
 from .admin import admin_site
 from .schema import schema
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^graphql', auth_graphql_view, name='graphql'),
     url(r'^app', app_view, name='app'),
     url(r'^onboarding', onboarding_view, name='onboarding'),
+    url(r'^manifest.json$', manifest_view, name='manifest'),
     url(r'^calculators/debt-repayment-calculator', calculators_view, name='calculators'),
 
     url(r'^', include('apps.users.urls')),

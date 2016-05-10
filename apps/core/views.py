@@ -44,3 +44,9 @@ class CalculatorsView(TemplateView):
     template_name = 'core/calculators.html'
 
 calculators_view = CalculatorsView.as_view()
+
+
+class ManifestView(TemplateView):
+    template_name = 'manifest.json'
+
+manifest_view = ManifestView.as_view()
