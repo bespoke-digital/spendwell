@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
-import Button from 'components/button';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
@@ -13,16 +12,10 @@ import style from 'sass/components/goal-form';
 
 class GoalForm extends Component {
   static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func,
-    loading: PropTypes.bool,
+    onChange: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = { valid: false };
-  }
+  state = { valid: false };
 
   componentWillMount() {
     if (this.props.goal) {
@@ -31,21 +24,25 @@ class GoalForm extends Component {
     }
   }
 
-  handleSubmit() {
-    const { onSubmit } = this.props;
+  sendChange() {
+    const { onChange } = this.props;
     const { name, monthlyAmount } = this.state;
 
-    onSubmit({ name, monthlyAmount });
+    console.log('sendChange', { name, monthlyAmount });
+    onChange({ name, monthlyAmount });
   }
 
   handleMonthlyAmountChange(monthlyAmount) {
     monthlyAmount = -parseInt(monthlyAmount * 100);
     if (!_.isNaN(monthlyAmount))
-      this.setState({ monthlyAmount });
+      this.setState({ monthlyAmount }, ::this.sendChange);
+  }
+
+  handleNameChange(name) {
+    this.setState({ name }, ::this.sendChange);
   }
 
   render() {
-    const { onCancel, onDelete, loading } = this.props;
     const { name, monthlyAmount } = this.state;
 
     return (
@@ -54,7 +51,7 @@ class GoalForm extends Component {
           <TextInput
             label='Name'
             value={name}
-            onChange={(name)=> this.setState({ name })}
+            onChange={::this.handleNameChange}
             autoFocus={true}
           />
         </Card>
@@ -66,11 +63,6 @@ class GoalForm extends Component {
             : ''}
             onChange={::this.handleMonthlyAmountChange}
           />
-        </Card>
-        <Card>
-          <Button onClick={::this.handleSubmit} loading={loading}>Save</Button>
-          <Button onClick={onCancel}>Cancel</Button>
-          <Button onClick={onDelete} color='danger' className='delete'>delete</Button>
         </Card>
       </CardList>
     );

@@ -26,9 +26,7 @@ function cleanFilters(filters) {
 
 class BucketForm extends Component {
   static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
     loading: PropTypes.bool,
   };
 
@@ -50,11 +48,11 @@ class BucketForm extends Component {
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
-  handleSubmit() {
-    const { onSubmit } = this.props;
+  sendChange() {
+    const { onChange } = this.props;
     const { filters, name } = this.state;
 
-    onSubmit({ name, filters: cleanFilters(filters) });
+    onChange({ name, filters: cleanFilters(filters) });
   }
 
   handleAddFilter() {
@@ -62,7 +60,7 @@ class BucketForm extends Component {
 
     filters.push({ descriptionContains: '' });
 
-    this.setState({ filters });
+    this.setState({ filters }, ::this.sendChange);
   }
 
   handleRemoveFilter(index) {
@@ -70,7 +68,7 @@ class BucketForm extends Component {
 
     filters.splice(index, 1);
 
-    this.setState({ filters });
+    this.setState({ filters }, ::this.sendChange);
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
@@ -79,8 +77,12 @@ class BucketForm extends Component {
 
     filters[index] = filter;
 
-    this.setState({ filters });
+    this.setState({ filters }, ::this.sendChange);
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
+  }
+
+  handleChangeName(name) {
+    this.setState({ name }, ::this.sendChange);
   }
 
   handleScroll() {
@@ -89,10 +91,8 @@ class BucketForm extends Component {
   }
 
   render() {
-    const { onCancel, onDelete, viewer, bucket, loading } = this.props;
+    const { viewer } = this.props;
     const { name, filters } = this.state;
-
-    const valid = name.length && filters.length;
 
     return (
       <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
@@ -101,7 +101,7 @@ class BucketForm extends Component {
             <TextInput
               label='Name'
               value={name}
-              onChange={(name)=> this.setState({ name })}
+              onChange={::this.handleChangeName}
               autoFocus={true}
             />
           </Card>
@@ -113,16 +113,6 @@ class BucketForm extends Component {
             onRemove={::this.handleRemoveFilter}
             onChange={::this.handleChangeFilter}
           />
-
-          <Card>
-            <Button disabled={!valid} onClick={::this.handleSubmit} loading={loading}>
-              {bucket ? 'Save Label' : 'Create Label'}
-            </Button>
-            <Button onClick={onCancel}>Cancel</Button>
-            {bucket ?
-              <Button onClick={onDelete} className='delete' color='danger'>Delete</Button>
-            : null}
-          </Card>
         </CardList>
 
         <ListHeading>Filtered Transactions</ListHeading>

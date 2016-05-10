@@ -6,9 +6,14 @@
   transition: background-color 300ms ease;
   display: none;
   background-color: rgba(black, 0);
+  transform: translateZ(0);
 
   > .card {
     transition: top 300ms ease;
+  }
+
+  .bottom-sheet-actionbar {
+    background-color: $primary;
   }
 
   &.in {
@@ -52,13 +57,35 @@
 
         height: $appbar-height;
         width: 100%;
-        background-color: $primary;
 
-        > a {
-          padding: 0 16px;
+        .close,
+        .bottom-sheet-actions,
+        .title {
+          display: inline-block;
+          height: $appbar-height;
+          line-height: $appbar-height;
 
           .icon {
             line-height: $appbar-height;
+          }
+        }
+
+        .close {
+          float: left;
+          padding: 0 16px;
+        }
+
+        .title {
+          float: left;
+          font-size: 22px;
+          color: white;
+        }
+
+        .bottom-sheet-actions {
+          float: right;
+
+          > a {
+            padding: 0 16px;
           }
         }
       }

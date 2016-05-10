@@ -14,11 +14,14 @@ export default class BottomSheet extends Component {
     onRequestClose: PropTypes.func.isRequired,
     visible: PropTypes.bool,
     className: PropTypes.string,
+    title: PropTypes.string,
+    actions: PropTypes.object,
   };
 
   static defaultProps = {
     visible: false,
     className: '',
+    title: '',
   };
 
   state = {
@@ -39,7 +42,15 @@ export default class BottomSheet extends Component {
   }
 
   render() {
-    const { onRequestClose, className, visible, children } = this.props;
+    const {
+      onRequestClose,
+      className,
+      visible,
+      title,
+      actions,
+      children,
+    } = this.props;
+
     const { transitioned } = this.state;
 
     return (
@@ -53,7 +64,9 @@ export default class BottomSheet extends Component {
         `}>
           <Card onClick={(e)=> e.stopPropagation()}>
             <div className='bottom-sheet-actionbar'>
-              <A onClick={onRequestClose}><Icon type='close' color='light'/></A>
+              <A className='close' onClick={onRequestClose}><Icon type='close' color='light'/></A>
+              <div className='title'>{title}</div>
+              <div className='bottom-sheet-actions'>{actions}</div>
             </div>
             <div className='bottom-sheet-children'>
               {children}

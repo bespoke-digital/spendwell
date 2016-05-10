@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 import moment from 'moment';
-import { browserHistory } from 'react-router';
 
 import Card from 'components/card';
 import CardList from 'components/card-list';
@@ -18,8 +17,8 @@ import DashboardSummary from 'components/dashboard-summary';
 import ListHeading from 'components/list-heading';
 import PrimaryFab from 'components/primary-fab';
 import Icon from 'components/icon';
-import BottomSheet from 'components/bottom-sheet';
-import Button from 'components/button';
+import CreateBucketSheet from 'components/create-bucket-sheet';
+import CreateGoalSheet from 'components/create-goal-sheet';
 
 import { AssignTransactionsMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
@@ -32,12 +31,12 @@ class Dashboard extends Component {
     params: PropTypes.object.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = {
-      selected: null,
-    };
-  }
+  state = {
+    selected: null,
+    createLabel: false,
+    createBill: false,
+    createGoal: false,
+  };
 
   select(id) {
     const { selected } = this.state;
@@ -59,7 +58,7 @@ class Dashboard extends Component {
     const { params: { year, month }, viewer } = this.props;
     const { spentFromSavings } = viewer.summary;
 
-    const { selected } = this.state;
+    const { selected, createLabel, createBill, createGoal } = this.state;
 
     const now = moment().startOf('month');
     const current = year && month ? moment(`${year}-${month}-0`) : now;
@@ -219,22 +218,42 @@ class Dashboard extends Component {
             label: 'New Goal',
             className: 'goal-fab',
             icon: <Icon type='show chart' color='light'/>,
-            onClick: ()=> browserHistory.push('/app/goals/new'),
+            onClick: ()=> this.setState({ createGoal: true }),
           },
           {
             label: 'New Bill',
             className: 'bill-fab',
             icon: <Icon type='receipt' color='light'/>,
-            onClick: ()=> browserHistory.push('/app/labels/new/bill'),
+            onClick: ()=> this.setState({ createBill: true }),
           },
           {
             default: true,
             label: 'New Label',
             className: 'label-fab',
             icon: <Icon type='local offer' color='light'/>,
-            onClick: ()=> browserHistory.push('/app/labels/new/expense'),
+            onClick: ()=> this.setState({ createLabel: true }),
           },
         ]}/>
+
+        <CreateBucketSheet
+          visible={createLabel}
+          onRequestClose={()=> this.setState({ createLabel: false })}
+          type='expense'
+          viewer={viewer}
+        />
+
+        <CreateBucketSheet
+          visible={createBill}
+          onRequestClose={()=> this.setState({ createBill: false })}
+          type='bill'
+          viewer={viewer}
+        />
+
+        <CreateGoalSheet
+          visible={createGoal}
+          onRequestClose={()=> this.setState({ createGoal: false })}
+          viewer={viewer}
+        />
       </App>
     );
   }
@@ -264,6 +283,8 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${BucketMonth.getFragment('viewer')}
         ${BillMonth.getFragment('viewer')}
         ${SettingsMutation.getFragment('viewer')}
+        ${CreateBucketSheet.getFragment('viewer')}
+        ${CreateGoalSheet.getFragment('viewer')}
 
         firstMonth
 

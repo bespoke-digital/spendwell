@@ -1,0 +1,39 @@
+
+@import '../variables';
+@import '../color';
+
+:local(.root) {
+  > .card {
+    background-color: color('grey', '200');
+  }
+
+  .bottom-sheet-actions {
+    .spinner-container {
+      position: relative;
+      width: 24px + 16px;
+      height: $appbar-height;
+
+      .spinner {
+        position: absolute;
+        top: calc(50% - 12px);
+        right: 16px;
+
+        circle {
+          stroke: white;
+        }
+      }
+    }
+  }
+
+  &.expense {
+    .bottom-sheet-actionbar {
+      background-color: $label;
+    }
+  }
+
+  &.bill {
+    .bottom-sheet-actionbar {
+      background-color: $bill;
+    }
+  }
+}

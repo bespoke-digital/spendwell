@@ -2,11 +2,11 @@
 import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Modernizr from 'modernizr';
 
 import Button from 'components/button';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
+import supportsTrueHover from 'utils/supports-true-hover';
 
 import styles from 'sass/components/primary-fab.scss';
 
@@ -31,10 +31,17 @@ class PrimaryFab extends Component {
 
   state = {
     open: false,
+    hovered: false,
   };
 
-  handleOpen() {
-    this.setState({ open: true });
+  handleClick(defaultAction) {
+    const { open } = this.state;
+
+    if (!supportsTrueHover())
+      this.setState({ open: !open });
+
+    if (open || supportsTrueHover())
+      defaultAction();
   }
 
   render() {
@@ -46,7 +53,7 @@ class PrimaryFab extends Component {
 
     return (
       <div
-        onClickOff={()=> this.setState({ open: false })}
+        onMouseOver={()=> this.setState({ hovered: true })}
         className={`
           primary-fab
           ${styles.root}
@@ -60,7 +67,7 @@ class PrimaryFab extends Component {
         : null}
 
         <Button
-          onClick={Modernizr.touchevents && !open ? ::this.handleOpen : defaultAction.onClick}
+          onClick={this.handleClick.bind(this, defaultAction.onClick)}
           className={`primary ${defaultAction.className || ''}`}
           color='accent'
           fab

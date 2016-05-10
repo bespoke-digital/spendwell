@@ -1,0 +1,42 @@
+
+@import '../variables';
+@import '../color';
+
+:local(.root) {
+  $offset: 187;
+  $duration: 1.4s;
+
+  height: 24px;
+  width: 24px;
+
+  animation: rotator $duration linear infinite;
+
+  circle {
+    stroke-dasharray: $offset;
+    stroke-dashoffset: 0;
+    stroke: $accent;
+    transform-origin: center;
+    animation: dash $duration ease-in-out infinite;
+  }
+
+  @keyframes rotator {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(270deg); }
+  }
+
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: $offset;
+    }
+
+    50% {
+      stroke-dashoffset: $offset / 4;
+      transform: rotate(135deg);
+    }
+
+    100% {
+      stroke-dashoffset: $offset;
+      transform: rotate(450deg);
+    }
+  }
+}
