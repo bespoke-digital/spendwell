@@ -48,5 +48,6 @@ calculators_view = CalculatorsView.as_view()
 
 class ManifestView(TemplateView):
     template_name = 'manifest.json'
+    content_type = 'application/json'
 
 manifest_view = ManifestView.as_view()
