@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'apps.buckets',
     'apps.goals',
     'apps.finicity',
+    'apps.ads',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -180,3 +181,8 @@ FINICITY_APP_KEY = 'e152b1e1dc39cd13969ffc7dc954bb88'
 MIXPANEL_PUBLIC_KEY = 'setme'
 GOOGLE_ANALYTICS_KEY = 'setme'
 FACEBOOK_PIXEL_KEY = 'setme'
+
+TWITTER_CONSUMER_KEY = '1C9J8kD7rQjB2aPeFn2KdAHuM'
+TWITTER_CONSUMER_SECRET = None
+TWITTER_ACCESS_TOKEN_KEY = '4510053751-KpDrPjddh9CDm3hvf5hdVoQWyH538JgKqpaa0r0'
+TWITTER_ACCESS_TOKEN_SECRET = None

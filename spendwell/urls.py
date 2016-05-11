@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^admin/', admin_site.urls),
     url(r'^watchman/', include('watchman.urls')),
     url(r'^finicity/', include('apps.finicity.urls', namespace='finicity')),
+    url(r'^ads/', include('apps.ads.urls', namespace='ads')),
 
     url(r'^graphiql', graphiql_view, name='graphiql'),
     url(r'^graphql', auth_graphql_view, name='graphql'),

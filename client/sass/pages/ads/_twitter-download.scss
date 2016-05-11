@@ -1,0 +1,16 @@
+
+body.twitter-download {
+  .twitter-download-container {
+    max-width: 600px;
+    padding: 24px 0;
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      width: 100%;
+    }
+  }
+}
