@@ -12,7 +12,7 @@ class TwitterDownloadForm(forms.Form):
 
     def clean_usernames(self):
         return [
-            username.strip().lower()
+            username.strip()
             for username in re.split(r'\n|,', self.cleaned_data['usernames'])
         ]
 
@@ -29,10 +29,8 @@ class TwitterDownloadForm(forms.Form):
         api = tweepy.API(auth)
 
         followers = []
-        print(self.cleaned_data['usernames'])
         for username in self.cleaned_data['usernames']:
-            print('downloading', username)
-            followers += [user.screen_name for user in api.followers(username)]
+            for id in tweepy.Cursor(api.followers_ids, screen_name=username).items():
+                followers.append(str(id))
 
-        print('done')
         return '\n'.join(followers)
