@@ -8,8 +8,8 @@ import CardList from 'components/card-list';
 import TextActions from 'components/text-actions';
 import A from 'components/a';
 import BottomSheet from 'components/bottom-sheet';
-import Icon from 'components/icon';
 import Spinner from 'components/spinner';
+import Button from 'components/button';
 
 import { handleMutationError } from 'utils/network-layer';
 import { CreateGoalMutation } from 'mutations/goals';
@@ -26,31 +26,26 @@ class CreateGoalSheet extends Component {
 
   state = {
     loading: false,
-    name: '',
-    monthlyAmount: 0,
   };
-
-  isValid() {
-    const { loading, name, monthlyAmount } = this.state;
-    return !loading && monthlyAmount !== 0 & name.length > 0;
-  }
 
   handleSubmit() {
     const { viewer, onRequestClose, relay } = this.props;
-    const { name, monthlyAmount } = this.state;
+    const { loading } = this.state;
+    const goalForm = this.refs.goalForm.refs.component;
 
-    if (!this.isValid())
+    if (!goalForm.isValid() || loading)
       return;
 
     this.setState({ loading: true });
-    Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, name, monthlyAmount }), {
+    Relay.Store.commitUpdate(new CreateGoalMutation({ viewer, ...goalForm.getData() }), {
       onFailure: (response)=> {
         this.setState({ loading: false });
         handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: CreateGoalMutation');
-        this.setState({ loading: false, name: '', monthlyAmount: 0 });
+        this.setState({ loading: false });
+        goalForm.reset();
         relay.forceFetch();
         onRequestClose();
       },
@@ -79,12 +74,9 @@ class CreateGoalSheet extends Component {
         actions={loading ?
           <div className='spinner-container'><Spinner/></div>
         :
-          <A className='action' onClick={::this.handleSubmit}>
-            <Icon
-              type='send'
-              color={this.isValid() ? 'light' : 'dark'}
-            />
-          </A>
+          <Button className='action' onClick={::this.handleSubmit} plain color='light'>
+            Save
+          </Button>
         }
       >
         {viewer.settings.createGoalHelp ?
@@ -99,10 +91,7 @@ class CreateGoalSheet extends Component {
           </CardList>
         : null}
 
-        <GoalForm
-          onChange={({ name, monthlyAmount })=> this.setState({ name, monthlyAmount })}
-          goal={null}
-        />
+        <GoalForm ref='goalForm' goal={null}/>
       </BottomSheet>
     );
   }

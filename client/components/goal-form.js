@@ -1,6 +1,6 @@
 
 import _ from 'lodash';
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import Relay from 'react-relay';
 
 import Card from 'components/card';
@@ -10,36 +10,37 @@ import TextInput from 'components/text-input';
 import style from 'sass/components/goal-form';
 
 
-class GoalForm extends Component {
-  static propTypes = {
-    onChange: PropTypes.func.isRequired,
+function getInitialState({ goal }) {
+  return {
+    name: goal ? goal.name : '',
+    monthlyAmount: goal ? goal.monthlyAmount : 0,
   };
+}
 
-  state = { valid: false };
-
-  componentWillMount() {
-    if (this.props.goal) {
-      const { name, monthlyAmount } = this.props.goal;
-      this.setState({ name, monthlyAmount });
-    }
+class GoalForm extends Component {
+  constructor(props) {
+    super();
+    this.state = getInitialState(props);
   }
 
-  sendChange() {
-    const { onChange } = this.props;
+  getData() {
     const { name, monthlyAmount } = this.state;
+    return { name, monthlyAmount };
+  }
 
-    console.log('sendChange', { name, monthlyAmount });
-    onChange({ name, monthlyAmount });
+  reset() {
+    this.setState(getInitialState(this.props));
+  }
+
+  isValid() {
+    const { name, monthlyAmount } = this.state;
+    return monthlyAmount !== 0 & name.length > 0;
   }
 
   handleMonthlyAmountChange(monthlyAmount) {
     monthlyAmount = -parseInt(monthlyAmount * 100);
     if (!_.isNaN(monthlyAmount))
-      this.setState({ monthlyAmount }, ::this.sendChange);
-  }
-
-  handleNameChange(name) {
-    this.setState({ name }, ::this.sendChange);
+      this.setState({ monthlyAmount });
   }
 
   render() {
@@ -51,7 +52,7 @@ class GoalForm extends Component {
           <TextInput
             label='Name'
             value={name}
-            onChange={::this.handleNameChange}
+            onChange={(name)=> this.setState({ name })}
             autoFocus={true}
           />
         </Card>

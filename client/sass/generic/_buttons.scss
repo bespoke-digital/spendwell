@@ -108,11 +108,12 @@
   &.mui-btn--light {
     color: white;
 
-    &:hover {
+    &:hover, &:focus {
       color: white;
     }
 
-    &:not(.mui-btn--plain):hover {
+    &:not(.mui-btn--plain):hover,
+    &:not(.mui-btn--plain):focus {
       background-color: rgba(black, .2);
     }
   }

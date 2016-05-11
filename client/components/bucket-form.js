@@ -21,10 +21,15 @@ function cleanFilters(filters) {
   return filters.map(cleanFilter).filter((filter)=> _.some(_.values(filter)));
 }
 
+function getInitialState({ bucket }) {
+  return {
+    filters: bucket ? cleanFilters(bucket.filters) : [],
+    name: bucket ? bucket.name : '',
+  };
+}
 
 class BucketForm extends Component {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
     loading: PropTypes.bool,
   };
 
@@ -32,13 +37,9 @@ class BucketForm extends Component {
     type: 'expense',
   };
 
-  constructor({ bucket }) {
+  constructor(props) {
     super();
-
-    this.state = {
-      filters: bucket ? cleanFilters(bucket.filters) : [],
-      name: bucket ? bucket.name : '',
-    };
+    this.state = getInitialState(props);
   }
 
   componentWillMount() {
@@ -46,11 +47,18 @@ class BucketForm extends Component {
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
-  sendChange() {
-    const { onChange } = this.props;
+  getData() {
     const { filters, name } = this.state;
+    return { name, filters: cleanFilters(filters) };
+  }
 
-    onChange({ name, filters: cleanFilters(filters) });
+  reset() {
+    this.setState(getInitialState(this.props));
+  }
+
+  isValid() {
+    const { filters, name } = this.state;
+    return filters.length > 0 & name.length > 0;
   }
 
   handleAddFilter() {
@@ -58,7 +66,7 @@ class BucketForm extends Component {
 
     filters.push({ descriptionContains: '' });
 
-    this.setState({ filters }, ::this.sendChange);
+    this.setState({ filters });
   }
 
   handleRemoveFilter(index) {
@@ -66,7 +74,7 @@ class BucketForm extends Component {
 
     filters.splice(index, 1);
 
-    this.setState({ filters }, ::this.sendChange);
+    this.setState({ filters });
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
@@ -75,12 +83,12 @@ class BucketForm extends Component {
 
     filters[index] = filter;
 
-    this.setState({ filters }, ::this.sendChange);
+    this.setState({ filters });
     this.props.relay.setVariables({ filters: cleanFilters(filters) });
   }
 
   handleChangeName(name) {
-    this.setState({ name }, ::this.sendChange);
+    this.setState({ name });
   }
 
   handleLoad() {

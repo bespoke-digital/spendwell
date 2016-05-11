@@ -29,12 +29,17 @@ class Viewer(
     BucketsQuery,
     FinicityQuery,
 ):
+    dummy = graphene.Field(graphene.String())
+
     @classmethod
     def get_node(Cls, id, info):
         return Cls()
 
     def to_global_id(self):
         return self.global_id(1)
+
+    def resolve_dummy(self, args, info):
+        return ''
 
 
 class Query(graphene.ObjectType):

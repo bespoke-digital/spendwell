@@ -8,7 +8,6 @@ import CardList from 'components/card-list';
 import TextActions from 'components/text-actions';
 import BottomSheet from 'components/bottom-sheet';
 import A from 'components/a';
-import Icon from 'components/icon';
 import Button from 'components/button';
 import Spinner from 'components/spinner';
 
@@ -28,31 +27,26 @@ class CreateBucketSheet extends Component {
 
   state = {
     loading: false,
-    filters: [],
-    name: '',
   };
-
-  isValid() {
-    const { loading, filters, name } = this.state;
-    return !loading && filters.length > 0 & name.length > 0;
-  }
 
   handleSubmit() {
     const { viewer, type, onRequestClose, relay } = this.props;
-    const { filters, name } = this.state;
+    const { loading } = this.state;
+    const bucketForm = this.refs.bucketForm.refs.component;
 
-    if (!this.isValid())
+    if (!bucketForm.isValid() || loading)
       return;
 
     this.setState({ loading: true });
-    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, name, filters, type }), {
+    Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, type, ...bucketForm.getData() }), {
       onFailure: (response)=> {
         this.setState({ loading: false });
         handleMutationError(response);
       },
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
-        this.setState({ loading: false, filters: [], name: '' });
+        this.setState({ loading: false });
+        bucketForm.reset();
         relay.forceFetch();
         onRequestClose();
       },
@@ -103,12 +97,7 @@ class CreateBucketSheet extends Component {
           </CardList>
         : null}
 
-        <BucketForm
-          onChange={({ filters, name })=> this.setState({ filters, name })}
-          viewer={viewer}
-          bucket={null}
-          loading={loading}
-        />
+        <BucketForm ref='bucketForm' viewer={viewer} bucket={null} loading={loading}/>
       </BottomSheet>
     );
   }
@@ -116,7 +105,6 @@ class CreateBucketSheet extends Component {
 
 CreateBucketSheet = Relay.createContainer(CreateBucketSheet, {
   initialVariables: {
-    filters: [],
     count: 50,
   },
   fragments: {
