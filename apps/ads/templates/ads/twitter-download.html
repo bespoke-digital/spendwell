@@ -1,0 +1,16 @@
+{% extends "landing/base.html" %}
+
+{% block body_class %}{{ block.super }} twitter-download{% endblock %}
+
+{% block analytics_page_name %}Twitter User Download{% endblock %}
+
+{% block content %}
+<h1 class="color-bar faq-heading">Twitter User Download</h1>
+<div class="container twitter-download-container">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="mui-btn mui-btn--accent mui-btn--flat">Submit</button>
+  </form>
+</div>
+{% endblock %}
