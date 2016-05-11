@@ -9,6 +9,7 @@ import A from 'components/a';
 import Icon from 'components/icon';
 import TextInput from 'components/text-input';
 import Transition from 'components/transition';
+import CreateBucketSheet from 'components/create-bucket-sheet';
 
 import { TransactionQuickAddMutation } from 'mutations/transactions';
 
@@ -20,10 +21,10 @@ class TransactionQuickAdd extends Component {
     onRemove: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = { loading: false };
-  }
+  state = {
+    loading: false,
+    createBucketType: null,
+  };
 
   getResponseHandler(clbk) {
     const { relay } = this.props;
@@ -44,48 +45,48 @@ class TransactionQuickAdd extends Component {
     };
   }
 
-  createBucket() {
-    const { viewer, transaction } = this.props;
-    const { searchValue } = this.state;
+  // createBucket() {
+  //   const { viewer, transaction } = this.props;
+  //   const { searchValue } = this.state;
 
-    this.setState({ loading: true });
-    Relay.Store.commitUpdate(new TransactionQuickAddMutation({
-      viewer,
-      transaction,
-      bucket: null,
-      bucketName: searchValue,
-    }), {
-      onFailure: (response)=> {
-        this.setState({ loading: false });
-        handleMutationError(response);
-      },
-      onSuccess: (response)=> {
-        console.log('Success: TransactionQuickAddMutation');
-        this.setState({ loading: false });
+  //   this.setState({ loading: true });
+  //   Relay.Store.commitUpdate(new TransactionQuickAddMutation({
+  //     viewer,
+  //     transaction,
+  //     bucket: null,
+  //     bucketName: searchValue,
+  //   }), {
+  //     onFailure: (response)=> {
+  //       this.setState({ loading: false });
+  //       handleMutationError(response);
+  //     },
+  //     onSuccess: (response)=> {
+  //       console.log('Success: TransactionQuickAddMutation');
+  //       this.setState({ loading: false });
 
-        // Need to clear the stack to props.transaction gets updates
-        // from mutation response
-        setTimeout(()=> {
-          const { transaction } = this.props;
+  //       // Need to clear the stack to props.transaction gets updates
+  //       // from mutation response
+  //       setTimeout(()=> {
+  //         const { transaction } = this.props;
 
-          if (!transaction.buckets) {
-            console.warn('No transaction buckets after quick-add', response, transaction);
-            return;
-          }
+  //         if (!transaction.buckets) {
+  //           console.warn('No transaction buckets after quick-add', response, transaction);
+  //           return;
+  //         }
 
-          const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
-          const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
+  //         const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
+  //         const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
 
-          if (!newBucketId) {
-            console.warn('New bucket not found after quick-add', response, transaction);
-            return;
-          }
+  //         if (!newBucketId) {
+  //           console.warn('New bucket not found after quick-add', response, transaction);
+  //           return;
+  //         }
 
-          browserHistory.push(`/app/labels/${newBucketId}/edit`);
-        }, 0);
-      },
-    });
-  }
+  //         browserHistory.push(`/app/labels/${newBucketId}/edit`);
+  //       }, 0);
+  //     },
+  //   });
+  // }
 
   addToBucket(bucket) {
     const { relay, viewer, transaction } = this.props;
@@ -119,8 +120,8 @@ class TransactionQuickAdd extends Component {
   }
 
   render() {
-    const { viewer, onRemove } = this.props;
-    const { focus, searchValue } = this.state;
+    const { viewer, transaction, onRemove } = this.props;
+    const { focus, searchValue, createBucketType } = this.state;
 
     return (
       <div className={`transaction-quick-add ${styles.root}`}>
@@ -144,11 +145,28 @@ class TransactionQuickAdd extends Component {
                 </A>
               )
             ) : null}
-            <A onClick={::this.createBucket}>
-              Create "{searchValue}" label
-            </A>
+            {searchValue && searchValue.length > 0 ?
+              <A onClick={()=> this.setState({ createBucketType: 'expense' })}>
+                Create "{searchValue}" Label
+              </A>
+            : null}
+            {searchValue && searchValue.length > 0 ?
+              <A onClick={()=> this.setState({ createBucketType: 'bill' })}>
+                Create "{searchValue}" Bill
+              </A>
+            : null}
           </Card>
         </Transition>
+
+        <CreateBucketSheet
+          viewer={viewer}
+          visible={createBucketType !== null}
+          type={createBucketType}
+          initialName={searchValue}
+          initialFilters={[{ descriptionExact: transaction.description }]}
+          onRequestClose={()=> this.setState({ createBucketType: null })}
+          onComplete={()=> this.setState({ searchValue: '' })}
+        />
       </div>
     );
   }
@@ -167,6 +185,7 @@ TransactionQuickAdd = Relay.createContainer(TransactionQuickAdd, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionQuickAddMutation.getFragment('viewer')}
+        ${CreateBucketSheet.getFragment('viewer')}
 
         buckets(first: 10, nameContains: $searchValue) @include(if: $search) {
           edges {
@@ -185,6 +204,7 @@ TransactionQuickAdd = Relay.createContainer(TransactionQuickAdd, {
         ${TransactionQuickAddMutation.getFragment('transaction')}
 
         id
+        description
 
         buckets(first: 100) {
           edges {

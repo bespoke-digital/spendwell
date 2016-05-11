@@ -21,16 +21,29 @@ import styles from 'sass/components/create-bucket-sheet';
 class CreateBucketSheet extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
+    onComplete: PropTypes.func,
     visible: PropTypes.bool.isRequired,
     type: PropTypes.oneOf(['bill', 'expense', 'account']),
+    initialFilters: PropTypes.arrayOf(PropTypes.object),
+    initialName: PropTypes.string,
   };
 
   state = {
     loading: false,
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visible !== this.props.visible)
+      this.props.relay.setVariables({ open: nextProps.visible });
+  }
+
+  componentWillUnmount() {
+    if (self.timeout)
+      clearTimeout(self.timeout);
+  }
+
   handleSubmit() {
-    const { viewer, type, onRequestClose, relay } = this.props;
+    const { viewer, type, onRequestClose, onComplete, relay } = this.props;
     const { loading } = this.state;
     const bucketForm = this.refs.bucketForm.refs.component;
 
@@ -45,9 +58,14 @@ class CreateBucketSheet extends Component {
       },
       onSuccess: ()=> {
         console.log('Success: CreateBucketMutation');
+
         this.setState({ loading: false });
         bucketForm.reset();
         relay.forceFetch();
+
+        if (onComplete)
+          onComplete();
+
         onRequestClose();
       },
     });
@@ -63,13 +81,14 @@ class CreateBucketSheet extends Component {
   }
 
   render() {
-    const { viewer, type, visible, onRequestClose } = this.props;
+    const { viewer, type, onRequestClose, initialFilters, initialName, relay } = this.props;
+    const { open } = relay.variables;
     const { loading } = this.state;
 
     return (
       <BottomSheet
         className={`${styles.root} ${type}`}
-        visible={visible}
+        visible={open}
         onRequestClose={onRequestClose}
         title={type === 'expense' ? 'New Label' : 'New Bill'}
         actions={loading ?
@@ -80,7 +99,10 @@ class CreateBucketSheet extends Component {
           </Button>
         }
       >
-        {(type === 'expense' && viewer.settings.createLabelHelp) || (type === 'bill' && viewer.settings.createBillHelp) ?
+        {open && (
+          (type === 'expense' && viewer.settings.createLabelHelp) ||
+          (type === 'bill' && viewer.settings.createBillHelp)
+        ) ?
           <CardList>
             <Card>
               {type === 'expense' ? `
@@ -97,7 +119,16 @@ class CreateBucketSheet extends Component {
           </CardList>
         : null}
 
-        <BucketForm ref='bucketForm' viewer={viewer} bucket={null} loading={loading}/>
+        {open ?
+          <BucketForm
+            ref='bucketForm'
+            viewer={viewer}
+            bucket={null}
+            loading={loading}
+            initialName={initialName}
+            initialFilters={initialFilters}
+          />
+        : null}
       </BottomSheet>
     );
   }
@@ -105,16 +136,17 @@ class CreateBucketSheet extends Component {
 
 CreateBucketSheet = Relay.createContainer(CreateBucketSheet, {
   initialVariables: {
+    open: false,
     count: 50,
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: (variables)=> Relay.QL`
       fragment on Viewer {
-        ${BucketForm.getFragment('viewer')}
-        ${CreateBucketMutation.getFragment('viewer')}
-        ${SettingsMutation.getFragment('viewer')}
+        ${BucketForm.getFragment('viewer').if(variables.open)}
+        ${CreateBucketMutation.getFragment('viewer').if(variables.open)}
+        ${SettingsMutation.getFragment('viewer').if(variables.open)}
 
-        settings {
+        settings @include(if: $open) {
           createLabelHelp
           createBillHelp
         }

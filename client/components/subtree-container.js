@@ -1,7 +1,9 @@
 
 import { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import { findDOMNode } from 'react-dom';
 
+import style from 'sass/components/subtree-container';
 import store from 'store';
 
 
@@ -14,10 +16,12 @@ const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer;
 export default class SubtreeContainer extends Component {
   static propTypes = {
     stealScroll: PropTypes.bool,
+    className: PropTypes.string,
   };
 
   static defaultProps = {
     stealScroll: false,
+    className: '',
   };
 
   componentDidMount() {
@@ -56,8 +60,15 @@ export default class SubtreeContainer extends Component {
   }
 
   subtreeRender() {
-    const { children } = this.props;
-    return <span>{children}</span>;
+    const { stealScroll, className, ..._props } = this.props;
+    return <div
+      className={`
+        ${style.root}
+        ${stealScroll ? 'steal-scroll' : ''}
+        ${className}
+      `}
+      {..._props}
+    />;
   }
 
   render() {

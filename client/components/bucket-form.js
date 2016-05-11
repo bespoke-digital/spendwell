@@ -21,16 +21,18 @@ function cleanFilters(filters) {
   return filters.map(cleanFilter).filter((filter)=> _.some(_.values(filter)));
 }
 
-function getInitialState({ bucket }) {
+function getInitialState({ bucket, initialFilters, initialName }) {
   return {
-    filters: bucket ? cleanFilters(bucket.filters) : [],
-    name: bucket ? bucket.name : '',
+    filters: bucket ? cleanFilters(bucket.filters) : (initialFilters || []),
+    name: bucket ? bucket.name : (initialName || ''),
   };
 }
 
 class BucketForm extends Component {
   static propTypes = {
     loading: PropTypes.bool,
+    initialName: PropTypes.string,
+    initialFilters: PropTypes.arrayOf(PropTypes.object),
   };
 
   static defaultProps = {

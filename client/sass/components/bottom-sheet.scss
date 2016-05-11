@@ -3,102 +3,84 @@
 @import '../depth';
 
 :local(.root) {
-  transition: background-color 300ms ease;
-  display: none;
   background-color: rgba(black, 0);
-  transform: translateZ(0);
+  transition: background-color 300ms ease;
 
   > .card {
+    @extend .depth-z4;
+
+    position: absolute;
+    padding: 0;
+    top: 100vh;
     transition: top 300ms ease;
+
+    @media (max-width: $screen-xs-max) {
+      left: 0;
+      width: 100%;
+      height: 100vh;
+    }
+
+    @media (min-width: $screen-sm-min) {
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vh;
+      max-width: 970px;
+      min-height: 80vh;
+
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .bottom-sheet-actionbar {
+      @extend .depth-z1;
+
+      height: $appbar-height;
+      width: 100%;
+
+      .close,
+      .bottom-sheet-actions,
+      .title {
+        display: inline-block;
+        height: $appbar-height;
+        line-height: $appbar-height;
+
+        .icon {
+          line-height: $appbar-height;
+        }
+      }
+
+      .close {
+        float: left;
+        padding: 0 16px;
+      }
+
+      .title {
+        float: left;
+        font-size: 22px;
+        color: white;
+      }
+
+      .bottom-sheet-actions {
+        float: right;
+
+        > a {
+          padding: 0 16px;
+        }
+      }
+    }
+
+    .bottom-sheet-children {
+      padding: 16px;
+
+      @media (max-width: $screen-xs-max) {
+        height: calc(100% - #{$appbar-height});
+        overflow-y: scroll;
+      }
+    }
   }
 
   .bottom-sheet-actionbar {
     background-color: $primary;
-  }
-
-  &.in {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-
-    @media (min-width: $screen-sm-min) {
-      overflow-y: scroll;
-    }
-
-    > .card {
-      @extend .depth-z4;
-
-      position: absolute;
-      padding: 0;
-      top: 100vh;
-
-      @media (max-width: $screen-xs-max) {
-        left: 0;
-        width: 100%;
-        height: 100vh;
-      }
-
-      @media (min-width: $screen-sm-min) {
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80vh;
-        max-width: 970px;
-        min-height: 80vh;
-
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-
-      .bottom-sheet-actionbar {
-        @extend .depth-z1;
-
-        height: $appbar-height;
-        width: 100%;
-
-        .close,
-        .bottom-sheet-actions,
-        .title {
-          display: inline-block;
-          height: $appbar-height;
-          line-height: $appbar-height;
-
-          .icon {
-            line-height: $appbar-height;
-          }
-        }
-
-        .close {
-          float: left;
-          padding: 0 16px;
-        }
-
-        .title {
-          float: left;
-          font-size: 22px;
-          color: white;
-        }
-
-        .bottom-sheet-actions {
-          float: right;
-
-          > a {
-            padding: 0 16px;
-          }
-        }
-      }
-
-      .bottom-sheet-children {
-        padding: 16px;
-
-        @media (max-width: $screen-xs-max) {
-          height: calc(100% - #{$appbar-height});
-          overflow-y: scroll;
-        }
-      }
-    }
   }
 
   &.visible {

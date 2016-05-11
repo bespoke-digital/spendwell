@@ -28,6 +28,11 @@ class CreateGoalSheet extends Component {
     loading: false,
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visible !== this.props.visible)
+      this.props.relay.setVariables({ open: nextProps.visible });
+  }
+
   handleSubmit() {
     const { viewer, onRequestClose, relay } = this.props;
     const { loading } = this.state;
@@ -62,13 +67,14 @@ class CreateGoalSheet extends Component {
   }
 
   render() {
-    const { viewer, type, visible, onRequestClose } = this.props;
+    const { viewer, type, relay, onRequestClose } = this.props;
+    const { open } = relay.variables;
     const { loading } = this.state;
 
     return (
       <BottomSheet
         className={`${styles.root} ${type}`}
-        visible={visible}
+        visible={open}
         onRequestClose={onRequestClose}
         title='New Goal'
         actions={loading ?
@@ -79,7 +85,7 @@ class CreateGoalSheet extends Component {
           </Button>
         }
       >
-        {viewer.settings.createGoalHelp ?
+        {open && viewer.settings.createGoalHelp ?
           <CardList>
             <Card>
               Goals are for saving. They come out of safe-to-spend at the
@@ -91,20 +97,25 @@ class CreateGoalSheet extends Component {
           </CardList>
         : null}
 
-        <GoalForm ref='goalForm' goal={null}/>
+        {open ?
+          <GoalForm ref='goalForm' goal={null}/>
+        : null}
       </BottomSheet>
     );
   }
 }
 
 CreateGoalSheet = Relay.createContainer(CreateGoalSheet, {
+  initialVariables: {
+    open: false,
+  },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: (variables)=> Relay.QL`
       fragment on Viewer {
-        ${CreateGoalMutation.getFragment('viewer')}
-        ${SettingsMutation.getFragment('viewer')}
+        ${CreateGoalMutation.getFragment('viewer').if(variables.open)}
+        ${SettingsMutation.getFragment('viewer').if(variables.open)}
 
-        settings {
+        settings @include(if: $open) {
           createGoalHelp
         }
       }
