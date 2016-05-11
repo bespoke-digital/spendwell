@@ -6,9 +6,10 @@ import BucketForm from 'components/bucket-form';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextActions from 'components/text-actions';
-import A from 'components/a';
 import BottomSheet from 'components/bottom-sheet';
+import A from 'components/a';
 import Icon from 'components/icon';
+import Button from 'components/button';
 import Spinner from 'components/spinner';
 
 import { handleMutationError } from 'utils/network-layer';
@@ -80,9 +81,9 @@ class CreateBucketSheet extends Component {
         actions={loading ?
           <div className='spinner-container'><Spinner/></div>
         :
-          <A className='action' onClick={::this.handleSubmit}>
-            <Icon type='send' color={this.isValid() ? 'light' : 'dark'}/>
-          </A>
+          <Button className='action' onClick={::this.handleSubmit} plain color='light'>
+            Save
+          </Button>
         }
       >
         {(type === 'expense' && viewer.settings.createLabelHelp) || (type === 'bill' && viewer.settings.createBillHelp) ?

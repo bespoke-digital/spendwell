@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 export default class Button extends Component {
   static propTypes = {
     className: PropTypes.string,
-    color: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent']),
+    color: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent', 'light']),
     variant: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent']), // variant deprecated, use color
     raised: PropTypes.bool,
     fab: PropTypes.bool,

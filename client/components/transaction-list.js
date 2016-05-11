@@ -4,6 +4,7 @@ import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
 import ListTransaction from 'components/list-transaction';
+import Button from 'components/button';
 
 import styles from 'sass/components/transaction-list';
 
@@ -13,6 +14,7 @@ class TransactionList extends Component {
     months: PropTypes.bool,
     expand: PropTypes.bool,
     abs: PropTypes.bool,
+    onLoadMore: PropTypes.func,
   };
 
   static defaultProps = {
@@ -35,7 +37,7 @@ class TransactionList extends Component {
   }
 
   render() {
-    const { viewer, transactions, expand, abs, months } = this.props;
+    const { viewer, transactions, expand, abs, months, onLoadMore } = this.props;
     const { expanded } = this.state;
 
     if (_.isNull(transactions) || _.isUndefined(transactions)) return null;
@@ -53,6 +55,11 @@ class TransactionList extends Component {
             abs={abs}
           />
         )}
+        {onLoadMore && transactions.pageInfo.hasNextPage ?
+          <div className='load-more'>
+            <Button onClick={onLoadMore}>Load More</Button>
+          </div>
+        : null}
       </div>
     );
   }
@@ -73,6 +80,10 @@ TransactionList = Relay.createContainer(TransactionList, {
 
             id
           }
+        }
+
+        pageInfo {
+          hasNextPage
         }
       }
     `,

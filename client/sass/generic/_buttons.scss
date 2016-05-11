@@ -104,4 +104,16 @@
       line-height: 36px;
     }
   }
+
+  &.mui-btn--light {
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+
+    &:not(.mui-btn--plain):hover {
+      background-color: rgba(black, .2);
+    }
+  }
 }

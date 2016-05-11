@@ -3,13 +3,11 @@ import _ from 'lodash';
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
 
-import Button from 'components/button';
 import Card from 'components/card';
 import CardList from 'components/card-list';
 import TextInput from 'components/text-input';
 import Filters from 'components/filters';
 import TransactionList from 'components/transaction-list';
-import ScrollTrigger from 'components/scroll-trigger';
 import ListHeading from 'components/list-heading';
 
 import style from 'sass/components/bucket-form';
@@ -85,7 +83,7 @@ class BucketForm extends Component {
     this.setState({ name }, ::this.sendChange);
   }
 
-  handleScroll() {
+  handleLoad() {
     const { count } = this.props.relay.variables;
     this.props.relay.setVariables({ count: count + 50 });
   }
@@ -95,7 +93,7 @@ class BucketForm extends Component {
     const { name, filters } = this.state;
 
     return (
-      <ScrollTrigger onTrigger={::this.handleScroll} className={style.root}>
+      <div className={style.root}>
         <CardList>
           <Card>
             <TextInput
@@ -122,10 +120,11 @@ class BucketForm extends Component {
             viewer={viewer}
             transactions={viewer.transactions}
             months={true}
+            onLoadMore={::this.handleLoad}
           />
         </CardList>
 
-      </ScrollTrigger>
+      </div>
     );
   }
 }

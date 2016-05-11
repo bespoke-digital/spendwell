@@ -3,13 +3,8 @@
 
 
 :local(.root) {
-  .month {
-    background-color: color('grey', '600');
-    color: color('grey', '100');
-  }
-
-  .total {
-    background-color: color('grey', '600');
-    color: color('grey', '100');
+  > .load-more {
+    margin: 8px auto 0;
+    text-align: center;
   }
 }
