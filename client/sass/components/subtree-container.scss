@@ -1,5 +1,7 @@
 
 :local(.root) {
+  z-index: 1;
+
   &.steal-scroll {
     position: fixed;
     top: 0;

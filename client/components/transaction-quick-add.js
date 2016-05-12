@@ -1,7 +1,6 @@
 
 import { PropTypes, Component } from 'react';
 import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
 
 import { handleMutationError } from 'utils/network-layer';
 import Card from 'components/card';
@@ -24,6 +23,7 @@ class TransactionQuickAdd extends Component {
   state = {
     loading: false,
     createBucketType: null,
+    createBucket: false,
   };
 
   getResponseHandler(clbk) {
@@ -44,49 +44,6 @@ class TransactionQuickAdd extends Component {
       },
     };
   }
-
-  // createBucket() {
-  //   const { viewer, transaction } = this.props;
-  //   const { searchValue } = this.state;
-
-  //   this.setState({ loading: true });
-  //   Relay.Store.commitUpdate(new TransactionQuickAddMutation({
-  //     viewer,
-  //     transaction,
-  //     bucket: null,
-  //     bucketName: searchValue,
-  //   }), {
-  //     onFailure: (response)=> {
-  //       this.setState({ loading: false });
-  //       handleMutationError(response);
-  //     },
-  //     onSuccess: (response)=> {
-  //       console.log('Success: TransactionQuickAddMutation');
-  //       this.setState({ loading: false });
-
-  //       // Need to clear the stack to props.transaction gets updates
-  //       // from mutation response
-  //       setTimeout(()=> {
-  //         const { transaction } = this.props;
-
-  //         if (!transaction.buckets) {
-  //           console.warn('No transaction buckets after quick-add', response, transaction);
-  //           return;
-  //         }
-
-  //         const newBucketEdge = transaction.buckets.edges.find(({ node })=> node.name === searchValue);
-  //         const newBucketId = newBucketEdge ? newBucketEdge.node.id : null;
-
-  //         if (!newBucketId) {
-  //           console.warn('New bucket not found after quick-add', response, transaction);
-  //           return;
-  //         }
-
-  //         browserHistory.push(`/app/labels/${newBucketId}/edit`);
-  //       }, 0);
-  //     },
-  //   });
-  // }
 
   addToBucket(bucket) {
     const { relay, viewer, transaction } = this.props;
@@ -121,7 +78,7 @@ class TransactionQuickAdd extends Component {
 
   render() {
     const { viewer, transaction, onRemove } = this.props;
-    const { focus, searchValue, createBucketType } = this.state;
+    const { focus, searchValue, createBucketType, createBucket } = this.state;
 
     return (
       <div className={`transaction-quick-add ${styles.root}`}>
@@ -136,7 +93,7 @@ class TransactionQuickAdd extends Component {
 
         <A onClick={onRemove} className='close'><Icon type='close'/></A>
 
-        <Transition show={!!viewer.buckets && focus} out={true}>
+        <Transition show={true || !!viewer.buckets && focus} out={true}>
           <Card className='options'>
             {viewer.buckets && viewer.buckets.edges.length ?
               viewer.buckets.edges.map(({ node })=> (
@@ -146,12 +103,12 @@ class TransactionQuickAdd extends Component {
               )
             ) : null}
             {searchValue && searchValue.length > 0 ?
-              <A onClick={()=> this.setState({ createBucketType: 'expense' })}>
+              <A onClick={()=> this.setState({ createBucketType: 'expense', createBucket: true })}>
                 Create "{searchValue}" Label
               </A>
             : null}
             {searchValue && searchValue.length > 0 ?
-              <A onClick={()=> this.setState({ createBucketType: 'bill' })}>
+              <A onClick={()=> this.setState({ createBucketType: 'bill', createBucket: true })}>
                 Create "{searchValue}" Bill
               </A>
             : null}
@@ -160,11 +117,11 @@ class TransactionQuickAdd extends Component {
 
         <CreateBucketSheet
           viewer={viewer}
-          visible={createBucketType !== null}
+          visible={createBucket}
           type={createBucketType}
           initialName={searchValue}
           initialFilters={[{ descriptionExact: transaction.description }]}
-          onRequestClose={()=> this.setState({ createBucketType: null })}
+          onRequestClose={()=> this.setState({ createBucket: false })}
           onComplete={()=> this.setState({ searchValue: '' })}
         />
       </div>

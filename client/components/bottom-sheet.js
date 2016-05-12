@@ -73,7 +73,7 @@ export default class BottomSheet extends Component {
 
     return (
       <SubtreeContainer
-        stealScroll={visible}
+        stealScroll={visible || transitioned}
         className={`
           ${style.root}
           ${visible && transitioned ? 'visible' : ''}
