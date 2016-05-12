@@ -96,6 +96,15 @@ class BillMonth extends Component {
             <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
             <Button onClick={()=> this.setState({ updateBucket: true })}>Edit</Button>
           </CardActions>
+
+          <UpdateBucketSheet
+            viewer={viewer}
+            bucket={bucketMonth.bucket}
+            visible={updateBucket}
+            onRequestClose={()=> this.setState({ updateBucket: false })}
+            onUpdated={()=> relay.forceFetch()}
+            onDeleted={onForceFetch}
+          />
         </Card>
       }>
         {hasTransaction ?
@@ -107,15 +116,6 @@ class BillMonth extends Component {
             <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
-
-        <UpdateBucketSheet
-          viewer={viewer}
-          bucket={bucketMonth.bucket}
-          visible={updateBucket}
-          onRequestClose={()=> this.setState({ updateBucket: false })}
-          onUpdated={()=> relay.forceFetch()}
-          onDeleted={onForceFetch}
-        />
       </SuperCard>
     );
   }

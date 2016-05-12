@@ -93,10 +93,20 @@ class BucketMonth extends Component {
             <div><Money amount={bucketMonth.amount} abs={true}/></div>
             <div><Money amount={bucketMonth.avgAmount} abs={true}/></div>
           </div>
+
           <CardActions>
             <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
             <Button onClick={()=> this.setState({ updateBucket: true })}>Edit</Button>
           </CardActions>
+
+          <UpdateBucketSheet
+            viewer={viewer}
+            bucket={bucketMonth.bucket}
+            visible={updateBucket}
+            onRequestClose={()=> this.setState({ updateBucket: false })}
+            onUpdated={()=> relay.forceFetch()}
+            onDeleted={onForceFetch}
+          />
         </Card>
       }>
         {hasTransaction ?
@@ -110,15 +120,6 @@ class BucketMonth extends Component {
             })} flat>Load More</Button>
           </div>
         : null}
-
-        <UpdateBucketSheet
-          viewer={viewer}
-          bucket={bucketMonth.bucket}
-          visible={updateBucket}
-          onRequestClose={()=> this.setState({ updateBucket: false })}
-          onUpdated={()=> relay.forceFetch()}
-          onDeleted={onForceFetch}
-        />
       </SuperCard>
     );
   }

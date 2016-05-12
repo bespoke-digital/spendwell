@@ -113,6 +113,7 @@ class Dashboard extends Component {
             {goalMonths.map((node)=>
               <GoalMonth
                 key={node.id}
+                viewer={viewer}
                 goalMonth={node}
                 selected={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
@@ -286,11 +287,12 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${DashboardSummary.getFragment('viewer')}
         ${TransactionList.getFragment('viewer')}
         ${SpentFromSavings.getFragment('viewer')}
+        ${GoalMonth.getFragment('viewer')}
         ${BucketMonth.getFragment('viewer')}
         ${BillMonth.getFragment('viewer')}
         ${SettingsMutation.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
-        ${CreateGoalSheet.getFragment('viewer')}
+        ${CreateGoalSheet.getFragment('viewer')}\
 
         firstMonth
 
@@ -304,6 +306,7 @@ Dashboard = Relay.createContainer(Dashboard, {
             edges {
               node {
                 ${GoalMonth.getFragment('goalMonth')}
+
                 id
                 name
                 targetAmount

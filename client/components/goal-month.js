@@ -4,12 +4,14 @@ import Relay from 'react-relay';
 
 import Card from 'components/card';
 import Money from 'components/money';
-import A from 'components/a';
-import TextActions from 'components/text-actions';
+import Button from 'components/button';
+import CardActions from 'components/card-actions';
+import UpdateGoalSheet from 'components/update-goal-sheet';
 
 
 class GoalMonth extends Component {
   static propTypes = {
+    onForceFetch: PropTypes.func.isRequired,
     onClick: PropTypes.func,
     selected: PropTypes.bool,
     className: PropTypes.string,
@@ -20,8 +22,13 @@ class GoalMonth extends Component {
     className: '',
   };
 
+  state = {
+    updateGoal: false,
+  };
+
   render() {
-    const { goalMonth, onClick, selected, className } = this.props;
+    const { viewer, goalMonth, onClick, onForceFetch, selected, className, relay } = this.props;
+    const { updateGoal } = this.state;
 
     return (
       <Card onClick={onClick} expanded={selected} className={`goal ${className}`} summary={
@@ -31,9 +38,18 @@ class GoalMonth extends Component {
           <div className='amount'><Money abs={true} amount={goalMonth.targetAmount}/></div>
         </div>
       }>
-        <TextActions>
-          <A href={`/app/goals/${goalMonth.goal.id}/edit`}>Edit</A>
-        </TextActions>
+        <CardActions>
+          <Button onClick={()=> this.setState({ updateGoal: true })}>Edit</Button>
+        </CardActions>
+
+        <UpdateGoalSheet
+          viewer={viewer}
+          goal={goalMonth.goal}
+          visible={updateGoal}
+          onRequestClose={()=> this.setState({ updateGoal: false })}
+          onUpdated={()=> relay.forceFetch()}
+          onDeleted={onForceFetch}
+        />
       </Card>
     );
   }
@@ -41,12 +57,18 @@ class GoalMonth extends Component {
 
 GoalMonth = Relay.createContainer(GoalMonth, {
   fragments: {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        ${UpdateGoalSheet.getFragment('viewer')}
+      }
+    `,
     goalMonth: ()=> Relay.QL`
       fragment on GoalMonthNode {
         name
         targetAmount
+
         goal {
-          id
+          ${UpdateGoalSheet.getFragment('goal')}
         }
       }
     `,

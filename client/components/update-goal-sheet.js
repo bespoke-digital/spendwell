@@ -2,29 +2,26 @@
 import Relay from 'react-relay';
 import { Component, PropTypes } from 'react';
 
-import BucketForm from 'components/bucket-form';
+import GoalForm from 'components/goal-form';
 import BottomSheet from 'components/bottom-sheet';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
 
 import { handleMutationError } from 'utils/network-layer';
-import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
+import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
 
 import styles from 'sass/components/create-bucket-sheet';
 
 
-class UpdateBucketSheet extends Component {
+class CreateGoalSheet extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
-    onUpdated: PropTypes.func,
-    onDeleted: PropTypes.func,
+    onComplete: PropTypes.func,
     visible: PropTypes.bool.isRequired,
   };
 
   state = {
-    updateLoading: false,
-    deleteLoading: false,
-    confirmDelete: false,
+    loading: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -33,16 +30,15 @@ class UpdateBucketSheet extends Component {
   }
 
   handleDelete() {
-    const { viewer, bucket, onDeleted, onRequestClose } = this.props;
+    const { viewer, goal, onDeleted, onRequestClose } = this.props;
 
-    this.setState({ deleteLoading: true });
-    Relay.Store.commitUpdate(new DeleteBucketMutation({ viewer, bucket }), {
-      onFailure: (response)=> {
+    Relay.Store.commitUpdate(new DeleteGoalMutation({ viewer, goal }), {
+      onFailure: ()=> {
+        console.log('Failure: DeleteGoalMutation');
         this.setState({ deleteLoading: false, confirmDelete: false });
-        handleMutationError(response);
       },
       onSuccess: ()=> {
-        console.log('Success: DeleteBucketMutation');
+        console.log('Success: DeleteGoalMutation');
         this.setState({ deleteLoading: false, confirmDelete: false });
 
         if (onDeleted)
@@ -54,23 +50,23 @@ class UpdateBucketSheet extends Component {
   }
 
   handleUpdate() {
-    const { viewer, bucket, onUpdated, onRequestClose } = this.props;
+    const { viewer, goal, onUpdated, onRequestClose } = this.props;
     const { updateLoading } = this.state;
-    const bucketForm = this.refs.bucketForm.refs.component;
+    const goalForm = this.refs.goalForm.refs.component;
 
-    if (!bucketForm.isValid() || updateLoading)
+    if (!goalForm.isValid() || updateLoading)
       return;
 
-    const args = { viewer, bucket, ...bucketForm.getData() };
+    const args = { viewer, goal, ...goalForm.getData() };
 
-    this.setState({ updateLoading: true });
-    Relay.Store.commitUpdate(new UpdateBucketMutation(args), {
+    this.setState({ loading: true });
+    Relay.Store.commitUpdate(new UpdateGoalMutation(args), {
       onFailure: (response)=> {
         this.setState({ updateLoading: false });
         handleMutationError(response);
       },
       onSuccess: ()=> {
-        console.log('Success: UpdateBucketMutation');
+        console.log('Success: UpdateGoalMutation');
         this.setState({ updateLoading: false });
 
         if (onUpdated)
@@ -82,7 +78,7 @@ class UpdateBucketSheet extends Component {
   }
 
   render() {
-    const { viewer, bucket, type, onRequestClose, relay } = this.props;
+    const { goal, type, relay, onRequestClose } = this.props;
     const { open } = relay.variables;
     const { updateLoading, deleteLoading, confirmDelete } = this.state;
 
@@ -91,7 +87,7 @@ class UpdateBucketSheet extends Component {
         className={`${styles.root} ${type}`}
         visible={open}
         onRequestClose={onRequestClose}
-        title={`Edit ${bucket.name}`}
+        title={`Edit ${goal.name}`}
         actions={<span>
           <Button
             className='action'
@@ -112,7 +108,7 @@ class UpdateBucketSheet extends Component {
         {confirmDelete ?
           <Dialog size='sm' onRequestClose={()=> this.setState({ confirmDelete: false })}>
             <div className='body'>
-              Are you sure you'd like to perminantly delete {bucket.name}?
+              Are you sure you'd like to perminantly delete {goal.name}?
             </div>
             <div className='actions'>
               <Button onClick={()=> this.setState({ confirmDelete: false })} flat>Cancel</Button>
@@ -127,36 +123,29 @@ class UpdateBucketSheet extends Component {
         : null}
 
         {open ?
-          <BucketForm
-            ref='bucketForm'
-            viewer={viewer}
-            bucket={bucket}
-            loading={updateLoading}
-          />
+          <GoalForm ref='goalForm' goal={goal}/>
         : null}
       </BottomSheet>
     );
   }
 }
 
-UpdateBucketSheet = Relay.createContainer(UpdateBucketSheet, {
+CreateGoalSheet = Relay.createContainer(CreateGoalSheet, {
   initialVariables: {
     open: false,
-    count: 50,
   },
   fragments: {
     viewer: (variables)=> Relay.QL`
       fragment on Viewer {
-        ${BucketForm.getFragment('viewer').if(variables.open)}
-        ${UpdateBucketMutation.getFragment('viewer').if(variables.open)}
-        ${DeleteBucketMutation.getFragment('viewer').if(variables.open)}
+        ${UpdateGoalMutation.getFragment('viewer').if(variables.open)}
+        ${DeleteGoalMutation.getFragment('viewer').if(variables.open)}
       }
     `,
-    bucket: (variables)=> Relay.QL`
-      fragment on BucketNode {
-        ${BucketForm.getFragment('bucket').if(variables.open)}
-        ${UpdateBucketMutation.getFragment('bucket').if(variables.open)}
-        ${DeleteBucketMutation.getFragment('bucket').if(variables.open)}
+    goal: (variables)=> Relay.QL`
+      fragment on GoalNode {
+        ${GoalForm.getFragment('goal').if(variables.open)}
+        ${DeleteGoalMutation.getFragment('goal').if(variables.open)}
+        ${UpdateGoalMutation.getFragment('goal').if(variables.open)}
 
         name
       }
@@ -164,4 +153,4 @@ UpdateBucketSheet = Relay.createContainer(UpdateBucketSheet, {
   },
 });
 
-export default UpdateBucketSheet;
+export default CreateGoalSheet;
