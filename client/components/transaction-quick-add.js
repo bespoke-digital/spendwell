@@ -76,6 +76,14 @@ class TransactionQuickAdd extends Component {
     relay.setVariables({ searchValue });
   }
 
+  handleCreateComplete() {
+    const { relay } = this.props;
+
+    this.setState({ searchValue: '' });
+    relay.setVariables({ searchValue: '' });
+    relay.forceFetch();
+  }
+
   render() {
     const { viewer, transaction, onRemove } = this.props;
     const { focus, searchValue, createBucketType, createBucket } = this.state;
@@ -122,7 +130,7 @@ class TransactionQuickAdd extends Component {
           initialName={searchValue}
           initialFilters={[{ descriptionExact: transaction.description }]}
           onRequestClose={()=> this.setState({ createBucket: false })}
-          onComplete={()=> this.setState({ searchValue: '' })}
+          onComplete={::this.handleCreateComplete}
         />
       </div>
     );

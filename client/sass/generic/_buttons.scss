@@ -29,6 +29,8 @@
       height: 20px;
       border: 1px solid;
       border-radius: 50%;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
       border-left-color: transparent;
       border-right-color: rgba(black, .5);
     }
@@ -116,5 +118,12 @@
     &:not(.mui-btn--plain):focus {
       background-color: rgba(black, .2);
     }
+
+    &.mui-btn--can-load {
+      &:before {
+        border-right-color: white;
+      }
+    }
+
   }
 }

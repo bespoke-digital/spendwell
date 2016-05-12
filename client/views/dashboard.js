@@ -55,7 +55,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { params: { year, month }, viewer } = this.props;
+    const { params: { year, month }, viewer, relay } = this.props;
     const { spentFromSavings } = viewer.summary;
 
     const { selected, createLabel, createBill, createGoal } = this.state;
@@ -116,6 +116,7 @@ class Dashboard extends Component {
                 goalMonth={node}
                 selected={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
+                onForceFetch={()=> relay.forceFetch()}
                 className='month'
               />
             )}
@@ -162,6 +163,7 @@ class Dashboard extends Component {
                 expanded={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
                 className='month'
+                onForceFetch={()=> relay.forceFetch()}
               />
             )}
 
@@ -198,6 +200,7 @@ class Dashboard extends Component {
                 expanded={selected === node.id}
                 onClick={this.select.bind(this, node.id)}
                 className='month'
+                onForceFetch={()=> relay.forceFetch()}
               />
             )}
 
@@ -238,6 +241,7 @@ class Dashboard extends Component {
         <CreateBucketSheet
           visible={createLabel}
           onRequestClose={()=> this.setState({ createLabel: false })}
+          onComplete={()=> relay.forceFetch()}
           type='expense'
           viewer={viewer}
         />
@@ -245,6 +249,7 @@ class Dashboard extends Component {
         <CreateBucketSheet
           visible={createBill}
           onRequestClose={()=> this.setState({ createBill: false })}
+          onComplete={()=> relay.forceFetch()}
           type='bill'
           viewer={viewer}
         />
@@ -252,6 +257,7 @@ class Dashboard extends Component {
         <CreateGoalSheet
           visible={createGoal}
           onRequestClose={()=> this.setState({ createGoal: false })}
+          onComplete={()=> relay.forceFetch()}
           viewer={viewer}
         />
       </App>

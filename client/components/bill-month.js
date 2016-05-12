@@ -10,11 +10,13 @@ import CardActions from 'components/card-actions';
 import Button from 'components/button';
 import Icon from 'components/icon';
 import IconList from 'components/icon-list';
+import UpdateBucketSheet from 'components/update-bucket-sheet';
 
 
 class BillMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
+    onForceFetch: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
     className: PropTypes.string,
@@ -23,6 +25,10 @@ class BillMonth extends Component {
   static defaultProps = {
     expanded: false,
     className: '',
+  };
+
+  state = {
+    updateBucket: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -38,8 +44,9 @@ class BillMonth extends Component {
   }
 
   render() {
-    const { viewer, bucketMonth, onClick, className, relay } = this.props;
+    const { viewer, bucketMonth, onClick, className, onForceFetch, relay } = this.props;
     const { open } = relay.variables;
+    const { updateBucket } = this.state;
 
     const hasTransaction = (
       bucketMonth.transactions &&
@@ -87,7 +94,7 @@ class BillMonth extends Component {
 
           <CardActions>
             <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
-            <Button to={`/app/labels/${bucketMonth.bucket.id}/edit`}>Edit</Button>
+            <Button onClick={()=> this.setState({ updateBucket: true })}>Edit</Button>
           </CardActions>
         </Card>
       }>
@@ -100,6 +107,15 @@ class BillMonth extends Component {
             <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
         : null}
+
+        <UpdateBucketSheet
+          viewer={viewer}
+          bucket={bucketMonth.bucket}
+          visible={updateBucket}
+          onRequestClose={()=> this.setState({ updateBucket: false })}
+          onUpdated={()=> relay.forceFetch()}
+          onDeleted={onForceFetch}
+        />
       </SuperCard>
     );
   }
@@ -114,6 +130,7 @@ BillMonth = Relay.createContainer(BillMonth, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionList.getFragment('viewer')}
+        ${UpdateBucketSheet.getFragment('viewer')}
       }
     `,
     bucketMonth: ()=> Relay.QL`
@@ -122,6 +139,8 @@ BillMonth = Relay.createContainer(BillMonth, {
         avgAmount
 
         bucket {
+          ${UpdateBucketSheet.getFragment('bucket')}
+
           id
           name
           avatar

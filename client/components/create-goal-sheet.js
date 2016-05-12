@@ -21,6 +21,7 @@ import styles from 'sass/components/create-bucket-sheet';
 class CreateGoalSheet extends Component {
   static propTypes = {
     onRequestClose: PropTypes.func.isRequired,
+    onComplete: PropTypes.func,
     visible: PropTypes.bool.isRequired,
   };
 
@@ -34,7 +35,7 @@ class CreateGoalSheet extends Component {
   }
 
   handleSubmit() {
-    const { viewer, onRequestClose, relay } = this.props;
+    const { viewer, onRequestClose, onComplete, relay } = this.props;
     const { loading } = this.state;
     const goalForm = this.refs.goalForm.refs.component;
 
@@ -49,9 +50,13 @@ class CreateGoalSheet extends Component {
       },
       onSuccess: ()=> {
         console.log('Success: CreateGoalMutation');
+
         this.setState({ loading: false });
         goalForm.reset();
-        relay.forceFetch();
+
+        if (onComplete)
+          onComplete();
+
         onRequestClose();
       },
     });

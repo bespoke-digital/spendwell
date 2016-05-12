@@ -37,13 +37,8 @@ class CreateBucketSheet extends Component {
       this.props.relay.setVariables({ open: nextProps.visible });
   }
 
-  componentWillUnmount() {
-    if (self.timeout)
-      clearTimeout(self.timeout);
-  }
-
   handleSubmit() {
-    const { viewer, type, onRequestClose, onComplete, relay } = this.props;
+    const { viewer, type, onRequestClose, onComplete } = this.props;
     const { loading } = this.state;
     const bucketForm = this.refs.bucketForm.refs.component;
 
@@ -61,7 +56,6 @@ class CreateBucketSheet extends Component {
 
         this.setState({ loading: false });
         bucketForm.reset();
-        relay.forceFetch();
 
         if (onComplete)
           onComplete();

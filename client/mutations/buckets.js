@@ -67,14 +67,7 @@ export class CreateBucketMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on CreateBucketMutation {
         viewer {
-          summary {
-            billsUnpaidTotal
-            billsPaidTotal
-            allocated
-            spent
-            net
-            spentFromSavings
-          }
+          dummy
         }
       }
     `;
@@ -119,14 +112,7 @@ export class DeleteBucketMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on DeleteBucketMutation {
         viewer {
-          summary {
-            billsUnpaidTotal
-            billsPaidTotal
-            allocated
-            spent
-            net
-            spentFromSavings
-          }
+          dummy
         }
       }
     `;
