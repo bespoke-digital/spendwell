@@ -20,7 +20,7 @@ import styles from 'sass/components/list-transaction';
 class ListTransaction extends Component {
   static propTypes = {
     abs: PropTypes.bool.isRequired,
-    dateFormat: PropTypes.string.isRequired,
+    months: PropTypes.bool.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
   };
@@ -57,7 +57,7 @@ class ListTransaction extends Component {
   }
 
   render() {
-    const { viewer, transaction, expanded, onClick, abs, dateFormat, relay } = this.props;
+    const { viewer, transaction, expanded, onClick, abs, months, relay } = this.props;
     const { loading, quickAdd } = this.state;
 
     return (
@@ -76,8 +76,11 @@ class ListTransaction extends Component {
                 <span key={node.id}>{node.name}</span>
               )}
             </div>
-            <div className='date'>
-              <DateTime value={transaction.date} format={dateFormat}/>
+            <div className={`date ${months ? 'months' : ''}`}>
+              <DateTime
+                value={transaction.date}
+                format={months ? 'ddd • MMM Do' : 'ddd • Do'}
+              />
             </div>
             <div className='amount'>
               <Money amount={transaction.amount} abs={abs}/>

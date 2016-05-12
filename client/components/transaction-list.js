@@ -51,7 +51,7 @@ class TransactionList extends Component {
             transaction={node}
             onClick={this.toggleSelect.bind(this, node)}
             expanded={expand && expanded === node.id}
-            dateFormat={months ? 'ddd • MMM Do' : 'ddd • Do'}
+            months={months}
             abs={abs}
           />
         )}

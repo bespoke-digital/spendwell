@@ -4,35 +4,11 @@
 @import '../mixins';
 
 :local(.root) {
+  $mobile-break: 910px;
+
   .summary {
     > div {
-      @media (min-width: $screen-sm-min) {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-
-        height: 24px;
-        line-height: 24px;
-        vertical-align: middle;
-
-        .description {
-          flex: 1;
-          text-align: left;
-        }
-
-        .date,
-        .amount {
-          margin-left: 16px;
-          text-align: right;
-        }
-
-        .buckets {
-          margin-left: 16px;
-          text-align: right;
-        }
-      }
-
-      @media (max-width: $screen-xs-max) {
+      @media (max-width: $mobile-break) {
         position: relative;
         height: 16px + 8px + 14px; // line 1 height, padding, line 2 height
 
@@ -65,6 +41,32 @@
           right: 0;
         }
       }
+
+      @media (min-width: $mobile-break + 1) {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        height: 24px;
+        line-height: 24px;
+        vertical-align: middle;
+
+        .description {
+          flex: 1;
+          text-align: left;
+        }
+
+        .date,
+        .amount {
+          margin-left: 16px;
+          text-align: right;
+        }
+
+        .buckets {
+          margin-left: 16px;
+          text-align: right;
+        }
+      }
     }
 
     .buckets, .no-bucket {
@@ -72,13 +74,17 @@
     }
 
     .date {
-      width: 110px;
+      width: 75px;
       text-align: right;
       color: color('grey', '600');
+
+      &.months {
+        width: 100px;
+      }
     }
 
     .amount {
-      width: 60px;
+      width: 80px;
       text-align: right;
     }
   }

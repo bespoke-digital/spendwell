@@ -42,7 +42,7 @@ export default class BottomSheet extends Component {
     // This is seriously fucked. However, something about nodes being added
     // to children during the visibility toggle causes the scroll position
     // to get wonky without it.
-    if (!prevProps.visible && this.props.visible) {
+    if (prevProps.visible !== this.props.visible) {
       setTimeout(()=> {
         const node = findDOMNode(this.refs.card);
         if (node)
