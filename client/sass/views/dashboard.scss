@@ -94,7 +94,14 @@
       flex-direction: row;
       justify-content: flex-end;
       flex-wrap: wrap;
-      font-size: 16px;
+
+      @media (max-width: $screen-xs-max) {
+        font-size: 16px;
+      }
+
+      @media (min-width: $screen-sm-min) {
+        font-size: 14px;
+      }
 
       .icon {
         > div {
