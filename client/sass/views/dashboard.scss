@@ -124,6 +124,10 @@
         height: 24px;
         line-height: 24px;
         vertical-align: middle;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       > :nth-child(1n+3) {
@@ -173,6 +177,13 @@
     .goal-children {
       > :last-child {
         float: right;
+      }
+    }
+
+    &.expanded {
+      .summary > div > :nth-child(2) {
+        white-space: normal;
+        height: auto;
       }
     }
   }
