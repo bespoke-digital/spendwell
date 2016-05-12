@@ -5,17 +5,24 @@ import Relay from 'react-relay';
 import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import Button from 'components/button';
+import CardActions from 'components/card-actions';
 import TransactionList from 'components/transaction-list';
+import UpdateBucketSheet from 'components/update-bucket-sheet';
 
 
 class ListExternalAccount extends Component {
   static propTypes = {
+    onForceFetch: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
   };
 
   static defaultProps = {
     expanded: false,
+  };
+
+  state = {
+    updateBucket: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -31,8 +38,15 @@ class ListExternalAccount extends Component {
   }
 
   render() {
-    const { viewer, bucket, onClick, relay } = this.props;
+    const { viewer, bucket, onForceFetch, onClick, relay } = this.props;
     const { open } = relay.variables;
+    const { updateBucket } = this.state;
+
+    const hasTransaction = (
+      bucket.transactions &&
+      bucket.transactions.edges &&
+      bucket.transactions.edges.length > 0
+    );
 
     return (
       <SuperCard
@@ -41,15 +55,26 @@ class ListExternalAccount extends Component {
         onSummaryClick={onClick}
         summary={
           <Card summary={bucket.name} expanded={open}>
-            <div className='actions'>
-              <Button to={`/app/labels/${bucket.id}/edit`}>Edit</Button>
-            </div>
+            <CardActions>
+              <Button onClick={()=> this.setState({ updateBucket: true })}>Edit</Button>
+            </CardActions>
+
+            <UpdateBucketSheet
+              viewer={viewer}
+              bucket={bucket}
+              visible={updateBucket}
+              onRequestClose={()=> this.setState({ updateBucket: false })}
+              onUpdated={()=> relay.forceFetch()}
+              onDeleted={onForceFetch}
+            />
           </Card>
         }
       >
-        <TransactionList viewer={viewer} transactions={bucket.transactions} abs={false}/>
+        {hasTransaction ?
+          <TransactionList viewer={viewer} transactions={bucket.transactions} abs={false}/>
+        : null}
 
-        {bucket.transactions && bucket.transactions.pageInfo.hasNextPage ?
+        {hasTransaction && bucket.transactions.pageInfo.hasNextPage ?
           <div className='bottom-buttons'>
             <Button onClick={::this.loadTransactions}>Load More</Button>
           </div>
@@ -68,10 +93,13 @@ ListExternalAccount = Relay.createContainer(ListExternalAccount, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionList.getFragment('viewer')}
+        ${UpdateBucketSheet.getFragment('viewer')}
       }
     `,
     bucket: ()=> Relay.QL`
       fragment on BucketNode {
+        ${UpdateBucketSheet.getFragment('bucket')}
+
         id
         name
 

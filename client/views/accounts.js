@@ -13,13 +13,19 @@ import ExternalAccounts from 'components/external-accounts';
 import PrimaryFab from 'components/primary-fab';
 import ListHeading from 'components/list-heading';
 import Icon from 'components/icon';
+import CreateBucketSheet from 'components/create-bucket-sheet';
 
 import styles from 'sass/views/accounts';
 
 
 class Accounts extends Component {
+  state = {
+    createExternalAccount: false,
+  };
+
   render() {
-    const { viewer } = this.props;
+    const { viewer, relay } = this.props;
+    const { createExternalAccount } = this.state;
 
     return (
       <App viewer={viewer} title='Accounts' className={`${styles.root}`}>
@@ -52,7 +58,7 @@ class Accounts extends Component {
           {
             label: 'New External Account',
             icon: <Icon type='open in new' color='light'/>,
-            onClick: ()=> browserHistory.push('/app/accounts/new/external'),
+            onClick: ()=> this.setState({ createExternalAccount: true }),
           },
           {
             default: true,
@@ -61,6 +67,14 @@ class Accounts extends Component {
             onClick: ()=> browserHistory.push('/app/accounts/new'),
           },
         ]}/>
+
+        <CreateBucketSheet
+          visible={createExternalAccount}
+          onRequestClose={()=> this.setState({ createExternalAccount: false })}
+          onComplete={()=> relay.forceFetch()}
+          type='account'
+          viewer={viewer}
+        />
       </App>
     );
   }
@@ -73,6 +87,7 @@ Accounts = Relay.createContainer(Accounts, {
         ${App.getFragment('viewer')}
         ${ExternalAccounts.getFragment('viewer')}
         ${Institution.getFragment('viewer')}
+        ${CreateBucketSheet.getFragment('viewer')}
 
         isAdmin
 

@@ -18,7 +18,7 @@ class ExternalAccounts extends Component {
   }
 
   render() {
-    const { viewer } = this.props;
+    const { viewer, relay } = this.props;
     const { selected } = this.state;
 
     if (viewer.buckets.edges.length === 0)
@@ -35,6 +35,7 @@ class ExternalAccounts extends Component {
             onClick={()=> selected === node.id ?
               this.setState({ selected: null }) :
               this.setState({ selected: node.id })}
+            onForceFetch={()=> relay.forceFetch()}
           />
         )}
       </CardList>
