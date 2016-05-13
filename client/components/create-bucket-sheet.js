@@ -84,7 +84,7 @@ class CreateBucketSheet extends Component {
         className={`${styles.root} ${type}`}
         visible={open}
         onRequestClose={onRequestClose}
-        title={type === 'expense' ? 'New Label' : 'New Bill'}
+        title={type === 'expense' ? 'New Label' : type === 'bill' ? 'New Bill' : 'New External Account'}
         actions={loading ?
           <div className='spinner-container'><Spinner/></div>
         :
