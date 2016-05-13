@@ -8,10 +8,11 @@ import Button from 'components/button';
 import CardActions from 'components/card-actions';
 import UpdateGoalSheet from 'components/update-goal-sheet';
 
+import eventEmitter from 'utils/event-emitter';
+
 
 class GoalMonth extends Component {
   static propTypes = {
-    onForceFetch: PropTypes.func.isRequired,
     onClick: PropTypes.func,
     selected: PropTypes.bool,
     className: PropTypes.string,
@@ -26,8 +27,12 @@ class GoalMonth extends Component {
     updateGoal: false,
   };
 
+  forceFetch() {
+    eventEmitter.emit('forceFetch');
+  }
+
   render() {
-    const { viewer, goalMonth, onClick, onForceFetch, selected, className, relay } = this.props;
+    const { viewer, goalMonth, onClick, selected, className } = this.props;
     const { updateGoal } = this.state;
 
     return (
@@ -47,8 +52,8 @@ class GoalMonth extends Component {
           goal={goalMonth.goal}
           visible={updateGoal}
           onRequestClose={()=> this.setState({ updateGoal: false })}
-          onUpdated={()=> relay.forceFetch()}
-          onDeleted={onForceFetch}
+          onUpdated={::this.forceFetch}
+          onDeleted={::this.forceFetch}
         />
       </Card>
     );

@@ -28,7 +28,12 @@ class Accounts extends Component {
     const { createExternalAccount } = this.state;
 
     return (
-      <App viewer={viewer} title='Accounts' className={`${styles.root}`}>
+      <App
+        viewer={viewer}
+        title='Accounts'
+        className={`${styles.root}`}
+        onForceFetch={relay.forceFetch}
+      >
         {viewer.institutions.edges.map(({ node })=>
           <Institution
             key={node.id}

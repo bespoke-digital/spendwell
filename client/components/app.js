@@ -10,6 +10,7 @@ import InstitutionReauth from 'components/institution-reauth';
 import Progress from 'components/progress';
 import Toasts from 'components/toasts';
 
+import eventEmitter from 'utils/event-emitter';
 import style from 'sass/components/app';
 
 
@@ -17,6 +18,7 @@ class App extends Component {
   static propTypes = {
     loading: PropTypes.number.isRequired,
     chatlioOpen: PropTypes.bool.isRequired,
+    onForceFetch: PropTypes.func,
     title: PropTypes.string,
     onOverlayClose: PropTypes.func,
     back: PropTypes.bool,
@@ -27,9 +29,28 @@ class App extends Component {
     className: '',
   };
 
+  state = { navOpen: false };
+
   constructor() {
     super();
-    this.state = { navOpen: false };
+    this.handleForceFetch = ::this.handleForceFetch;
+  }
+
+  componentDidMount() {
+    eventEmitter.addListener('forceFetch', this.handleForceFetch);
+  }
+
+  componentWillUnmount() {
+    eventEmitter.removeListener('forceFetch', this.handleForceFetch);
+  }
+
+  handleForceFetch() {
+    const { onForceFetch } = this.props;
+
+    if (onForceFetch)
+      onForceFetch();
+    else
+      console.warn('Unhandled forceFetch event');
   }
 
   toggleNav() {

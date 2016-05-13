@@ -12,11 +12,12 @@ import Button from 'components/button';
 import CardActions from 'components/card-actions';
 import UpdateBucketSheet from 'components/update-bucket-sheet';
 
+import eventEmitter from 'utils/event-emitter';
+
 
 class BucketMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
-    onForceFetch: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
     className: PropTypes.string,
@@ -36,8 +37,12 @@ class BucketMonth extends Component {
       this.props.relay.setVariables({ open: nextProps.expanded });
   }
 
+  forceFetch() {
+    eventEmitter.emit('forceFetch');
+  }
+
   render() {
-    const { viewer, bucketMonth, month, onClick, className, onForceFetch, relay } = this.props;
+    const { viewer, bucketMonth, month, onClick, className, relay } = this.props;
     const { transactionCount, open } = relay.variables;
     const { updateBucket } = this.state;
 
@@ -104,8 +109,8 @@ class BucketMonth extends Component {
             bucket={bucketMonth.bucket}
             visible={updateBucket}
             onRequestClose={()=> this.setState({ updateBucket: false })}
-            onUpdated={()=> relay.forceFetch()}
-            onDeleted={onForceFetch}
+            onUpdated={::this.forceFetch}
+            onDeleted={::this.forceFetch}
           />
         </Card>
       }>

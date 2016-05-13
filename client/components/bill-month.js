@@ -12,11 +12,12 @@ import Icon from 'components/icon';
 import IconList from 'components/icon-list';
 import UpdateBucketSheet from 'components/update-bucket-sheet';
 
+import eventEmitter from 'utils/event-emitter';
+
 
 class BillMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
-    onForceFetch: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
     className: PropTypes.string,
@@ -43,8 +44,12 @@ class BillMonth extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
+  forceFetch() {
+    eventEmitter.emit('forceFetch');
+  }
+
   render() {
-    const { viewer, bucketMonth, onClick, className, onForceFetch, relay } = this.props;
+    const { viewer, bucketMonth, onClick, className, relay } = this.props;
     const { open } = relay.variables;
     const { updateBucket } = this.state;
 
@@ -102,8 +107,8 @@ class BillMonth extends Component {
             bucket={bucketMonth.bucket}
             visible={updateBucket}
             onRequestClose={()=> this.setState({ updateBucket: false })}
-            onUpdated={()=> relay.forceFetch()}
-            onDeleted={onForceFetch}
+            onUpdated={::this.forceFetch}
+            onDeleted={::this.forceFetch}
           />
         </Card>
       }>

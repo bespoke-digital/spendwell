@@ -10,6 +10,7 @@ import TextInput from 'components/text-input';
 import Transition from 'components/transition';
 import CreateBucketSheet from 'components/create-bucket-sheet';
 
+import eventEmitter from 'utils/event-emitter';
 import { TransactionQuickAddMutation } from 'mutations/transactions';
 
 import styles from 'sass/components/transaction-quick-add';
@@ -64,7 +65,7 @@ class TransactionQuickAdd extends Component {
         this.setState({ loading: false, searchValue: '' });
         relay.setVariables({ searchValue: '' });
 
-        relay.forceFetch();
+        eventEmitter.emit('forceFetch');
       },
     });
   }
@@ -81,7 +82,7 @@ class TransactionQuickAdd extends Component {
 
     this.setState({ searchValue: '' });
     relay.setVariables({ searchValue: '' });
-    relay.forceFetch();
+    eventEmitter.emit('forceFetch');
   }
 
   render() {

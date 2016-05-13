@@ -35,7 +35,6 @@ class ExternalAccounts extends Component {
             onClick={()=> selected === node.id ?
               this.setState({ selected: null }) :
               this.setState({ selected: node.id })}
-            onForceFetch={()=> relay.forceFetch()}
           />
         )}
       </CardList>

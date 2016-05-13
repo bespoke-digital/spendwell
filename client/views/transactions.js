@@ -29,7 +29,12 @@ class Dashboard extends Component {
     const { viewer, relay } = this.props;
 
     return (
-      <App viewer={viewer} title='Transactions' className={styles.root}>
+      <App
+        viewer={viewer}
+        title='Transactions'
+        className={styles.root}
+        onForceFetch={relay.forceFetch}
+      >
         <ScrollTrigger onTrigger={::this.loadTransactions}>
           <CardList>
             <MonthSelector

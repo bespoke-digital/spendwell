@@ -9,10 +9,11 @@ import CardActions from 'components/card-actions';
 import TransactionList from 'components/transaction-list';
 import UpdateBucketSheet from 'components/update-bucket-sheet';
 
+import eventEmitter from 'utils/event-emitter';
+
 
 class ListExternalAccount extends Component {
   static propTypes = {
-    onForceFetch: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
   };
@@ -37,8 +38,12 @@ class ListExternalAccount extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
+  forceFetch() {
+    eventEmitter.emit('forceFetch');
+  }
+
   render() {
-    const { viewer, bucket, onForceFetch, onClick, relay } = this.props;
+    const { viewer, bucket, onClick, relay } = this.props;
     const { open } = relay.variables;
     const { updateBucket } = this.state;
 
@@ -64,8 +69,8 @@ class ListExternalAccount extends Component {
               bucket={bucket}
               visible={updateBucket}
               onRequestClose={()=> this.setState({ updateBucket: false })}
-              onUpdated={()=> relay.forceFetch()}
-              onDeleted={onForceFetch}
+              onUpdated={::this.forceFetch}
+              onDeleted={::this.forceFetch}
             />
           </Card>
         }
