@@ -55,7 +55,7 @@ class BillMonth extends Component {
     );
 
     const paid = bucketMonth.amount !== 0 && (
-      (Math.abs(bucketMonth.avgAmount - bucketMonth.amount) / bucketMonth.avgAmount) < 0.10
+      Math.abs(bucketMonth.avgAmount - bucketMonth.amount) / Math.abs(bucketMonth.avgAmount) < 0.10
     );
 
     return (
