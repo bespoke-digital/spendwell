@@ -101,7 +101,7 @@ class TransactionQuickAdd extends Component {
 
         <A onClick={onRemove} className='close'><Icon type='close'/></A>
 
-        <Transition show={true || !!viewer.buckets && focus} out={true}>
+        <Transition show={!!viewer.buckets && focus} out={true}>
           <Card className='options'>
             {viewer.buckets && viewer.buckets.edges.length ?
               viewer.buckets.edges.map(({ node })=> (
