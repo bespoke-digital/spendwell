@@ -82,13 +82,13 @@ class UpdateBucketSheet extends Component {
   }
 
   render() {
-    const { viewer, bucket, type, onRequestClose, relay } = this.props;
+    const { viewer, bucket, onRequestClose, relay } = this.props;
     const { open } = relay.variables;
     const { updateLoading, deleteLoading, confirmDelete } = this.state;
 
     return (
       <BottomSheet
-        className={`${styles.root} ${type}`}
+        className={`${styles.root} ${bucket.type}`}
         visible={open}
         onRequestClose={onRequestClose}
         title={`Edit ${bucket.name}`}
@@ -159,6 +159,7 @@ UpdateBucketSheet = Relay.createContainer(UpdateBucketSheet, {
         ${DeleteBucketMutation.getFragment('bucket').if(variables.open)}
 
         name
+        type
       }
     `,
   },
