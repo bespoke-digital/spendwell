@@ -54,6 +54,11 @@
         .description {
           flex: 1;
           text-align: left;
+          min-width: 150px;
+
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .date,
@@ -65,6 +70,10 @@
         .buckets {
           margin-left: 16px;
           text-align: right;
+
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

@@ -92,14 +92,17 @@ class ListTransaction extends Component {
           <div>
             <IconList>
               <div>
-                <Icon type='attach money'/>
-                <div className='content'><Money amount={transaction.amount}/></div>
-                <div className='label'>Amount</div>
+                <Icon type='local atm'/>
+                <div className='content'>{transaction.description}</div>
+                <div className='label'>Description</div>
               </div>
-              <div className='divider'>
-                <Icon type='today'/>
+              <div>
                 <div className='content'><DateTime value={transaction.date}/></div>
                 <div className='label'>Date</div>
+              </div>
+              <div>
+                <div className='content'><Money amount={transaction.amount}/></div>
+                <div className='label'>Amount</div>
               </div>
               <div className='divider'>
                 <Icon type='account balance'/>
