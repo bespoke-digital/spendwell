@@ -2,6 +2,8 @@
 var googleAnalyticsKey = document.querySelector('meta[name=google-analytics-key]').getAttribute('content');
 var mixpanelKey = document.querySelector('meta[name=mixpanel-key]').getAttribute('content');
 var ravenDsn = document.querySelector('meta[name=raven-dsn]').getAttribute('content');
+var userID = document.querySelector('meta[name=user-id]').getAttribute('content');
+var userEmail = document.querySelector('meta[name=user-email]').getAttribute('content');
 
 
 // Mixpanel
@@ -21,3 +23,15 @@ ga('send', 'pageview');
 // Sentry
 if (window.Raven)
   Raven.config(ravenDsn).install();
+
+
+var isSignup = document.location.search.indexOf('signup') !== -1;
+
+if (window.mixpanel && userID && isSignup) {
+  window.mixpanel.alias(userID);
+  window.mixpanel.people.set({ email: userEmail });
+  window.mixpanel.track('signup');
+
+} else if (window.mixpanel && userID) {
+  window.mixpanel.identify(userID);
+}

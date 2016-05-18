@@ -7,6 +7,7 @@ import BottomSheet from 'components/bottom-sheet';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
 
+import track from 'utils/track';
 import { handleMutationError } from 'utils/network-layer';
 import { DeleteGoalMutation, UpdateGoalMutation } from 'mutations/goals';
 
@@ -45,6 +46,8 @@ class CreateGoalSheet extends Component {
           onDeleted();
 
         onRequestClose();
+
+        track('delete-goal');
       },
     });
   }
@@ -73,6 +76,8 @@ class CreateGoalSheet extends Component {
           onUpdated();
 
         onRequestClose();
+
+        track('update-goal');
       },
     });
   }

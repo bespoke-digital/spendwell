@@ -5,8 +5,6 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'dist/app.css' %}">
 
-  <meta name="user-email" content="{{ request.user.email }}"/>
-  <meta name="user-id" content="{{ request.user.id }}"/>
   <meta name="plaid-production" content="{% if PLAID_PRODUCTION %}true{% else %}false{% endif %}"/>
   <meta name="plaid-public-key" content="{{ PLAID_PUBLIC_KEY }}"/>
 {% endblock %}

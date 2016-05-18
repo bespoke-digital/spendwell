@@ -7,6 +7,7 @@ import BottomSheet from 'components/bottom-sheet';
 import Button from 'components/button';
 import Dialog from 'components/dialog';
 
+import track from 'utils/track';
 import { handleMutationError } from 'utils/network-layer';
 import { DeleteBucketMutation, UpdateBucketMutation } from 'mutations/buckets';
 
@@ -49,6 +50,13 @@ class UpdateBucketSheet extends Component {
           onDeleted();
 
         onRequestClose();
+
+        track(
+          bucket.type === 'expense' ? 'delete-label' :
+          bucket.type === 'bill' ? 'delete-bill' :
+          bucket.type === 'account' ? 'delete-external-account' :
+          'delete-bucket'
+        );
       },
     });
   }
@@ -77,6 +85,13 @@ class UpdateBucketSheet extends Component {
           onUpdated();
 
         onRequestClose();
+
+        track(
+          bucket.type === 'expense' ? 'update-label' :
+          bucket.type === 'bill' ? 'update-bill' :
+          bucket.type === 'account' ? 'update-external-account' :
+          'update-bucket'
+        );
       },
     });
   }
