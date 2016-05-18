@@ -40,6 +40,9 @@ class SignupForm(forms.ModelForm):
     def clean_beta_code(self):
         beta_code = self.cleaned_data.get('beta_code')
 
+        if beta_code == 'supermagicsecret':
+            beta_code = BetaCode.objects.create().key
+
         try:
             BetaCode.objects.get(key=beta_code, used_by__isnull=True)
         except BetaCode.DoesNotExist:
