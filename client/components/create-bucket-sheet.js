@@ -11,6 +11,7 @@ import A from 'components/a';
 import Button from 'components/button';
 import Spinner from 'components/spinner';
 
+import track from 'utils/track';
 import { handleMutationError } from 'utils/network-layer';
 import { CreateBucketMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
@@ -61,6 +62,13 @@ class CreateBucketSheet extends Component {
           onComplete();
 
         onRequestClose();
+
+        track(
+          type === 'expense' ? 'create-label' :
+          type === 'bill' ? 'create-bill' :
+          type === 'account' ? 'create-external-account' :
+          'create-bucket'
+        );
       },
     });
   }

@@ -9,6 +9,7 @@ import Button from 'components/button';
 import Dialog from 'components/dialog';
 import DialogActions from 'components/dialog-actions';
 
+import track from 'utils/track';
 import { ConnectFinicityInstitutionMutation } from 'mutations/finicity';
 
 import style from 'sass/components/finicity-account-dialog';
@@ -112,6 +113,8 @@ class FinicityAccountDialog extends Component {
         });
 
         onConnected();
+
+        track('account-connected', { type: 'Finicity' });
       },
     });
   }

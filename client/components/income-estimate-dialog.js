@@ -3,12 +3,13 @@ import _ from 'lodash';
 import { Component, PropTypes } from 'react';
 import Relay from 'react-relay';
 
-import { handleMutationError } from 'utils/network-layer';
 import Button from 'components/button';
 import MoneyInput from 'components/money-input';
 import Dialog from 'components/dialog';
 import DialogActions from 'components/dialog-actions';
 
+import track from 'utils/track';
+import { handleMutationError } from 'utils/network-layer';
 import { SetIncomeEstimateMutation } from 'mutations/users';
 
 
@@ -37,6 +38,7 @@ class IncomeEstimateDialog extends Component {
         console.log('SetIncomeEstimateMutation Success');
         this.setState({ loading: false });
         onRequestClose();
+        track('update-income-estimate');
       },
     });
   }

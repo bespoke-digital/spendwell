@@ -9,6 +9,7 @@ import Graphicdialog from 'components/graphic-dialog';
 import Icon from 'components/icon';
 
 import { SyncInstitutionsMutation } from 'mutations/institutions';
+import track from 'utils/track';
 
 import pyfImage from 'img/views/onboarding/pyf.svg';
 import liveImage from 'img/views/onboarding/live.svg';
@@ -75,6 +76,8 @@ class OnboardingWalkthrough extends Component {
   componentDidMount() {
     const { viewer } = this.props;
 
+    track('onboard-walkthrough');
+
     this.setState({ syncing: true });
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
       onFailure: (response)=> {
@@ -84,6 +87,7 @@ class OnboardingWalkthrough extends Component {
       onSuccess: ()=> {
         console.log('Success: SyncInstitutionsMutation');
         this.setState({ syncing: false });
+        track('onboard-sync');
       },
     });
   }

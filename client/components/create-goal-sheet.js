@@ -11,6 +11,7 @@ import BottomSheet from 'components/bottom-sheet';
 import Spinner from 'components/spinner';
 import Button from 'components/button';
 
+import track from 'utils/track';
 import { handleMutationError } from 'utils/network-layer';
 import { CreateGoalMutation } from 'mutations/goals';
 import { SettingsMutation } from 'mutations/users';
@@ -35,7 +36,7 @@ class CreateGoalSheet extends Component {
   }
 
   handleSubmit() {
-    const { viewer, onRequestClose, onComplete, relay } = this.props;
+    const { viewer, onRequestClose, onComplete } = this.props;
     const { loading } = this.state;
     const goalForm = this.refs.goalForm.refs.component;
 
@@ -58,6 +59,8 @@ class CreateGoalSheet extends Component {
           onComplete();
 
         onRequestClose();
+
+        track('create-goal');
       },
     });
   }

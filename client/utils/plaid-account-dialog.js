@@ -1,6 +1,7 @@
 
 import Relay from 'react-relay';
 
+import track from 'utils/track';
 import { handleMutationError } from 'utils/network-layer';
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 
@@ -41,6 +42,8 @@ export default function({
 
             if (onConnected)
               onConnected();
+
+            track('account-connected', { type: 'Plaid' });
           },
         });
       },

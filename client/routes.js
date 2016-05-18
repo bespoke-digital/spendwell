@@ -14,15 +14,17 @@ import OnboardingAddAccount from 'views/onboarding/add-account';
 import OnboardingAccounts from 'views/onboarding/accounts';
 import OnboardingWalkthrough from 'views/onboarding/walkthrough';
 
+import track from 'utils/track';
 
 const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
 
+function onUpdate() {
+  window.scrollTo(0, 0);
+  track(`route: ${document.location.pathname}`);
+}
+
 export default (
-  <RelayRouter
-    history={browserHistory}
-    renderFetched={()=> setTimeout(window.scrollTo.bind(window, 0, 0), 10)}
-    forceFetch={true}
-  >
+  <RelayRouter history={browserHistory} onUpdate={onUpdate} forceFetch={true}>
     <Route path='onboarding'>
       <IndexRedirect to='connect'/>
 
