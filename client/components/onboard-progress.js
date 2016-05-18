@@ -142,7 +142,7 @@ class OnboardProgress extends Component {
         <CreateBucketSheet
           visible={createLabel}
           onRequestClose={()=> this.setState({ createLabel: false })}
-          onComplete={eventEmitter.emit('forceFetch')}
+          onComplete={()=> eventEmitter.emit('forceFetch')}
           type='expense'
           viewer={viewer}
         />
@@ -150,7 +150,7 @@ class OnboardProgress extends Component {
         <CreateBucketSheet
           visible={createBill}
           onRequestClose={()=> this.setState({ createBill: false })}
-          onComplete={eventEmitter.emit('forceFetch')}
+          onComplete={()=> eventEmitter.emit('forceFetch')}
           type='bill'
           viewer={viewer}
         />
@@ -158,14 +158,14 @@ class OnboardProgress extends Component {
         <CreateGoalSheet
           visible={createGoal}
           onRequestClose={()=> this.setState({ createGoal: false })}
-          onComplete={eventEmitter.emit('forceFetch')}
+          onComplete={()=> eventEmitter.emit('forceFetch')}
           viewer={viewer}
         />
 
         <CreateBucketSheet
           visible={createAccount}
           onRequestClose={()=> this.setState({ createAccount: false })}
-          onComplete={eventEmitter.emit('forceFetch')}
+          onComplete={()=> eventEmitter.emit('forceFetch')}
           type='account'
           viewer={viewer}
         />
