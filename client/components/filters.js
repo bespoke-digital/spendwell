@@ -48,7 +48,7 @@ class Filters extends Component {
             onExpand={this.selectFilter.bind(this, index)}
             onCollapse={this.selectFilter.bind(this, null)}
             expanded={selected === index}
-            onRemove={onRemove}
+            onRemove={()=> onRemove(index)}
             canRemove={filters.length === 1}
             onChange={(filter)=> onChange(index, filter)}
           />
