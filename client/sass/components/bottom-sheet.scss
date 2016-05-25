@@ -56,8 +56,12 @@
 
       .title {
         float: left;
+        max-width: calc(100% - 220px);
         font-size: 22px;
         color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .bottom-sheet-actions {
