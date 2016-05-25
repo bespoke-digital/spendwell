@@ -37,8 +37,13 @@
     <meta name="raven-dsn" content="{{ RAVEN_PUBLIC_DSN }}">
     <meta name="facebook-pixel-key" content="{{ FACEBOOK_PIXEL_KEY }}">
 
-    <meta name="user-id" content="{{ request.user.id }}">
-    <meta name="user-email" content="{{ request.user.email }}">
+    {% if request.user.is_authenticated %}
+        <meta name="user-id" content="{{ request.user.id }}">
+        <meta name="user-email" content="{{ request.user.email }}">
+    {% else %}
+        <meta name="user-id">
+        <meta name="user-email">
+    {% endif %}
 
     <title>{% block title %}Spendwell{% endblock %}</title>
 

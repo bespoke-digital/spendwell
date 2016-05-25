@@ -41,7 +41,7 @@
         <div class="col-sm-4 hidden-xs">
           {% if request.user.is_authenticated %}
             <ul class="list-inline">
-              <li><a href="{% url 'logout' %}">Logout</a></li>
+              <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
               <li><a href="{% url 'app' %}" class="mui-btn mui-btn--primary">Dashboard</a></li>
             </ul>
           {% else %}
