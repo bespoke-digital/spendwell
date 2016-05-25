@@ -33,29 +33,14 @@ class Goal(SWModel):
         return self.name
 
     def generate_month(self, month_start=None):
-        from apps.users.summary import MonthSummary
-
         if month_start is None:
             month_start = this_month()
-
-        month_simmary = MonthSummary(self.owner, month_start)
-        available_amount = sum([
-            month_simmary.income,
-            month_simmary.bills_unpaid_total,
-            month_simmary.spent,
-        ])
-
-        if available_amount < self.monthly_amount:
-            filled_amount = -available_amount
-        else:
-            filled_amount = self.monthly_amount
 
         goal_month, created = GoalMonth.objects.update_or_create(
             goal=self,
             month_start=month_start,
             defaults={
                 'target_amount': self.monthly_amount,
-                'filled_amount': filled_amount,
             },
         )
 
@@ -81,7 +66,6 @@ class GoalMonth(SWModel):
     goal = models.ForeignKey(Goal, related_name='months')
     month_start = models.DateTimeField()
     target_amount = models.DecimalField(decimal_places=2, max_digits=12)
-    filled_amount = models.DecimalField(decimal_places=2, max_digits=12)
 
     objects = GoalMonthManager()
 

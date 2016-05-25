@@ -21,7 +21,6 @@ class GoalNode(SWNode):
 class GoalMonthNode(SWNode):
     name = graphene.Field(graphene.String())
     target_amount = graphene.Field(Money)
-    filled_amount = graphene.Field(Money)
 
     class Meta:
         model = GoalMonth
@@ -29,7 +28,6 @@ class GoalMonthNode(SWNode):
             'name',
             'month_start',
             'target_amount',
-            'filled_amount',
             'goal',
         )
 

@@ -89,7 +89,7 @@ class MonthSummary(object):
             self._goals_total = GoalMonth.objects.filter(
                 goal__owner=self.user,
                 month_start=self.month_start,
-            ).sum('filled_amount')
+            ).sum('target_amount')
         return self._goals_total
 
     @property

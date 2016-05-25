@@ -315,7 +315,6 @@ Dashboard = Relay.createContainer(Dashboard, {
                 id
                 name
                 targetAmount
-                filledAmount
               }
             }
           }

@@ -14,7 +14,6 @@ import Accounts from 'views/accounts';
 import AddAccount from 'views/add-account';
 import AccountUpload from 'views/account-upload';
 import Bucket from 'views/bucket';
-import Goal from 'views/goal';
 import Transactions from 'views/transactions';
 import OnboardingAddAccount from 'views/onboarding/add-account';
 import OnboardingAccounts from 'views/onboarding/accounts';
@@ -51,7 +50,6 @@ export default (
       <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
       <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
 
-      <Route path='goals/:id' component={Goal} queries={rootQuery}/>
       <Route path='labels/:id' component={Bucket} queries={rootQuery}/>
 
       <Route path='accounts' component={Accounts} queries={rootQuery}/>
