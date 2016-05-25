@@ -54,10 +54,16 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(Cls, input, info):
         from spendwell.schema import Viewer
 
+        filters = clean_filters(input['filters'])
+
+        filters = clean_filters(input['filters'])
+        if not len(filters):
+            raise ValueError('filters are required')
+
         Bucket.objects.create(
             owner=info.request_context.user,
             name=input['name'],
-            filters=clean_filters(input['filters']),
+            filters=filters,
             type=input['type'],
         )
 
