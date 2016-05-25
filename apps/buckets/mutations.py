@@ -10,6 +10,7 @@ from apps.transactions.filters import TransactionFilter
 
 from .models import Bucket
 from .schema import BucketNode
+from .utils import autodetect_bills
 
 
 BucketEdge = Edge.for_node(BucketNode)
@@ -24,22 +25,6 @@ def clean_filters(filters):
         }
         for filter in filters
     ]
-
-
-class AssignTransactionsMutation(ClientIDMutation):
-    class Input:
-        pass
-
-    viewer = graphene.Field('Viewer')
-
-    @classmethod
-    def mutate_and_get_payload(Cls, input, info):
-        from spendwell.schema import Viewer
-
-        for bucket in Bucket.objects.filter(owner=info.request_context.user):
-            bucket.assign_transactions()
-
-        return Cls(viewer=Viewer())
 
 
 class CreateBucketMutation(graphene.relay.ClientIDMutation):
@@ -116,11 +101,41 @@ class DeleteBucketMutation(graphene.relay.ClientIDMutation):
         return Cls(viewer=Viewer())
 
 
+class AssignTransactionsMutation(ClientIDMutation):
+    class Input:
+        pass
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+
+        for bucket in Bucket.objects.filter(owner=info.request_context.user):
+            bucket.assign_transactions()
+
+        return Cls(viewer=Viewer())
+
+
+class AutodetectBillsMutation(graphene.relay.ClientIDMutation):
+    class Input:
+        pass
+
+    viewer = graphene.Field('Viewer')
+
+    @classmethod
+    def mutate_and_get_payload(Cls, input, info):
+        from spendwell.schema import Viewer
+        autodetect_bills(info.request_context.user)
+        return Cls(viewer=Viewer())
+
+
 class BucketsMutations(graphene.ObjectType):
     create_bucket = graphene.Field(CreateBucketMutation)
     delete_bucket = graphene.Field(DeleteBucketMutation)
     update_bucket = graphene.Field(UpdateBucketMutation)
     assign_transactions = graphene.Field(AssignTransactionsMutation)
+    autodetect_bills = graphene.Field(AutodetectBillsMutation)
 
     class Meta:
         abstract = True

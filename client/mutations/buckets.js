@@ -185,3 +185,41 @@ export class UpdateBucketMutation extends Relay.Mutation {
     };
   }
 }
+
+
+export class AutodetectBillsMutation extends Relay.Mutation {
+  static fragments = {
+    viewer: ()=> Relay.QL`
+      fragment on Viewer {
+        id
+      }
+    `,
+  };
+
+  getMutation() {
+    return Relay.QL`mutation { autodetectBills }`;
+  }
+
+  getVariables() {
+    return {};
+  }
+
+  getFatQuery() {
+    return Relay.QL`
+      fragment on AutodetectBillsMutation {
+        viewer {
+          dummy
+        }
+      }
+    `;
+  }
+
+  getConfigs() {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: this.props.viewer.id,
+      },
+    }];
+  }
+}

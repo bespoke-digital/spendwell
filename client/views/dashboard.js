@@ -20,6 +20,8 @@ import Icon from 'components/icon';
 import CreateBucketSheet from 'components/create-bucket-sheet';
 import CreateGoalSheet from 'components/create-goal-sheet';
 
+import { handleMutationError } from 'utils/network-layer';
+import { AutodetectBillsMutation } from 'mutations/buckets';
 import { AssignTransactionsMutation } from 'mutations/buckets';
 import { SettingsMutation } from 'mutations/users';
 
@@ -224,6 +226,19 @@ class Dashboard extends Component {
 
         <PrimaryFab actions={[
           {
+            label: 'Autodetect Bills',
+            icon: <Icon type='compare arrows' color='light'/>,
+            onClick: ()=> {
+              Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
+                onFailure: handleMutationError,
+                onSuccess: ()=> {
+                  console.log('Success: AutodetectBillsMutation');
+                  relay.forceFetch();
+                },
+              });
+            },
+          },
+          {
             label: 'New Goal',
             className: 'goal-fab',
             icon: <Icon type='show chart' color='light'/>,
@@ -297,7 +312,8 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${BillMonth.getFragment('viewer')}
         ${SettingsMutation.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
-        ${CreateGoalSheet.getFragment('viewer')}\
+        ${CreateGoalSheet.getFragment('viewer')}
+        ${AutodetectBillsMutation.getFragment('viewer')}
 
         firstMonth
 
