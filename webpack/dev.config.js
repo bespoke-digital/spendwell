@@ -3,7 +3,7 @@
 var config = require('./base.config.js');
 
 
-// config.devtool = 'sourcemap';
+config.devtool = 'sourcemap';
 // config.devtool = 'cheap-module-eval-source-map';
 config.debug = true;
 

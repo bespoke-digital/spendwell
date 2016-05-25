@@ -1,7 +1,13 @@
 
-import { Route, IndexRedirect, browserHistory } from 'react-router';
+import {
+  Router,
+  Route,
+  IndexRedirect,
+  applyRouterMiddleware,
+  browserHistory,
+} from 'react-router';
 import Relay from 'react-relay';
-import { RelayRouter } from 'react-router-relay';
+import useRelay from 'react-router-relay';
 
 import Dashboard from 'views/dashboard';
 import Accounts from 'views/accounts';
@@ -24,7 +30,13 @@ function onUpdate() {
 }
 
 export default (
-  <RelayRouter history={browserHistory} onUpdate={onUpdate} forceFetch={true}>
+  <Router
+    history={browserHistory}
+    onUpdate={onUpdate}
+    forceFetch={true}
+    render={applyRouterMiddleware(useRelay)}
+    environment={Relay.Store}
+  >
     <Route path='onboarding'>
       <IndexRedirect to='connect'/>
 
@@ -48,5 +60,5 @@ export default (
 
       <Route path='transactions' component={Transactions} queries={rootQuery}/>
     </Route>
-  </RelayRouter>
+  </Router>
 );
