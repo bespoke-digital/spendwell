@@ -43,7 +43,6 @@ class Bucket(SWModel):
 
     @filters.setter
     def filters(self, value):
-        # import pdb; pdb.set_trace()
         low_filters = deepcopy(value)
         for index, filter in enumerate(low_filters):
             for key, value in filter.items():
