@@ -19,6 +19,7 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
         full_sync = graphene.Boolean()
         public_token = graphene.String()
         plaid_institution_id = graphene.String()
+        logo = graphene.String()
 
     viewer = graphene.Field('Viewer')
 
@@ -39,6 +40,7 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
             plaid_id=input['plaid_institution_id'],
             plaid_public_token=input['public_token'],
             plaid_access_token=token_response['access_token'],
+            logo_data=input['logo'],
             data=institution_response,
         )
 

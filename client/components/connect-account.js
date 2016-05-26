@@ -51,12 +51,15 @@ class ConnectAccount extends Component {
       viewer,
       plaidInstitutionId: plaidInstitution.id,
       onConnected: ::this.handleConnected,
+      logo: plaidInstitution.logo,
     });
   }
 
   render() {
     const { viewer, relay } = this.props;
     const { results } = this.state;
+
+    console.log(results);
 
     return (
       <CardList className={styles.root}>

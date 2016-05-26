@@ -17,6 +17,7 @@ export default function({
   onConnecing,
   onConnected,
   fullSync,
+  logo,
 }) {
   function openPlaid() {
     window.Plaid.create({
@@ -35,6 +36,7 @@ export default function({
           publicToken,
           plaidInstitutionId,
           fullSync: !!fullSync,
+          logo,
         }), {
           onFailure: handleMutationError,
           onSuccess: ()=> {

@@ -1,6 +1,8 @@
 
 import logging
+from base64 import b64decode
 
+from django.core.files.base import ContentFile
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -19,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class InstitutionManager(SWManager):
-    def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data):
+    def from_plaid(self, owner, plaid_id, plaid_access_token, plaid_public_token, data, logo_data):
         institution, created = Institution.objects.get_or_create(
             owner=owner,
             plaid_id=plaid_id,
@@ -28,12 +30,16 @@ class InstitutionManager(SWManager):
 
         # Make sure reauth for FIs without plaid_public_token causes accounts
         # to be deleted. This can be removed later, since it only applies to
-        # accounts connected before 1016/04/25
+        # accounts connected before 2016/04/25
         if not created and not institution.plaid_public_token:
             institution.accounts.all().delete()
 
         institution.plaid_public_token = plaid_public_token
         institution.plaid_access_token = plaid_access_token
+
+        if logo_data:
+            institution.logo = ContentFile(b64decode(logo_data), 'logo.png')
+
         institution.save()
         return institution
 
@@ -60,6 +66,8 @@ class Institution(SWModel):
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     reauth_required = models.BooleanField(default=False)
     last_sync = models.DateTimeField(null=True, blank=True)
+
+    logo = models.ImageField(upload_to='institutions/institution/logo', blank=True, null=True)
 
     objects = InstitutionManager()
 

@@ -15,6 +15,7 @@ class InstitutionNode(SWNode):
     current_balance = graphene.Field(Money)
     accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
     finicity_institution = graphene.Field(FinicityInstitutionNode)
+    logo = graphene.Field(graphene.String())
 
     class Meta:
         model = Institution
@@ -35,6 +36,10 @@ class InstitutionNode(SWNode):
 
     def resolve_can_sync(self, args, info):
         return bool(self.instance.plaid_id) or bool(self.instance.finicity_id)
+
+    def resolve_logo(self, args, info):
+        if self.instance.logo:
+            return self.instance.logo.url
 
 
 class InstitutionsQuery(graphene.ObjectType):

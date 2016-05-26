@@ -65,9 +65,12 @@ class Institution extends Component {
       <CardList className='institution'>
         <Card summary={
           <div>
+            {institution.logo ?
+              <img src={institution.logo} alt={institution.name} className='institution-logo'/>
+            : null}
             <h3>{institution.name}</h3>
 
-            {isAdmin ?
+            {isAdmin && institution.lastSync ?
               <div className='last-sync'>
                 {moment(institution.lastSync).fromNow()}
               </div>
@@ -130,6 +133,7 @@ Institution = Relay.createContainer(Institution, {
         canSync
         lastSync
         currentBalance
+        logo
 
         accounts(first: 100, disabled: false) {
           edges {

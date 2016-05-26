@@ -20,6 +20,7 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
       fullSync: this.props.fullSync,
       publicToken: this.props.publicToken,
       plaidInstitutionId: this.props.plaidInstitutionId,
+      logo: this.props.logo,
     };
   }
 
