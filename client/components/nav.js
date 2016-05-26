@@ -8,6 +8,7 @@ import style from 'sass/components/nav';
 
 import { handleMutationError } from 'utils/network-layer';
 import { AutodetectBillsMutation } from 'mutations/buckets';
+import { SyncInstitutionsMutation } from 'mutations/institutions';
 
 import logoGreen from 'img/logo-green.svg';
 import logoWhite from 'img/logo-white.svg';
@@ -79,6 +80,22 @@ class Nav extends Component {
               </A>
             </li>
           ) : null}
+          {viewer.isAdmin ? (
+            <li>
+              <A onClick={()=> {
+                Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
+                  onFailure: handleMutationError,
+                  onSuccess: ()=> {
+                    console.log('Success: SyncInstitutionsMutation');
+                    relay.forceFetch();
+                  },
+                });
+              }}>
+                <Icon type='file download'/>
+                <div className='label'>Sync</div>
+              </A>
+            </li>
+          ) : null}
         </ul>
       </div>
     );
@@ -91,6 +108,7 @@ Nav = Relay.createContainer(Nav, {
       return Relay.QL`
         fragment on Viewer {
           ${AutodetectBillsMutation.getFragment('viewer')}
+          ${SyncInstitutionsMutation.getFragment('viewer')}
 
           email
           isAdmin

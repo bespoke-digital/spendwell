@@ -9,6 +9,7 @@ from django.db import models
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.accounts.models import Account
+from apps.finicity.utils import normalize_transaction_description
 
 from .utils import similarity
 
@@ -60,7 +61,7 @@ class TransactionManager(SWManager):
         transaction.account = account
         transaction.owner = institution.owner
 
-        transaction.description = data['name']
+        transaction.description = normalize_transaction_description(data['name'])
         transaction.amount = -Decimal(data['amount'])
         transaction.date = datetime(
             *map(int, data['date'].split('-')),
