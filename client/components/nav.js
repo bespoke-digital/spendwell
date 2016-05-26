@@ -9,6 +9,7 @@ import style from 'sass/components/nav';
 import { handleMutationError } from 'utils/network-layer';
 import { AutodetectBillsMutation } from 'mutations/buckets';
 import { SyncInstitutionsMutation } from 'mutations/institutions';
+import eventEmitter from 'utils/event-emitter';
 
 import logoGreen from 'img/logo-green.svg';
 import logoWhite from 'img/logo-white.svg';
@@ -24,7 +25,7 @@ class Nav extends Component {
   };
 
   render() {
-    const { viewer, toggleNav, open, relay } = this.props;
+    const { viewer, toggleNav, open } = this.props;
 
     return (
       <div className={`${style.root} ${open ? 'open' : ''}`}>
@@ -71,7 +72,7 @@ class Nav extends Component {
                   onFailure: handleMutationError,
                   onSuccess: ()=> {
                     console.log('Success: AutodetectBillsMutation');
-                    relay.forceFetch();
+                    eventEmitter.emit('forceFetch');
                   },
                 });
               }}>
@@ -87,7 +88,7 @@ class Nav extends Component {
                   onFailure: handleMutationError,
                   onSuccess: ()=> {
                     console.log('Success: SyncInstitutionsMutation');
-                    relay.forceFetch();
+                    eventEmitter.emit('forceFetch');
                   },
                 });
               }}>
