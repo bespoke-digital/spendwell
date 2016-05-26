@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 var googleAnalyticsKey = document.querySelector('meta[name=google-analytics-key]').getAttribute('content');
 var mixpanelKey = document.querySelector('meta[name=mixpanel-key]').getAttribute('content');
@@ -25,13 +26,16 @@ if (window.Raven)
   Raven.config(ravenDsn).install();
 
 
-var isSignup = document.location.search.indexOf('signup') !== -1;
+if (window.mixpanel && userID) {
+  var isSignup = document.location.search.indexOf('signup') !== -1;
 
-if (window.mixpanel && userID && isSignup) {
-  window.mixpanel.alias(userID);
+  if (isSignup) {
+    window.mixpanel.alias(userID);
+    window.mixpanel.track('signup');
+
+  } else {
+    window.mixpanel.identify(userID);
+  }
+
   window.mixpanel.people.set({ email: userEmail });
-  window.mixpanel.track('signup');
-
-} else if (window.mixpanel && userID) {
-  window.mixpanel.identify(userID);
 }

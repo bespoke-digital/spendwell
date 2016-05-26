@@ -5,6 +5,8 @@ from django.conf import settings
 
 from plaid import Client
 
+from apps.buckets.utils import autodetect_bills
+
 from .models import Institution
 from .schema import InstitutionNode
 
@@ -61,6 +63,8 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
         info.request_context.user.sync()
         info.request_context.user.estimate_income()
         info.request_context.user.save()
+
+        autodetect_bills(info.request_context.user)
 
         return SyncInstitutionsMutation(viewer=Viewer())
 

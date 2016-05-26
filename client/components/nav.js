@@ -6,6 +6,9 @@ import A from 'components/a';
 import Icon from 'components/icon';
 import style from 'sass/components/nav';
 
+import { handleMutationError } from 'utils/network-layer';
+import { AutodetectBillsMutation } from 'mutations/buckets';
+
 import logoGreen from 'img/logo-green.svg';
 import logoWhite from 'img/logo-white.svg';
 
@@ -20,7 +23,7 @@ class Nav extends Component {
   };
 
   render() {
-    const { viewer, toggleNav, open } = this.props;
+    const { viewer, toggleNav, open, relay } = this.props;
 
     return (
       <div className={`${style.root} ${open ? 'open' : ''}`}>
@@ -59,6 +62,23 @@ class Nav extends Component {
               <div className='label'>Logout</div>
             </a>
           </li>
+          {viewer.isAdmin ? <li className='divider'/> : null}
+          {viewer.isAdmin ? (
+            <li>
+              <A onClick={()=> {
+                Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
+                  onFailure: handleMutationError,
+                  onSuccess: ()=> {
+                    console.log('Success: AutodetectBillsMutation');
+                    relay.forceFetch();
+                  },
+                });
+              }}>
+                <Icon type='find replace'/>
+                <div className='label'>Autodetect Bills</div>
+              </A>
+            </li>
+          ) : null}
         </ul>
       </div>
     );
@@ -70,7 +90,10 @@ Nav = Relay.createContainer(Nav, {
     viewer() {
       return Relay.QL`
         fragment on Viewer {
+          ${AutodetectBillsMutation.getFragment('viewer')}
+
           email
+          isAdmin
         }
       `;
     },

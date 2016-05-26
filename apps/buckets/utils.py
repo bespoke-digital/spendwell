@@ -7,7 +7,7 @@ from apps.transactions.models import Transaction
 from .models import Bucket
 
 
-def test_month_ago(transaction, month_start, ago):
+def bill_month_match(transaction, month_start, ago):
     prev_month_start = month_start - relativedelta(months=ago)
     prev_month_end = month_start - relativedelta(months=ago - 1)
 
@@ -40,8 +40,6 @@ def autodetect_bills(user):
     full_month_end = this_month()
     full_month_start = full_month_end - relativedelta(months=1)
 
-    Bucket.objects.filter(owner=user, type='bill').delete()
-
     for transaction in Transaction.objects.filter(
         owner=user,
         date__gte=full_month_start,
@@ -49,8 +47,8 @@ def autodetect_bills(user):
         amount__lt=0,
     ):
         if (
-            test_month_ago(transaction, full_month_start, 1) and
-            test_month_ago(transaction, full_month_start, 2)
+            bill_month_match(transaction, full_month_start, 1) and
+            bill_month_match(transaction, full_month_start, 2)
         ):
             Bucket.objects.create(
                 owner=user,

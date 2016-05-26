@@ -1,5 +1,6 @@
 
 @import '../variables';
+@import '../color';
 @import '../depth';
 
 :local(.root) {
@@ -107,6 +108,11 @@
       .icon {
         color: $accent;
       }
+    }
+
+    li.divider {
+      border-top: 1px solid color('grey', '200');
+      margin: 8px 0;
     }
   }
 }
