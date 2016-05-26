@@ -13,6 +13,11 @@ from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
 
 
+class BucketAvatar(models.Model):
+    name = models.CharField(max_length=255)
+    avatar = models.ImageField(upload_to='buckets/bucketavatar/avatar')
+
+
 class Bucket(SWModel):
     owner = models.ForeignKey('users.User', related_name='buckets')
     name = models.CharField(max_length=255)
@@ -22,8 +27,6 @@ class Bucket(SWModel):
         ('bill', 'Bill'),
         ('account', 'External Account'),
     ))
-
-    avatar = models.ImageField(upload_to='buckets/bucket/avatar', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -54,6 +57,15 @@ class Bucket(SWModel):
         if hasattr(self, '_high_filters'):
             delattr(self, '_high_filters')
             self.filters
+
+    @property
+    def avatar(self):
+        if not hasattr(self, '_avatar'):
+            try:
+                self._avatar = BucketAvatar.objects.get(name__iexact=self.name).avatar
+            except BucketAvatar.DoesNotExist:
+                self._avatar = None
+        return self._avatar
 
     def raw_transactions(self, **filters):
         filters['owner'] = self.owner

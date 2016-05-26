@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 from spendwell.admin import admin_site
-from .models import Bucket
+from .models import Bucket, BucketAvatar
 
 
 class BucketAdmin(admin.ModelAdmin):
@@ -18,3 +18,9 @@ class BucketAdmin(admin.ModelAdmin):
     )
 
 admin_site.register(Bucket, BucketAdmin)
+
+
+class BucketAvatarAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+admin_site.register(BucketAvatar, BucketAvatarAdmin)
