@@ -61,7 +61,7 @@ class TransactionManager(SWManager):
         transaction.account = account
         transaction.owner = institution.owner
 
-        transaction.description = normalize_transaction_description(data['name'])
+        transaction.description = data['name']
         transaction.amount = -Decimal(data['amount'])
         transaction.date = datetime(
             *map(int, data['date'].split('-')),
@@ -102,7 +102,7 @@ class TransactionManager(SWManager):
         transaction.account = account
         transaction.owner = institution.owner
 
-        transaction.description = data['description']
+        transaction.description = normalize_transaction_description(data['description'])
         transaction.amount = Decimal(data['amount'])
         transaction.date = datetime.fromtimestamp(
             float(data['postedDate']),
