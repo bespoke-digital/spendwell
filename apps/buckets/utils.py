@@ -20,7 +20,6 @@ def test_month_ago(transaction, month_start, ago):
     ).count()
 
     if not description_match_count == 1:
-        print(transaction.description, description_match_count)
         return False
 
     amount_match_count = transaction.account.transactions.filter(
@@ -32,7 +31,6 @@ def test_month_ago(transaction, month_start, ago):
     ).count()
 
     if not amount_match_count == 1:
-        print(transaction.description, amount_match_count)
         return False
 
     return True
