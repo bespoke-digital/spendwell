@@ -65,9 +65,9 @@ const STEPS = [
       image: readyImage,
       header: 'Your Data Is Ready To Go',
       paragraph: `
-        You’ll now be redirected to your financial dashboard where all the magic
-        happens. Review the bills we’ve created, set up some goals and labels
-        and start managing your money like a boss.
+        You'll now be redirected to your financial dashboard where all the magic
+        happens. Review the bills we've created, set up some goals/labels and
+        start managing your money like a boss.
       `,
     },
   },
