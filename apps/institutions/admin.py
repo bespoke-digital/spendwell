@@ -15,6 +15,7 @@ class InstitutionAdmin(admin.ModelAdmin):
         'plaid_public_token',
         'finicity_id',
         'last_sync',
+        'logo',
         'reauth_required',
     )
 
