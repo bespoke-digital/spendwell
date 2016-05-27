@@ -106,6 +106,21 @@
     > span:last-child:after {
       content: '';
     }
+
+    .bucket-chip {
+      cursor: pointer;
+
+      > .icon {
+        display: block;
+        float: right;
+        margin: 8px 0 8px 4px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .buckets-label {
+    margin-top: 4px;
   }
 
   .transaction-quick-add {

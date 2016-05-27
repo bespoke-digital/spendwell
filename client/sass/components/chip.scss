@@ -1,0 +1,14 @@
+
+@import '../variables';
+@import '../color';
+
+:local(.root) {
+  display: inline-block;
+  height: 32px;
+  padding: 0 12px;
+  line-height: 32px;
+  border-radius: 16px;
+  margin-right: 8px;
+
+  background-color: color('grey', '200');
+}

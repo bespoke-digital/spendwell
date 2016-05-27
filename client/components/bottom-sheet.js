@@ -1,6 +1,5 @@
 
 import { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
 
 import Card from 'components/card';
 import SubtreeContainer from 'components/subtree-container';

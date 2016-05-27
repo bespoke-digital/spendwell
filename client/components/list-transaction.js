@@ -10,7 +10,10 @@ import Button from 'components/button';
 import CardActions from 'components/card-actions';
 import Icon from 'components/icon';
 import IconList from 'components/icon-list';
+import Chip from 'components/chip';
+import UpdateBucketSheet from 'components/update-bucket-sheet';
 
+import eventEmitter from 'utils/event-emitter';
 import { handleMutationError } from 'utils/network-layer';
 import { DeleteTransactionMutation } from 'mutations/transactions';
 
@@ -32,6 +35,7 @@ class ListTransaction extends Component {
   state = {
     loading: false,
     quickAdd: false,
+    editBucket: null,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -58,7 +62,7 @@ class ListTransaction extends Component {
 
   render() {
     const { viewer, transaction, expanded, onClick, abs, months, relay } = this.props;
-    const { loading, quickAdd } = this.state;
+    const { loading, quickAdd, editBucket } = this.state;
 
     return (
       <Card
@@ -125,10 +129,26 @@ class ListTransaction extends Component {
                   <Icon type='local offer'/>
                   <div className='content buckets'>
                     {transaction.buckets.edges.map(({ node })=>
-                      <span key={node.id}>{node.name}</span>
+                      <Chip
+                        key={node.id}
+                        className='bucket-chip'
+                        onClick={()=> this.setState({ editBucket: node.id })}
+                      >
+                        {node.name}
+                        <Icon type='edit'/>
+
+                        <UpdateBucketSheet
+                          viewer={viewer}
+                          bucket={node}
+                          visible={editBucket === node.id}
+                          onRequestClose={()=> this.setState({ editBucket: null })}
+                          onUpdated={()=> eventEmitter.emit('forceFetch')}
+                          onDeleted={()=> eventEmitter.emit('forceFetch')}
+                        />
+                      </Chip>
                     )}
                   </div>
-                  <div className='label'>Labels</div>
+                  <div className='label buckets-label'>Labels</div>
                 </div>
               : null}
             </IconList>
@@ -162,6 +182,7 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     viewer: ()=> Relay.QL`
       fragment on Viewer {
         ${TransactionQuickAdd.getFragment('viewer')}
+        ${UpdateBucketSheet.getFragment('viewer')}
       }
     `,
     transaction: ()=> Relay.QL`
@@ -181,6 +202,8 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         buckets(first: 10) {
           edges {
             node {
+              ${UpdateBucketSheet.getFragment('bucket')}
+
               id
               name
             }
