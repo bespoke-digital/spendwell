@@ -96,9 +96,7 @@ class CreateBucketSheet extends Component {
         actions={loading ?
           <div className='spinner-container'><Spinner/></div>
         :
-          <Button className='action' onClick={::this.handleSubmit} plain color='light'>
-            Save
-          </Button>
+          <Button className='action' onClick={::this.handleSubmit} plain color='light'>Save</Button>
         }
       >
         {open && (
