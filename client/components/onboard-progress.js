@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import { Component } from 'react';
 import Relay from 'react-relay';
+import { browserHistory } from 'react-router';
 
 import Progress from 'components/progress';
 import Icon from 'components/icon';
@@ -39,6 +40,7 @@ class OnboardProgress extends Component {
     } = this.state;
 
     const status = {
+      hasInstitution: viewer.institutions.edges.length > 0,
       estimatedIncomeConfirmed: viewer.settings.estimatedIncomeConfirmed,
       hasGoal: viewer.goals.edges.length > 0,
       hasBill: viewer.bills.edges.length > 0,
@@ -78,6 +80,16 @@ class OnboardProgress extends Component {
           >
             <h4>Get Started</h4>
             <ul>
+              <li
+                className={status.hasInstitution ? 'done' : 'not-done'}
+                onClick={()=> browserHistory.push('/app/accounts')}
+              >
+                <div><Icon type={status.hasInstitution ? 'done' : 'radio button off'}/></div>
+                <div>
+                  <div className='title'>Connect an Account</div>
+                  <div className='description'>Get your transaction in the system.</div>
+                </div>
+              </li>
               <li
                 className={status.estimatedIncomeConfirmed ? 'done' : 'not-done'}
                 onClick={()=> this.setState({ showIncomeEstimateDialog: true })}
@@ -184,6 +196,10 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
 
         settings {
           estimatedIncomeConfirmed
+        }
+
+        institutions(first: 1) {
+          edges { node { id } }
         }
 
         goals(first: 1) {

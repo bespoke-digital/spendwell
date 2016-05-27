@@ -18,17 +18,9 @@
   }
 
   .appbar-container {
-    @media (max-width: $screen-xs-max) {
-      height: $appbar-height;
-      position: relative;
-      cursor: pointer;
-    }
-
-    @media (min-width: $screen-sm-min) {
-      height: $appbar-height;
-      position: relative;
-      cursor: pointer;
-    }
+    height: $appbar-height;
+    position: relative;
+    cursor: pointer;
 
     > .progress {
       @extend .depth-z1;
@@ -127,6 +119,7 @@
         justify-content: flex-end;
         padding: 5px 10px;
         margin-bottom: 5px;
+        cursor: pointer;
 
         text-align: left;
 
@@ -143,8 +136,6 @@
         }
 
         &.not-done {
-          cursor: pointer;
-
           &:hover {
             background-color: $gray-8;
           }
