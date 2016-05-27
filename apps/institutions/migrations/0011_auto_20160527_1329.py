@@ -17,7 +17,7 @@ def plaid_logos(apps, schema_editor):
         response = requests.get(
             'https://tartan.plaid.com/institutions/search?id={}'.format(institution.plaid_id)
         )
-        if response.status_code == 200 and 'logo' in response.json():
+        if response.status_code == 200 and 'logo' in response.json() and response.json()['logo']:
             institution.logo = ContentFile(b64decode(response.json()['logo']), 'logo.png')
             institution.save()
 
