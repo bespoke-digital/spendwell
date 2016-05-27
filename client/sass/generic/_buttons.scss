@@ -124,6 +124,45 @@
         border-right-color: white;
       }
     }
+  }
 
+  &.mui-btn--color-primary {
+    color: $primary;
+
+    &:hover {
+      color: darken($primary, 5%);
+    };
+  }
+
+  &.mui-btn--color-accent {
+    color: $accent;
+
+    &:hover {
+      color: darken($accent, 5%);
+    }
+  }
+
+  &.mui-btn--color-goal {
+    color: $goal;
+
+    &:hover {
+      color: darken($goal, 5%);
+    }
+  }
+
+  &.mui-btn--color-bill {
+    color: $bill;
+
+    &:hover {
+      color: darken($bill, 5%);
+    }
+  }
+
+  &.mui-btn--color-label {
+    color: $label;
+
+    &:hover {
+      color: darken($label, 5%);
+    }
   }
 }

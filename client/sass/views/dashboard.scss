@@ -200,6 +200,47 @@
     text-align: center;
   }
 
+  .month-placeholder {
+    display: flex;
+    border: 1px solid color('grey', '300');
+    padding: 16px;
+
+    .placeholder-icon {
+      height: 24px;
+      width: 24px;
+      border-radius: 12px;
+      padding: 4px;
+      margin-right: 16px;
+
+      &.goal {
+        background-color: $goal;
+      }
+
+      &.bill {
+        background-color: $bill;
+      }
+
+      &.label {
+        background-color: $label;
+      }
+
+      .icon {
+        font-size: 16px;
+      }
+    }
+
+    .placeholder-copy {
+      flex: 1;
+      line-height: 24px;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .placeholder-cta {
+      margin: -6px;
+    }
+  }
+
   .goal-fab .btn {
     @include button-variant(white, $goal);
   }

@@ -19,6 +19,7 @@ import PrimaryFab from 'components/primary-fab';
 import Icon from 'components/icon';
 import CreateBucketSheet from 'components/create-bucket-sheet';
 import CreateGoalSheet from 'components/create-goal-sheet';
+import Button from 'components/button';
 
 import { SettingsMutation } from 'mutations/users';
 
@@ -108,32 +109,48 @@ class Dashboard extends Component {
           periods={periods}
         />
 
-        {goalMonths.length > 0 ?
-          <CardList className='month-list'>
-            <ListHeading>
-              Goals <small> for long and short term savings</small>
-            </ListHeading>
+        <CardList className='month-list'>
+          <ListHeading>
+            Goals <small> for long and short term savings</small>
+          </ListHeading>
 
-            {goalMonths.map((node)=>
-              <GoalMonth
-                key={node.id}
-                viewer={viewer}
-                goalMonth={node}
-                selected={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-                onForceFetch={()=> relay.forceFetch()}
-                className='month'
-              />
-            )}
+          {goalMonths.length > 0 ? goalMonths.map((node)=>
+            <GoalMonth
+              key={node.id}
+              viewer={viewer}
+              goalMonth={node}
+              selected={selected === node.id}
+              onClick={this.select.bind(this, node.id)}
+              onForceFetch={()=> relay.forceFetch()}
+              className='month'
+            />
+          ) : null}
 
+          {goalMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div><strong>Total</strong></div>
               <div className='amount'>
                 <Money amount={goalTargetTotal} abs={true}/>
               </div>
             </Card>
-          </CardList>
-        : null}
+          : null}
+
+          {goalMonths.length === 0 ?
+            <div className='month-placeholder'>
+              <div className='placeholder-icon goal'>
+                <Icon type='show chart' color='light'/>
+              </div>
+              <div className='placeholder-copy'>
+                You don't have any goals set up
+              </div>
+              <div className='placeholder-cta'>
+                <Button onClick={()=> this.setState({ createGoal: true })} color='goal'>
+                  New Goal
+                </Button>
+              </div>
+            </div>
+          : null}
+        </CardList>
 
         {spentFromSavings > 0 ?
           <CardList>
@@ -147,31 +164,33 @@ class Dashboard extends Component {
           </CardList>
         : null}
 
-        {billMonths.length > 0 ?
-          <CardList className='month-list'>
-            <ListHeading>
-              Bills <small> for monthly recurring expenses</small>
-            </ListHeading>
+        <CardList className='month-list'>
+          <ListHeading>
+            Bills <small> for monthly recurring expenses</small>
+          </ListHeading>
 
+          {billMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div></div>
               <div className='amount'>Average</div>
               <div className='amount'>Spent</div>
             </Card>
+          : null}
 
-            {billMonths.map((node)=>
-              <BillMonth
-                key={node.id}
-                viewer={viewer}
-                bucketMonth={node}
-                month={periods.current}
-                expanded={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-                className='month'
-                onForceFetch={()=> relay.forceFetch()}
-              />
-            )}
+          {billMonths.length > 0 ? billMonths.map((node)=>
+            <BillMonth
+              key={node.id}
+              viewer={viewer}
+              bucketMonth={node}
+              month={periods.current}
+              expanded={selected === node.id}
+              onClick={this.select.bind(this, node.id)}
+              className='month'
+              onForceFetch={()=> relay.forceFetch()}
+            />
+          ) : null}
 
+          {billMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div><strong>Total</strong></div>
               <div className='amount avg'>
@@ -181,34 +200,52 @@ class Dashboard extends Component {
                 <Money amount={billTotal} abs={true}/>
               </div>
             </Card>
-          </CardList>
-        : null}
+          : null}
 
-        {bucketMonths.length > 0 ?
-          <CardList className='month-list'>
-            <ListHeading>
-              Labels <small> for tracking spending</small>
-            </ListHeading>
+          {bucketMonths.length === 0 ?
+            <div className='month-placeholder'>
+              <div className='placeholder-icon bill'>
+                <Icon type='receipt' color='light'/>
+              </div>
+              <div className='placeholder-copy'>
+                You don't have any bills set up
+              </div>
+              <div className='placeholder-cta'>
+                <Button onClick={()=> this.setState({ createBill: true })} color='bill'>
+                  New Bill
+                </Button>
+              </div>
+            </div>
+          : null}
+        </CardList>
 
+        <CardList className='month-list'>
+          <ListHeading>
+            Labels <small> for tracking spending</small>
+          </ListHeading>
+
+          {bucketMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div></div>
               <div className='amount'>Average</div>
               <div className='amount'>Spent</div>
             </Card>
+          : null}
 
-            {bucketMonths.map((node)=>
-              <BucketMonth
-                key={node.id}
-                viewer={viewer}
-                bucketMonth={node}
-                month={periods.current}
-                expanded={selected === node.id}
-                onClick={this.select.bind(this, node.id)}
-                className='month'
-                onForceFetch={()=> relay.forceFetch()}
-              />
-            )}
+          {bucketMonths.length > 0 ? bucketMonths.map((node)=>
+            <BucketMonth
+              key={node.id}
+              viewer={viewer}
+              bucketMonth={node}
+              month={periods.current}
+              expanded={selected === node.id}
+              onClick={this.select.bind(this, node.id)}
+              className='month'
+              onForceFetch={()=> relay.forceFetch()}
+            />
+          ) : null}
 
+          {bucketMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div><strong>Total</strong></div>
               <div className='amount avg'>
@@ -218,8 +255,24 @@ class Dashboard extends Component {
                 <Money amount={bucketTotal} abs={true}/>
               </div>
             </Card>
-          </CardList>
-        : null}
+          : null}
+
+          {bucketMonths.length === 0 ?
+            <div className='month-placeholder'>
+              <div className='placeholder-icon label'>
+                <Icon type='local offer' color='light'/>
+              </div>
+              <div className='placeholder-copy'>
+                You don't have any labels set up
+              </div>
+              <div className='placeholder-cta'>
+                <Button onClick={()=> this.setState({ createLabel: true })} color='label'>
+                  New Label
+                </Button>
+              </div>
+            </div>
+          : null}
+        </CardList>
 
         <PrimaryFab actions={[
           {

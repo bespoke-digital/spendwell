@@ -7,7 +7,17 @@ import { Link } from 'react-router';
 export default class Button extends Component {
   static propTypes = {
     className: PropTypes.string,
-    color: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent', 'light']),
+    color: PropTypes.oneOf([
+      'default',
+      'primary',
+      'danger',
+      'dark',
+      'accent',
+      'light',
+      'goal',
+      'bill',
+      'label',
+    ]),
     variant: PropTypes.oneOf(['default', 'primary', 'danger', 'dark', 'accent']), // variant deprecated, use color
     raised: PropTypes.bool,
     fab: PropTypes.bool,
@@ -66,7 +76,7 @@ export default class Button extends Component {
     let classes = className || '';
     classes += ' mui-btn btn';
     if (variant || color)
-      classes += ` mui-btn--${variant || color}`;
+      classes += ` mui-btn--${variant || color} mui-btn--color-${variant || color}`;
     if (raised)
       classes += ' mui-btn--raised';
     if ((flat || plain) && !fab)
