@@ -24,9 +24,9 @@ const STEPS = [
     image: philosophyImage,
     header: 'Our Philosophy',
     paragraph: `
-      While we analyze your data, we want to quickly tell you a bit
-      more about our philosophy. It boils down to two key principals:
-      pay yourself first and live within your means.
+      While we analyze your data, we want to quickly tell you a bit more about
+      our philosophy. It boils down to two key principals: pay yourself first
+      and live within your means.
     `,
   },
   {
@@ -34,8 +34,9 @@ const STEPS = [
     image: pyfImage,
     header: 'Pay Yourself First',
     paragraph: `
-      This means taking money for your savings goals off the
-      top, before anything else. Our goals feature can help.
+      This means taking money for your savings goals out first, before anything
+      else. When you set up a goal, the amount is subtracted from your safe to
+      spend number each month.
     `,
   },
   {
@@ -43,9 +44,9 @@ const STEPS = [
     image: liveImage,
     header: 'Live Within Your Means',
     paragraph: `
-      This one seems obvious, but can be hard in practice. We can help
-      by telling you what's safe to spend without
-      missing bills or failing to meet your savings goals.
+      This one seems obvious, but can be hard in practice. We will help by
+      telling you what's safe to spend while ensuring your goals and bills are
+      accounted for.
     `,
   },
   {
@@ -54,14 +55,20 @@ const STEPS = [
       image: crunchingImage,
       header: 'We\'re Crunching The Numbers',
       paragraph: `
-        We're downloading and processing your financial data.
-        It could take a minute or two.
+        We're downloading and processing your financial data. It could take a
+        minute or two. We’ll be estimating your income and detecting some of
+        your bills in the process.
       `,
     },
     doneSyncing: {
       scheme: 'blue',
       image: readyImage,
       header: 'Your Data Is Ready To Go',
+      paragraph: `
+        You’ll now be redirected to your financial dashboard where all the magic
+        happens. Review the bills we’ve created, set up some goals and labels
+        and start managing your money like a boss.
+      `,
     },
   },
 ];
