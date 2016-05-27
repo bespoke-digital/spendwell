@@ -202,7 +202,7 @@ class Dashboard extends Component {
             </Card>
           : null}
 
-          {bucketMonths.length === 0 ?
+          {billMonths.length === 0 ?
             <div className='month-placeholder'>
               <div className='placeholder-icon bill'>
                 <Icon type='receipt' color='light'/>
