@@ -107,7 +107,7 @@ class CreateBucketSheet extends Component {
             <Card>
               {type === 'expense' ? `
                 Labels are for tracking spending. We'll show you a 3-month average,
-                and if you're on track to be over or under.
+                and if you're on track to be over or under for the current month.
               ` : `
                 Bills are for monthly recurring expenses. We'll track if the bill has been
                 paid and take unpaid bills out of safe-to-spend.

@@ -64,7 +64,7 @@ class OnboardProgress extends Component {
           <Progress current={progressCurrent + 1} target={progressTarget + 1}/>
         </div>
 
-        <Transition show={calloutOpen && progressCurrent <== 2}>
+        <Transition show={calloutOpen && progressCurrent <= 2}>
           <ClickOff
             className='callout'
             onClickOff={()=> this.setState({ calloutOpen: false })}
