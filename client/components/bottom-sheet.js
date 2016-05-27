@@ -38,19 +38,6 @@ export default class BottomSheet extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   // This is seriously fucked. However, something about nodes being added
-  //   // to children during the visibility toggle causes the scroll position
-  //   // to get wonky without it.
-  //   if (prevProps.visible !== this.props.visible) {
-  //     setTimeout(()=> {
-  //       const node = findDOMNode(this.refs.card);
-  //       if (node)
-  //         node.parentNode.scrollTop = 0;
-  //     }, 1);
-  //   }
-  // }
-
   componentWillUnmount() {
     if (self.timeout)
       clearTimeout(self.timeout);
