@@ -44,10 +44,15 @@ class InstitutionManager(SWManager):
         return institution
 
     def from_finicity(self, owner, data):
+        try:
+            logo = FinicityInstitution.objects.get(finicity_id=data['id']).image
+        except FinicityInstitution.DoesNotExist:
+            logo = None
+
         institution, created = Institution.objects.get_or_create(
             owner=owner,
             finicity_id=data['id'],
-            defaults={'name': data['name']},
+            defaults={'name': data['name'], 'logo': logo},
         )
         return institution
 
