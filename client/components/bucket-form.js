@@ -110,7 +110,6 @@ class BucketForm extends Component {
               label='Name'
               value={name}
               onChange={::this.handleChangeName}
-              autoFocus={true}
             />
           </Card>
 
