@@ -1,5 +1,4 @@
 
-from decimal import Decimal
 import graphene
 
 from apps.core.fields import SWNode, SWConnectionField
@@ -9,7 +8,6 @@ from .models import Goal, GoalMonth
 
 class GoalNode(SWNode):
     monthly_amount = graphene.Field(Money)
-    filled_amount = graphene.Field(Money)
 
     class Meta:
         model = Goal
@@ -17,16 +15,13 @@ class GoalNode(SWNode):
             'name',
             'months',
             'monthly_amount',
-            'filled_amount',
         )
-
-    def resolve_filled_amount(self, args, info):
-        return self.instance.monthly_amount
 
 
 class GoalMonthNode(SWNode):
     name = graphene.Field(graphene.String())
     target_amount = graphene.Field(Money)
+    filled_amount = graphene.Field(Money)
 
     class Meta:
         model = GoalMonth
@@ -34,11 +29,15 @@ class GoalMonthNode(SWNode):
             'name',
             'month_start',
             'target_amount',
+            'filled_amount',
             'goal',
         )
 
     def resolve_name(self, args, info):
         return self.instance.goal.name
+
+    def resolve_filled_amount(self, args, info):
+        return self.instance.target_amount
 
 
 class GoalsQuery(graphene.ObjectType):
