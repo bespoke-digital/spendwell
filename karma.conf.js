@@ -1,5 +1,6 @@
-// Karma configuration
-// Generated on Mon May 30 2016 12:16:30 GMT-0400 (EDT)
+
+var webpackConfig = require('./webpack/base.config.js');
+
 
 module.exports = function(config) {
   config.set({
@@ -15,8 +16,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'client/*.js',
-      'client/**/*.js'
+      'client/tests/*.js',
+      'client/tests/**/*.js',
     ],
 
 
@@ -28,8 +29,11 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'client/test/*.js': ['webpack'],
+      'client/tests/**/*.js': ['webpack'],
     },
 
+    webpack: webpackConfig,
 
     // test results reporter to use
     // possible values: 'dots', 'progress'

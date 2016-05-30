@@ -79,6 +79,7 @@
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
     "karma-mocha": "^1.0.1",
+    "karma-webpack": "^1.7.0",
     "mocha": "^2.5.3",
     "sass-lint": "^1.6.2",
     "webpack-dev-server": "^1.14.1"
