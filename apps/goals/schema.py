@@ -21,6 +21,7 @@ class GoalNode(SWNode):
 class GoalMonthNode(SWNode):
     name = graphene.Field(graphene.String())
     target_amount = graphene.Field(Money)
+    filled_amount = graphene.Field(Money)
 
     class Meta:
         model = GoalMonth
@@ -28,11 +29,15 @@ class GoalMonthNode(SWNode):
             'name',
             'month_start',
             'target_amount',
+            'filled_amount',
             'goal',
         )
 
     def resolve_name(self, args, info):
         return self.instance.goal.name
+
+    def resolve_filled_amount(self, args, info):
+        return self.instance.target_amount
 
 
 class GoalsQuery(graphene.ObjectType):

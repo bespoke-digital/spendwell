@@ -40,7 +40,7 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
             plaid_id=input['plaid_institution_id'],
             plaid_public_token=input['public_token'],
             plaid_access_token=token_response['access_token'],
-            logo_data=input['logo'],
+            logo_data=input.get('logo'),
             data=institution_response,
         )
 
