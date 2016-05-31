@@ -10,3 +10,6 @@ proxy / localhost:3000 {
     proxy_header X-Forwarded-Host dev.spendwell.co
     proxy_header X-Forwarded-Proto https
 }
+
+startup node ./webpack/dev.server.js &
+startup ./manage.py runserver &
