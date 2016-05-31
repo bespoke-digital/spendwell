@@ -4,6 +4,7 @@ from apps.core.utils import node_id_from_instance
 from apps.users.factories import UserFactory
 from apps.buckets.factories import BucketFactory
 from apps.buckets.models import Bucket
+from apps.accounts.factories import AccountFactory
 
 from .models import Transaction
 from .filters import TransactionFilter
@@ -193,6 +194,24 @@ class TransactionsTestCase(SWTestCase):
             10000,
         )
 
+        result = self.graph_query('''{
+            viewer {
+                transactions(filters: [{ amountExact: "20000" }]) {
+                    edges {
+                        node {
+                            amount
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 1)
+        self.assertEqual(
+            result.data['viewer']['transactions']['edges'][0]['node']['amount'],
+            20000,
+        )
+
     def test_description_filter(self):
         owner = UserFactory.create()
 
@@ -257,6 +276,28 @@ class TransactionsTestCase(SWTestCase):
                 }
             }
         }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+
+    def test_account_filter(self):
+        owner = UserFactory.create()
+
+        account = AccountFactory.create()
+        TransactionFactory.create(owner=owner)
+        TransactionFactory.create(owner=owner, account=account)
+        TransactionFactory.create(owner=owner, account=account)
+
+        result = self.graph_query('''{{
+            viewer {{
+                transactions(account: {}) {{
+                    edges {{
+                        node {{
+                            description
+                        }}
+                    }}
+                }}
+            }}
+        }}'''.format(account.id), user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
 
