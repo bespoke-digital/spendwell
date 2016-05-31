@@ -13,6 +13,7 @@ import TransactionList from 'components/transaction-list';
 import MoneyInput from 'components/money-input';
 import Money from 'components/money';
 import A from 'components/a';
+import Select from 'components/select';
 
 import style from 'sass/components/filter';
 
@@ -21,12 +22,10 @@ export class Filter {
   static fields = {
     descriptionExact: { label: 'Description Exact', type: 'string' },
     descriptionContains: { label: 'Description Contains', type: 'string' },
+    amountExact: { label: 'Amount Equals', type: 'money' },
     amountGt: { label: 'Amount Less Than', type: 'money' },
     amountLt: { label: 'Amount Greater Than', type: 'money' },
-    // category: { label: 'Category', type: 'string' },
-    // dateGt: { label: 'Date Greater Than', type: 'date' },
-    // dateLt: { label: 'Date Less Than', type: 'date' },
-    // accountId: { label: 'Account', type: 'account' },
+    // account: { label: 'Account', type: 'account' },
   };
 
   constructor(source, onChange) {
@@ -223,6 +222,15 @@ class FilterComponent extends Component {
                   initialValue={Math.abs(filter.value(field))}
                   onChange={(value)=> filter.update(field, value)}
                 />
+              : Filter.fields[field].type === 'account' ?
+                <Select
+                  initialValue={Math.abs(filter.value(field))}
+                  onChange={(value)=> filter.update(field, value)}
+                  label='Account'
+                  options={viewer.accounts.edges.map(({ node })=> (
+                    { label: node.name, value: node.id }
+                  ))}
+                />
               :
                 <TextInput
                   value={filter.value(field)}
@@ -282,6 +290,15 @@ FilterComponent = Relay.createContainer(FilterComponent, {
 
           pageInfo {
             hasNextPage
+          }
+        }
+
+        accounts(first: 100) {
+          edges {
+            node {
+              id
+              name
+            }
           }
         }
       }
