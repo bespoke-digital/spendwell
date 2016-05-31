@@ -61,7 +61,7 @@ class Bucket(SWModel):
     def avatar(self):
         if not hasattr(self, '_avatar'):
             try:
-                self._avatar = BucketAvatar.objects.get(name__iexact=self.name).avatar
+                self._avatar = BucketAvatar.objects.get(name__icontains=self.name).avatar
             except BucketAvatar.DoesNotExist:
                 self._avatar = None
         return self._avatar
