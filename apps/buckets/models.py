@@ -60,10 +60,12 @@ class Bucket(SWModel):
     @property
     def avatar(self):
         if not hasattr(self, '_avatar'):
-            try:
-                self._avatar = BucketAvatar.objects.get(name__icontains=self.name).avatar
-            except BucketAvatar.DoesNotExist:
+            bucket_avatar = BucketAvatar.objects.filter(name__icontains=self.name).first()
+            if bucket_avatar:
+                self._avatar = bucket_avatar.avatar
+            else:
                 self._avatar = None
+
         return self._avatar
 
     def raw_transactions(self, **filters):
