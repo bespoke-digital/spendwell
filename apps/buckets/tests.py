@@ -4,10 +4,11 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from apps.core.tests import SWTestCase
+from apps.core.utils import this_month, node_id_from_instance
 from apps.transactions.factories import TransactionFactory
 from apps.users.factories import UserFactory
+from apps.accounts.factories import AccountFactory
 
-from apps.core.utils import this_month
 from .factories import BucketFactory
 from .models import Bucket
 
@@ -61,6 +62,53 @@ class BucktsTestCase(SWTestCase):
         self.assertEqual(
             result.data['viewer']['buckets']['edges'][0]['node']['filters'][0]['descriptionContains'],
             'desc',
+        )
+
+    def test_filters_account(self):
+        owner = UserFactory.create()
+        account = AccountFactory.create(owner=owner)
+
+        TransactionFactory.create(owner=owner)
+        TransactionFactory.create(owner=owner, account=account)
+        TransactionFactory.create(owner=owner, account=account)
+
+        BucketFactory.create(owner=owner, filters=[{
+            'account': account.id,
+        }])
+
+        result = self.graph_query('''{
+            viewer {
+                buckets {
+                    edges {
+                        node {
+                            transactions(first: 2) {
+                                edges {
+                                    node {
+                                        id
+                                    }
+                                }
+                            }
+                            filters {
+                                account
+                            }
+                        }
+                    }
+                }
+            }
+        }''', user=owner)
+
+        self.assertEqual(len(result.data['viewer']['buckets']['edges']), 1)
+        self.assertEqual(
+            len(result.data['viewer']['buckets']['edges'][0]['node']['transactions']['edges']),
+            2,
+        )
+        self.assertEqual(
+            len(result.data['viewer']['buckets']['edges'][0]['node']['filters']),
+            1,
+        )
+        self.assertEqual(
+            result.data['viewer']['buckets']['edges'][0]['node']['filters'][0]['account'],
+            node_id_from_instance(account),
         )
 
     def test_bill_avg(self):

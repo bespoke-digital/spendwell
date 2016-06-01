@@ -6,7 +6,6 @@ import Card from 'components/card';
 import SuperCard from 'components/super-card';
 import Button from 'components/button';
 import Money from 'components/money';
-import A from 'components/a';
 import TransactionList from 'components/transaction-list';
 import CardActions from 'components/card-actions';
 

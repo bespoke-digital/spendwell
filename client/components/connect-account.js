@@ -59,8 +59,6 @@ class ConnectAccount extends Component {
     const { viewer, relay } = this.props;
     const { results } = this.state;
 
-    console.log(results);
-
     return (
       <CardList className={styles.root}>
         <Card>

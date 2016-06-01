@@ -37,7 +37,7 @@ def bill_month_match(transaction, month_start, ago):
 
 
 def autodetect_bills(user):
-    full_month_end = this_month()
+    full_month_end = this_month() - relativedelta(months=1)
     full_month_start = full_month_end - relativedelta(months=1)
 
     for transaction in Transaction.objects.filter(
@@ -54,5 +54,8 @@ def autodetect_bills(user):
                 owner=user,
                 name=transaction.description,
                 type='bill',
-                filters=[{'description_exact': transaction.description}],
+                filters=[{
+                    'description_exact': transaction.description,
+                    'account': transaction.account.id,
+                }],
             ).assign_transactions()

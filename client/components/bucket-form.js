@@ -162,10 +162,12 @@ BucketForm = Relay.createContainer(BucketForm, {
         filters {
           amountGt
           amountLt
+          amountExact
           dateGte
           dateLte
           descriptionContains
           descriptionExact
+          account
         }
       }
     `,

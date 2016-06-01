@@ -26,18 +26,23 @@ def instance_for_node_id(node_id, info, check_owner=True):
     return node.instance
 
 
-def node_id_from_instance(instance):
+def node_id_from_instance(instance=None, model=None, id=None):
     "Returns a relay node id for a model instance"
     from spendwell.schema import schema
     schema.schema.get_type_map()
 
-    schema_type = get_type_for_model(schema, instance.__class__)
+    if instance:
+        model = instance.__class__
+        id = instance.id
+    elif not model or not id:
+        raise ValueError('instance or (model and id) must be passed to node_id_from_instance')
+
+    schema_type = get_type_for_model(schema, model)
 
     if schema_type is None:
-        raise ValueError('Cannot find GraphQL type for {}'.format(instance.__class__))
+        raise ValueError('Cannot find GraphQL type for {}'.format(model))
 
-    # import pdb; pdb.set_trace()
-    return to_global_id(schema_type.__name__, instance.id)
+    return to_global_id(schema_type.__name__, id)
 
 
 def get_cursor(instance):

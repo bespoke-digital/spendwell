@@ -1,6 +1,7 @@
 
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.utils import to_snake_case
+from graphql_relay import from_global_id
 
 from apps.core.fields import SWConnectionMixin
 from .filters import TransactionFilter
@@ -24,10 +25,13 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
         ).qs
 
         if args.get('filters'):
-            filters = [
-                {to_snake_case(k): v for k, v in f.items()}
-                for f in args['filters']
-            ]
+            filters = []
+            for filter in args['filters']:
+                for key, value in filter.items():
+                    if key == 'account':
+                        value = from_global_id(value).id
+                    filters.append({to_snake_case(key): value})
+
             queryset = apply_filter_list(queryset, filters, self.filterset_class)
 
         queryset = queryset.order_by(args.get('order_by', '-date'))
