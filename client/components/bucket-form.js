@@ -162,7 +162,6 @@ BucketForm = Relay.createContainer(BucketForm, {
         filters {
           amountGt
           amountLt
-          category
           dateGte
           dateLte
           descriptionContains

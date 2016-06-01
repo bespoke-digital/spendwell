@@ -67,7 +67,6 @@ def import_demo_data():
             description=transaction_data['description'],
             amount=Decimal(transaction_data['amount']),
             date=date,
-            category_id=transaction_data['category_id'],
             from_savings=transaction_data.get('from_savings', False),
             source='demo',
         )

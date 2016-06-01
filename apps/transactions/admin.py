@@ -13,7 +13,6 @@ class TransactionAdmin(admin.ModelAdmin):
     fields = (
         'owner',
         'account',
-        'category',
         'description',
         'date',
         'plaid_id',

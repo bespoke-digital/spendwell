@@ -158,12 +158,6 @@ class Transaction(SWModel):
         related_name='transactions',
         on_delete=models.CASCADE,
     )
-    category = models.ForeignKey(
-        'categories.Category',
-        related_name='transactions',
-        null=True,
-        on_delete=models.SET_NULL,
-    )
     buckets = models.ManyToManyField(
         'buckets.Bucket',
         related_name='transactions',

@@ -195,10 +195,6 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         date
         source
 
-        category {
-          name
-        }
-
         buckets(first: 10) {
           edges {
             node {

@@ -1,7 +1,6 @@
 
 import graphene
 
-from apps.categories.schema import CategoriesQuery
 from apps.institutions.schema import InstitutionsQuery
 from apps.institutions.mutations import InstitutionsMutations
 from apps.accounts.schema import AccountsQuery
@@ -20,7 +19,6 @@ from apps.finicity.mutations import FinicityMutations
 
 class Viewer(
     graphene.relay.Node,
-    CategoriesQuery,
     InstitutionsQuery,
     AccountsQuery,
     TransactionsQuery,

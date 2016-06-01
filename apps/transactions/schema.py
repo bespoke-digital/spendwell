@@ -23,7 +23,6 @@ class TransactionNode(SWNode):
             'description',
             'date',
             'amount',
-            'category',
             'account',
             'transfer_pair',
             'pending',
