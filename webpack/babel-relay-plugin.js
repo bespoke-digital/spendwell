@@ -2,10 +2,7 @@
 
 var babelRelayPlugin = require('babel-relay-plugin');
 var childProcess = require('child_process');
-var path = require('path');
 
-var schema = JSON.parse(childProcess.execSync(
-  'python manage.py export_schema';
-));
+var schema = JSON.parse(childProcess.execSync('python manage.py export_schema'));
 
 module.exports = babelRelayPlugin(schema);
