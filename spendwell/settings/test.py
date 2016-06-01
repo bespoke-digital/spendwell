@@ -11,4 +11,5 @@ DATABASES['default'] = {
     'NAME': 'test',
     'USER': os.environ['PG_USER'],
     'PASSWORD': os.environ['PG_PASSWORD'],
+    'PORT': 5434,
 }
