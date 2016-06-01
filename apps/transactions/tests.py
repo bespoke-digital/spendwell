@@ -289,7 +289,7 @@ class TransactionsTestCase(SWTestCase):
 
         result = self.graph_query('''{{
             viewer {{
-                transactions(account: {}) {{
+                transactions(account: "{}") {{
                     edges {{
                         node {{
                             description
@@ -297,7 +297,7 @@ class TransactionsTestCase(SWTestCase):
                     }}
                 }}
             }}
-        }}'''.format(account.id), user=owner)
+        }}'''.format(node_id_from_instance(account)), user=owner)
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
 

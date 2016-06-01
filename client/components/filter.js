@@ -25,7 +25,7 @@ export class Filter {
     amountExact: { label: 'Amount Equals', type: 'money' },
     amountGt: { label: 'Amount Less Than', type: 'money' },
     amountLt: { label: 'Amount Greater Than', type: 'money' },
-    // account: { label: 'Account', type: 'account' },
+    account: { label: 'Account', type: 'account' },
   };
 
   constructor(source, onChange) {
@@ -101,7 +101,7 @@ export class Filter {
     return this._data[key];
   }
 
-  name() {
+  name(accounts) {
     const fields = Object.keys(_.pick(this._data, (v)=> !(_.isNull(v) || v === '')));
 
     if (fields.length === 0)
@@ -114,7 +114,11 @@ export class Filter {
       return (
         <span className='field' key={key}>
           <strong>{label}{':'}&nbsp;</strong>
-          {type === 'money' ? <Money amount={value} abs={true}/> : value}
+          {type === 'money' ?
+            <Money amount={value} abs={true}/>
+          : type === 'account' ?
+            _.find(accounts.edges, ({ node })=> node.id === value).node.name
+          : value}
         </span>
       );
     });
@@ -199,7 +203,7 @@ class FilterComponent extends Component {
             <div>
               <div className='filter-name'>
                 <div className='subtitle'>Filter</div>
-                <div>{filter.name()}</div>
+                <div>{filter.name(viewer.accounts)}</div>
               </div>
               <Button onClick={onRemove} disabled={canRemove}>
                 Remove Filter
@@ -226,7 +230,8 @@ class FilterComponent extends Component {
                 <Select
                   initialValue={Math.abs(filter.value(field))}
                   onChange={(value)=> filter.update(field, value)}
-                  label='Account'
+                  label='Select Account'
+                  selectedLabel={false}
                   options={viewer.accounts.edges.map(({ node })=> (
                     { label: node.name, value: node.id }
                   ))}
@@ -293,7 +298,7 @@ FilterComponent = Relay.createContainer(FilterComponent, {
           }
         }
 
-        accounts(first: 100) {
+        accounts(first: 100, disabled: false) {
           edges {
             node {
               id
