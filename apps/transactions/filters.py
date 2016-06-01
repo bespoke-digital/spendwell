@@ -19,7 +19,6 @@ class TransactionFilter(filters.FilterSet):
     date_gte = filters.DateTimeFilter(name='date', lookup_type='gte')
     is_transfer = BooleanMethodFilter()
     source_exact = filters.CharFilter(name='source', lookup_type='exact')
-    account = filters.NumberFilter(name='account_id')
 
     class Meta:
         model = Transaction
