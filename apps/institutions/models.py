@@ -163,23 +163,8 @@ class Institution(SWModel):
 
     def sync_transactions(self):
         if self.plaid_client and self.plaid_data:
-            transaction_ids = []
             for transaction_data in self.plaid_data['transactions']:
-                transaction = Transaction.objects.from_plaid(self, transaction_data)
-                if transaction:
-                    transaction_ids.append(transaction.id)
-
-            # import_start = Transaction.objects.filter(id__in=transaction_ids).order_by('date')[0].date
-            # stale_transactions = Transaction.objects.exclude(
-            #     id__in=transaction_ids,
-            #     owner=self.owner,
-            #     date__gt=import_start,
-            # )
-            # print('deleting', len(stale_transactions), 'stale transactions after', import_start)
-            # stale_transactions.delete()
-
-            # print()
-            # print()
+                Transaction.objects.from_plaid(self, transaction_data)
 
         elif self.finicity_client:
             try:
