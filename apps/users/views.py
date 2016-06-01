@@ -1,12 +1,14 @@
 
 from django.core.urlresolvers import reverse
 from django.core.signing import Signer
+from django.core.validators import validate_email
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import ValidationError
 
-from .models import User
+from .models import User, BetaSignup
 from .forms import SignupForm
 
 
@@ -61,3 +63,20 @@ def get_demo_key_view(request):
             request.get_host(),
             reverse('demo_login', args=(signature,))
         ))
+
+
+def beta_signup_view(request):
+    if not request.method == 'POST':
+        return HttpResponse(status=405)
+
+    if 'email' not in request.POST:
+        return HttpResponse('{ errors: [{ "email": "this field is required" }] }', status=400)
+
+    try:
+        validate_email(request.POST['email'])
+    except ValidationError:
+        return HttpResponse('{ errors: [{ "email": "invalid" }] }', status=400)
+
+    BetaSignup.objects.get_or_create(email=request.POST['email'])
+
+    return HttpResponse()

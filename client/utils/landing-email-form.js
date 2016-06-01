@@ -7,28 +7,21 @@ $('.landing-cta').on('click', function(event) {
   window.mixpanel.track('Landing: CTA Clicked');
   window.fbq('track', 'Lead');
 
-  const formContainer = document.getElementById('landing-form-container');
-  formContainer.style.display = 'block';
-  formContainer.onclick = ()=> formContainer.style.display = 'none';
+  $('#landing-form-container').show().on('click', function() {
+    $(this).hide();
+  });
 });
 
 const $form = $('#landing-form');
+$form.on('click', (event)=> event.stopPropagation());
+$form.on('submit', (event)=> {
+  event.preventDefault();
 
-if ($form) {
-  $form.on('click', (event)=> event.stopPropagation());
-  $form.on('submit', (event)=> {
-    event.preventDefault();
+  window.mixpanel.track('Landing: Email Submitted');
+  window.fbq('track', 'CompleteRegistration');
 
-    window.mixpanel.track('Landing: Email Submitted');
-    window.fbq('track', 'CompleteRegistration');
-
-    $.ajax({
-      url: $form.attr('action'),
-      data: $form.serialize(),
-      dataType: 'jsonp',
-      jsonp: 'jsonp',
-      timeout: 2000,
-      success: (data)=> document.location = data.social_url,
-    });
+  $.post('/beta-signup', $form.serialize(), ()=> {
+    $('.email-form-success').show();
+    $form.hide();
   });
-}
+});

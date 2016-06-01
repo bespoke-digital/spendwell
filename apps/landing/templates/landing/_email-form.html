@@ -7,6 +7,7 @@
     id="landing-form"
     novalidate
   >
+    {% csrf_token %}
     <h4>We're launching soon</h4>
     <p>Leave your email to get on the list</p>
     <div class="form-fields">
@@ -19,4 +20,12 @@
       </button>
     </div>
   </form>
+
+  <div class="email-form-success">
+    <h4>You're on the list!</h4>
+    <p>You'll receive an invite shortly.</p>
+    <button type="button" name="subscribe" class="mui-btn mui-btn--accent">
+      close
+    </button>
+  </div>
 </div>

@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from spendwell.admin import admin_site
-from .models import User, BetaCode
+from .models import User, BetaCode, BetaSignup
 
 
 class UserCreationForm(forms.ModelForm):
@@ -75,3 +75,11 @@ class BetaCodeAdmin(admin.ModelAdmin):
     readonly_fields = ('used_by',)
 
 admin_site.register(BetaCode, BetaCodeAdmin)
+
+
+class BetaSignupAdmin(admin.ModelAdmin):
+    list_display = ('email', 'created', 'used')
+    readonly_fields = ('used',)
+    raw_id_fields = ('beta_code',)
+
+admin_site.register(BetaSignup, BetaSignupAdmin)

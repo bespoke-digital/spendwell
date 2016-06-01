@@ -147,10 +147,21 @@ def get_beta_code():
     return uuid4().hex
 
 
+class BetaSignup(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    beta_code = models.OneToOneField('users.BetaCode', blank=True, null=True, related_name='beta_signup')
+
+    def used(self):
+        return bool(self.beta_code) or User.objects.filter(email=self.email).exists()
+    used.boolean = True
+
+
 class BetaCode(models.Model):
     key = models.CharField(max_length=255, default=get_beta_code)
-    used_by = models.OneToOneField(User, blank=True, null=True)
     intended_for = models.CharField(max_length=255, blank=True, default='')
+    used_by = models.OneToOneField(User, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

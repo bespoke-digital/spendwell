@@ -12,7 +12,8 @@
   z-index: 1;
   background-color: rgba(black, .5);
 
-  form {
+  form,
+  .email-form-success {
     @extend .depth-z1;
 
     position: absolute;
@@ -38,7 +39,9 @@
     p {
       margin: 0 0 10px;
     }
+  }
 
+  form {
     .mui-textfield {
       display: inline-block;
       text-align: left;
@@ -61,5 +64,9 @@
         width: 192px;
       }
     }
+  }
+
+  .email-form-success {
+    display: none;
   }
 }
