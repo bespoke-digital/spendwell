@@ -14,19 +14,10 @@ CSRF_COOKIE_SECURE = True
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CSP_HEADER = {
-    'default-src': ('https:', "'self'"),
-    'style-src': ('https:', "'self'", "'unsafe-inline'"),
-    'img-src': ('https:', 'data:', "'self'"),
-    'script-src': (
-        'https:',
-        "'self'",
+CSP_DEFAULT_SRC = ('https:', "'self'")
+CSP_STYLE_SRC = ('https:', "'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ('https:', 'data:', "'self'")
 
-        # For admin:
-        "'sha256-SO5rB6tTgkF8Namqb9qX6e/002waGiA2OtxE2Xp73I0='",
-        "'sha256-xEaRLIZeA00IlEr5z9q6SQv+Cm8XursiQETnjCD1his='",
-    )
-}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -70,7 +61,7 @@ MIDDLEWARE_CLASSES = [
     'security_middleware.middleware.SSLMiddleware',
     'security_middleware.middleware.XSSProtectionMiddleware',
     'security_middleware.middleware.NoSniffMiddleware',
-    'security_middleware.middleware.ContentSecurityPolicyMiddleware',
+    'csp.middleware.CSPMiddleware',
 
     'apps.users.middleware.BetaCodeMiddleware',
 ]

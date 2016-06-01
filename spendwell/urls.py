@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from graphene.contrib.django.views import GraphQLView
 from django_graphiql.views import GraphiQL
+from csp.decorators import csp_exempt
 
 from apps.core.views import app_view, onboarding_view, calculators_view, manifest_view
 
@@ -20,7 +21,7 @@ class AuthGraphQLView(GraphQLView):
 
 auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
 
-graphiql_view = login_required(GraphiQL.as_view())
+graphiql_view = csp_exempt(login_required(GraphiQL.as_view()))
 
 
 urlpatterns = [
