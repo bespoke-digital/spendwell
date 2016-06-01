@@ -60,7 +60,7 @@ class Bucket(SWModel):
     @property
     def avatar(self):
         if not hasattr(self, '_avatar'):
-            bucket_avatar = BucketAvatar.objects.filter(name__icontains=self.name).first()
+            bucket_avatar = BucketAvatar.objects.filter(name__iexact=self.name).first()
             if bucket_avatar:
                 self._avatar = bucket_avatar.avatar
             else:
