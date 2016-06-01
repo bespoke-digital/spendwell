@@ -3,6 +3,7 @@ import graphene
 from graphene.relay import ClientIDMutation
 from graphene.relay.types import Edge
 from graphene.utils import to_snake_case
+from graphql_relay import from_global_id
 
 from apps.core.utils import instance_for_node_id
 from apps.transactions.utils import filter_list_schema
@@ -17,14 +18,20 @@ BucketEdge = Edge.for_node(BucketNode)
 
 
 def clean_filters(filters):
-    return [
-        {
-            to_snake_case(key): val
-            for key, val in filter.items()
-            if val is not None and val is not ''
-        }
-        for filter in filters
-    ]
+    clean = []
+
+    for filter in filters:
+        clean_filter = {}
+        for key, val in filter.items():
+            if val is None or val is '':
+                continue
+
+            if key == 'account':
+                val = from_global_id(val).id
+
+            clean_filter[to_snake_case(key)] = val
+        clean.append(clean_filter)
+    return clean
 
 
 class CreateBucketMutation(graphene.relay.ClientIDMutation):
@@ -38,8 +45,6 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(Cls, input, info):
         from spendwell.schema import Viewer
-
-        filters = clean_filters(input['filters'])
 
         filters = clean_filters(input['filters'])
         if not len(filters):
