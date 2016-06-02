@@ -26,7 +26,6 @@ class CreateGoalMutation(graphene.relay.ClientIDMutation):
         if monthly_amount > 0:
             monthly_amount = -monthly_amount
 
-        raise ValueError('--goals.py:29--')
         Goal.objects.create(
             owner=context.user,
             name=input['name'],
