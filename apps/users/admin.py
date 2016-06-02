@@ -39,7 +39,7 @@ class UserChangeForm(forms.ModelForm):
         fields = ('email', 'password', 'is_active', 'is_admin')
 
     def clean_password(self):
-        return self.initial['password']
+        return self.initial.get('password')
 
 
 class UserAdmin(AuthUserAdmin):

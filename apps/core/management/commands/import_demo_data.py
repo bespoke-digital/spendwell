@@ -16,9 +16,13 @@ from apps.transactions.models import Transaction
 
 
 def import_demo_data():
+    try:
+        owner = User.objects.get(email='demo@spendwell.co')
+    except User.DoesNotExist:
+        return
+
     with open(os.path.join(settings.BASE_DIR, 'local/demo.json'), 'r') as demo_file:
         export = json.load(demo_file)
-    owner = User.objects.get(email='demo@spendwell.co')
 
     print('clearing existing demo data')
     owner.institutions.all().delete()
