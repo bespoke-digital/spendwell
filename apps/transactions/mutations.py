@@ -5,6 +5,7 @@ from datetime import datetime
 from pytz import timezone
 
 import graphene
+from graphene.utils import with_context
 from graphene.relay import ClientIDMutation
 from django.utils.timezone import make_aware
 
@@ -24,10 +25,11 @@ class DetectTransfersMutation(ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        Transaction.objects.detect_transfers(owner=info.request_context.user)
+        Transaction.objects.detect_transfers(owner=context.user)
 
         return Cls(viewer=Viewer())
 
@@ -40,11 +42,12 @@ class SetIncomeFromSavingsMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
         IncomeFromSavings.objects.update_or_create(
-            owner=info.request_context.user,
+            owner=context.user,
             month_start=input['month'],
             defaults={'amount': input['amount']}
         )
@@ -63,20 +66,22 @@ class TransactionQuickAddMutation(ClientIDMutation):
     bucket = graphene.Field('BucketNode')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        transaction = instance_for_node_id(input.get('transaction_id'), info)
+        transaction = instance_for_node_id(input.get('transaction_id'), context, info)
+
         filter = {'description_exact': transaction.description}
 
         if input.get('bucket_id'):
-            bucket = instance_for_node_id(input['bucket_id'], info)
+            bucket = instance_for_node_id(input['bucket_id'], context, info)
             bucket.filters = unique(bucket.filters + [filter])
             bucket.save()
 
         elif input.get('bucket_name'):
             bucket = Bucket.objects.create(
-                owner=info.request_context.user,
+                owner=context.user,
                 name=input['bucket_name'],
                 filters=[filter],
             )
@@ -92,8 +97,9 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
     account = graphene.Field(AccountNode)
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
-        account = instance_for_node_id(input.get('account_id'), info)
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
+        account = instance_for_node_id(input.get('account_id'), context, info)
 
         for row in csv.reader(input['csv'].split('\n')):
             if len(row) is not 5:
@@ -110,11 +116,11 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
 
             date = make_aware(
                 datetime.strptime(date, '%m/%d/%Y'),
-                timezone(info.request_context.user.timezone),
+                timezone(context.user.timezone),
             )
 
             transaction, created = Transaction.objects.get_or_create(
-                owner=info.request_context.user,
+                owner=context.user,
                 account=account,
                 description=description,
                 amount=amount,
@@ -123,9 +129,9 @@ class UploadCsvMutation(graphene.relay.ClientIDMutation):
                 source='csv',
             )
 
-        Transaction.objects.detect_transfers(owner=info.request_context.user)
+        Transaction.objects.detect_transfers(owner=context.user)
 
-        for bucket in Bucket.objects.filter(owner=info.request_context.user):
+        for bucket in Bucket.objects.filter(owner=context.user):
             bucket.assign_transactions()
 
         return UploadCsvMutation(account=account)
@@ -141,10 +147,11 @@ class DeleteTransactionMutation(ClientIDMutation):
     transaction_id = graphene.Field(graphene.ID())
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        transaction = instance_for_node_id(input.get('transaction_id'), info)
+        transaction = instance_for_node_id(input.get('transaction_id'), context, info)
 
         if not transaction.source == 'csv':
             raise ValueError('Only CSV transactions can be deleted.')

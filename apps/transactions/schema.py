@@ -1,6 +1,7 @@
 
 import graphene
 from graphene.contrib.django.fields import DjangoConnectionField
+from graphene.utils import with_context
 
 from apps.core.fields import SWNode
 from apps.core.types import Money
@@ -38,9 +39,10 @@ class TransactionNode(SWNode):
     def get_queryset(queryset, args, info):
         return queryset.filter(account__disabled=False)
 
-    def resolve_buckets(self, args, info):
+    @with_context
+    def resolve_buckets(self, args, context, info):
         return Bucket.objects.filter(
-            owner=info.request_context.user,
+            owner=context.user,
             transactions=self.instance,
         ).distinct()
 

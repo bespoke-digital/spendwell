@@ -1,6 +1,6 @@
 
 import graphene
-from graphene.utils import to_snake_case
+from graphene.utils import to_snake_case, with_context
 from graphene.contrib.django.types import DjangoNode
 from graphene.contrib.django.fields import DjangoConnectionField
 
@@ -33,8 +33,9 @@ class FinicityInstitutionNode(DjangoNode):
     class Meta:
         model = FinicityInstitution
 
-    def resolve_login_form(self, args, info):
-        finicity_client = Finicity(info.request_context.user)
+    @with_context
+    def resolve_login_form(self, args, context, info):
+        finicity_client = Finicity(context.user)
 
         return [
             FinicityLoginField(finicity=self, **field)

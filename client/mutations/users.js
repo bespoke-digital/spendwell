@@ -21,7 +21,7 @@ export class SetIncomeEstimateMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on SetIncomeEstimateMutation {
+      fragment on SetIncomeEstimateMutationPayload {
         viewer {
           settings {
             estimatedIncomeConfirmed
@@ -73,7 +73,7 @@ export class SettingsMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on SettingsMutation {
+      fragment on SettingsMutationPayload {
         viewer {
           settings
         }

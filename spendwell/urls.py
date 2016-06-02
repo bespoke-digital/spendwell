@@ -19,6 +19,20 @@ class AuthGraphQLView(GraphQLView):
             return HttpResponse(status=403)
         return super(AuthGraphQLView, self).dispatch(request, *args, **kwargs)
 
+    # @staticmethod
+    # def format_error(error):
+    #     if isinstance(error, GraphQLError):
+    #         formatted_error = {
+    #             'message': error.message,
+    #         }
+    #         if hasattr(error, 'original_error') and isinstance(error.original_error, exceptions.GraphQLЕTypedError):
+    #             formatted_error['type'] = error.original_error.error_type
+    #         elif error.locations is not None:
+    #             formatted_error['locations'] = [{'line': loc.line, 'column': loc.column} for loc in error.locations]
+    #         return formatted_error
+    #     else:
+    #         return {'message': str(error)}
+
 auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
 
 graphiql_view = csp_exempt(login_required(GraphiQL.as_view()))

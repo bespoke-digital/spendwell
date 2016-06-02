@@ -24,7 +24,7 @@ export class DisableAccountMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DisableAccountMutation {
+      fragment on DisableAccountMutationPayload {
         account {
           disabled
         }
@@ -74,7 +74,7 @@ export class EnableAccountMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on EnableAccountMutation {
+      fragment on EnableAccountMutationPayload {
         account {
           disabled
         }

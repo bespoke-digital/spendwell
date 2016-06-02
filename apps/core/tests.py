@@ -29,7 +29,7 @@ class SWTestCase(TestCase):
         request = self.request_factory.post('/graphql')
         request.user = user
 
-        result = schema.execute(query, request_context=request, **kwargs)
+        result = schema.execute(query, context_value=request, **kwargs)
 
         if len(result.errors):
             print('GraphQL Errors:', result.errors)

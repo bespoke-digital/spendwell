@@ -2,7 +2,7 @@
 import graphene
 from graphene.relay import ClientIDMutation
 from graphene.relay.types import Edge
-from graphene.utils import to_snake_case
+from graphene.utils import to_snake_case, with_context
 from graphql_relay import from_global_id
 
 from apps.core.utils import instance_for_node_id
@@ -43,7 +43,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
         filters = clean_filters(input['filters'])
@@ -51,7 +52,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
             raise ValueError('filters are required')
 
         Bucket.objects.create(
-            owner=info.request_context.user,
+            owner=context.user,
             name=input['name'],
             filters=filters,
             type=input['type'],
@@ -71,10 +72,11 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
     bucket = graphene.Field(BucketNode)
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        bucket = instance_for_node_id(input['bucket_id'], info)
+        bucket = instance_for_node_id(input['bucket_id'], context, info)
 
         if 'name' in input and input['name']:
             bucket.name = input['name']
@@ -97,10 +99,11 @@ class DeleteBucketMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        bucket = instance_for_node_id(input['bucket_id'], info)
+        bucket = instance_for_node_id(input['bucket_id'], context, info)
         bucket.delete()
 
         return Cls(viewer=Viewer())
@@ -113,10 +116,11 @@ class AssignTransactionsMutation(ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        for bucket in Bucket.objects.filter(owner=info.request_context.user):
+        for bucket in Bucket.objects.filter(owner=context.user):
             bucket.assign_transactions()
 
         return Cls(viewer=Viewer())
@@ -129,10 +133,11 @@ class AutodetectBillsMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
-        Bucket.objects.filter(owner=info.request_context.user, type='bill').delete()
-        autodetect_bills(info.request_context.user)
+        Bucket.objects.filter(owner=context.user, type='bill').delete()
+        autodetect_bills(context.user)
         return Cls(viewer=Viewer())
 
 

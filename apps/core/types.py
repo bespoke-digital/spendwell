@@ -7,7 +7,7 @@ import logging
 import delorean
 
 from graphene.core.classtypes import Scalar
-from graphql.core.language import ast
+from graphql.language import ast
 
 
 logger = logging.getLogger(__name__)

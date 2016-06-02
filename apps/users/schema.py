@@ -2,6 +2,7 @@
 import delorean
 import graphene
 from graphene.contrib.django.fields import DjangoConnectionField
+from graphene.utils import with_context
 
 from apps.core.types import Money, Month
 from apps.goals.schema import GoalMonthNode
@@ -83,23 +84,30 @@ class UsersQuery(graphene.ObjectType):
     class Meta:
         abstract = True
 
-    def resolve_safe_to_spend(self, args, info):
-        return MonthSummary(info.request_context.user).net
+    @with_context
+    def resolve_safe_to_spend(self, args, context, info):
+        return MonthSummary(context.user).net
 
-    def resolve_summary(self, args, info):
-        return MonthSummary(info.request_context.user, args['month'])
+    @with_context
+    def resolve_summary(self, args, context, info):
+        return MonthSummary(context.user, args['month'])
 
-    def resolve_first_month(self, args, info):
-        return info.request_context.user.first_data_month()
+    @with_context
+    def resolve_first_month(self, args, context, info):
+        return context.user.first_data_month()
 
-    def resolve_email(self, args, info):
-        return info.request_context.user.email
+    @with_context
+    def resolve_email(self, args, context, info):
+        return context.user.email
 
-    def resolve_is_admin(self, args, info):
-        return info.request_context.user.is_admin
+    @with_context
+    def resolve_is_admin(self, args, context, info):
+        return context.user.is_admin
 
-    def resolve_estimated_income(self, args, info):
-        return info.request_context.user.estimated_income
+    @with_context
+    def resolve_estimated_income(self, args, context, info):
+        return context.user.estimated_income
 
-    def resolve_settings(self, args, info):
-        return info.request_context.user
+    @with_context
+    def resolve_settings(self, args, context, info):
+        return context.user

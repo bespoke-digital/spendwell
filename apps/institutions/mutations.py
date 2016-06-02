@@ -1,5 +1,6 @@
 
 import graphene
+from graphene.utils import with_context
 from graphene.relay.types import Edge
 from django.conf import settings
 
@@ -24,7 +25,8 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
         plaid_client = Client(
@@ -36,7 +38,7 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
         institution_response = plaid_client.institution(input['plaid_institution_id']).json()
 
         institution = Institution.objects.from_plaid(
-            owner=info.request_context.user,
+            owner=context.user,
             plaid_id=input['plaid_institution_id'],
             plaid_public_token=input['public_token'],
             plaid_access_token=token_response['access_token'],
@@ -59,14 +61,15 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
-        info.request_context.user.sync()
-        info.request_context.user.estimate_income()
-        info.request_context.user.save()
+        context.user.sync()
+        context.user.estimate_income()
+        context.user.save()
 
-        autodetect_bills(info.request_context.user)
+        autodetect_bills(context.user)
 
         return SyncInstitutionsMutation(viewer=Viewer())
 

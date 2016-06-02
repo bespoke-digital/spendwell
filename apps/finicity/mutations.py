@@ -2,6 +2,7 @@
 import json
 
 import graphene
+from graphene.utils import with_context
 from django.utils import timezone
 
 from apps.institutions.models import Institution
@@ -26,19 +27,21 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
         try:
             finicity_institution = instance_for_node_id(
                 input['finicity_institution_id'],
+                context,
                 info,
                 check_owner=False,
             )
-            finicity_client = Finicity(info.request_context.user)
+            finicity_client = Finicity(context.user)
 
             institution = Institution.objects.from_finicity(
-                owner=info.request_context.user,
+                owner=context.user,
                 data=finicity_client.get_institution(finicity_institution.finicity_id),
             )
 

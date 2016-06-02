@@ -24,15 +24,9 @@ export class CreateGoalMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on CreateGoalMutation {
+      fragment on CreateGoalMutationPayload {
         viewer {
-          safeToSpend
-
-          summary {
-            goalsTotal
-            allocated
-            net
-          }
+          dummy
         }
       }
     `;
@@ -77,14 +71,9 @@ export class UpdateGoalMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on UpdateGoalMutation {
-        goal
+      fragment on UpdateGoalMutationPayload {
         viewer {
-          summary {
-            goalsTotal
-            net
-            goalMonths
-          }
+          dummy
         }
       }
     `;
@@ -95,7 +84,6 @@ export class UpdateGoalMutation extends Relay.Mutation {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
-        goal: this.props.goal.id,
       },
     }];
   }
@@ -128,14 +116,9 @@ export class DeleteGoalMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteGoalMutation {
+      fragment on DeleteGoalMutationPayload {
         viewer {
-          goals
-          summary {
-            goalMonths
-            allocated
-            net
-          }
+          dummy
         }
       }
     `;
@@ -179,16 +162,9 @@ export class GenerateGoalMonthMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on GenerateGoalMonthMutation {
-        goal {
-          months
-        }
+      fragment on GenerateGoalMonthMutationPayload {
         viewer {
-          summary {
-            allocated
-            net
-            goalMonths
-          }
+          dummy
         }
       }
     `;
@@ -199,7 +175,6 @@ export class GenerateGoalMonthMutation extends Relay.Mutation {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
-        goal: this.props.goal.id,
       },
     }];
   }

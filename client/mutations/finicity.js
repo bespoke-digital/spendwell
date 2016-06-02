@@ -33,7 +33,7 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on ConnectFinicityInstitutionMutation {
+      fragment on ConnectFinicityInstitutionMutationPayload {
         viewer {
           safeToSpend
         }

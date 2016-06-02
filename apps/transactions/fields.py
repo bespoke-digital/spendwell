@@ -2,6 +2,7 @@
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.utils import to_snake_case
 from graphql_relay import from_global_id
+from graphene.utils import with_context
 
 from apps.core.fields import SWConnectionMixin
 from .filters import TransactionFilter
@@ -17,8 +18,8 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
         kwargs['filters'] = TransactionsFiltersField
         super(TransactionConnectionField, self).__init__(node_type, *args, **kwargs)
 
-    def get_queryset(self, queryset, args, info):
-        queryset = queryset.filter(owner=info.request_context.user)
+    def get_queryset(self, queryset, args, context, info):
+        queryset = queryset.filter(owner=context.user)
         queryset = self.filterset_class(
             self.get_filter_kwargs(args),
             queryset=queryset,
@@ -39,14 +40,15 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
 
         return queryset
 
-    def resolver(self, instance, args, info):
+    @with_context
+    def resolver(self, instance, args, context, info):
         schema = info.schema.graphene_schema
         connection_type = self.get_type(schema)
 
-        connection_type.count = self.get_queryset(self.get_manager(), args, info).count()
+        connection_type.count = self.get_queryset(self.get_manager(), args, context, info).count()
 
-        resolved = super(TransactionConnectionField, self).resolver(instance, args, info)
+        resolved = super(TransactionConnectionField, self).resolver(instance, args, context, info)
 
         if isinstance(resolved, connection_type):
             return resolved
-        return self.from_list(connection_type, resolved, args, info)
+        return self.from_list(connection_type, resolved, args, context, info)

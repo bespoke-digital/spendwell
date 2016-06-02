@@ -2,15 +2,12 @@
 from decimal import Decimal
 
 import graphene
-from graphene.relay.types import Edge
+from graphene.utils import with_context
 
 from apps.core.utils import instance_for_node_id
 from apps.core.types import Money, Month
 from .models import Goal
 from .schema import GoalNode
-
-
-GoalEdge = Edge.for_node(GoalNode)
 
 
 class CreateGoalMutation(graphene.relay.ClientIDMutation):
@@ -19,27 +16,23 @@ class CreateGoalMutation(graphene.relay.ClientIDMutation):
         monthly_amount = graphene.Int()
 
     viewer = graphene.Field('Viewer')
-    goal_edge = graphene.Field(GoalEdge)
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
         monthly_amount = Decimal(input['monthly_amount']) / Decimal('100')
         if monthly_amount > 0:
             monthly_amount = -monthly_amount
 
-        return CreateGoalMutation(
-            viewer=Viewer(),
-            goal_edge=GoalEdge(
-                cursor='none',
-                node=Goal.objects.create(
-                    owner=info.request_context.user,
-                    name=input['name'],
-                    monthly_amount=monthly_amount,
-                ),
-            ),
+        Goal.objects.create(
+            owner=context.user,
+            name=input['name'],
+            monthly_amount=monthly_amount,
         )
+
+        return CreateGoalMutation(viewer=Viewer())
 
 
 class UpdateGoalMutation(graphene.relay.ClientIDMutation):
@@ -52,10 +45,11 @@ class UpdateGoalMutation(graphene.relay.ClientIDMutation):
     goal = graphene.Field(GoalNode)
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
-        goal = instance_for_node_id(input['goal_id'], info)
+        goal = instance_for_node_id(input['goal_id'], context, info)
         goal.monthly_amount = input['monthly_amount']
         goal.name = input['name']
         goal.save()
@@ -70,10 +64,11 @@ class DeleteGoalMutation(graphene.relay.ClientIDMutation):
     viewer = graphene.Field('Viewer')
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
-        goal = instance_for_node_id(input['goal_id'], info)
+        goal = instance_for_node_id(input['goal_id'], context, info)
         goal.delete()
 
         return UpdateGoalMutation(viewer=Viewer())
@@ -88,10 +83,11 @@ class GenerateGoalMonthMutation(graphene.relay.ClientIDMutation):
     goal = graphene.Field(GoalNode)
 
     @classmethod
-    def mutate_and_get_payload(Cls, input, info):
+    @with_context
+    def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
 
-        goal = instance_for_node_id(input['goal_id'], info)
+        goal = instance_for_node_id(input['goal_id'], context, info)
         goal.generate_month(month_start=input['month'])
 
         return Cls(goal=goal, viewer=Viewer())

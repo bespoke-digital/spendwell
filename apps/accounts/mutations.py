@@ -1,6 +1,7 @@
 
 import graphene
 from graphene.relay.types import Edge
+from graphene.utils import with_context
 
 from apps.core.utils import instance_for_node_id
 from .schema import AccountNode
@@ -17,8 +18,9 @@ class DisableAccountMutation(graphene.relay.ClientIDMutation):
     account = graphene.Field(AccountNode)
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        account = instance_for_node_id(input.get('account_id'), info)
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
+        account = instance_for_node_id(input.get('account_id'), context, info)
         account.disable(input.get('detect_transfers', True))
         return DisableAccountMutation(account=account)
 
@@ -31,8 +33,9 @@ class EnableAccountMutation(graphene.relay.ClientIDMutation):
     account = graphene.Field(AccountNode)
 
     @classmethod
-    def mutate_and_get_payload(cls, input, info):
-        account = instance_for_node_id(input.get('account_id'), info)
+    @with_context
+    def mutate_and_get_payload(cls, input, context, info):
+        account = instance_for_node_id(input.get('account_id'), context, info)
         account.enable(input.get('sync', True))
         return EnableAccountMutation(account=account)
 

@@ -21,7 +21,7 @@ export class DetectTransfersMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DetectTransfersMutation {
+      fragment on DetectTransfersMutationPayload {
         viewer {
           transactions
         }
@@ -62,7 +62,7 @@ export class SetIncomeFromSavingsMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on SetIncomeFromSavingsMutation {
+      fragment on SetIncomeFromSavingsMutationPayload {
         viewer {
           safeToSpend
 
@@ -121,7 +121,7 @@ export class TransactionQuickAddMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on TransactionQuickAddMutation {
+      fragment on TransactionQuickAddMutationPayload {
         transaction {
           buckets
         }
@@ -161,7 +161,7 @@ export class UploadCsvMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on UploadCsvMutation {
+      fragment on UploadCsvMutationPayload {
         account {
           transactions
         }
@@ -201,7 +201,7 @@ export class DeleteTransactionMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on DeleteTransactionMutation {
+      fragment on DeleteTransactionMutationPayload {
         viewer {
           transactions
         }

@@ -26,7 +26,7 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on ConnectPlaidInstitutionMutation {
+      fragment on ConnectPlaidInstitutionMutationPayload {
         viewer {
           summary
           institutions
@@ -67,7 +67,7 @@ export class SyncInstitutionsMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`
-      fragment on SyncInstitutionsMutation {
+      fragment on SyncInstitutionsMutationPayload {
         viewer {
           institutions
           accounts

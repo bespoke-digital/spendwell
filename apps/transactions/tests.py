@@ -324,7 +324,7 @@ class TransactionsTestCase(SWTestCase):
                 }
             }
             ''',
-            args={
+            variable_values={
                 'input': {
                     'transactionId': node_id_from_instance(transaction),
                     'bucketId': node_id_from_instance(bucket),
