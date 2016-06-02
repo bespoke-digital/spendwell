@@ -12,6 +12,12 @@ from apps.core.views import app_view, onboarding_view, calculators_view, manifes
 from .admin import admin_site
 from .schema import schema
 
+try:
+    from raven.contrib.django.raven_compat.models import client as raven
+    use_raven = True
+except ImportError:
+    use_raven = False
+
 
 class AuthGraphQLView(GraphQLView):
     def dispatch(self, request, *args, **kwargs):
@@ -19,19 +25,17 @@ class AuthGraphQLView(GraphQLView):
             return HttpResponse(status=403)
         return super(AuthGraphQLView, self).dispatch(request, *args, **kwargs)
 
-    # @staticmethod
-    # def format_error(error):
-    #     if isinstance(error, GraphQLError):
-    #         formatted_error = {
-    #             'message': error.message,
-    #         }
-    #         if hasattr(error, 'original_error') and isinstance(error.original_error, exceptions.GraphQLЕTypedError):
-    #             formatted_error['type'] = error.original_error.error_type
-    #         elif error.locations is not None:
-    #             formatted_error['locations'] = [{'line': loc.line, 'column': loc.column} for loc in error.locations]
-    #         return formatted_error
-    #     else:
-    #         return {'message': str(error)}
+    @classmethod
+    def format_error(Cls, error):
+        if hasattr(error, 'original_error') and error.original_error and use_raven:
+            try:
+                raise error.original_error
+            except:
+                raven.captureException()
+
+            return {'message': 'An error has occured'}
+
+        return super(AuthGraphQLView, Cls).format_error(error)
 
 auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
 
