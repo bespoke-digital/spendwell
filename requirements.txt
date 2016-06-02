@@ -1,4 +1,3 @@
--e git://github.com/defrex/graphql-core.git@9c8450fa5b2e3dd0a8ea015ac3b9b5f24028ac91#egg=graphql-core
 -e git://github.com/defrex/django-security-middleware.git#egg=django-security-middleware
 
 Django==1.9.1
