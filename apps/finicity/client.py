@@ -199,7 +199,6 @@ class Finicity(object):
         return body, mfa_data['session']
 
     def list_institutions(self, query):
-        print('finicity: list_institutions')
         response = self.request('/v1/institutions', params={
             'search': query.replace(' ', '+'),
             'start': 1,
@@ -243,7 +242,6 @@ class Finicity(object):
         return maybe_list(response['accounts']['account'])
 
     def list_accounts(self, institution_id):
-        print('finicity: list_accounts')
         self.ensure_customer()
 
         response = self.request('/v1/customers/{}/institutions/{}/accounts'.format(
@@ -274,6 +272,8 @@ class Finicity(object):
                 transactions += response_data
                 if len(response_data) < 1000:
                     break
+                else:
+                    print('finicity transactions:', len(response_data))
             else:
                 break
 
