@@ -274,6 +274,7 @@ class Finicity(object):
                     break
                 else:
                     print('finicity transactions:', len(response_data))
+                    print('\tfirst:', response_data[0])
             else:
                 break
 
