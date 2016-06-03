@@ -107,6 +107,7 @@ class Finicity(object):
         headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
         headers['Finicity-App-Token'] = self.access_token
 
+        print('finicity: request', path)
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
             headers=headers,
@@ -119,6 +120,8 @@ class Finicity(object):
             raise FinicityMFAException(self.user, response, data)
 
         if 'error' in data:
+            print('finicity: response error', data)
+
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
@@ -128,15 +131,9 @@ class Finicity(object):
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
 
-            print()
-            print()
-            print('FINICITY RESPONSE')
-            print()
-            print('url:', '{}{}'.format(FINICITY_URL, path))
-            print('status:', response.status_code)
-            print('content:')
-            print(response.content)
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
+        else:
+            print('finicity: response okay')
 
         return data
 
@@ -202,6 +199,7 @@ class Finicity(object):
         return body, mfa_data['session']
 
     def list_institutions(self, query):
+        print('finicity: list_institutions')
         response = self.request('/v1/institutions', params={
             'search': query.replace(' ', '+'),
             'start': 1,
@@ -245,6 +243,7 @@ class Finicity(object):
         return maybe_list(response['accounts']['account'])
 
     def list_accounts(self, institution_id):
+        print('finicity: list_accounts')
         self.ensure_customer()
 
         response = self.request('/v1/customers/{}/institutions/{}/accounts'.format(

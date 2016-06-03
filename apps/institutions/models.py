@@ -178,8 +178,11 @@ class Institution(SWModel):
                 Transaction.objects.from_finicity(self, transaction_data)
 
     def sync(self):
+        print('sync: start')
         self.sync_accounts()
+        print('sync: accounts finished')
         self.sync_transactions()
+        print('sync: transactions finished')
         self.last_sync = timezone.now()
         self.reauth_required = False
         self.save()
