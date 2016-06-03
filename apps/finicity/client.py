@@ -107,7 +107,7 @@ class Finicity(object):
         headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
         headers['Finicity-App-Token'] = self.access_token
 
-        print('finicity: request', path)
+        print('finicity: request', path, kwargs)
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
             headers=headers,
