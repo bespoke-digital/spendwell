@@ -273,7 +273,8 @@ class Finicity(object):
                 if len(response_data) < 1000:
                     break
                 else:
-                    print('finicity transactions:', len(response_data), response_data[0])
+                    print('finicity transactions:', len(response_data))
+                    print('\tfirst:', response_data[0])
             else:
                 break
 
