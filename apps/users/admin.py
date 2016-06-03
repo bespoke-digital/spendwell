@@ -1,5 +1,8 @@
 
 from django import forms
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.utils.html import format_html
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -79,7 +82,31 @@ admin_site.register(BetaCode, BetaCodeAdmin)
 
 class BetaSignupAdmin(admin.ModelAdmin):
     list_display = ('email', 'created', 'used')
-    readonly_fields = ('used',)
-    raw_id_fields = ('beta_code',)
+    readonly_fields = ('used', 'invite_url', 'beta_code_link')
+    fields = ('email', 'used', 'invite_url', 'beta_code_link')
+    actions = ('invite_user',)
+
+    def invite_user(self, request, queryset):
+        invited = sum([beta_signup.invite_user() for beta_signup in queryset])
+        self.message_user(request, '{} beta codes generated'.format(invited))
+    invite_user.short_description = 'Generate Invite Code'
+
+    def invite_url(self, beta_signup):
+        if not beta_signup.beta_code:
+            return ''
+        return 'https://{}/signup?beta-code={}'.format(
+            settings.ALLOWED_HOSTS[0],
+            beta_signup.beta_code.key,
+        )
+    invite_url.short_description = 'Invite URL'
+
+    def beta_code_link(self, beta_signup):
+        if not beta_signup.beta_code:
+            return ''
+        return format_html(
+            '<a href="{}">Beta Code</a>',
+            reverse('admin:users_betacode_change', args=(beta_signup.beta_code.id,)),
+        )
+    beta_code_link.short_description = 'Beta Code'
 
 admin_site.register(BetaSignup, BetaSignupAdmin)

@@ -154,8 +154,20 @@ class BetaSignup(models.Model):
     beta_code = models.OneToOneField('users.BetaCode', blank=True, null=True, related_name='beta_signup')
 
     def used(self):
-        return bool(self.beta_code) or User.objects.filter(email=self.email).exists()
+        return (
+            (self.beta_code and self.beta_code.used) or
+            User.objects.filter(email=self.email).exists()
+        )
     used.boolean = True
+
+    def invite_user(self):
+        if self.beta_code:
+            return False
+
+        self.beta_code = BetaCode.objects.create(intended_for=self.email)
+        self.save()
+
+        return True
 
 
 class BetaCode(models.Model):
