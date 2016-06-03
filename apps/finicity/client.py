@@ -132,8 +132,9 @@ class Finicity(object):
             print()
             print('FINICITY RESPONSE')
             print()
+            print('url:', '{}{}'.format(FINICITY_URL, path))
             print('status:', response.status_code)
-            print()
+            print('content:')
             print(response.content)
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
 
