@@ -69,6 +69,8 @@ class FinicityAccountDialog extends Component {
 
         this.setState({ loading: false });
 
+        console.log(transaction);
+        console.log(transaction.getError());
         const errors = transaction.getError().source.errors;
         const error = (testMessage)=> errors.find(({ message })=> message.indexOf(testMessage) === 0);
 
