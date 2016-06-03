@@ -153,6 +153,10 @@ class BetaSignup(models.Model):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     beta_code = models.OneToOneField('users.BetaCode', blank=True, null=True, related_name='beta_signup')
 
+    def invited(self):
+        return bool(self.beta_code) or User.objects.filter(email=self.email).exists()
+    invited.boolean = True
+
     def used(self):
         return (
             (self.beta_code and self.beta_code.used) or

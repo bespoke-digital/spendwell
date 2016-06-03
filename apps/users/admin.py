@@ -81,9 +81,9 @@ admin_site.register(BetaCode, BetaCodeAdmin)
 
 
 class BetaSignupAdmin(admin.ModelAdmin):
-    list_display = ('email', 'created', 'used')
-    readonly_fields = ('used', 'invite_url', 'beta_code_link')
-    fields = ('email', 'used', 'invite_url', 'beta_code_link')
+    list_display = ('email', 'created', 'invited', 'used')
+    readonly_fields = ('used', 'invite_url')
+    fields = ('email', 'used', 'invite_url')
     actions = ('invite_user',)
 
     def invite_user(self, request, queryset):
@@ -99,14 +99,5 @@ class BetaSignupAdmin(admin.ModelAdmin):
             beta_signup.beta_code.key,
         )
     invite_url.short_description = 'Invite URL'
-
-    def beta_code_link(self, beta_signup):
-        if not beta_signup.beta_code:
-            return ''
-        return format_html(
-            '<a href="{}">Beta Code</a>',
-            reverse('admin:users_betacode_change', args=(beta_signup.beta_code.id,)),
-        )
-    beta_code_link.short_description = 'Beta Code'
 
 admin_site.register(BetaSignup, BetaSignupAdmin)
