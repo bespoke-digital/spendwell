@@ -128,6 +128,11 @@ class Finicity(object):
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
 
+            print()
+            print()
+            print('FINICITY ERRROR:')
+            print()
+            print(response.content)
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
 
         return data
