@@ -33,8 +33,6 @@ class AuthGraphQLView(GraphQLView):
             except:
                 raven.captureException()
 
-            return {'message': 'An error has occured'}
-
         return super(AuthGraphQLView, Cls).format_error(error)
 
 auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
