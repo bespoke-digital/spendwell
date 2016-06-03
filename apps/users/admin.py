@@ -89,7 +89,7 @@ class BetaSignupAdmin(admin.ModelAdmin):
     def invite_user(self, request, queryset):
         invited = sum([beta_signup.invite_user() for beta_signup in queryset])
         self.message_user(request, '{} beta codes generated'.format(invited))
-    invite_user.short_description = 'Generate Invite Code'
+    invite_user.short_description = 'Invite'
 
     def invite_url(self, beta_signup):
         if not beta_signup.beta_code:
