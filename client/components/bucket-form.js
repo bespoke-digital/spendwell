@@ -46,7 +46,10 @@ class BucketForm extends Component {
 
   componentWillMount() {
     const { filters } = this.state;
-    this.props.relay.setVariables({ filters: cleanFilters(filters) });
+    this.props.relay.setVariables({
+      isTransfer: this.props.bucket && this.props.bucket.type === 'account',
+      filters: cleanFilters(filters),
+    });
   }
 
   getData() {
@@ -142,6 +145,7 @@ BucketForm = Relay.createContainer(BucketForm, {
   initialVariables: {
     filters: [],
     count: 50,
+    isTransfer: false,
   },
   fragments: {
     viewer: ()=> Relay.QL`
@@ -149,7 +153,7 @@ BucketForm = Relay.createContainer(BucketForm, {
         ${Filters.getFragment('viewer')}
         ${TransactionList.getFragment('viewer')}
 
-        transactions(first: $count, filters: $filters, isTransfer: false) {
+        transactions(first: $count, filters: $filters, isTransfer: $isTransfer) {
           ${TransactionList.getFragment('transactions')}
         }
       }
