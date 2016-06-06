@@ -107,12 +107,21 @@ class Finicity(object):
         headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
         headers['Finicity-App-Token'] = self.access_token
 
-        print('finicity: request', path, kwargs)
+        print()
+        print('FINICITY REQUEST')
+        print(method, path)
+        if 'data' in kwargs:
+            print(kwargs['data'])
+
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
             headers=headers,
             **kwargs
         )
+
+        print()
+        print('FINICITY RESPONSE')
+        print(response.content)
 
         data = self.parse(response)
 
