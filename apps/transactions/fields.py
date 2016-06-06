@@ -30,7 +30,7 @@ class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField)
             for filter in args['filters']:
                 for key, value in filter.items():
                     if key == 'account':
-                        value = from_global_id(value).id
+                        _, value = from_global_id(value)
                     filters.append({to_snake_case(key): value})
 
             queryset = apply_filter_list(queryset, filters, self.filterset_class)
