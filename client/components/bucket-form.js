@@ -128,14 +128,15 @@ class BucketForm extends Component {
         <ListHeading>Filtered Transactions</ListHeading>
 
         <CardList>
-          <TransactionList
-            viewer={viewer}
-            transactions={viewer.transactions}
-            months={true}
-            onLoadMore={::this.handleLoad}
-          />
+          {viewer.transactions ?
+            <TransactionList
+              viewer={viewer}
+              transactions={viewer.transactions}
+              months={true}
+              onLoadMore={::this.handleLoad}
+            />
+          : null}
         </CardList>
-
       </div>
     );
   }
@@ -143,9 +144,16 @@ class BucketForm extends Component {
 
 BucketForm = Relay.createContainer(BucketForm, {
   initialVariables: {
+    includeTransactions: false,
     filters: [],
     count: 50,
     isTransfer: false,
+  },
+  prepareVariables(variables) {
+    return {
+      ...variables,
+      includeTransactions: variables.filters.length > 0,
+    };
   },
   fragments: {
     viewer: ()=> Relay.QL`
@@ -153,7 +161,7 @@ BucketForm = Relay.createContainer(BucketForm, {
         ${Filters.getFragment('viewer')}
         ${TransactionList.getFragment('viewer')}
 
-        transactions(first: $count, filters: $filters, isTransfer: $isTransfer) {
+        transactions(first: $count, filters: $filters, isTransfer: $isTransfer) @include(if: $includeTransactions) {
           ${TransactionList.getFragment('transactions')}
         }
       }
