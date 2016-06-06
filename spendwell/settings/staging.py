@@ -9,6 +9,7 @@ from .secrets import (
     raven_dsn,
     twitter_consumer_secret,
     twitter_access_token_secret,
+    mailgun_smtp_password,
 )
 
 
@@ -32,6 +33,9 @@ LOGGING['handlers']['sentry'] = {
     'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
 }
 LOGGING['loggers']['django']['handlers'] = ['console', 'sentry']
+
+
+EMAIL_HOST_PASSWORD = mailgun_smtp_password
 
 
 RAVEN_PUBLIC_DSN = 'https://f5915ddc585f49798179209ff074b43a@app.getsentry.com/73490'

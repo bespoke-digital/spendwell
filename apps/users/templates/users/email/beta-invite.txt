@@ -1,0 +1,11 @@
+Hey {{ recipient_name }},
+
+Thanks for signing up for the Spendwell beta! You’ll find your invite below.
+
+{{ invite_link }}
+
+We’re very excited to get you going. We’d love to hear any feedback you have on the product, especially if you have any trouble with it or don’t understand something. Feel free to reply to this email, or use the chat feature in the app. It’s a direct line to our Slack channel.
+
+Thanks for trying out Spendwell.
+
+Matt & Aron

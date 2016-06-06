@@ -158,6 +158,12 @@ LOGIN_REDIRECT_URL = '/app'
 LOGIN_URL = '/login'
 
 
+DEFAULT_FROM_EMAIL = 'Spendwell <hello@spendwell.co>'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@spendwell.co'
+EMAIL_HOST_PASSWORD = None
+
+
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_PUBLIC_KEY = '4b747132cf8c427bec79f00e0dcb4a'
