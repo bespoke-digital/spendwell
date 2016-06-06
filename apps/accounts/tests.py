@@ -23,9 +23,9 @@ class EnableDisableMutationsTestCase(SWTestCase):
             accounts {
                 edges {
                     node {
-                    id
-                    currentBalance
-                    disabled
+                        id
+                        currentBalance
+                        disabled
                     }
                 }
             }
