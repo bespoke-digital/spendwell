@@ -1,7 +1,6 @@
 
 from django import forms
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.utils.html import format_html
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
@@ -85,20 +84,19 @@ class BetaSignupAdmin(admin.ModelAdmin):
     readonly_fields = ('used', 'invite_url', 'beta_code_link')
     raw_id_fields = ('beta_code',)
     fields = ('email', 'used', 'invite_url', 'beta_code_link', 'beta_code')
-    actions = ('invite_user',)
+    actions = ('invite_user', 'invite_user_email',)
 
-    def invite_user(self, request, queryset):
-        invited = sum([beta_signup.invite_user() for beta_signup in queryset])
+    def invite_user(self, request, queryset, email=False):
+        invited = sum([beta_signup.invite_user(email=email) for beta_signup in queryset])
         self.message_user(request, '{} beta codes generated'.format(invited))
     invite_user.short_description = 'Invite'
 
+    def invite_user_email(self, request, queryset):
+        return self.invite_user(request, queryset, email=True)
+    invite_user_email.short_description = 'Invite & Email'
+
     def invite_url(self, beta_signup):
-        if not beta_signup.beta_code:
-            return ''
-        return 'https://{}/signup?beta-code={}'.format(
-            settings.ALLOWED_HOSTS[0],
-            beta_signup.beta_code.key,
-        )
+        return beta_signup.beta_code.invite_url
     invite_url.short_description = 'Invite URL'
 
     def beta_code_link(self, beta_signup):

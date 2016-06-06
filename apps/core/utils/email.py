@@ -9,6 +9,8 @@ def send_email(subject, to, template, context, from_email=settings.DEFAULT_FROM_
     if isinstance(to, str):
         to = [to]
 
+    context['subject'] = subject
+
     html_message = render_to_string(template, context)
 
     send_mail(

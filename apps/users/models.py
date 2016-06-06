@@ -6,10 +6,12 @@ from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.dispatch import receiver
+from django.conf import settings
 from delorean import Delorean
 
 from apps.core.signals import day_start
 from apps.core.utils import months_ago, this_month
+from apps.core.utils.email import send_email
 from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction
 
@@ -164,12 +166,20 @@ class BetaSignup(models.Model):
         )
     used.boolean = True
 
-    def invite_user(self):
+    def invite_user(self, email=False):
         if self.beta_code:
             return False
 
         self.beta_code = BetaCode.objects.create(intended_for=self.email)
         self.save()
+
+        if email:
+            send_email(
+                subject="You're invited to join Spendwell",
+                to=self.email,
+                template='users/email/beta-invite.html',
+                context={'invite_url': self.beta_code.invite_url},
+            )
 
         return True
 
@@ -182,3 +192,6 @@ class BetaCode(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     used = models.DateTimeField(null=True, blank=True)
+
+    def invite_url(self):
+        return 'https://{}/signup?beta-code={}'.format(settings.ALLOWED_HOSTS[0], self.key)
