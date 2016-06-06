@@ -9,10 +9,12 @@ from apps.transactions.factories import TransactionFactory
 from .models import Account
 
 
-class EnableDisableFlagsTestCase(SWTestCase):
+class EnableDisableMutationsTestCase(SWTestCase):
     '''
     Tests which check for balance in accounts based on the disabled boolean in the accounts model.
     Each enableAccount or disableAccount mutation changes the disabled boolean.
+    Additionally, tests for transactions being added to an enabled account,
+    and transactions being deleted after an account is disabled.
     '''
 
     # GraphQL string input for querying accounts. Stored for readability and repeated use.
@@ -41,13 +43,85 @@ class EnableDisableFlagsTestCase(SWTestCase):
 
         return total
 
-    def test_flags_and_balance_enabled_accounts(self):
-        'Basic GraphQL query after creating two accounts to see if they exist.'
+    def test_enable_mutation_balance_and_transactions(self):
+        '''
+        Creates disabled accounts with different current_balance values, and enables them
+        individually to check if the total current_balance changes as expected.
+        Additionally, tests for change in the disabled flag after a deactivated account
+        is enabled. This checks for the ability to add transactions to an enabled account.
+        '''
 
         owner = UserFactory.create()
-        AccountFactory.create(owner=owner, current_balance=Decimal(100))
-        AccountFactory.create(owner=owner, current_balance=Decimal(200))
+        account_1 = AccountFactory.create(owner=owner, disabled=True, current_balance=Decimal(100))
+        account_2 = AccountFactory.create(owner=owner, disabled=True, current_balance=Decimal(200))
 
+        # Check if total current_balance  is 0 when both accounts disabled.
+        result = self.graph_query(
+            self.accounts_graph_query,
+            user=owner,
+        ).data['viewer']['accounts']['edges']
+
+        self.assertTrue(self.enabled_accounts_total(result) == 0)
+
+        self.graph_query(
+            '''
+            mutation enableFirstAccount($input: EnableAccountMutationInput!) {
+                enableAccount(input: $input) {
+                    clientMutationId,
+                    account {
+                        id,
+                        disabled,
+                        currentBalance,
+                    }
+                }
+            }
+            ''',
+            variable_values={
+                'input': {
+                    'clientMutationId': '12345',
+                    'accountId': node_id_from_instance(account_1),
+                    'sync': True,
+                },
+            },
+            user=owner,
+        )
+
+        # Check if total current_balance  is 100 after account_1 is disabled.
+        result = self.graph_query(
+            self.accounts_graph_query,
+            user=owner,
+        ).data['viewer']['accounts']['edges']
+
+        self.assertTrue(self.enabled_accounts_total(result) == 10000)
+
+        # Check if mutation is reflected in database by doing a database query.
+        account_1 = Account.objects.get(current_balance=100)
+        self.assertFalse(account_1.disabled)
+
+        self.graph_query(
+            '''
+            mutation enableSecondAccount($input: EnableAccountMutationInput!) {
+                enableAccount(input: $input) {
+                    clientMutationId,
+                    account {
+                        id,
+                        disabled,
+                        currentBalance,
+                    }
+                }
+            }
+            ''',
+            variable_values={
+                'input': {
+                    'clientMutationId': '12345',
+                    'accountId': node_id_from_instance(account_2),
+                    'sync': True,
+                },
+            },
+            user=owner,
+        )
+
+        # Check if total current_balance is 300 after both accounts are enabled.
         result = self.graph_query(
             self.accounts_graph_query,
             user=owner,
@@ -55,10 +129,16 @@ class EnableDisableFlagsTestCase(SWTestCase):
 
         self.assertTrue(self.enabled_accounts_total(result) == 30000)
 
-    def test_flags_and_balance_disabled_accounts(self):
+        # Check if mutation is reflected in database by doing a database query.
+        account_2 = Account.objects.get(current_balance=200)
+        self.assertFalse(account_2.disabled)
+
+    def test_disable_mutation_balance_and_transactions(self):
         '''
-        Test to confirm change in total current_balance after enabling/disabling two accounts with
-        different current_balance values.
+        Creates enabled accounts with different current_balance values, and disables them
+        individually to check if the total current_balance changes as expected.
+        Additionally, confirms transactions connected to account are deleted
+        after said account is disabled.
         '''
 
         owner = UserFactory.create()
@@ -123,7 +203,7 @@ class EnableDisableFlagsTestCase(SWTestCase):
             user=owner,
         )
 
-        # Check if current_balance total is be 0 after account_1 and account_2 are disabled.
+        # Check if current_balance total is 0 after both accounts are disabled.
         result = self.graph_query(
             self.accounts_graph_query,
             user=owner,
@@ -135,83 +215,9 @@ class EnableDisableFlagsTestCase(SWTestCase):
         account_2 = Account.objects.get(current_balance=200)
         self.assertTrue(account_2.disabled)
 
-        self.graph_query(
-            '''
-            mutation enableFirstAccount($input: EnableAccountMutationInput!) {
-                enableAccount(input: $input) {
-                    clientMutationId,
-                    account {
-                        id,
-                        disabled,
-                        currentBalance,
-                    }
-                }
-            }
-            ''',
-            variable_values={
-                'input': {
-                    'clientMutationId': '12345',
-                    'accountId': node_id_from_instance(account_1),
-                    'sync': True,
-                },
-            },
-            user=owner,
-        )
-
-        # Check if current_balance total is 100 after account_2 is disabled.
-        result = self.graph_query(
-            self.accounts_graph_query,
-            user=owner,
-        ).data['viewer']['accounts']['edges']
-
-        self.assertTrue(self.enabled_accounts_total(result) == 10000)
-
-        # Check if mutation is reflected in database by doing a database query.
-        account_1 = Account.objects.get(current_balance=100)
-        self.assertFalse(account_1.disabled)
-
-        self.graph_query(
-            '''
-            mutation enableSecondAccount($input: EnableAccountMutationInput!) {
-                enableAccount(input: $input) {
-                    clientMutationId,
-                    account {
-                        id,
-                        disabled,
-                        currentBalance,
-                    }
-                }
-            }
-            ''',
-            variable_values={
-                'input': {
-                    'clientMutationId': '12345',
-                    'accountId': node_id_from_instance(account_2),
-                    'sync': True,
-                },
-            },
-            user=owner,
-        )
-
-        # Check if current_balance total is 300 after no accounts are disabled.
-        result = self.graph_query(
-            self.accounts_graph_query,
-            user=owner,
-        ).data['viewer']['accounts']['edges']
-        self.assertTrue(self.enabled_accounts_total(result) == 30000)
-
-        # Check if mutation is reflected in database by doing a database query.
-        account_2 = Account.objects.get(current_balance=200)
-        self.assertFalse(account_1.disabled)
-
-
-class EnableDisableAccountsTransactionsTestCase(SWTestCase):
-    'Test to confirm if transactions connected to account are deleted after account is disabled.'
-
-    def test_accounts_transactions_after_enable_and_disable(self):
-        owner = UserFactory.create()
-        account = AccountFactory.create(owner=owner)
-        TransactionFactory.create(owner=owner, account=account, amount=Decimal(150))
+        # Create transaction and link it to account_3 to perform transaction test.
+        account_3 = AccountFactory.create(owner=owner, current_balance=300)
+        TransactionFactory.create(owner=owner, account=account_3, amount=Decimal(150))
 
         # GraphQL string input for querying transactions. Stored for readability and repeated use.
         transactions_graph_query = '''{
@@ -221,7 +227,7 @@ class EnableDisableAccountsTransactionsTestCase(SWTestCase):
                         node {
                             id,
                             description,
-                            amount
+                            amount,
                         }
                     }
                 }
@@ -254,7 +260,7 @@ class EnableDisableAccountsTransactionsTestCase(SWTestCase):
             variable_values={
                 'input': {
                     'clientMutationId': '12345',
-                    'accountId': node_id_from_instance(account),
+                    'accountId': node_id_from_instance(account_3),
                     'detectTransfers': True,
                 },
             },
@@ -270,5 +276,5 @@ class EnableDisableAccountsTransactionsTestCase(SWTestCase):
         self.assertTrue(len(transaction_result) == 0)
 
         # Check if disableAccount mutation is reflected in database by doing a database query.
-        account = Account.objects.get(owner=owner)
-        self.assertTrue(account.disabled is True)
+        account_3 = Account.objects.get(current_balance=300)
+        self.assertTrue(account_3.disabled)
