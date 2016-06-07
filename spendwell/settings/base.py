@@ -7,9 +7,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 SECRET_KEY = '&;v_CEg*j%lmzulK(qS.J1Brlezwshavj+`yu5nZc~]A6,G9fuHGWI$hw"WOe'
 
-DEBUG = False
+SITE_DOMAIN = 'www.spendwell.co'
+ALLOWED_HOSTS = [SITE_DOMAIN]
 
-ALLOWED_HOSTS = ['app.spendwell.co']
+DEBUG = False
 CSRF_COOKIE_SECURE = True
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

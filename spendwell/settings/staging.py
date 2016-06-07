@@ -13,7 +13,8 @@ from .secrets import (
 )
 
 
-ALLOWED_HOSTS = ['*']
+SITE_DOMAIN = 'staging.spendwell.co'
+ALLOWED_HOSTS = [SITE_DOMAIN]
 
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',

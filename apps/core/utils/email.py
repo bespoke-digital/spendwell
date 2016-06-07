@@ -10,6 +10,7 @@ def send_email(subject, to, template, context, from_email=settings.DEFAULT_FROM_
         to = [to]
 
     context['subject'] = subject
+    context['SITE_DOMAIN'] = settings.SITE_DOMAIN
 
     html_message = render_to_string(template, context)
 

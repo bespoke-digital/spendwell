@@ -194,4 +194,4 @@ class BetaCode(models.Model):
     used = models.DateTimeField(null=True, blank=True)
 
     def invite_url(self):
-        return 'https://{}/signup?beta-code={}'.format(settings.ALLOWED_HOSTS[0], self.key)
+        return 'https://{}/signup?beta-code={}'.format(settings.SITE_DOMAIN, self.key)
