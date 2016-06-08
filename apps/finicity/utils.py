@@ -53,7 +53,7 @@ def normalize_transaction_description(description):
     if description.lower().startswith('www hover com'):
         return 'Hover'
 
-    if description.lower() == 'bbs securities   msp' or description.lower() == 'cdn shr   invest':
+    if description.lower() == 'bbs securities   msp' or description.lower() == 'cdn shr invest   inv':
         return 'Wealthsimple'
 
     if description.lower().startswith('dropbox'):
