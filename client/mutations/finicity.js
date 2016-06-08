@@ -9,8 +9,8 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
         id
       }
     `,
-    finicityInstitution: ()=> Relay.QL`
-      fragment on FinicityInstitutionNode {
+    institutionTemplate: ()=> Relay.QL`
+      fragment on InstitutionTemplateNode {
         id
       }
     `,
@@ -21,10 +21,10 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { finicityInstitution, credentials, mfaAnswers, fullSync } = this.props;
+    const { institutionTemplate, credentials, mfaAnswers, fullSync } = this.props;
 
     return {
-      finicityInstitutionId: finicityInstitution.id,
+      institutionTemplateId: institutionTemplate.id,
       credentials: JSON.stringify(credentials),
       mfaAnswers: mfaAnswers ? JSON.stringify(mfaAnswers) : null,
       fullSync,
@@ -35,7 +35,7 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on ConnectFinicityInstitutionMutationPayload {
         viewer {
-          safeToSpend
+          dummy
         }
       }
     `;

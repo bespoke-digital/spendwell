@@ -1,0 +1,63 @@
+{% extends "page.html" %}
+
+{% load i18n %}
+
+{% block body_class %}{{ block.super }} finicity-add-institution{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <form method="GET">
+      <div class="mui-textfield">
+        <input name="query" value="{{ query }}" placeholder='Search'/>
+      </div>
+
+      <div class="mui-radio">
+        <label>
+          <input
+            type="radio"
+            name="provider"
+            value="plaid"
+            {% if provider == 'plaid' %}checked{% endif %}
+          > Plaid
+        </label>
+      </div>
+      <div class="mui-radio">
+        <label>
+          <input
+            type="radio"
+            name="provider"
+            value="finicity"
+            {% if provider == 'finicity' %}checked{% endif %}
+          > Finicity
+        </label>
+      </div>
+
+      <button type="submit" class="mui-btn mui-btn--default">Submit</button>
+    </form>
+  </div>
+
+  {% for institution in institutions %}
+    <div class="card">
+      <pre>{{ institution.raw }}</pre>
+
+      <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="provider" value="{{ provider }}"/>
+        <input type="hidden" name="id" value="{{ institution.id }}"/>
+        {% if institution.in_whitelist %}
+          <input type="hidden" name="action" value="remove"/>
+          <button type="submit" class="mui-btn mui-btn--danger">
+            Remove from whitelist
+          </button>
+        {% else %}
+          <input type="hidden" name="action" value="add"/>
+          <button type="submit" class="mui-btn mui-btn--primary">
+            Add to whitelist
+          </button>
+        {% endif %}
+      </form>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

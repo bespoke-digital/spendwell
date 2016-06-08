@@ -14,7 +14,6 @@ from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity, FinicityError
-from apps.finicity.models import FinicityInstitution
 
 
 logger = logging.getLogger(__name__)
@@ -45,8 +44,8 @@ class InstitutionManager(SWManager):
 
     def from_finicity(self, owner, data):
         try:
-            logo = FinicityInstitution.objects.get(finicity_id=data['id']).image
-        except FinicityInstitution.DoesNotExist:
+            logo = InstitutionTemplate.objects.get(finicity_id=data['id']).image
+        except InstitutionTemplate.DoesNotExist:
             logo = None
 
         institution, created = Institution.objects.get_or_create(
@@ -83,20 +82,20 @@ class Institution(SWModel):
         return self.name
 
     @property
-    def finicity_institution(self):
-        if not hasattr(self, '_finicity_institution'):
+    def institution_template(self):
+        if not hasattr(self, '_institution_template'):
             if not self.finicity_id:
-                self._finicity_institution = None
+                self._institution_template = None
 
             else:
                 try:
-                    self._finicity_institution = FinicityInstitution.objects.get(
+                    self._institution_template = InstitutionTemplate.objects.get(
                         finicity_id=self.finicity_id
                     )
-                except FinicityInstitution.DoesNotExist:
-                    self._finicity_institution = None
+                except InstitutionTemplate.DoesNotExist:
+                    self._institution_template = None
 
-        return self._finicity_institution
+        return self._institution_template
 
     @property
     def plaid_client(self):
@@ -178,11 +177,25 @@ class Institution(SWModel):
                 Transaction.objects.from_finicity(self, transaction_data)
 
     def sync(self):
-        print('sync: start')
         self.sync_accounts()
-        print('sync: accounts finished')
         self.sync_transactions()
-        print('sync: transactions finished')
         self.last_sync = timezone.now()
         self.reauth_required = False
         self.save()
+
+
+class InstitutionTemplate(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    finicity_id = models.CharField(max_length=255, blank=True, null=True)
+    plaid_id = models.CharField(max_length=255, blank=True, null=True)
+    color = models.CharField(max_length=21, default='#000000')
+    image = models.ImageField(
+        upload_to='finicity/institutions',
+        null=True, blank=True,
+    )
+    default = models.CharField(max_length=20, blank=True, default='', choices=(
+        ('', 'Search Only'),
+        ('us', 'USA'),
+        ('ca', 'Canada'),
+    ))

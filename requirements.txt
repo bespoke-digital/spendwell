@@ -25,3 +25,4 @@ graphene==0.10.2
 django-graphiql==0.4.4
 html2text==2016.5.29
 geoip2==2.3.0
+django-ipware==1.1.5

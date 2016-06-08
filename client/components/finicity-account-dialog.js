@@ -50,7 +50,7 @@ class FinicityAccountDialog extends Component {
   handleSubmit(event) {
     if (event) event.preventDefault();
 
-    const { viewer, finicityInstitution, onConnected, onConnecting, fullSync } = this.props;
+    const { viewer, institutionTemplate, onConnected, onConnecting, fullSync } = this.props;
     const { credentials, mfaAnswers } = this.state;
 
     if (onConnecting)
@@ -59,7 +59,7 @@ class FinicityAccountDialog extends Component {
     this.setState({ loading: true });
     Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
       viewer,
-      finicityInstitution,
+      institutionTemplate,
       credentials,
       mfaAnswers,
       fullSync,
@@ -122,7 +122,7 @@ class FinicityAccountDialog extends Component {
   }
 
   render() {
-    const { finicityInstitution, onRequestClose } = this.props;
+    const { institutionTemplate, onRequestClose } = this.props;
     const {
       loading,
       mfaChallenges,
@@ -132,13 +132,13 @@ class FinicityAccountDialog extends Component {
       userActionRequired,
     } = this.state;
 
-    const formFields = _.sortBy(finicityInstitution.loginForm, 'displayOrder');
+    const formFields = _.sortBy(institutionTemplate.loginForm, 'displayOrder');
 
     return (
       <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
         <form onSubmit={::this.handleSubmit}>
           <div className='body'>
-            <h3>Connect {finicityInstitution.name}</h3>
+            <h3>Connect {institutionTemplate.name}</h3>
 
             {invalidCredentials ?
               <span className='form-error'>
@@ -229,9 +229,9 @@ FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
         ${ConnectFinicityInstitutionMutation.getFragment('viewer')}
       }
     `,
-    finicityInstitution: ()=> Relay.QL`
-      fragment on FinicityInstitutionNode {
-        ${ConnectFinicityInstitutionMutation.getFragment('finicityInstitution')}
+    institutionTemplate: ()=> Relay.QL`
+      fragment on InstitutionTemplateNode {
+        ${ConnectFinicityInstitutionMutation.getFragment('institutionTemplate')}
 
         id
         finicityId

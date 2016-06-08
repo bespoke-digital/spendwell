@@ -45,14 +45,22 @@ class ConnectAccount extends Component {
       browserHistory.push('/app/accounts');
   }
 
-  selectPlaidInstitution(plaidInstitution) {
+  selectPlaidInstitution(plaidId) {
     const { viewer } = this.props;
     plaidAccountDialog({
       viewer,
-      plaidInstitutionId: plaidInstitution.id,
+      plaidInstitutionId: plaidId,
       onConnected: ::this.handleConnected,
-      logo: plaidInstitution.logo,
     });
+  }
+
+  handleTemplateClick(institutionTemplate) {
+    const { relay } = this.props;
+
+    if (institutionTemplate.finicityId)
+      relay.setVariables({ finicitySelectedId: institutionTemplate.id });
+    else if (institutionTemplate.plaidId)
+      this.selectPlaidInstitution(institutionTemplate.plaidId);
   }
 
   render() {
@@ -65,21 +73,21 @@ class ConnectAccount extends Component {
           <TextInput label='Bank Search' onChange={this.handleSearch}/>
         </Card>
 
-        <Transition show={!!viewer.finicityInstitution}>
+        <Transition show={!!viewer.institutionTemplate}>
           <FinicityAccountDialog
             viewer={viewer}
-            finicityInstitution={viewer.finicityInstitution}
-            onRequestClose={()=> relay.setVariables({ selectedFinicityId: null })}
+            institutionTemplate={viewer.institutionTemplate}
+            onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
             onConnected={::this.handleConnected}
           />
         </Transition>
 
-        {viewer.finicityInstitutions ? viewer.finicityInstitutions.edges.map(({ node })=>
+        {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node })=>
           <Card
             key={node.id}
             className='fi'
             className={`fi ${node.image ? 'has-logo' : ''}`}
-            onClick={()=> relay.setVariables({ selectedFinicityId: node.id })}
+            onClick={()=> this.handleTemplateClick(node)}
             style={{ borderLeftColor: node.color }}
           >
             {node.image ? <img src={node.image} alt={node.name}/> : null}
@@ -122,12 +130,11 @@ class ConnectAccount extends Component {
 ConnectAccount = Relay.createContainer(ConnectAccount, {
   initialVariables: {
     query: null,
-    selectedFinicityId: null,
+    finicitySelectedId: null,
   },
   prepareVariables(vars) {
     return {
-      hasQuery: !!vars.query,
-      selectedFinicity: !!vars.selectedFinicityId,
+      selectedFinicity: !!vars.finicitySelectedId,
       ...vars,
     };
   },
@@ -137,10 +144,12 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
         ${FinicityAccountDialog.getFragment('viewer')}
         ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
 
-        finicityInstitutions(query: $query, first: 10) @include(if: $hasQuery) {
+        institutionTemplates(query: $query, first: 10) {
           edges {
             node {
               id
+              finicityId
+              plaidId
               name
               url
               image
@@ -149,8 +158,8 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
           }
         }
 
-        finicityInstitution(id: $selectedFinicityId) @include(if: $selectedFinicity) {
-          ${FinicityAccountDialog.getFragment('finicityInstitution')}
+        institutionTemplate(id: $finicitySelectedId) @include(if: $selectedFinicity) {
+          ${FinicityAccountDialog.getFragment('institutionTemplate')}
         }
       }
     `,

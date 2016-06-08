@@ -107,21 +107,11 @@ class Finicity(object):
         headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
         headers['Finicity-App-Token'] = self.access_token
 
-        print()
-        print('FINICITY REQUEST')
-        print(method, path)
-        if 'data' in kwargs:
-            print(kwargs['data'])
-
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
             headers=headers,
             **kwargs
         )
-
-        print()
-        print('FINICITY RESPONSE')
-        print(response.content)
 
         data = self.parse(response)
 
@@ -139,6 +129,16 @@ class Finicity(object):
 
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
+
+            print()
+            print()
+            print('FINICITY REQUEST')
+            print(method, path)
+            if 'data' in kwargs:
+                print(kwargs['data'])
+            print()
+            print('FINICITY RESPONSE')
+            print(response.content)
 
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
         else:

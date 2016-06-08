@@ -5,8 +5,6 @@ import Relay from 'react-relay';
 import ConnectAccount from 'components/connect-account';
 import App from 'components/app';
 
-import styles from 'sass/views/add-plaid.scss';
-
 
 class AddAccountView extends Component {
   render() {
@@ -15,7 +13,7 @@ class AddAccountView extends Component {
     return (
       <App
         viewer={viewer}
-        className={`container skinny ${styles.root}`}
+        className='container skinny'
         title='Connect Accounts'
       >
         <ConnectAccount viewer={viewer}/>

@@ -55,11 +55,11 @@ class InstitutionReauth extends Component {
 
     return (
       <Container>
-        <Transition show={!!(finicityConnect && finicityConnect.finicityInstitution)}>
+        <Transition show={!!(finicityConnect && finicityConnect.institutionTemplate)}>
           <FinicityAccountDialog
             viewer={viewer}
-            finicityInstitution={finicityConnect ? finicityConnect.finicityInstitution : null}
-            onRequestClose={()=> this.setState({ finicityInstitution: null, loading: false })}
+            institutionTemplate={finicityConnect ? finicityConnect.institutionTemplate : null}
+            onRequestClose={()=> this.setState({ institutionTemplate: null, loading: false })}
             onConnecing={()=> this.setState({ loading: true })}
             onConnected={::this.handleFinicityConnected}
             fullSync
@@ -107,8 +107,8 @@ InstitutionReauth = Relay.createContainer(InstitutionReauth, {
                 plaidPublicToken
                 finicityId
 
-                finicityInstitution {
-                  ${FinicityAccountDialog.getFragment('finicityInstitution')}
+                institutionTemplate {
+                  ${FinicityAccountDialog.getFragment('institutionTemplate')}
                 }
               }
             }

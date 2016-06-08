@@ -5,10 +5,10 @@ import graphene
 from graphene.utils import with_context
 from django.utils import timezone
 
+from apps.core.utils import instance_for_node_id
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 
-from apps.core.utils import instance_for_node_id
 from .client import Finicity, FinicityError
 
 try:
@@ -20,7 +20,7 @@ except ImportError:
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     class Input:
         credentials = graphene.InputField(graphene.String())
-        finicity_institution_id = graphene.InputField(graphene.ID())
+        institution_template_id = graphene.InputField(graphene.ID())
         mfa_answers = graphene.InputField(graphene.String())
         full_sync = graphene.Boolean()
 
@@ -32,8 +32,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         from spendwell.schema import Viewer
 
         try:
-            finicity_institution = instance_for_node_id(
-                input['finicity_institution_id'],
+            institution_template = instance_for_node_id(
+                input['institution_template_id'],
                 context,
                 info,
                 check_owner=False,
@@ -42,7 +42,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
 
             institution = Institution.objects.from_finicity(
                 owner=context.user,
-                data=finicity_client.get_institution(finicity_institution.finicity_id),
+                data=finicity_client.get_institution(institution_template.finicity_id),
             )
 
             sync_kwargs = {
@@ -52,7 +52,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
                 sync_kwargs['mfa_answers'] = json.loads(input['mfa_answers'])
 
             accounts_data = finicity_client.connect_institution(
-                finicity_institution.finicity_id,
+                institution_template.finicity_id,
                 **sync_kwargs
             )
 

@@ -43,7 +43,7 @@ graphiql_view = csp_exempt(login_required(GraphiQL.as_view()))
 urlpatterns = [
     url(r'^admin/', admin_site.urls),
     url(r'^watchman/', include('watchman.urls')),
-    url(r'^finicity/', include('apps.finicity.urls', namespace='finicity')),
+    url(r'^institutions/', include('apps.institutions.urls', namespace='institutions')),
     url(r'^ads/', include('apps.ads.urls', namespace='ads')),
 
     url(r'^graphiql', graphiql_view, name='graphiql'),

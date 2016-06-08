@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 from spendwell.admin import admin_site
-from .models import Institution
+from .models import Institution, InstitutionTemplate
 
 
 class InstitutionAdmin(admin.ModelAdmin):
@@ -20,3 +20,9 @@ class InstitutionAdmin(admin.ModelAdmin):
     )
 
 admin_site.register(Institution, InstitutionAdmin)
+
+
+class InstitutionTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'url')
+
+admin_site.register(InstitutionTemplate, InstitutionTemplateAdmin)

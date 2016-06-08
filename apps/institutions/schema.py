@@ -1,20 +1,41 @@
 
+from django.contrib.gis.geoip2 import GeoIP2
 import graphene
+from graphene.utils import with_context
+from graphene.contrib.django.types import DjangoNode
+from graphene.contrib.django.fields import DjangoConnectionField
+from ipware.ip import get_real_ip
 
 from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.types import Money
 from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
-from apps.finicity.schema import FinicityInstitutionNode
+from apps.finicity.schema import FinicityLoginField, resolve_login_form
 
-from .models import Institution
+from .models import Institution, InstitutionTemplate
+
+
+class InstitutionTemplateNode(DjangoNode):
+    login_form = graphene.List(FinicityLoginField)
+    image = graphene.String()
+
+    class Meta:
+        model = InstitutionTemplate
+
+    @with_context
+    def resolve_login_form(self, *args):
+        return resolve_login_form(self, *args)
+
+    def resolve_image(self, args, info):
+        if self.instance.image:
+            return self.instance.image.url
 
 
 class InstitutionNode(SWNode):
     can_sync = graphene.Field(graphene.Boolean())
     current_balance = graphene.Field(Money)
     accounts = SWFilterConnectionField(AccountNode, filterset_class=AccountFilter)
-    finicity_institution = graphene.Field(FinicityInstitutionNode)
+    institution_template = graphene.Field(InstitutionTemplateNode)
     logo = graphene.Field(graphene.String())
 
     class Meta:
@@ -31,7 +52,7 @@ class InstitutionNode(SWNode):
             'plaid_id',
             'plaid_public_token',
             'finicity_id',
-            'finicity_institution',
+            'institution_template',
         )
 
     def resolve_can_sync(self, args, info):
@@ -45,6 +66,23 @@ class InstitutionNode(SWNode):
 class InstitutionsQuery(graphene.ObjectType):
     institution = graphene.relay.NodeField(InstitutionNode)
     institutions = SWFilterConnectionField(InstitutionNode)
+    institution_template = graphene.relay.NodeField(InstitutionTemplateNode)
+    institution_templates = DjangoConnectionField(InstitutionTemplateNode, query=graphene.String())
 
     class Meta:
         abstract = True
+
+    @with_context
+    def resolve_institution_templates(self, args, context, info):
+        if 'query' not in args or not args['query']:
+            ip = get_real_ip(context)
+
+            if ip:
+                country = GeoIP2().get_country(ip)['country_code'].lower()
+            else:
+                country = 'ca'
+
+            return InstitutionTemplate.objects.filter(default=country).order_by('name')
+
+        else:
+            return InstitutionTemplate.objects.filter(name__icontains=args['query']).order_by('id')

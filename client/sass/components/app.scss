@@ -32,6 +32,12 @@
     @media (min-width: $screen-sm-min) and (max-width: $container-width + 48px + 55px) {
       padding-right: 48px + 55px;
     }
+
+    &.skinny {
+      @media (min-width: $screen-sm-min) {
+        max-width: 650px + $nav-width-desktop + ($container-padding * 2);
+      }
+    }
   }
 
   &.onboarding {
