@@ -14,6 +14,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'owner',
         'account',
         'description',
+        'raw_description',
         'date',
         'plaid_id',
         'from_savings',
