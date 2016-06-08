@@ -25,6 +25,12 @@ class Dashboard extends Component {
     relay.setVariables({ transactionCount: transactionCount + 20 });
   }
 
+  // Loads mutated variables immediately.
+  loadNewTransactions(arg) {
+    this.props.relay.setVariables(arg);
+    this.props.relay.forceFetch();
+  }
+
   render() {
     const { viewer, relay } = this.props;
 
@@ -40,7 +46,7 @@ class Dashboard extends Component {
             <MonthSelector
               month={relay.variables.month}
               first={moment(viewer.firstMonth, 'YYYY/MM')}
-              onChange={(m)=> relay.setVariables({ month: m })}
+              onChange={(m)=> this.loadNewTransactions({ month: m })}
             />
           </CardList>
 

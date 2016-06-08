@@ -13,6 +13,8 @@ import ListAccount from 'components/list-account';
 import TextActions from 'components/text-actions';
 import A from 'components/a';
 
+import eventEmitter from 'utils/event-emitter';
+
 import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
 
 
@@ -30,28 +32,30 @@ class Institution extends Component {
     this.state = { selected: null, showDisabled: false };
   }
 
+  forceFetch() {
+    eventEmitter.emit('forceFetch');
+  }
+
   selectAccount({ id }) {
     browserHistory.push({ pathname: `/accounts/${id}` });
   }
 
   enableAccount(account) {
-    const { relay } = this.props;
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
       onFailure: handleMutationError,
       onSuccess: ()=> {
         console.log('Success: EnableAccountMutation');
-        relay.forceFetch();
+        this.forceFetch();
       },
     });
   }
 
   disableAccount(account) {
-    const { relay } = this.props;
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
       onFailure: handleMutationError,
       onSuccess: ()=> {
         console.log('Success: DisableAccountMutation');
-        relay.forceFetch();
+        this.forceFetch();
       },
     });
   }
