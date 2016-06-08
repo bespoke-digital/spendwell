@@ -61,13 +61,13 @@ class CreateInstitutionTemplateView(TemplateView):
         provider = self.request.POST.get('provider')
 
         if action == 'remove':
-            if provider == 'fincity':
+            if provider == 'finicity':
                 InstitutionTemplate.objects.filter(finicity_id=id).delete()
             elif provider == 'plaid':
                 InstitutionTemplate.objects.filter(plaid_id=id).delete()
 
         else:
-            if provider == 'fincity':
+            if provider == 'finicity':
                 fi_data = client.get_institution(id)
                 InstitutionTemplate.objects.create(
                     finicity_id=id,
