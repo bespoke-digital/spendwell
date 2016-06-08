@@ -13,16 +13,7 @@ def bill_month_match(transaction, month_start, ago):
 
     amount_variation = transaction.amount * Decimal('.10')
 
-    description_match_count = transaction.account.transactions.filter(
-        description=transaction.description,
-        date__gte=prev_month_start,
-        date__lt=prev_month_end,
-    ).count()
-
-    if not description_match_count == 1:
-        return False
-
-    amount_match_count = transaction.account.transactions.filter(
+    match_count = transaction.account.transactions.filter(
         description=transaction.description,
         date__gte=prev_month_start,
         date__lt=prev_month_end,
@@ -30,10 +21,7 @@ def bill_month_match(transaction, month_start, ago):
         amount__lt=transaction.amount - amount_variation,
     ).count()
 
-    if not amount_match_count == 1:
-        return False
-
-    return True
+    return match_count == 1
 
 
 def autodetect_bills(user):
@@ -47,6 +35,7 @@ def autodetect_bills(user):
         amount__lt=0,
     ):
         if (
+            bill_month_match(transaction, full_month_start, 0) and
             bill_month_match(transaction, full_month_start, 1) and
             bill_month_match(transaction, full_month_start, 2)
         ):
