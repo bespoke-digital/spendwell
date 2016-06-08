@@ -209,7 +209,7 @@ class Finicity(object):
 
     def list_institutions(self, query):
         response = self.request('/v1/institutions', params={
-            'search': query.replace(' ', '+'),
+            'search': query,
             'start': 1,
             'limit': 10,
         })
