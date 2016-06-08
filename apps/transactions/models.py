@@ -102,6 +102,7 @@ class TransactionManager(SWManager):
         transaction.account = account
         transaction.owner = institution.owner
 
+        transaction.raw_description = data['description']
         transaction.description = normalize_transaction_description(data['description'])
         transaction.amount = Decimal(data['amount'])
         transaction.date = datetime.fromtimestamp(
@@ -166,6 +167,7 @@ class Transaction(SWModel):
     _transfer_pair = models.ManyToManyField('self')
 
     description = models.CharField(max_length=255, db_index=True)
+    raw_description = models.CharField(max_length=255, blank=True, null=True)
     amount = models.DecimalField(decimal_places=2, max_digits=12, db_index=True)
     date = models.DateTimeField(db_index=True)
     balance = models.DecimalField(decimal_places=2, max_digits=12, default=0)

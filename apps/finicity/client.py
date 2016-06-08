@@ -119,8 +119,6 @@ class Finicity(object):
             raise FinicityMFAException(self.user, response, data)
 
         if 'error' in data:
-            print('finicity: response error', data)
-
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
@@ -141,8 +139,6 @@ class Finicity(object):
             print(response.content)
 
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
-        else:
-            print('finicity: response okay')
 
         return data
 
@@ -281,9 +277,6 @@ class Finicity(object):
                 transactions += response_data
                 if len(response_data) < 1000:
                     break
-                else:
-                    print('finicity: transactions count', len(response_data))
-                    print('\tfirst id:', response_data[0]['id'])
             else:
                 break
 

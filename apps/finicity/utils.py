@@ -61,8 +61,4 @@ def normalize_transaction_description(description):
     if description.lower().startswith('meundies.com'):
         return 'MeUndies'
 
-    return re.sub(
-        r'[\d-]+$',
-        '',
-        description.title(),
-    )
+    return re.sub(r'[\d-]+$', '', description.title())

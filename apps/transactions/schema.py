@@ -22,6 +22,7 @@ class TransactionNode(SWNode):
         model = Transaction
         only_fields = (
             'description',
+            'raw_description',
             'date',
             'amount',
             'account',

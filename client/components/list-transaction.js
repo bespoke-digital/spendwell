@@ -100,6 +100,12 @@ class ListTransaction extends Component {
                 <div className='content'>{transaction.description}</div>
                 <div className='label'>Description</div>
               </div>
+              {transaction.rawDescription && transaction.rawDescription.toUpperCase() !== transaction.description.toUpperCase() ?
+                <div>
+                  <div className='content'>{transaction.rawDescription}</div>
+                  <div className='label'>Original Description</div>
+                </div>
+              : null}
               <div>
                 <div className='content'><DateTime value={transaction.date}/></div>
                 <div className='label'>Date</div>
@@ -191,6 +197,7 @@ ListTransaction = Relay.createContainer(ListTransaction, {
         ${DeleteTransactionMutation.getFragment('transaction')}
 
         description
+        rawDescription
         amount
         date
         source
