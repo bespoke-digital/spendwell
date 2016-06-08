@@ -55,4 +55,7 @@ def normalize_transaction_description(description):
     if description.lower().startswith('dropbox'):
         return 'Dropbox'
 
+    if description.lower().startswith('meundies.com'):
+        return 'MeUndies'
+
     return description.title()
