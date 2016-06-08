@@ -1,5 +1,6 @@
 
 import re
+from string import capwords
 
 
 def maybe_list(obj):
@@ -61,4 +62,7 @@ def normalize_transaction_description(description):
     if description.lower().startswith('meundies.com'):
         return 'MeUndies'
 
-    return re.sub(r'[\d-]+$', '', description.title())
+    description = re.sub(r'[\d-]+$', '', description)
+    description = capwords(description)
+
+    return description
