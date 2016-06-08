@@ -264,7 +264,7 @@ class Finicity(object):
         self.ensure_customer()
         self.request('/v1/customers/{}/accounts'.format(self.user.finicity_id), method='POST')
 
-        path = '/v1/customers/{}/transactions'.format(self.user.finicity_id)
+        path = '/v2/customers/{}/transactions'.format(self.user.finicity_id)
         to_date = int(time.time())
         from_date = int(to_date - 16416000)
         transactions = []
