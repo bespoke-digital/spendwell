@@ -78,7 +78,7 @@ class InstitutionsQuery(graphene.ObjectType):
             ip = get_real_ip(context)
 
             if ip:
-                country = GeoIP2().get_country(ip)['country_code'].lower()
+                country = GeoIP2().country(ip)['country_code'].lower()
             else:
                 country = 'ca'
 
