@@ -84,7 +84,7 @@ class Nav extends Component {
           {viewer.isAdmin ? (
             <li>
               <A onClick={()=> {
-                Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
+                Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer, autodetectBills: false }), {
                   onFailure: handleMutationError,
                   onSuccess: ()=> {
                     console.log('Success: SyncInstitutionsMutation');

@@ -61,17 +61,16 @@ export class SyncInstitutionsMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    return {};
+    return {
+      autodetectBills: this.props.autodetectBills,
+      estimateIncome: this.props.estimateIncome,
+    };
   }
 
   getFatQuery() {
     return Relay.QL`
       fragment on SyncInstitutionsMutationPayload {
-        viewer {
-          institutions
-          accounts
-          transactions
-        }
+        viewer { dummy }
       }
     `;
   }

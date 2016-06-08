@@ -56,7 +56,8 @@ class ConnectPlaidInstitutionMutation(graphene.relay.ClientIDMutation):
 
 class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     class Input:
-        pass
+        autodetect_bills = graphene.Boolean()
+        estimate_income = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
 
@@ -66,10 +67,14 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
         from spendwell.schema import Viewer
 
         context.user.sync()
-        context.user.estimate_income()
+
+        if input.get('estimate_income', True):
+            context.user.estimate_income()
+
         context.user.save()
 
-        autodetect_bills(context.user)
+        if input.get('autodetect_bills', True):
+            autodetect_bills(context.user)
 
         return SyncInstitutionsMutation(viewer=Viewer())
 
