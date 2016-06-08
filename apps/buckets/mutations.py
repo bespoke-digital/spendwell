@@ -27,7 +27,7 @@ def clean_filters(filters):
                 continue
 
             if key == 'account':
-                val = from_global_id(val).id
+                _, val = from_global_id(val)
 
             clean_filter[to_snake_case(key)] = val
         clean.append(clean_filter)
