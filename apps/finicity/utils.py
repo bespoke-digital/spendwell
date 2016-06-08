@@ -62,6 +62,15 @@ def normalize_transaction_description(description):
     if description.lower().startswith('meundies.com'):
         return 'MeUndies'
 
+    if description.lower().startswith('oculus'):
+        return 'Oculus'
+
+    description = description.split('   ')
+    if len(description) > 1:
+        description = description[:-1]
+    description = ' '.join(description)
+
+    description = description.replace('*', ' ')
     description = re.sub(r'[\d-]+$', '', description)
     description = capwords(description)
 
