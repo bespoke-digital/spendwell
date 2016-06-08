@@ -65,6 +65,12 @@ def normalize_transaction_description(description):
     if description.lower().startswith('oculus'):
         return 'Oculus'
 
+    if description.lower().startswith('linkedin'):
+        return 'LinkedIn'
+
+    if '*google play' in description.lower():
+        return 'Google Play'
+
     description = description.split('   ')
     if len(description) > 1:
         description = description[:-1]
