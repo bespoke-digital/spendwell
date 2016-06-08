@@ -1,4 +1,7 @@
 
+import re
+
+
 def maybe_list(obj):
     if isinstance(obj, list):
         return obj
@@ -58,4 +61,8 @@ def normalize_transaction_description(description):
     if description.lower().startswith('meundies.com'):
         return 'MeUndies'
 
-    return description.title()
+    return re.sub(
+        r'[\d-]+$',
+        '',
+        description.title(),
+    )
