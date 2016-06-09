@@ -108,10 +108,16 @@ AUTHENTICATION_BACKENDS = (
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 
 LOGGING = {
     'version': 1,
@@ -167,6 +173,10 @@ EMAIL_HOST_PASSWORD = None
 
 GEOIP_PATH = '/data/shared/'
 GEOIP_COUNTRY = 'GeoIP2-Country.mmdb'
+
+
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ('json',)
 
 
 PLAID_PRODUCTION = False
