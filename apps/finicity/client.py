@@ -132,12 +132,13 @@ class Finicity(object):
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
 
-            print('\n\nFINICITY REQUEST')
-            print(method, path)
-            if 'data' in kwargs:
-                print(kwargs['data'])
-            print('\nFINICITY RESPONSE')
-            print(response.content)
+            if settings.DEBUG:
+                print('\n\nFINICITY REQUEST')
+                print(method, path)
+                if 'data' in kwargs:
+                    print(kwargs['data'])
+                print('\nFINICITY RESPONSE')
+                print(response.content)
 
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
 
