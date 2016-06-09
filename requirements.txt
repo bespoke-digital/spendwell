@@ -26,3 +26,4 @@ django-graphiql==0.4.4
 html2text==2016.5.29
 geoip2==2.3.0
 django-ipware==1.1.5
+mixpanel==4.3.0

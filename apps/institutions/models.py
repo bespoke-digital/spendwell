@@ -6,9 +6,9 @@ from django.core.files.base import ContentFile
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-
 from plaid import Client
 from plaid.errors import ResourceNotFoundError, RequestFailedError
+from mixpanel import Mixpanel
 
 from apps.core.models import SWModel, SWManager
 from apps.accounts.models import Account
@@ -17,6 +17,7 @@ from apps.finicity.client import Finicity, FinicityError
 
 
 logger = logging.getLogger(__name__)
+mixpanel = Mixpanel(settings.MIXPANEL_PUBLIC_KEY)
 
 
 class InstitutionManager(SWManager):
@@ -182,6 +183,19 @@ class Institution(SWModel):
         self.last_sync = timezone.now()
         self.reauth_required = False
         self.save()
+
+        if self.finicity_id:
+            provider = 'finicty'
+        elif self.finicity_id:
+            provider = 'plaid'
+        else:
+            provider = 'other'
+
+        mixpanel.track(self.owner.id, 'sync', {
+            'provider': provider,
+            'accounts': self.accounts.count(),
+            'transactions': sum([a.transactions.count() for a in self.accounts.all()]),
+        })
 
 
 class InstitutionTemplate(models.Model):
