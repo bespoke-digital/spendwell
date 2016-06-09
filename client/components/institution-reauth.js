@@ -2,7 +2,6 @@
 import { Component } from 'react';
 import Relay from 'react-relay';
 
-import Container from 'components/container';
 import Card from 'components/card';
 import TextActions from 'components/text-actions';
 import A from 'components/a';
@@ -13,12 +12,18 @@ import Icon from 'components/icon';
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';
 
+import style from 'sass/components/institution-reauth';
 
 class InstitutionReauth extends Component {
-  state = { loading: false };
+  state = {
+    loading: false,
+    canceled: false,
+  };
 
   reauth(institution) {
     const { viewer, relay } = this.props;
+
+    this.setState({ canceled: false });
 
     if (institution.plaidId)
       plaidAccountDialog({
@@ -48,18 +53,18 @@ class InstitutionReauth extends Component {
 
   render() {
     const { viewer } = this.props;
-    const { finicityConnect, loading } = this.state;
+    const { finicityConnect, loading, canceled } = this.state;
 
     if (!viewer.institutions || viewer.institutions.edges.length === 0)
       return null;
 
     return (
-      <Container>
-        <Transition show={!!(finicityConnect && finicityConnect.institutionTemplate)}>
+      <div className={style.root}>
+        <Transition show={!canceled && !!(finicityConnect && finicityConnect.institutionTemplate)}>
           <FinicityAccountDialog
             viewer={viewer}
             institutionTemplate={finicityConnect ? finicityConnect.institutionTemplate : null}
-            onRequestClose={()=> this.setState({ institutionTemplate: null, loading: false })}
+            onRequestClose={()=> this.setState({ canceled: true, loading: false })}
             onConnecing={()=> this.setState({ loading: true })}
             onConnected={::this.handleFinicityConnected}
             fullSync
@@ -85,7 +90,7 @@ class InstitutionReauth extends Component {
             </div>
           </Card>
         )}
-      </Container>
+      </div>
     );
   }
 }
