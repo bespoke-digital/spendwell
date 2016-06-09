@@ -27,10 +27,11 @@ class FinicityAccountDialog extends Component {
     fullSync: false,
   };
 
-  constructor() {
-    super();
-    this.state = { credentials: {}, mfaAnswers: [], loading: false };
-  }
+  state = {
+    credentials: {},
+    mfaAnswers: [],
+    loading: false,
+  };
 
   setCredentialValue(name, id, value) {
     const { credentials } = this.state;
@@ -69,8 +70,6 @@ class FinicityAccountDialog extends Component {
 
         this.setState({ loading: false });
 
-        console.log(transaction);
-        console.log(transaction.getError());
         const errors = transaction.getError().source.errors;
         const error = (testMessage)=> errors.find(({ message })=> message.indexOf(testMessage) === 0);
 

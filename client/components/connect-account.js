@@ -17,7 +17,7 @@ import { parseUrl } from 'utils';
 import styles from 'sass/views/add-plaid.scss';
 
 
-const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
+// const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
 
 
 class ConnectAccount extends Component {
@@ -32,10 +32,10 @@ class ConnectAccount extends Component {
 
     relay.setVariables({ query });
 
-    fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
-        `/institutions/search?p=connect&q=${query}`)
-      .then((response)=> response.json())
-      .then((results)=> this.setState({ results }));
+    // fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
+    //     `/institutions/search?p=connect&q=${query}`)
+    //   .then((response)=> response.json())
+    //   .then((results)=> this.setState({ results }));
   }
 
   handleConnected() {
@@ -87,7 +87,7 @@ class ConnectAccount extends Component {
             key={node.id}
             className='fi'
             className={`fi ${node.image ? 'has-logo' : ''}`}
-            onClick={()=> this.handleTemplateClick(node)}
+            onClick={this.handleTemplateClick.bind(this, node)}
             style={{ borderLeftColor: node.color }}
           >
             {node.image ? <img src={node.image} alt={node.name}/> : null}
@@ -134,7 +134,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
   },
   prepareVariables(vars) {
     return {
-      selectedFinicity: !!vars.finicitySelectedId,
+      finicitySelected: !!vars.finicitySelectedId,
       ...vars,
     };
   },
@@ -158,7 +158,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
           }
         }
 
-        institutionTemplate(id: $finicitySelectedId) @include(if: $selectedFinicity) {
+        institutionTemplate(id: $finicitySelectedId) @include(if: $finicitySelected) {
           ${FinicityAccountDialog.getFragment('institutionTemplate')}
         }
       }

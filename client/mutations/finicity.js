@@ -11,7 +11,7 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
     `,
     institutionTemplate: ()=> Relay.QL`
       fragment on InstitutionTemplateNode {
-        id
+        finicityId
       }
     `,
   };
@@ -24,7 +24,7 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
     const { institutionTemplate, credentials, mfaAnswers, fullSync } = this.props;
 
     return {
-      institutionTemplateId: institutionTemplate.id,
+      finicityId: institutionTemplate.finicityId,
       credentials: JSON.stringify(credentials),
       mfaAnswers: mfaAnswers ? JSON.stringify(mfaAnswers) : null,
       fullSync,

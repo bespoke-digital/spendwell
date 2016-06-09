@@ -1,4 +1,6 @@
 
+from uuid import uuid4
+
 from django.contrib.gis.geoip2 import GeoIP2
 import graphene
 from graphene.utils import with_context
@@ -11,6 +13,7 @@ from apps.core.types import Money
 from apps.accounts.schema import AccountNode
 from apps.accounts.filters import AccountFilter
 from apps.finicity.schema import FinicityLoginField, resolve_login_form
+from apps.finicity.client import Finicity
 
 from .models import Institution, InstitutionTemplate
 
@@ -21,6 +24,22 @@ class InstitutionTemplateNode(DjangoNode):
 
     class Meta:
         model = InstitutionTemplate
+
+    @with_context
+    @classmethod
+    def get_node(Cls, id, context, info=None):
+        if id.startswith('finicity-tmp:'):
+            finicity_id = id.split(':')[-1]
+            client = Finicity(context.user)
+            finicity_institution = client.get_institution(finicity_id)
+            return InstitutionTemplate(
+                    id='finicity-tmp:{}'.format(finicity_institution['id']),
+                    finicity_id=finicity_institution['id'],
+                    name=finicity_institution['name'],
+                    url=finicity_institution['urlHomeApp'],
+                )
+        else:
+            return super(InstitutionTemplateNode, Cls).get_node(id, info)
 
     @with_context
     def resolve_login_form(self, *args):
@@ -85,4 +104,20 @@ class InstitutionsQuery(graphene.ObjectType):
             return InstitutionTemplate.objects.filter(default=country).order_by('name')
 
         else:
-            return InstitutionTemplate.objects.filter(name__icontains=args['query']).order_by('id')
+            institution_templates = list(InstitutionTemplate.objects.filter(
+                name__icontains=args['query']
+            ).order_by('id'))
+
+            # return unsaved temporary institutions direct from the finicity API.
+            client = Finicity(context.user)
+            long_tail_institutions = [
+                InstitutionTemplate(
+                    id='finicity-tmp:{}'.format(fi['id']),
+                    finicity_id=fi['id'],
+                    name=fi['name'],
+                    url=fi['urlHomeApp'],
+                )
+                for fi in client.list_institutions(args['query'])
+            ]
+
+            return institution_templates + long_tail_institutions
