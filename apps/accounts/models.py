@@ -47,7 +47,7 @@ class AccountManager(SWManager):
         account.type = data['type']
         account.name = data['name']
         account.number_snippet = data['number']
-        account.current_balance = data['balance']
+        account.current_balance = data.get('balance')
 
         account.save()
         return account
