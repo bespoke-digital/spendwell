@@ -11,6 +11,7 @@ import Icon from 'components/icon';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';
+import eventEmitter from 'utils/event-emitter';
 
 import style from 'sass/components/institution-reauth';
 
@@ -21,7 +22,7 @@ class InstitutionReauth extends Component {
   };
 
   reauth(institution) {
-    const { viewer, relay } = this.props;
+    const { viewer } = this.props;
 
     this.setState({ canceled: false });
 
@@ -33,7 +34,7 @@ class InstitutionReauth extends Component {
         fullSync: true,
         onConnecing: ()=> this.setState({ loading: true }),
         onConnected: ()=> {
-          relay.forceFetch();
+          eventEmitter.emit('forceFetch');
           this.setState({ loading: false });
         },
       });
@@ -46,8 +47,7 @@ class InstitutionReauth extends Component {
   }
 
   handleFinicityConnected() {
-    const { relay } = this.props;
-    relay.forceFetch();
+    eventEmitter.emit('forceFetch');
     this.setState({ finicityConnect: null, loading: false });
   }
 
