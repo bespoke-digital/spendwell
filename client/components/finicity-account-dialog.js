@@ -100,13 +100,13 @@ class FinicityAccountDialog extends Component {
             userActionRequired: !!userActionRequired,
           });
 
-          if (!invalidCredentials && !userActionRequired)
-            handleMutationError(transaction);
-
           track('connect-error', {
             provider: 'finicity',
             institution: institutionTemplate.name,
           });
+
+          if (!invalidCredentials && !userActionRequired)
+            handleMutationError(transaction);
         }
       },
       onSuccess: ()=> {
@@ -118,12 +118,12 @@ class FinicityAccountDialog extends Component {
           userActionRequired: false,
         });
 
-        onConnected();
-
         track('connect-success', {
           provider: 'finicity',
           institution: institutionTemplate.name,
         });
+
+        onConnected();
       },
     });
   }
