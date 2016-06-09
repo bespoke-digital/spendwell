@@ -15,12 +15,12 @@ body.users-auth {
 
     input:-webkit-autofill {
       ~ label {
-          color: $mui-label-font-color;
-          font-size: $mui-label-font-size;
-          line-height: $xFormLabelLineHeight;
-          transform: translate(0px, 0px);
-          text-overflow: ellipsis;
-        }
+        color: $mui-label-font-color;
+        font-size: $mui-label-font-size;
+        line-height: $xFormLabelLineHeight;
+        transform: translate(0, 0);
+        text-overflow: ellipsis;
+      }
     }
 
     .has-error {

@@ -25,10 +25,10 @@
             {{ field }}
           </div>
         {% else %}
-          <div class="mui-textfield mui-textfield--float-label">
-            {{ field.errors }}
-            {{ field }}
+          <div class="mui-textfield mui-textfield--float-label {% if field.errors %} has-error {% endif %}">
+            {{ field }} 
             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field.errors }}
           </div>
         {% endif %}
       {% endfor %}

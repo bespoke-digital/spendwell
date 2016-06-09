@@ -9,13 +9,14 @@
 
     <form action="" method="post">
       {% csrf_token %}
-
+      <div class="{% if form.non_field_errors %} has-error {% endif %}">
+      {{ form.non_field_errors }}
+      </div>
       {% for field in form %}
-        {{ form.non_field_errors }}
-        <div class="mui-textfield mui-textfield--float-label">
-          {{ field.errors }}
+        <div class="mui-textfield mui-textfield--float-label {% if field.errors %} has-error {% endif %}">
           {{ field }}
           <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field.errors }}
         </div>
       {% endfor %}
 
