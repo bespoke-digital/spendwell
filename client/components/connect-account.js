@@ -144,7 +144,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
         ${FinicityAccountDialog.getFragment('viewer')}
         ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
 
-        institutionTemplates(query: $query, first: 10) {
+        institutionTemplates(query: $query, first: 12) {
           edges {
             node {
               id
