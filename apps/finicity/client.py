@@ -123,7 +123,7 @@ class Finicity(object):
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
-            if not force_auth and data['error']['code'] in ('44000',) and FINICITY_RETRIES < 3:
+            if not force_auth and data['error']['code'] in ('44000',) and retries < FINICITY_RETRIES:
                 print('\n\n44000\n\n')
                 return self.request(path, method, headers, force_auth=False, retries=retries + 1, **kwargs)
 
