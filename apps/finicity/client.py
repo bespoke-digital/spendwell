@@ -18,6 +18,7 @@ from .utils import maybe_list
 logger = logging.getLogger(__name__)
 
 FINICITY_URL = 'https://api.finicity.com/aggregation'
+FINICITY_RETRIES = 3
 
 
 if settings.FINICITY_PRODUCTION:
@@ -98,7 +99,7 @@ class Finicity(object):
 
         cache.set('finicity-access-token', self.access_token, 7200)
 
-    def request(self, path, method='GET', headers=None, force_auth=False, **kwargs):
+    def request(self, path, method='GET', headers=None, force_auth=False, retries=0, **kwargs):
         if force_auth or not hasattr(self, 'access_token'):
             self.authenticate(force=force_auth)
 
@@ -122,20 +123,20 @@ class Finicity(object):
             if not force_auth and data['error']['code'] in ('103', '10022', '10023'):
                 return self.request(path, method, headers, force_auth=True, **kwargs)
 
+            if not force_auth and data['error']['code'] in ('44000',) and FINICITY_RETRIES < 3:
+                return self.request(path, method, headers, force_auth, retries=retries + 1, **kwargs)
+
             if data['error']['code'] in ('103',):
                 raise FinicityValidation('finicity-invalid-credentials')
 
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
 
-            print()
-            print()
-            print('FINICITY REQUEST')
+            print('\n\nFINICITY REQUEST')
             print(method, path)
             if 'data' in kwargs:
                 print(kwargs['data'])
-            print()
-            print('FINICITY RESPONSE')
+            print('\nFINICITY RESPONSE')
             print(response.content)
 
             raise FinicityError('Finicity: {}'.format(data['error']['message']))
