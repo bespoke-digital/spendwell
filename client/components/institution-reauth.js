@@ -67,7 +67,7 @@ class InstitutionReauth extends Component {
             onRequestClose={()=> this.setState({ canceled: true, loading: false })}
             onConnecing={()=> this.setState({ loading: true })}
             onConnected={::this.handleFinicityConnected}
-            fullSync
+            sync
           />
         </Transition>
 

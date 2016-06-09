@@ -136,7 +136,6 @@ class AutodetectBillsMutation(graphene.relay.ClientIDMutation):
     @with_context
     def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
-        Bucket.objects.filter(owner=context.user, type='bill').delete()
         autodetect_bills(context.user)
         return Cls(viewer=Viewer())
 

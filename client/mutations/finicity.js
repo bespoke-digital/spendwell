@@ -21,13 +21,13 @@ export class ConnectFinicityInstitutionMutation extends Relay.Mutation {
   }
 
   getVariables() {
-    const { institutionTemplate, credentials, mfaAnswers, fullSync } = this.props;
+    const { institutionTemplate, credentials, mfaAnswers, sync } = this.props;
 
     return {
       finicityId: institutionTemplate.finicityId,
       credentials: JSON.stringify(credentials),
       mfaAnswers: mfaAnswers ? JSON.stringify(mfaAnswers) : null,
-      fullSync,
+      sync,
     };
   }
 

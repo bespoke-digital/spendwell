@@ -25,6 +25,8 @@ def bill_month_match(transaction, month_start, ago):
 
 
 def autodetect_bills(user):
+    Bucket.objects.filter(owner=user, type='bill').delete()
+
     full_month_end = this_month()
     full_month_start = full_month_end - relativedelta(months=1)
 

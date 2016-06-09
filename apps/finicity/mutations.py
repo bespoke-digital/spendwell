@@ -21,7 +21,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         finicity_id = graphene.InputField(graphene.String())
         credentials = graphene.InputField(graphene.String())
         mfa_answers = graphene.InputField(graphene.String())
-        full_sync = graphene.Boolean()
+        sync = graphene.InputField(graphene.Boolean())
 
     viewer = graphene.Field('Viewer')
 
@@ -48,7 +48,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
         for account_data in accounts_data:
             Account.objects.from_finicity(institution, account_data)
 
-        if input.get('full_sync'):
+        if input.get('sync'):
             institution.sync_transactions()
             institution.last_sync = timezone.now()
             institution.reauth_required = False

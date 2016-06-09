@@ -70,8 +70,7 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
 
         if input.get('estimate_income', True):
             context.user.estimate_income()
-
-        context.user.save()
+            context.user.save()
 
         if input.get('autodetect_bills', True):
             autodetect_bills(context.user)

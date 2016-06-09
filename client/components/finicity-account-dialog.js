@@ -20,11 +20,11 @@ class FinicityAccountDialog extends Component {
     onRequestClose: PropTypes.func.isRequired,
     onConnected: PropTypes.func.isRequired,
     onConnecting: PropTypes.func,
-    fullSync: PropTypes.bool,
+    sync: PropTypes.bool,
   };
 
   static defaultProps = {
-    fullSync: false,
+    sync: false,
   };
 
   state = {
@@ -51,7 +51,7 @@ class FinicityAccountDialog extends Component {
   handleSubmit(event) {
     if (event) event.preventDefault();
 
-    const { viewer, institutionTemplate, onConnected, onConnecting, fullSync } = this.props;
+    const { viewer, institutionTemplate, onConnected, onConnecting, sync } = this.props;
     const { credentials, mfaAnswers } = this.state;
 
     if (onConnecting)
@@ -63,7 +63,7 @@ class FinicityAccountDialog extends Component {
       institutionTemplate,
       credentials,
       mfaAnswers,
-      fullSync,
+      sync,
     }), {
       onFailure: (transaction)=> {
         console.log('Failure: ConnectFinicityInstitutionMutation');
