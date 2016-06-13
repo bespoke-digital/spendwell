@@ -89,12 +89,25 @@
       width: 24px;
     }
 
-    &.mui-btn--is-loading .icon {
-      display: none;
-    }
+    &.mui-btn--can-load {
 
-    &.mui-btn--can-load:before {
-      right: calc(50% - 9px);
+      height: auto;
+
+      &:before {
+        right: calc(14.5% - 9px);
+        margin-top: -28.5px;
+        width: 57px;
+        height: 57px;
+        border: 2px solid;
+        border-radius: 50%;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+      }
+
+      &.mui-btn--is-loading {
+        overflow: visible;
+      }
     }
   }
 
@@ -129,6 +142,12 @@
   &.mui-btn--color-primary {
     color: $primary;
 
+    &.fab-mui-btn--can-load {
+      &:before {
+        border-right-color: $load-for-everything;
+      }
+    }
+    
     &:hover {
       color: darken($primary, 5%);
     };
@@ -137,6 +156,13 @@
   &.mui-btn--color-accent {
     color: $accent;
 
+    &.mui-btn--can-load {
+
+      &:before {
+        border-right-color: $load-for-everything;
+      }
+    }
+    
     &:hover {
       color: darken($accent, 5%);
     }
@@ -145,6 +171,13 @@
   &.mui-btn--color-goal {
     color: $goal;
 
+    &.mui-btn--can-load {
+
+      &:before {
+        border-right-color: $load-for-everything;
+      }
+    }
+    
     &:hover {
       color: darken($goal, 5%);
     }
@@ -153,6 +186,13 @@
   &.mui-btn--color-bill {
     color: $bill;
 
+    &.mui-btn--can-load {
+
+      &:before {
+        border-right-color: $load-for-everything;
+      }
+    }
+    
     &:hover {
       color: darken($bill, 5%);
     }
@@ -161,6 +201,12 @@
   &.mui-btn--color-label {
     color: $label;
 
+    .mui-btn--can-load {
+
+      :before {
+        border-right-color: $load-for-everything;
+      }
+    }
     &:hover {
       color: darken($label, 5%);
     }

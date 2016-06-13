@@ -70,7 +70,10 @@ class ConnectAccount extends Component {
     return (
       <CardList className={styles.root}>
         <Card>
-          <TextInput label='Choose bank below or search here' onChange={this.handleSearch}/>
+          <TextInput
+            label='Choose bank below or search here'
+            onChange={this.handleSearch}
+          />
         </Card>
 
         <Transition show={!!viewer.institutionTemplate}>
