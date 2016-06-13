@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'watchman',
     'django_extensions',
     'security_middleware',
+    'djcelery',
 
     'apps.core',
     'apps.landing',
@@ -176,7 +177,8 @@ GEOIP_COUNTRY = 'GeoIP2-Country.mmdb'
 
 
 BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ('json',)
+CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
 
 PLAID_PRODUCTION = False

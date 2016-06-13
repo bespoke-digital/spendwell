@@ -11,7 +11,7 @@ from apps.transactions.filters import TransactionFilter
 
 from .models import Bucket
 from .schema import BucketNode
-from .utils import autodetect_bills
+from .tasks import autodetect_bills
 
 
 BucketEdge = Edge.for_node(BucketNode)

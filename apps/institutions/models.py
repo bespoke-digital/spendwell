@@ -3,6 +3,7 @@ import logging
 from base64 import b64decode
 
 from django.core.files.base import ContentFile
+from django.dispatch import receiver
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -11,9 +12,12 @@ from plaid.errors import ResourceNotFoundError, RequestFailedError
 from mixpanel import Mixpanel
 
 from apps.core.models import SWModel, SWManager
+from apps.core.signals import day_start
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.finicity.client import Finicity, FinicityError
+
+from .utils import sync_all
 
 
 logger = logging.getLogger(__name__)
@@ -196,6 +200,11 @@ class Institution(SWModel):
             'accounts': self.accounts.count(),
             'transactions': sum([a.transactions.count() for a in self.accounts.all()]),
         })
+
+
+@receiver(day_start)
+def on_day_start(*args, **kwargs):
+    sync_all().delay()
 
 
 class InstitutionTemplate(models.Model):
