@@ -38,7 +38,7 @@ def production():
     env.settings = 'spendwell.settings.production'
     env.branch = 'master'
     env.apps = ['72.51.30.238', '107.6.24.166']
-    env.workers = []
+    env.workers = ['72.51.29.172']
     configure_env()
 
 
@@ -49,7 +49,7 @@ def staging(branch='develop'):
     env.settings = 'spendwell.settings.staging'
     env.branch = branch
     env.apps = ['162.248.180.146']
-    env.workers = ['72.51.29.172']
+    env.workers = ['72.51.29.189']
     configure_env()
 
 
