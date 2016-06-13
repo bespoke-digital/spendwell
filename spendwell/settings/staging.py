@@ -29,6 +29,8 @@ INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 MIDDLEWARE_CLASSES.append('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware')
 
 
+CACHES['default']['LOCATION'] = 'redis://172.16.87.154:6379/1'
+
 LOGGING['handlers']['sentry'] = {
     'level': 'ERROR',
     'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
