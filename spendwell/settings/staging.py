@@ -45,6 +45,8 @@ RAVEN_CONFIG = {
     'release': raven.fetch_git_sha(BASE_DIR),
 }
 
+BROKER_URL = 'redis://172.16.87.154:6379/0'
+
 PLAID_PRODUCTION = True
 PLAID_SECRET = plaid_secret
 
