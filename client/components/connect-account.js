@@ -63,6 +63,18 @@ class ConnectAccount extends Component {
       this.selectPlaidInstitution(institutionTemplate.plaidId);
   }
 
+  parsedUrl(url) {
+    if (!url)
+      return;
+
+    const hostname = parseUrl(url).hostname;
+
+    if (hostname === parseUrl('').hostname)
+      return url;
+
+    return hostname;
+  }
+
   render() {
     const { viewer, relay } = this.props;
     const { results } = this.state;
@@ -70,7 +82,10 @@ class ConnectAccount extends Component {
     return (
       <CardList className={styles.root}>
         <Card>
-          <TextInput label='Choose bank below or search here' onChange={this.handleSearch}/>
+          <TextInput
+            label='Choose bank below or search here'
+            onChange={this.handleSearch}
+          />
         </Card>
 
         <Transition show={!!viewer.institutionTemplate}>
@@ -92,7 +107,7 @@ class ConnectAccount extends Component {
           >
             {node.image ? <img src={node.image} alt={node.name}/> : null}
             <div className='fi-name'><strong>{node.name}</strong></div>
-            <div className='fi-domain'>{parseUrl(node.url).hostname}</div>
+            <div className='fi-domain'>{this.parsedUrl(node.url)}</div>
           </Card>
         ) : null}
 

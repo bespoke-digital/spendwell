@@ -30,6 +30,7 @@ class FinicityAccountDialog extends Component {
   state = {
     credentials: {},
     mfaAnswers: [],
+    mfaExpired: false,
     loading: false,
   };
 
@@ -79,12 +80,11 @@ class FinicityAccountDialog extends Component {
         const userActionRequired = error('finicity-user-action-required');
 
         if (mfaError) {
-          const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'));
-          console.log('Finicity MFA Required', mfaChallenges);
           this.setState({
-            mfaChallenges,
+            mfaChallenges: JSON.parse(mfaError.message.split(':').slice(1).join(':')),
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
+            mfaExpired: false,
           });
 
         } else if (mfaExpired) {
@@ -92,12 +92,14 @@ class FinicityAccountDialog extends Component {
             mfaChallenges: null,
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
+            mfaExpired: true,
           });
 
         } else {
           this.setState({
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
+            mfaExpired: false,
           });
 
           track('connect-error', {
@@ -135,6 +137,7 @@ class FinicityAccountDialog extends Component {
       mfaChallenges,
       credentials,
       mfaAnswers,
+      mfaExpired,
       invalidCredentials,
       userActionRequired,
     } = this.state;
@@ -155,6 +158,10 @@ class FinicityAccountDialog extends Component {
             : userActionRequired ?
               <span className='form-error'>
                 You need to login to your bank and complete an action to continue.
+              </span>
+            : mfaExpired ?
+              <span className='form-error'>
+                Your login session has expired. Please try again.
               </span>
             : null}
 
