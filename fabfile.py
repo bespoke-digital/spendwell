@@ -118,16 +118,15 @@ def supervisor_status():
 @task
 def supervisor_restart():
     if env.host in env.workers:
-        process_name = 'celery-celeryd'
+        sudo('/usr/bin/supervisorctl restart celery-celeryd', shell=False)
     else:
-        process_name = 'gunicorn-{domain}'.format(**env)
+        sudo(
+            '/usr/bin/supervisorctl status gunicorn-{domain} | '
+            'sed "s/.*[pid ]\([0-9]\+\)\,.*/\\1/" | '
+            'xargs kill -HUP'.format(**env),
+            shell=False,
+        )
 
-    sudo(
-        '/usr/bin/supervisorctl status {} | '
-        'sed "s/.*[pid ]\([0-9]\+\)\,.*/\\1/" | '
-        'xargs kill -HUP'.format(process_name),
-        shell=False,
-    )
     return supervisor_status()
 
 
