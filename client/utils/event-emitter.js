@@ -1,6 +1,6 @@
 
-import EventEmitter from 'wolfy87-eventemitter';
+import EventEmitter from 'wolfy87-eventemitter'
 
-const eventEmitter = new EventEmitter();
+const eventEmitter = new EventEmitter()
 
-export default eventEmitter;
+export default eventEmitter

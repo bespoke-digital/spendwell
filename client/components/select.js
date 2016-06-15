@@ -1,9 +1,9 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
 
-import Dropdown from 'components/dropdown';
-import A from 'components/a';
+import Dropdown from 'components/dropdown'
+import A from 'components/a'
 
 
 export default class Select extends Component {
@@ -29,33 +29,33 @@ export default class Select extends Component {
     value: null,
   };
 
-  isControled() {
-    return !!this.props.value;
+  isControled () {
+    return !!this.props.value
   }
 
-  value() {
-    return this.isControled() ? this.props.value : this.state.value;
+  value () {
+    return this.isControled() ? this.props.value : this.state.value
   }
 
-  handleOptionClick(value) {
-    const { onChange } = this.props;
+  handleOptionClick (value) {
+    const { onChange } = this.props
 
     if (!this.isControled())
-      this.setState({ value });
+      this.setState({ value })
 
-    onChange(value);
+    onChange(value)
   }
 
-  render() {
-    const { initialValue, selectedLabel, label, options, variant, className } = this.props;
+  render () {
+    const { initialValue, selectedLabel, label, options, variant, className } = this.props
 
-    let value;
+    let value
     if (this.isControled())
-      value = this.props.value;
+      value = this.props.value
     else
-      value = this.state.value || initialValue;
+      value = this.state.value || initialValue
 
-    const valueLabel = _.result(_.find(options, { value }), 'label');
+    const valueLabel = _.result(_.find(options, { value }), 'label')
 
     return (
       <span className={className}>
@@ -67,13 +67,13 @@ export default class Select extends Component {
           }
           variant={variant}
         >
-          {options.map((option, index)=> (
+          {options.map((option, index) => (
             <A key={index} onClick={this.handleOptionClick.bind(this, option.value)}>
               {option.label}
             </A>
           ))}
         </Dropdown>
       </span>
-    );
+    )
   }
 }

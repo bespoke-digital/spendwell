@@ -1,6 +1,6 @@
 
-import { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
+import { Component, PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 
 
 export default class ClickOff extends Component {
@@ -8,25 +8,25 @@ export default class ClickOff extends Component {
     onClickOff: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.handleDocumentClick = ::this.handleDocumentClick;
+  constructor () {
+    super()
+    this.handleDocumentClick = ::this.handleDocumentClick
   }
 
-  componentDidMount() {
-    document.addEventListener('click', this.handleDocumentClick, false);
+  componentDidMount () {
+    document.addEventListener('click', this.handleDocumentClick, false)
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleDocumentClick, false);
+  componentWillUnmount () {
+    document.removeEventListener('click', this.handleDocumentClick, false)
   }
 
-  handleDocumentClick(event) {
+  handleDocumentClick (event) {
     if (!findDOMNode(this).contains(event.target))
-      this.props.onClickOff();
+      this.props.onClickOff()
   }
 
-  render() {
-    return <div {...this.props}/>;
+  render () {
+    return <div {...this.props}/>
   }
 }

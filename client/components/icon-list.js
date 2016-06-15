@@ -1,10 +1,10 @@
 
-import styles from 'sass/components/icon-list.scss';
+import styles from 'sass/components/icon-list.scss'
 
 
-export default (props)=> {
-  const { className, ..._props } = props;
+export default (props) => {
+  const { className, ..._props } = props
   return (
     <div className={`icon-list ${styles.root} ${className ? className : ''}`} {..._props}/>
-  );
-};
+  )
+}

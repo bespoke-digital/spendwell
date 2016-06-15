@@ -1,16 +1,16 @@
 
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
-import track from 'utils/track';
-import { handleMutationError } from 'utils/network-layer';
-import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
-
-
-const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
-const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').getAttribute('content');
+import track from 'utils/track'
+import { handleMutationError } from 'utils/network-layer'
+import { ConnectPlaidInstitutionMutation } from 'mutations/institutions'
 
 
-export default function({
+const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true'
+const PLAID_PUBLIC_KEY = document.querySelector('meta[name=plaid-public-key]').getAttribute('content')
+
+
+export default function ({
   plaidInstitutionId,
   plaidPublicToken,
   viewer,
@@ -18,7 +18,7 @@ export default function({
   onConnected,
   fullSync,
 }) {
-  function openPlaid() {
+  function openPlaid () {
     window.Plaid.create({
       clientName: 'Spendwell',
       key: PLAID_PUBLIC_KEY,
@@ -26,9 +26,9 @@ export default function({
       longtail: true,
       env: PLAID_PRODUCTION ? 'production' : 'tartan',
       token: plaidPublicToken ? plaidPublicToken : undefined,
-      onSuccess(publicToken) {
+      onSuccess (publicToken) {
         if (onConnecing)
-          onConnecing();
+          onConnecing()
 
         Relay.Store.commitUpdate(new ConnectPlaidInstitutionMutation({
           viewer,
@@ -37,29 +37,29 @@ export default function({
           fullSync: !!fullSync,
         }), {
           onFailure: handleMutationError,
-          onSuccess: ()=> {
-            console.log('Success: ConnectPlaidInstitutionMutation');
+          onSuccess: () => {
+            console.log('Success: ConnectPlaidInstitutionMutation')
 
             if (onConnected)
-              onConnected();
+              onConnected()
 
-            track('account-connected', { type: 'Plaid' });
+            track('account-connected', { type: 'Plaid' })
           },
-        });
+        })
       },
-    }).open(plaidInstitutionId);
+    }).open(plaidInstitutionId)
   }
 
   if (!window.Plaid) {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js';
-    script.onload = script.onreadystatechange = function() {
-      script.onload = script.onreadystatechange = null;
-      openPlaid();
-    };
-    document.getElementsByTagName('head')[0].appendChild(script);
+    const script = document.createElement('script')
+    script.src = 'https://cdn.plaid.com/link/stable/link-initialize.js'
+    script.onload = script.onreadystatechange = function () {
+      script.onload = script.onreadystatechange = null
+      openPlaid()
+    }
+    document.getElementsByTagName('head')[0].appendChild(script)
 
   } else {
-    openPlaid();
+    openPlaid()
   }
 }

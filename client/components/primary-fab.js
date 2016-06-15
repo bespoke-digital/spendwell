@@ -1,14 +1,14 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 
-import Button from 'components/button';
-import Icon from 'components/icon';
-import Tooltip from 'components/tooltip';
-import supportsTrueHover from 'utils/supports-true-hover';
+import Button from 'components/button'
+import Icon from 'components/icon'
+import Tooltip from 'components/tooltip'
+import supportsTrueHover from 'utils/supports-true-hover'
 
-import styles from 'sass/components/primary-fab.scss';
+import styles from 'sass/components/primary-fab.scss'
 
 
 class PrimaryFab extends Component {
@@ -34,26 +34,26 @@ class PrimaryFab extends Component {
     hovered: false,
   };
 
-  handleClick(defaultAction) {
-    const { open } = this.state;
+  handleClick (defaultAction) {
+    const { open } = this.state
 
     if (!supportsTrueHover())
-      this.setState({ open: !open });
+      this.setState({ open: !open })
 
     if (open || supportsTrueHover())
-      defaultAction();
+      defaultAction()
   }
 
-  render() {
-    const { className, icon, actions, chatlioOpen } = this.props;
-    const { open } = this.state;
+  render () {
+    const { className, icon, actions, chatlioOpen } = this.props
+    const { open } = this.state
 
-    const defaultAction = _.find(actions, (a)=> a.default);
-    const otherActions = _.filter(actions, (a)=> !a.default);
+    const defaultAction = _.find(actions, (a) => a.default)
+    const otherActions = _.filter(actions, (a) => !a.default)
 
     return (
       <div
-        onMouseOver={()=> this.setState({ hovered: true })}
+        onMouseOver={() => this.setState({ hovered: true })}
         className={`
           primary-fab
           ${styles.root}
@@ -77,7 +77,7 @@ class PrimaryFab extends Component {
         </Button>
 
         <div className='actions'>
-          {otherActions.map(({ label, onClick, icon, className }, index)=>
+          {otherActions.map(({ label, onClick, icon, className }, index) =>
             <div className={`action ${className || ''}`} key={index}>
               {label ? <Tooltip>{label}</Tooltip> : null}
               <Button onClick={onClick} color='primary' fab>{icon}</Button>
@@ -86,16 +86,16 @@ class PrimaryFab extends Component {
         </div>
 
         {open ?
-          <div className='overlay' onClick={()=> this.setState({ open: false })}/>
+          <div className='overlay' onClick={() => this.setState({ open: false })}/>
         : null}
       </div>
-    );
+    )
   }
 }
 
 
-PrimaryFab = connect((state)=> ({
+PrimaryFab = connect((state) => ({
   chatlioOpen: state.chatlioOpen,
-}))(PrimaryFab);
+}))(PrimaryFab)
 
-export default PrimaryFab;
+export default PrimaryFab

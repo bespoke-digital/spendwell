@@ -1,14 +1,14 @@
 
-import { Component } from 'react';
-import Relay from 'react-relay';
+import { Component } from 'react'
+import Relay from 'react-relay'
 
-import ConnectAccount from 'components/connect-account';
-import App from 'components/app';
+import ConnectAccount from 'components/connect-account'
+import App from 'components/app'
 
 
 class AddAccountView extends Component {
-  render() {
-    const { viewer } = this.props;
+  render () {
+    const { viewer } = this.props
 
     return (
       <App
@@ -18,20 +18,20 @@ class AddAccountView extends Component {
       >
         <ConnectAccount viewer={viewer}/>
       </App>
-    );
+    )
   }
 }
 
 
 AddAccountView = Relay.createContainer(AddAccountView, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${ConnectAccount.getFragment('viewer')}
       }
     `,
   },
-});
+})
 
-export default AddAccountView;
+export default AddAccountView

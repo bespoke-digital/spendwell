@@ -163,7 +163,7 @@ class FinicityAccountDialog extends Component {
               </span>
             : null}
 
-            {mfaChallenges ? mfaChallenges.map((challenge, index)=>
+            {mfaChallenges ? mfaChallenges.map((challenge, index) =>
               <div className='form-field' key={index}>
                 {challenge.image ?
                   <div className='mfa-question'><img src={challenge.image} alt={challenge.text}/></div>
@@ -175,7 +175,7 @@ class FinicityAccountDialog extends Component {
 
                 {challenge.choice ?
                   <ul className='mfa-choices'>
-                    {challenge.choice.map((choice)=>
+                    {challenge.choice.map((choice) =>
                       <li key={choice['@value']}>
                         {mfaAnswers[index] === choice['@value'] ?
                           <i className='fa fa-dot-circle-o'/>

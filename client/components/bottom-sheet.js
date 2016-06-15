@@ -1,12 +1,12 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import Card from 'components/card';
-import SubtreeContainer from 'components/subtree-container';
-import A from 'components/a';
-import Icon from 'components/icon';
+import Card from 'components/card'
+import SubtreeContainer from 'components/subtree-container'
+import A from 'components/a'
+import Icon from 'components/icon'
 
-import style from 'sass/components/bottom-sheet';
+import style from 'sass/components/bottom-sheet'
 
 
 export default class BottomSheet extends Component {
@@ -28,21 +28,21 @@ export default class BottomSheet extends Component {
     transitioned: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.visible !== this.props.visible) {
-      self.timeout = setTimeout(()=> {
-        this.setState({ transitioned: nextProps.visible });
-        self.timeout = null;
-      }, nextProps.visible ? 100 : 300);
+      self.timeout = setTimeout(() => {
+        this.setState({ transitioned: nextProps.visible })
+        self.timeout = null
+      }, nextProps.visible ? 100 : 300)
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     if (self.timeout)
-      clearTimeout(self.timeout);
+      clearTimeout(self.timeout)
   }
 
-  render() {
+  render () {
     const {
       onRequestClose,
       className,
@@ -50,12 +50,12 @@ export default class BottomSheet extends Component {
       title,
       actions,
       children,
-    } = this.props;
+    } = this.props
 
-    const { transitioned } = this.state;
+    const { transitioned } = this.state
 
     if (!visible && !transitioned)
-      return null;
+      return null
 
     return (
       <SubtreeContainer
@@ -67,7 +67,7 @@ export default class BottomSheet extends Component {
         `}
         onClick={onRequestClose}
       >
-        <Card onClick={(e)=> e.stopPropagation()} ref='card'>
+        <Card onClick={(e) => e.stopPropagation()} ref='card'>
           <div className='bottom-sheet-actionbar'>
             <A className='close' onClick={onRequestClose}><Icon type='close' color='light'/></A>
             <div className='title'>{title}</div>
@@ -78,6 +78,6 @@ export default class BottomSheet extends Component {
           </div>
         </Card>
       </SubtreeContainer>
-    );
+    )
   }
 }

@@ -1,14 +1,14 @@
 
-import moment from 'moment';
+import moment from 'moment'
 
-export default function DateTime({ value, format }) {
+export default function DateTime ({ value, format }) {
   if (!moment.isMoment(value))
-    value = moment(value);
+    value = moment(value)
 
   if (!format)
-    format = 'MMMM Do, YYYY';
+    format = 'MMMM Do, YYYY'
 
-  value = value.format(format);
+  value = value.format(format)
 
-  return <span className='datetime'>{value}</span>;
+  return <span className='datetime'>{value}</span>
 }
