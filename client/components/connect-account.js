@@ -82,8 +82,7 @@ class ConnectAccount extends Component {
             onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
             onConnected={::this.handleConnected}
             onError={() => this.setState({ isError: !this.state.isError })}
-          /> 
-          :
+          /> :
           <ErrorDialog 
           onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
           onError={() => this.setState({ isError: !this.state.isError })}
