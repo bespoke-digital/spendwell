@@ -1,6 +1,7 @@
 /*eslint no-var: 0*/
 
 process.env.NODE_ENV = 'development';
+process.env.BABEL_ENV = 'live-reloading';
 
 const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');

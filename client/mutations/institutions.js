@@ -1,29 +1,29 @@
 
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 
 export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { connectPlaidInstitution }`;
+  getMutation () {
+    return Relay.QL`mutation { connectPlaidInstitution }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       fullSync: this.props.fullSync,
       publicToken: this.props.publicToken,
       plaidInstitutionId: this.props.plaidInstitutionId,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on ConnectPlaidInstitutionMutationPayload {
         viewer {
@@ -33,54 +33,54 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
           transactions
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }
 
 
 export class SyncInstitutionsMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { syncInstitutions }`;
+  getMutation () {
+    return Relay.QL`mutation { syncInstitutions }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       autodetectBills: this.props.autodetectBills,
       estimateIncome: this.props.estimateIncome,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on SyncInstitutionsMutationPayload {
         viewer { dummy }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }

@@ -5,27 +5,27 @@ import {
   IndexRedirect,
   applyRouterMiddleware,
   browserHistory,
-} from 'react-router';
-import Relay from 'react-relay';
-import useRelay from 'react-router-relay';
+} from 'react-router'
+import Relay from 'react-relay'
+import useRelay from 'react-router-relay'
 
-import Dashboard from 'views/dashboard';
-import Accounts from 'views/accounts';
-import AddAccount from 'views/add-account';
-import AccountUpload from 'views/account-upload';
-import Bucket from 'views/bucket';
-import Transactions from 'views/transactions';
-import OnboardingAddAccount from 'views/onboarding/add-account';
-import OnboardingAccounts from 'views/onboarding/accounts';
-import OnboardingWalkthrough from 'views/onboarding/walkthrough';
+import Dashboard from 'views/dashboard'
+import Accounts from 'views/accounts'
+import AddAccount from 'views/add-account'
+import AccountUpload from 'views/account-upload'
+import Bucket from 'views/bucket'
+import Transactions from 'views/transactions'
+import OnboardingAddAccount from 'views/onboarding/add-account'
+import OnboardingAccounts from 'views/onboarding/accounts'
+import OnboardingWalkthrough from 'views/onboarding/walkthrough'
 
-import track from 'utils/track';
+import track from 'utils/track'
 
-const rootQuery = { viewer: ()=> Relay.QL`query { viewer }` };
+const rootQuery = { viewer: () => Relay.QL`query { viewer }` }
 
-function onUpdate() {
-  window.scrollTo(0, 0);
-  track(`route: ${document.location.pathname}`);
+function onUpdate () {
+  window.scrollTo(0, 0)
+  track(`route: ${document.location.pathname}`)
 }
 
 export default (
@@ -59,4 +59,4 @@ export default (
       <Route path='transactions' component={Transactions} queries={rootQuery}/>
     </Route>
   </Router>
-);
+)

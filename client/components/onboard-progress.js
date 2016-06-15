@@ -1,19 +1,19 @@
 
-import _ from 'lodash';
-import { Component } from 'react';
-import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
+import _ from 'lodash'
+import { Component } from 'react'
+import Relay from 'react-relay'
+import { browserHistory } from 'react-router'
 
-import Progress from 'components/progress';
-import Icon from 'components/icon';
-import Transition from 'components/transition';
-import ClickOff from 'components/click-off';
-import IncomeEstimateDialog from 'components/income-estimate-dialog';
-import CreateBucketSheet from 'components/create-bucket-sheet';
-import CreateGoalSheet from 'components/create-goal-sheet';
+import Progress from 'components/progress'
+import Icon from 'components/icon'
+import Transition from 'components/transition'
+import ClickOff from 'components/click-off'
+import IncomeEstimateDialog from 'components/income-estimate-dialog'
+import CreateBucketSheet from 'components/create-bucket-sheet'
+import CreateGoalSheet from 'components/create-goal-sheet'
 
-import eventEmitter from 'utils/event-emitter';
-import style from 'sass/components/onboard-progress';
+import eventEmitter from 'utils/event-emitter'
+import style from 'sass/components/onboard-progress'
 
 
 class OnboardProgress extends Component {
@@ -27,8 +27,8 @@ class OnboardProgress extends Component {
     createAccount: false,
   };
 
-  render() {
-    const { viewer } = this.props;
+  render () {
+    const { viewer } = this.props
     const {
       todosOpen,
       calloutOpen,
@@ -37,7 +37,7 @@ class OnboardProgress extends Component {
       createBill,
       createGoal,
       createAccount,
-    } = this.state;
+    } = this.state
 
     const status = {
       hasInstitution: viewer.institutions.edges.length > 0,
@@ -46,19 +46,19 @@ class OnboardProgress extends Component {
       hasBill: viewer.bills.edges.length > 0,
       hasLabel: viewer.labels.edges.length > 0,
       hasExternalAccount: viewer.externalAccounts.edges.length > 0,
-    };
+    }
 
-    const progressTarget = Object.keys(status).length;
-    const progressCurrent = _.values(status).filter((v)=> v).length;
+    const progressTarget = Object.keys(status).length
+    const progressCurrent = _.values(status).filter((v) => v).length
 
     if (progressTarget === progressCurrent)
-      return null;
+      return null
 
     return (
       <div className={style.root}>
         <div
           className='appbar-container'
-          onClick={()=> this.setState({ todosOpen: !todosOpen,
+          onClick={() => this.setState({ todosOpen: !todosOpen,
             calloutOpen: false })}
         >
           <Progress current={progressCurrent + 1} target={progressTarget + 1}/>
@@ -67,7 +67,7 @@ class OnboardProgress extends Component {
         <Transition show={calloutOpen && progressCurrent <= 2}>
           <ClickOff
             className='callout'
-            onClickOff={()=> this.setState({ calloutOpen: false })}
+            onClickOff={() => this.setState({ calloutOpen: false })}
           >
             <h4>Get Started</h4>
           </ClickOff>
@@ -76,13 +76,13 @@ class OnboardProgress extends Component {
         <Transition show={todosOpen}>
           <ClickOff
             className='todos'
-            onClickOff={()=> this.setState({ todosOpen: false })}
+            onClickOff={() => this.setState({ todosOpen: false })}
           >
             <h4>Get Started</h4>
             <ul>
               <li
                 className={status.hasInstitution ? 'done' : 'not-done'}
-                onClick={()=> browserHistory.push('/app/accounts')}
+                onClick={() => browserHistory.push('/app/accounts')}
               >
                 <div><Icon type={status.hasInstitution ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -92,7 +92,7 @@ class OnboardProgress extends Component {
               </li>
               <li
                 className={status.estimatedIncomeConfirmed ? 'done' : 'not-done'}
-                onClick={()=> this.setState({ showIncomeEstimateDialog: true })}
+                onClick={() => this.setState({ showIncomeEstimateDialog: true })}
               >
                 <div><Icon type={status.estimatedIncomeConfirmed ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -102,7 +102,7 @@ class OnboardProgress extends Component {
               </li>
               <li
                 className={status.hasGoal ? 'done' : 'not-done'}
-                onClick={()=> this.setState({ createGoal: true })}
+                onClick={() => this.setState({ createGoal: true })}
               >
                 <div><Icon type={status.hasGoal ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -112,7 +112,7 @@ class OnboardProgress extends Component {
               </li>
               <li
                 className={status.hasBill ? 'done' : 'not-done'}
-                onClick={()=> this.setState({ createBill: true })}
+                onClick={() => this.setState({ createBill: true })}
               >
                 <div><Icon type={status.hasBill ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -122,7 +122,7 @@ class OnboardProgress extends Component {
               </li>
               <li
                 className={status.hasLabel ? 'done' : 'not-done'}
-                onClick={()=> this.setState({ createLabel: true })}
+                onClick={() => this.setState({ createLabel: true })}
               >
                 <div><Icon type={status.hasLabel ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -132,7 +132,7 @@ class OnboardProgress extends Component {
               </li>
               <li
                 className={status.hasExternalAccount ? 'done' : 'not-done'}
-                onClick={()=> this.setState({ createAccount: true })}
+                onClick={() => this.setState({ createAccount: true })}
               >
                 <div><Icon type={status.hasExternalAccount ? 'done' : 'radio button off'}/></div>
                 <div>
@@ -147,48 +147,48 @@ class OnboardProgress extends Component {
         <Transition show={showIncomeEstimateDialog}>
           <IncomeEstimateDialog
             viewer={viewer}
-            onRequestClose={()=> this.setState({ showIncomeEstimateDialog: false })}
+            onRequestClose={() => this.setState({ showIncomeEstimateDialog: false })}
           />
         </Transition>
 
         <CreateBucketSheet
           visible={createLabel}
-          onRequestClose={()=> this.setState({ createLabel: false })}
-          onComplete={()=> eventEmitter.emit('forceFetch')}
+          onRequestClose={() => this.setState({ createLabel: false })}
+          onComplete={() => eventEmitter.emit('forceFetch')}
           type='expense'
           viewer={viewer}
         />
 
         <CreateBucketSheet
           visible={createBill}
-          onRequestClose={()=> this.setState({ createBill: false })}
-          onComplete={()=> eventEmitter.emit('forceFetch')}
+          onRequestClose={() => this.setState({ createBill: false })}
+          onComplete={() => eventEmitter.emit('forceFetch')}
           type='bill'
           viewer={viewer}
         />
 
         <CreateGoalSheet
           visible={createGoal}
-          onRequestClose={()=> this.setState({ createGoal: false })}
-          onComplete={()=> eventEmitter.emit('forceFetch')}
+          onRequestClose={() => this.setState({ createGoal: false })}
+          onComplete={() => eventEmitter.emit('forceFetch')}
           viewer={viewer}
         />
 
         <CreateBucketSheet
           visible={createAccount}
-          onRequestClose={()=> this.setState({ createAccount: false })}
-          onComplete={()=> eventEmitter.emit('forceFetch')}
+          onRequestClose={() => this.setState({ createAccount: false })}
+          onComplete={() => eventEmitter.emit('forceFetch')}
           type='account'
           viewer={viewer}
         />
       </div>
-    );
+    )
   }
 }
 
 OnboardProgress = Relay.createContainer(OnboardProgress, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${IncomeEstimateDialog.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
@@ -220,6 +220,6 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
       }
     `,
   },
-});
+})
 
-export default OnboardProgress;
+export default OnboardProgress

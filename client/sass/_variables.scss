@@ -15,6 +15,9 @@ $success: color('green', '500');
 $danger: color('red', '500');
 $warn: color('amber', '500');
 
+// Currently, this is used as the FAB loading indicator for all FABs.
+$load-for-everything: color('deep-orange', '500');
+
 $appbar-height: 64px;
 $nav-width-desktop: 230px;
 

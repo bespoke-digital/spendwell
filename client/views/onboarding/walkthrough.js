@@ -1,21 +1,21 @@
 
-import { Component } from 'react';
-import Relay from 'react-relay';
+import { Component } from 'react'
+import Relay from 'react-relay'
 
-import { handleMutationError } from 'utils/network-layer';
-import Button from 'components/button';
-import Onboarding from 'components/onboarding';
-import Graphicdialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import { handleMutationError } from 'utils/network-layer'
+import Button from 'components/button'
+import Onboarding from 'components/onboarding'
+import Graphicdialog from 'components/graphic-dialog'
+import Icon from 'components/icon'
 
-import { SyncInstitutionsMutation } from 'mutations/institutions';
-import track from 'utils/track';
+import { SyncInstitutionsMutation } from 'mutations/institutions'
+import track from 'utils/track'
 
-import pyfImage from 'img/views/onboarding/pyf.svg';
-import liveImage from 'img/views/onboarding/live.svg';
-import philosophyImage from 'img/views/onboarding/philosophy.svg';
-import crunchingImage from 'img/views/onboarding/crunching.svg';
-import readyImage from 'img/views/onboarding/ready.svg';
+import pyfImage from 'img/views/onboarding/pyf.svg'
+import liveImage from 'img/views/onboarding/live.svg'
+import philosophyImage from 'img/views/onboarding/philosophy.svg'
+import crunchingImage from 'img/views/onboarding/crunching.svg'
+import readyImage from 'img/views/onboarding/ready.svg'
 
 
 const STEPS = [
@@ -71,42 +71,42 @@ const STEPS = [
       `,
     },
   },
-];
+]
 
 
 class OnboardingWalkthrough extends Component {
-  constructor() {
-    super();
-    this.state = { syncing: false, stepIndex: 0 };
+  constructor () {
+    super()
+    this.state = { syncing: false, stepIndex: 0 }
   }
 
-  componentDidMount() {
-    const { viewer } = this.props;
+  componentDidMount () {
+    const { viewer } = this.props
 
-    track('onboard-walkthrough');
+    track('onboard-walkthrough')
 
-    this.setState({ syncing: true });
+    this.setState({ syncing: true })
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
-      onFailure: (response)=> {
-        this.setState({ syncing: false });
-        handleMutationError(response);
+      onFailure: (response) => {
+        this.setState({ syncing: false })
+        handleMutationError(response)
       },
-      onSuccess: ()=> {
-        console.log('Success: SyncInstitutionsMutation');
-        this.setState({ syncing: false });
-        track('onboard-sync');
+      onSuccess: () => {
+        console.log('Success: SyncInstitutionsMutation')
+        this.setState({ syncing: false })
+        track('onboard-sync')
       },
-    });
+    })
   }
 
-  render() {
-    const { viewer } = this.props;
-    const { syncing, stepIndex } = this.state;
+  render () {
+    const { viewer } = this.props
+    const { syncing, stepIndex } = this.state
 
-    let step = STEPS[stepIndex];
+    let step = STEPS[stepIndex]
 
     if (step.syncing)
-      step = step[syncing ? 'syncing' : 'doneSyncing'];
+      step = step[syncing ? 'syncing' : 'doneSyncing']
 
     return (
       <Onboarding viewer={viewer}>
@@ -117,7 +117,7 @@ class OnboardingWalkthrough extends Component {
           header={step.header}
           paragraph={step.paragraph}
           prev={stepIndex > 0 ?
-            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex - 1 })}>
+            <Button fab onClick={() => this.setState({ stepIndex: stepIndex - 1 })}>
               <Icon type='arrow back'/>
             </Button>
           : null}
@@ -131,25 +131,25 @@ class OnboardingWalkthrough extends Component {
               <Icon type='done'/>
             </Button>
           :
-            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
+            <Button fab onClick={() => this.setState({ stepIndex: stepIndex + 1 })}>
               <Icon type='arrow forward'/>
             </Button>
           }
         />
       </Onboarding>
-    );
+    )
   }
 }
 
 OnboardingWalkthrough = Relay.createContainer(OnboardingWalkthrough, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${SyncInstitutionsMutation.getFragment('viewer')}
         ${Onboarding.getFragment('viewer')}
       }
     `,
   },
-});
+})
 
-export default OnboardingWalkthrough;
+export default OnboardingWalkthrough

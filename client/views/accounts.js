@@ -1,21 +1,21 @@
 
-import _ from 'lodash';
-import { Component } from 'react';
-import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
+import _ from 'lodash'
+import { Component } from 'react'
+import Relay from 'react-relay'
+import { browserHistory } from 'react-router'
 
-import CardList from 'components/card-list';
-import Card from 'components/card';
-import Money from 'components/money';
-import Institution from 'components/institution';
-import App from 'components/app';
-import ExternalAccounts from 'components/external-accounts';
-import PrimaryFab from 'components/primary-fab';
-import ListHeading from 'components/list-heading';
-import Icon from 'components/icon';
-import CreateBucketSheet from 'components/create-bucket-sheet';
+import CardList from 'components/card-list'
+import Card from 'components/card'
+import Money from 'components/money'
+import Institution from 'components/institution'
+import App from 'components/app'
+import ExternalAccounts from 'components/external-accounts'
+import PrimaryFab from 'components/primary-fab'
+import ListHeading from 'components/list-heading'
+import Icon from 'components/icon'
+import CreateBucketSheet from 'components/create-bucket-sheet'
 
-import styles from 'sass/views/accounts';
+import styles from 'sass/views/accounts'
 
 
 class Accounts extends Component {
@@ -23,9 +23,9 @@ class Accounts extends Component {
     createExternalAccount: false,
   };
 
-  render() {
-    const { viewer, relay } = this.props;
-    const { createExternalAccount } = this.state;
+  render () {
+    const { viewer, relay } = this.props
+    const { createExternalAccount } = this.state
 
     return (
       <App
@@ -34,7 +34,7 @@ class Accounts extends Component {
         className={`${styles.root}`}
         onForceFetch={relay.forceFetch}
       >
-        {viewer.institutions.edges.map(({ node })=>
+        {viewer.institutions.edges.map(({ node }) =>
           <Institution
             key={node.id}
             viewer={viewer}
@@ -49,7 +49,7 @@ class Accounts extends Component {
               <div><strong>Total</strong></div>
               <div><Money amount={_.sum(
                 viewer.institutions.edges,
-                ({ node })=> node.currentBalance
+                ({ node }) => node.currentBalance
               )}/></div>
             </div>
           }/>
@@ -63,31 +63,31 @@ class Accounts extends Component {
           {
             label: 'New External Account',
             icon: <Icon type='open in new' color='light'/>,
-            onClick: ()=> this.setState({ createExternalAccount: true }),
+            onClick: () => this.setState({ createExternalAccount: true }),
           },
           {
             default: true,
             label: 'New Bank',
             icon: <Icon type='account balance' color='light'/>,
-            onClick: ()=> browserHistory.push('/app/accounts/new'),
+            onClick: () => browserHistory.push('/app/accounts/new'),
           },
         ]}/>
 
         <CreateBucketSheet
           visible={createExternalAccount}
-          onRequestClose={()=> this.setState({ createExternalAccount: false })}
-          onComplete={()=> relay.forceFetch()}
+          onRequestClose={() => this.setState({ createExternalAccount: false })}
+          onComplete={() => relay.forceFetch()}
           type='account'
           viewer={viewer}
         />
       </App>
-    );
+    )
   }
 }
 
 Accounts = Relay.createContainer(Accounts, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${ExternalAccounts.getFragment('viewer')}
@@ -110,7 +110,7 @@ Accounts = Relay.createContainer(Accounts, {
       }
     `,
   },
-});
+})
 
-export default Accounts;
+export default Accounts
 

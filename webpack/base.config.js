@@ -45,4 +45,11 @@ module.exports = {
     extensions: ['', '.js', '.jsx', '.scss', '.css', '.svg'],
     modulesDirectories: ['client', 'node_modules'],
   },
+
+  externals: {
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+    'react/addons': true,
+    'cheerio': 'window',
+  },
 };

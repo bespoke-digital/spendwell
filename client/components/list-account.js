@@ -1,13 +1,13 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import SuperCard from 'components/super-card';
-import Button from 'components/button';
-import Money from 'components/money';
-import TransactionList from 'components/transaction-list';
-import CardActions from 'components/card-actions';
+import Card from 'components/card'
+import SuperCard from 'components/super-card'
+import Button from 'components/button'
+import Money from 'components/money'
+import TransactionList from 'components/transaction-list'
+import CardActions from 'components/card-actions'
 
 
 export default class ListAccount extends Component {
@@ -21,21 +21,21 @@ export default class ListAccount extends Component {
     expanded: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.expanded !== this.props.expanded)
-      this.props.relay.setVariables({ open: nextProps.expanded });
+      this.props.relay.setVariables({ open: nextProps.expanded })
   }
 
-  loadTransactions() {
-    const { relay } = this.props;
-    const { transactionCount } = relay.variables;
+  loadTransactions () {
+    const { relay } = this.props
+    const { transactionCount } = relay.variables
 
-    relay.setVariables({ transactionCount: transactionCount + 20 });
+    relay.setVariables({ transactionCount: transactionCount + 20 })
   }
 
-  render() {
-    const { viewer, account, relay, onClick, onDisable } = this.props;
-    const { open } = relay.variables;
+  render () {
+    const { viewer, account, relay, onClick, onDisable } = this.props
+    const { open } = relay.variables
 
     return (
       <SuperCard
@@ -72,7 +72,7 @@ export default class ListAccount extends Component {
           </div>
         : null}
       </SuperCard>
-    );
+    )
   }
 }
 
@@ -82,12 +82,12 @@ ListAccount = Relay.createContainer(ListAccount, {
     transactionCount: 20,
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${TransactionList.getFragment('viewer')}
       }
     `,
-    account: ()=> Relay.QL`
+    account: () => Relay.QL`
       fragment on AccountNode {
         id
         name
@@ -103,6 +103,6 @@ ListAccount = Relay.createContainer(ListAccount, {
       }
     `,
   },
-});
+})
 
-export default ListAccount;
+export default ListAccount

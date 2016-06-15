@@ -1,17 +1,17 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
-import { connect } from 'react-redux';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
+import { connect } from 'react-redux'
 
-import Transition from 'components/transition';
-import Header from 'components/header';
-import Nav from 'components/nav';
-import InstitutionReauth from 'components/institution-reauth';
-import Progress from 'components/progress';
-import Toasts from 'components/toasts';
+import Transition from 'components/transition'
+import Header from 'components/header'
+import Nav from 'components/nav'
+import InstitutionReauth from 'components/institution-reauth'
+import Progress from 'components/progress'
+import Toasts from 'components/toasts'
 
-import eventEmitter from 'utils/event-emitter';
-import style from 'sass/components/app';
+import eventEmitter from 'utils/event-emitter'
+import style from 'sass/components/app'
 
 
 class App extends Component {
@@ -31,42 +31,42 @@ class App extends Component {
 
   state = { navOpen: false };
 
-  constructor() {
-    super();
-    this.handleForceFetch = ::this.handleForceFetch;
+  constructor () {
+    super()
+    this.handleForceFetch = ::this.handleForceFetch
   }
 
-  componentDidMount() {
-    eventEmitter.addListener('forceFetch', this.handleForceFetch);
+  componentDidMount () {
+    eventEmitter.addListener('forceFetch', this.handleForceFetch)
   }
 
-  componentWillUnmount() {
-    eventEmitter.removeListener('forceFetch', this.handleForceFetch);
+  componentWillUnmount () {
+    eventEmitter.removeListener('forceFetch', this.handleForceFetch)
   }
 
-  handleForceFetch() {
-    const { onForceFetch } = this.props;
+  handleForceFetch () {
+    const { onForceFetch } = this.props
 
     if (onForceFetch)
-      onForceFetch();
+      onForceFetch()
     else
-      console.warn('Unhandled forceFetch event');
+      console.warn('Unhandled forceFetch event')
   }
 
-  toggleNav() {
-    const navOpen = !this.state.navOpen;
-    this.setState({ navOpen });
+  toggleNav () {
+    const navOpen = !this.state.navOpen
+    this.setState({ navOpen })
   }
 
-  closeOverlay() {
-    const { onOverlayClose } = this.props;
+  closeOverlay () {
+    const { onOverlayClose } = this.props
 
-    this.setState({ navOpen: false });
+    this.setState({ navOpen: false })
 
-    if (onOverlayClose) onOverlayClose();
+    if (onOverlayClose) onOverlayClose()
   }
 
-  render() {
+  render () {
     const {
       children,
       viewer,
@@ -76,8 +76,8 @@ class App extends Component {
       title,
       chatlioOpen,
       className,
-    } = this.props;
-    const { navOpen } = this.state;
+    } = this.props
+    const { navOpen } = this.state
 
     return (
       <div className={`${style.root} ${chatlioOpen ? 'chatlio-open' : ''}`}>
@@ -104,28 +104,28 @@ class App extends Component {
           {children}
         </div>
       </div>
-    );
+    )
   }
 }
 
-App = connect((state)=> ({
+App = connect((state) => ({
   loading: state.loading,
   toasts: state.toasts,
   chatlioOpen: state.chatlioOpen,
-}))(App);
+}))(App)
 
 App = Relay.createContainer(App, {
   fragments: {
-    viewer() {
+    viewer () {
       return Relay.QL`
         fragment on Viewer {
           ${Header.getFragment('viewer')}
           ${Nav.getFragment('viewer')}
           ${InstitutionReauth.getFragment('viewer')}
         }
-      `;
+      `
     },
   },
-});
+})
 
-export default App;
+export default App

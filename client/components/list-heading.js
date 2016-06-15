@@ -1,7 +1,7 @@
 
-import styles from 'sass/components/list-heading.scss';
+import styles from 'sass/components/list-heading.scss'
 
 
-export default function ListHeading({ className, ...props }) {
-  return <h2 className={`${styles.root} ${className}`} {...props}/>;
+export default function ListHeading ({ className, ...props }) {
+  return <h2 className={`${styles.root} ${className}`} {...props}/>
 }

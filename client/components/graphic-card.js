@@ -1,19 +1,19 @@
 
-import Card from 'components/card';
-import Icon from 'components/icon';
-import A from 'components/a';
+import Card from 'components/card'
+import Icon from 'components/icon'
+import A from 'components/a'
 
-import styles from 'sass/components/graphic-card.scss';
+import styles from 'sass/components/graphic-card.scss'
 
 
-export default (props)=> {
+export default (props) => {
   const {
       scheme,
       image,
       header,
       paragraphs,
       dismiss,
-  } = props;
+  } = props
 
   return (
     <Card className={`${styles.root} scheme-${scheme}`}>
@@ -32,5 +32,5 @@ export default (props)=> {
         </div>
       : null}
     </Card>
-  );
-};
+  )
+}

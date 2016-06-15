@@ -38,11 +38,11 @@
     <meta name="facebook-pixel-key" content="{{ FACEBOOK_PIXEL_KEY }}">
 
     {% if request.user.is_authenticated %}
-        <meta name="user-id" content="{{ request.user.id }}">
-        <meta name="user-email" content="{{ request.user.email }}">
+      <meta name="user-id" content="{{ request.user.id }}">
+      <meta name="user-email" content="{{ request.user.email }}">
     {% else %}
-        <meta name="user-id">
-        <meta name="user-email">
+      <meta name="user-id">
+      <meta name="user-email">
     {% endif %}
 
     <title>{% block title %}Spendwell{% endblock %}</title>
@@ -55,7 +55,10 @@
     {% if RAVEN_PUBLIC_DSN %}
       <script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
     {% endif %}
-    <script src="{% static 'analytics.js' %}"></script>
+
+    {% if INCLUDE_ANALYTICS %}
+      <script src="{% static 'analytics.js' %}"></script>
+    {% endif %}
 
     {% block head %}{% endblock %}
   </head>

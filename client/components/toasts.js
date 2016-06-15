@@ -1,21 +1,21 @@
 
-import { TransitionMotion, spring } from 'react-motion';
+import { TransitionMotion, spring } from 'react-motion'
 
-import { root } from 'sass/components/toasts';
+import { root } from 'sass/components/toasts'
 
-export default function({ toasts, className, ...props }) {
+export default function ({ toasts, className, ...props }) {
   return (
     <TransitionMotion
-      willLeave={()=> ({ opacity: spring(0) })}
-      willEnter={()=> ({ opacity: 0 })}
-      styles={toasts.map((toast)=> ({
+      willLeave={() => ({ opacity: spring(0) })}
+      willEnter={() => ({ opacity: 0 })}
+      styles={toasts.map((toast) => ({
         key: toast.id,
         data: toast,
         style: { opacity: spring(1) },
       }))}
-    >{(styles)=> (
+    >{(styles) => (
       <ul className={`${root} ${className || ''}`} {...props}>
-        {styles.map(({ key, data, style })=>
+        {styles.map(({ key, data, style }) =>
           <li
             key={key}
             style={style}
@@ -25,5 +25,5 @@ export default function({ toasts, className, ...props }) {
         )}
       </ul>
     )}</TransitionMotion>
-  );
+  )
 }

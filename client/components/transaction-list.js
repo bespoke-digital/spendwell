@@ -1,12 +1,12 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import ListTransaction from 'components/list-transaction';
-import Button from 'components/button';
+import ListTransaction from 'components/list-transaction'
+import Button from 'components/button'
 
-import styles from 'sass/components/transaction-list';
+import styles from 'sass/components/transaction-list'
 
 
 class TransactionList extends Component {
@@ -23,28 +23,28 @@ class TransactionList extends Component {
     abs: true,
   };
 
-  constructor() {
-    super();
-    this.state = {};
+  constructor () {
+    super()
+    this.state = {}
   }
 
-  toggleSelect(transaction) {
-    const { expanded } = this.state;
+  toggleSelect (transaction) {
+    const { expanded } = this.state
     if (expanded === transaction.id)
-      this.setState({ expanded: null });
+      this.setState({ expanded: null })
     else
-      this.setState({ expanded: transaction.id });
+      this.setState({ expanded: transaction.id })
   }
 
-  render() {
-    const { viewer, transactions, expand, abs, months, onLoadMore } = this.props;
-    const { expanded } = this.state;
+  render () {
+    const { viewer, transactions, expand, abs, months, onLoadMore } = this.props
+    const { expanded } = this.state
 
-    if (_.isNull(transactions) || _.isUndefined(transactions)) return null;
+    if (_.isNull(transactions) || _.isUndefined(transactions)) return null
 
     return (
       <div className={styles.root}>
-        {transactions.edges.map(({ node })=>
+        {transactions.edges.map(({ node }) =>
           <ListTransaction
             key={node.id}
             viewer={viewer}
@@ -61,18 +61,18 @@ class TransactionList extends Component {
           </div>
         : null}
       </div>
-    );
+    )
   }
 }
 
 TransactionList = Relay.createContainer(TransactionList, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${ListTransaction.getFragment('viewer')}
       }
     `,
-    transactions: ()=> Relay.QL`
+    transactions: () => Relay.QL`
       fragment on TransactionNodeDefaultConnection {
         edges {
           node {
@@ -88,6 +88,6 @@ TransactionList = Relay.createContainer(TransactionList, {
       }
     `,
   },
-});
+})
 
-export default TransactionList;
+export default TransactionList

@@ -1,12 +1,12 @@
 
-import { Component, PropTypes } from 'react';
-import moment from 'moment';
+import { Component, PropTypes } from 'react'
+import moment from 'moment'
 
-import Card from 'components/card';
-import Button from 'components/button';
-import Icon from 'components/icon';
+import Card from 'components/card'
+import Button from 'components/button'
+import Icon from 'components/icon'
 
-import styles from 'sass/components/month-selector.scss';
+import styles from 'sass/components/month-selector.scss'
 
 
 export default class MonthSelector extends Component {
@@ -16,21 +16,21 @@ export default class MonthSelector extends Component {
     first: PropTypes.instanceOf(moment),
   };
 
-  render() {
-    const { month, onChange, first } = this.props;
+  render () {
+    const { month, onChange, first } = this.props
 
     const periods = {
       current: month,
       previous: month.clone().subtract(1, 'month'),
       next: month.clone().add(1, 'month'),
-    };
+    }
 
-    const now = moment().startOf('month');
+    const now = moment().startOf('month')
 
     return (
       <Card className={styles.root}>
         <Button
-          onClick={()=> onChange(periods.previous)}
+          onClick={() => onChange(periods.previous)}
           disabled={first ? periods.previous.isSame(first) : false}
           color='default'
           flat
@@ -41,7 +41,7 @@ export default class MonthSelector extends Component {
         <div className='current'>{periods.current.format('MMMM YYYY')}</div>
 
         <Button
-          onClick={()=> onChange(periods.next)}
+          onClick={() => onChange(periods.next)}
           disabled={periods.next.isAfter(now)}
           color='default'
           flat
@@ -49,6 +49,6 @@ export default class MonthSelector extends Component {
           <Icon type='chevron right'/>
         </Button>
       </Card>
-    );
+    )
   }
 }

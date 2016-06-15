@@ -1,8 +1,8 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
 
-import style from 'sass/components/text-input';
+import style from 'sass/components/text-input'
 
 
 export default class TextInput extends Component {
@@ -22,30 +22,30 @@ export default class TextInput extends Component {
     select: false,
   };
 
-  constructor() {
-    super();
-    this.state = {};
+  constructor () {
+    super()
+    this.state = {}
   }
 
-  componentDidMount() {
-    const { select } = this.props;
+  componentDidMount () {
+    const { select } = this.props
     if (select)
-      this.refs.input.select();
+      this.refs.input.select()
   }
 
-  changeValue(event) {
-    const value = event.currentTarget.value;
+  changeValue (event) {
+    const value = event.currentTarget.value
 
     if (_.isUndefined(this.props.value))
-      this.setState({ value });
+      this.setState({ value })
 
     if (this.props.onChange)
-      this.props.onChange(value);
+      this.props.onChange(value)
   }
 
-  render() {
-    const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props;
-    const _value = _.isUndefined(value) ? this.state.value : value;
+  render () {
+    const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props
+    const _value = _.isUndefined(value) ? this.state.value : value
     return (
       <div className={`
         mui-textfield
@@ -69,6 +69,6 @@ export default class TextInput extends Component {
         {label ? <label>{label}</label> : null}
         {_.isString(error) ? <span className='mui-textfield__help-text'>{error}</span> : null}
       </div>
-    );
+    )
   }
 }

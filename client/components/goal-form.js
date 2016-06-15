@@ -1,50 +1,50 @@
 
-import _ from 'lodash';
-import { Component } from 'react';
-import Relay from 'react-relay';
+import _ from 'lodash'
+import { Component } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import CardList from 'components/card-list';
-import TextInput from 'components/text-input';
+import Card from 'components/card'
+import CardList from 'components/card-list'
+import TextInput from 'components/text-input'
 
-import style from 'sass/components/goal-form';
+import style from 'sass/components/goal-form'
 
 
-function getInitialState({ goal }) {
+function getInitialState ({ goal }) {
   return {
     name: goal ? goal.name : '',
     monthlyAmount: goal ? goal.monthlyAmount : 0,
-  };
+  }
 }
 
 class GoalForm extends Component {
-  constructor(props) {
-    super();
-    this.state = getInitialState(props);
+  constructor (props) {
+    super()
+    this.state = getInitialState(props)
   }
 
-  getData() {
-    const { name, monthlyAmount } = this.state;
-    return { name, monthlyAmount };
+  getData () {
+    const { name, monthlyAmount } = this.state
+    return { name, monthlyAmount }
   }
 
-  reset() {
-    this.setState(getInitialState(this.props));
+  reset () {
+    this.setState(getInitialState(this.props))
   }
 
-  isValid() {
-    const { name, monthlyAmount } = this.state;
-    return monthlyAmount !== 0 & name.length > 0;
+  isValid () {
+    const { name, monthlyAmount } = this.state
+    return monthlyAmount !== 0 & name.length > 0
   }
 
-  handleMonthlyAmountChange(monthlyAmount) {
-    monthlyAmount = -parseInt(monthlyAmount * 100);
+  handleMonthlyAmountChange (monthlyAmount) {
+    monthlyAmount = -parseInt(monthlyAmount * 100)
     if (!_.isNaN(monthlyAmount))
-      this.setState({ monthlyAmount });
+      this.setState({ monthlyAmount })
   }
 
-  render() {
-    const { name, monthlyAmount } = this.state;
+  render () {
+    const { name, monthlyAmount } = this.state
 
     return (
       <CardList className={style.root}>
@@ -52,7 +52,7 @@ class GoalForm extends Component {
           <TextInput
             label='Name'
             value={name}
-            onChange={(name)=> this.setState({ name })}
+            onChange={(name) => this.setState({ name })}
             autoFocus={true}
           />
         </Card>
@@ -66,19 +66,19 @@ class GoalForm extends Component {
           />
         </Card>
       </CardList>
-    );
+    )
   }
 }
 
 GoalForm = Relay.createContainer(GoalForm, {
   fragments: {
-    goal: ()=> Relay.QL`
+    goal: () => Relay.QL`
       fragment on GoalNode {
         name
         monthlyAmount
       }
     `,
   },
-});
+})
 
-export default GoalForm;
+export default GoalForm

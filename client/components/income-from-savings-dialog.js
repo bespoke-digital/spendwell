@@ -1,15 +1,15 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import { handleMutationError } from 'utils/network-layer';
-import Button from 'components/button';
-import MoneyInput from 'components/money-input';
-import Dialog from 'components/dialog';
-import DialogActions from 'components/dialog-actions';
+import { handleMutationError } from 'utils/network-layer'
+import Button from 'components/button'
+import MoneyInput from 'components/money-input'
+import Dialog from 'components/dialog'
+import DialogActions from 'components/dialog-actions'
 
-import { SetIncomeFromSavingsMutation } from 'mutations/transactions';
+import { SetIncomeFromSavingsMutation } from 'mutations/transactions'
 
 
 class IncomeFromSavingsDialog extends Component {
@@ -17,37 +17,37 @@ class IncomeFromSavingsDialog extends Component {
     onRequestClose: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = { loading: false };
+  constructor () {
+    super()
+    this.state = { loading: false }
   }
 
-  handleAddFromSavingsSubmit() {
-    const { viewer, summary, onRequestClose } = this.props;
-    const { amount } = this.state;
+  handleAddFromSavingsSubmit () {
+    const { viewer, summary, onRequestClose } = this.props
+    const { amount } = this.state
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
 
     Relay.Store.commitUpdate(new SetIncomeFromSavingsMutation({
       month: summary.monthStart,
       viewer,
       amount: !_.isUndefined(amount) ? amount : summary.fromSavingsIncome,
     }), {
-      onFailure: (response)=> {
-        this.setState({ loading: false });
-        handleMutationError(response);
+      onFailure: (response) => {
+        this.setState({ loading: false })
+        handleMutationError(response)
       },
-      onSuccess: ()=> {
-        console.log('AssignTransactionsMutation Success');
-        this.setState({ loading: false });
-        onRequestClose();
+      onSuccess: () => {
+        console.log('AssignTransactionsMutation Success')
+        this.setState({ loading: false })
+        onRequestClose()
       },
-    });
+    })
   }
 
-  render() {
-    const { summary, onRequestClose } = this.props;
-    const { loading } = this.state;
+  render () {
+    const { summary, onRequestClose } = this.props
+    const { loading } = this.state
 
     return (
       <Dialog size='sm' onRequestClose={onRequestClose}>
@@ -60,7 +60,7 @@ class IncomeFromSavingsDialog extends Component {
           <MoneyInput
             label='Amount'
             initialValue={summary.fromSavingsIncome}
-            onChange={(amount)=> this.setState({ amount })}
+            onChange={(amount) => this.setState({ amount })}
             autoFocus
             select
           />
@@ -70,24 +70,24 @@ class IncomeFromSavingsDialog extends Component {
           <Button onClick={::this.handleAddFromSavingsSubmit} loading={loading}>Add</Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 IncomeFromSavingsDialog = Relay.createContainer(IncomeFromSavingsDialog, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${SetIncomeFromSavingsMutation.getFragment('viewer')}
       }
     `,
-    summary: ()=> Relay.QL`
+    summary: () => Relay.QL`
       fragment on Summary {
         fromSavingsIncome
         monthStart
       }
     `,
   },
-});
+})
 
-export default IncomeFromSavingsDialog;
+export default IncomeFromSavingsDialog

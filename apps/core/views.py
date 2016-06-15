@@ -7,8 +7,40 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.http import HttpResponse
+from graphene.contrib.django.views import GraphQLView
+from django_graphiql.views import GraphiQL
+from csp.decorators import csp_exempt
 
+from spendwell.schema import schema
 from .models import LoadingQuote
+
+try:
+    from raven.contrib.django.raven_compat.models import client as raven
+    use_raven = True
+except ImportError:
+    use_raven = False
+
+
+class AuthGraphQLView(GraphQLView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponse(status=403)
+        return super(AuthGraphQLView, self).dispatch(request, *args, **kwargs)
+
+    @classmethod
+    def format_error(Cls, error):
+        if hasattr(error, 'original_error') and error.original_error and use_raven:
+            try:
+                raise error.original_error
+            except:
+                raven.captureException()
+
+        return super(AuthGraphQLView, Cls).format_error(error)
+
+auth_graphql_view = AuthGraphQLView.as_view(schema=schema)
+
+graphiql_view = csp_exempt(login_required(GraphiQL.as_view()))
 
 
 class ClientView(TemplateView):

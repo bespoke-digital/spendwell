@@ -1,7 +1,7 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import style from 'sass/components/transition';
+import style from 'sass/components/transition'
 
 
 export default class Transition extends Component {
@@ -17,32 +17,32 @@ export default class Transition extends Component {
   };
 
 
-  constructor({ show }) {
-    super();
-    this.state = { visible: show };
+  constructor ({ show }) {
+    super()
+    this.state = { visible: show }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.show !== this.props.show) {
       if (!this.props.show)
-        self.timeout = setTimeout(()=> {
-          this.setState({ visible: nextProps.show });
-          self.timeout = null;
-        }, 1);
+        self.timeout = setTimeout(() => {
+          this.setState({ visible: nextProps.show })
+          self.timeout = null
+        }, 1)
 
       else if (!this.props.out)
-        this.setState({ visible: nextProps.show });
+        this.setState({ visible: nextProps.show })
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     if (self.timeout)
-      clearTimeout(self.timeout);
+      clearTimeout(self.timeout)
   }
 
-  render() {
-    const { name, show, children, ..._props } = this.props;
-    const { visible } = this.state;
+  render () {
+    const { name, show, children, ..._props } = this.props
+    const { visible } = this.state
 
     return (
       <div className={`${style.root} ${name}-transition`} {..._props} ref='root'>
@@ -52,6 +52,6 @@ export default class Transition extends Component {
           </div>
         : null}
       </div>
-    );
+    )
   }
 }

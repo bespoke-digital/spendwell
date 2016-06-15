@@ -1,23 +1,23 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import Money from 'components/money';
-import DateTime from 'components/date-time';
-import TransactionQuickAdd from 'components/transaction-quick-add';
-import Button from 'components/button';
-import CardActions from 'components/card-actions';
-import Icon from 'components/icon';
-import IconList from 'components/icon-list';
-import Chip from 'components/chip';
-import UpdateBucketSheet from 'components/update-bucket-sheet';
+import Card from 'components/card'
+import Money from 'components/money'
+import DateTime from 'components/date-time'
+import TransactionQuickAdd from 'components/transaction-quick-add'
+import Button from 'components/button'
+import CardActions from 'components/card-actions'
+import Icon from 'components/icon'
+import IconList from 'components/icon-list'
+import Chip from 'components/chip'
+import UpdateBucketSheet from 'components/update-bucket-sheet'
 
-import eventEmitter from 'utils/event-emitter';
-import { handleMutationError } from 'utils/network-layer';
-import { DeleteTransactionMutation } from 'mutations/transactions';
+import eventEmitter from 'utils/event-emitter'
+import { handleMutationError } from 'utils/network-layer'
+import { DeleteTransactionMutation } from 'mutations/transactions'
 
-import styles from 'sass/components/list-transaction';
+import styles from 'sass/components/list-transaction'
 
 
 class ListTransaction extends Component {
@@ -38,31 +38,31 @@ class ListTransaction extends Component {
     editBucket: null,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.expanded !== this.props.expanded)
-      this.props.relay.setVariables({ open: nextProps.expanded });
+      this.props.relay.setVariables({ open: nextProps.expanded })
   }
 
-  handleDelete() {
-    const { transaction, relay } = this.props;
+  handleDelete () {
+    const { transaction, relay } = this.props
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
     Relay.Store.commitUpdate(new DeleteTransactionMutation({ transaction }), {
-      onFailure: (response)=> {
-        this.setState({ loading: false });
-        handleMutationError(response);
+      onFailure: (response) => {
+        this.setState({ loading: false })
+        handleMutationError(response)
       },
-      onSuccess: ()=> {
-        console.log('Success: DeleteTransactionMutation');
-        this.setState({ loading: false });
-        relay.forceFetch();
+      onSuccess: () => {
+        console.log('Success: DeleteTransactionMutation')
+        this.setState({ loading: false })
+        relay.forceFetch()
       },
-    });
+    })
   }
 
-  render() {
-    const { viewer, transaction, expanded, onClick, abs, months, relay } = this.props;
-    const { loading, quickAdd, editBucket } = this.state;
+  render () {
+    const { viewer, transaction, expanded, onClick, abs, months, relay } = this.props
+    const { loading, quickAdd, editBucket } = this.state
 
     return (
       <Card
@@ -76,7 +76,7 @@ class ListTransaction extends Component {
               {transaction.description}
             </div>
             <div className='buckets'>
-              {transaction.buckets.edges.map(({ node })=>
+              {transaction.buckets.edges.map(({ node }) =>
                 <span key={node.id}>{node.name}</span>
               )}
             </div>
@@ -134,11 +134,11 @@ class ListTransaction extends Component {
                 <div className='divider'>
                   <Icon type='local offer'/>
                   <div className='content buckets'>
-                    {transaction.buckets.edges.map(({ node })=>
+                    {transaction.buckets.edges.map(({ node }) =>
                       <Chip
                         key={node.id}
                         className='bucket-chip'
-                        onClick={()=> this.setState({ editBucket: node.id })}
+                        onClick={() => this.setState({ editBucket: node.id })}
                       >
                         {node.name}
                         <Icon type='edit'/>
@@ -147,9 +147,9 @@ class ListTransaction extends Component {
                           viewer={viewer}
                           bucket={node}
                           visible={editBucket === node.id}
-                          onRequestClose={()=> this.setState({ editBucket: null })}
-                          onUpdated={()=> eventEmitter.emit('forceFetch')}
-                          onDeleted={()=> eventEmitter.emit('forceFetch')}
+                          onRequestClose={() => this.setState({ editBucket: null })}
+                          onUpdated={() => eventEmitter.emit('forceFetch')}
+                          onDeleted={() => eventEmitter.emit('forceFetch')}
                         />
                       </Chip>
                     )}
@@ -163,11 +163,11 @@ class ListTransaction extends Component {
               <TransactionQuickAdd
                 viewer={viewer}
                 transaction={transaction}
-                onRemove={()=> this.setState({ quickAdd: false })}
+                onRemove={() => this.setState({ quickAdd: false })}
               />
             :
               <CardActions>
-                <Button onClick={()=> this.setState({ quickAdd: true })}>Quick Add</Button>
+                <Button onClick={() => this.setState({ quickAdd: true })}>Quick Add</Button>
                 {transaction.source === 'csv' ?
                   <Button onClick={::this.handleDelete}>Delete</Button>
                 : null}
@@ -176,7 +176,7 @@ class ListTransaction extends Component {
           </div>
         : null}
       </Card>
-    );
+    )
   }
 }
 
@@ -185,13 +185,13 @@ ListTransaction = Relay.createContainer(ListTransaction, {
     open: false,
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${TransactionQuickAdd.getFragment('viewer')}
         ${UpdateBucketSheet.getFragment('viewer')}
       }
     `,
-    transaction: ()=> Relay.QL`
+    transaction: () => Relay.QL`
       fragment on TransactionNode {
         ${TransactionQuickAdd.getFragment('transaction')}
         ${DeleteTransactionMutation.getFragment('transaction')}
@@ -232,6 +232,6 @@ ListTransaction = Relay.createContainer(ListTransaction, {
       }
     `,
   },
-});
+})
 
-export default ListTransaction;
+export default ListTransaction

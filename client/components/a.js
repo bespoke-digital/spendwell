@@ -1,21 +1,21 @@
 
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router'
 
 
-export function supressEvent(handler, href, event) {
+export function supressEvent (handler, href, event) {
   if (event)
-    event.preventDefault();
+    event.preventDefault()
 
   if (handler)
-    handler();
+    handler()
 
   if (href)
-    browserHistory.push(href);
+    browserHistory.push(href)
 }
 
-export default function A({ onClick, href, ...props }) {
+export default function A ({ onClick, href, ...props }) {
   return <a
     href={href || '#'}
     onClick={supressEvent.bind(null, onClick, href)} {...props}
-  />;
+  />
 }

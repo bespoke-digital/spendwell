@@ -1,18 +1,18 @@
 
-import { Component, PropTypes } from 'react';
-import moment from 'moment';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import moment from 'moment'
+import Relay from 'react-relay'
 
-import SuperCard from 'components/super-card';
-import Card from 'components/card';
-import Money from 'components/money';
-import Progress from 'components/progress';
-import TransactionList from 'components/transaction-list';
-import Button from 'components/button';
-import CardActions from 'components/card-actions';
-import UpdateBucketSheet from 'components/update-bucket-sheet';
+import SuperCard from 'components/super-card'
+import Card from 'components/card'
+import Money from 'components/money'
+import Progress from 'components/progress'
+import TransactionList from 'components/transaction-list'
+import Button from 'components/button'
+import CardActions from 'components/card-actions'
+import UpdateBucketSheet from 'components/update-bucket-sheet'
 
-import eventEmitter from 'utils/event-emitter';
+import eventEmitter from 'utils/event-emitter'
 
 
 class BucketMonth extends Component {
@@ -32,30 +32,30 @@ class BucketMonth extends Component {
     updateBucket: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.expanded !== this.props.expanded)
-      this.props.relay.setVariables({ open: nextProps.expanded });
+      this.props.relay.setVariables({ open: nextProps.expanded })
   }
 
-  forceFetch() {
-    eventEmitter.emit('forceFetch');
+  forceFetch () {
+    eventEmitter.emit('forceFetch')
   }
 
-  render() {
-    const { viewer, bucketMonth, month, onClick, className, relay } = this.props;
-    const { transactionCount, open } = relay.variables;
-    const { updateBucket } = this.state;
+  render () {
+    const { viewer, bucketMonth, month, onClick, className, relay } = this.props
+    const { transactionCount, open } = relay.variables
+    const { updateBucket } = this.state
 
-    const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100);
+    const progress = parseInt((bucketMonth.amount / bucketMonth.avgAmount) * 100)
     const monthProgress = month.isBefore(moment().subtract(1, 'month')) ? 100 : (
       parseInt((moment().date() / month.clone().endOf('month').date()) * 100)
-    );
+    )
 
     const hasTransaction = (
       bucketMonth.transactions &&
       bucketMonth.transactions.edges &&
       bucketMonth.transactions.edges.length > 0
-    );
+    )
 
     return (
       <SuperCard expanded={open} summary={
@@ -101,14 +101,14 @@ class BucketMonth extends Component {
 
           <CardActions>
             <Button to={`/app/labels/${bucketMonth.bucket.id}`}>View All</Button>
-            <Button onClick={()=> this.setState({ updateBucket: true })}>Edit</Button>
+            <Button onClick={() => this.setState({ updateBucket: true })}>Edit</Button>
           </CardActions>
 
           <UpdateBucketSheet
             viewer={viewer}
             bucket={bucketMonth.bucket}
             visible={updateBucket}
-            onRequestClose={()=> this.setState({ updateBucket: false })}
+            onRequestClose={() => this.setState({ updateBucket: false })}
             onUpdated={::this.forceFetch}
             onDeleted={::this.forceFetch}
           />
@@ -126,7 +126,7 @@ class BucketMonth extends Component {
           </div>
         : null}
       </SuperCard>
-    );
+    )
   }
 }
 
@@ -136,13 +136,13 @@ BucketMonth = Relay.createContainer(BucketMonth, {
     open: false,
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${TransactionList.getFragment('viewer')}
         ${UpdateBucketSheet.getFragment('viewer')}
       }
     `,
-    bucketMonth: ()=> Relay.QL`
+    bucketMonth: () => Relay.QL`
       fragment on BucketMonthNode {
         amount
         avgAmount
@@ -171,6 +171,6 @@ BucketMonth = Relay.createContainer(BucketMonth, {
       }
     `,
   },
-});
+})
 
-export default BucketMonth;
+export default BucketMonth

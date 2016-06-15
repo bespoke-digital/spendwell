@@ -1,8 +1,8 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import ClickOff from 'components/click-off';
-import Button from 'components/button';
+import ClickOff from 'components/click-off'
+import Button from 'components/button'
 
 
 export default class Dropdown extends Component {
@@ -18,14 +18,14 @@ export default class Dropdown extends Component {
 
   state = { open: false };
 
-  render() {
-    const { label, children, variant, disabled } = this.props;
-    const { open } = this.state;
+  render () {
+    const { label, children, variant, disabled } = this.props
+    const { open } = this.state
 
     return (
       <ClickOff
         className='mui-dropdown dropdown'
-        onClickOff={()=> this.setState({ open: false })}
+        onClickOff={() => this.setState({ open: false })}
       >
         <Button
           onClick={this.setState.bind(this, { open: !open }, null)}
@@ -36,11 +36,11 @@ export default class Dropdown extends Component {
           <span className='mui-caret'/>
         </Button>
         <ul className={`mui-dropdown__menu ${open ? 'mui--is-open' : ''}`}>
-          {children.map((child, index)=> (
+          {children.map((child, index) => (
             <li key={index} onClick={this.setState.bind(this, { open: false }, null)}>{child}</li>
           ))}
         </ul>
       </ClickOff>
-    );
+    )
   }
 }
