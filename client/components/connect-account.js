@@ -75,18 +75,20 @@ class ConnectAccount extends Component {
         </Card>
 
         <Transition show={!!viewer.institutionTemplate}>
-        {!this.state.isError ?
-          <FinicityAccountDialog
-            viewer={viewer}
-            institutionTemplate={viewer.institutionTemplate}
-            onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
-            onConnected={::this.handleConnected}
-            onError={() => this.setState({ isError: !this.state.isError })}
-          /> :
-          <ErrorDialog 
-          onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
-          onError={() => this.setState({ isError: !this.state.isError })}
-          />}
+          {!this.state.isError ?
+            <FinicityAccountDialog
+              viewer={viewer}
+              institutionTemplate={viewer.institutionTemplate}
+              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
+              onConnected={::this.handleConnected}
+              onError={() => this.setState({ isError: !this.state.isError })}
+            /> 
+          :
+            <ErrorDialog 
+              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
+              onError={() => this.setState({ isError: !this.state.isError })}
+            />
+          }
         </Transition>
 
         {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node })=>
