@@ -100,7 +100,6 @@ class ConnectAccount extends Component {
         {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node }) =>
           <Card
             key={node.id}
-            className='fi'
             className={`fi ${node.image ? 'has-logo' : ''}`}
             onClick={this.handleTemplateClick.bind(this, node)}
             style={{ borderLeftColor: node.color }}
