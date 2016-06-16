@@ -6,7 +6,7 @@ import 'sass/pages'
 import 'utils/landing-email-form'
 
 const analyticsPageName = document.querySelector('meta[name=analytics-page-name]').getAttribute('content')
-if(window.mixpanel){
+if (window.mixpanel) {
   window.mixpanel.track(`Landing: ${analyticsPageName}`)
 }
 
