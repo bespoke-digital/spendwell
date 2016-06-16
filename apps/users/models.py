@@ -116,7 +116,7 @@ class BetaSignup(models.Model):
     invited.boolean = True
 
     def used(self):
-        return (
+        return bool(
             (self.beta_code and self.beta_code.used) or
             User.objects.filter(email=self.email).exists()
         )
