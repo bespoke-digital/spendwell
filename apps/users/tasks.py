@@ -4,6 +4,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
 from apps.core.utils import this_month, months_ago
+from apps.core.utils.email import send_email
 from apps.users.models import User
 
 
@@ -32,7 +33,15 @@ def estimate_income(user_id):
 
 
 @shared_task
-def set_last_sync(user_id):
+def user_sync_complete(user_id):
     user = User.objects.get(id=user_id)
+
+    if not user.last_sync:
+        send_email(
+            to=user.email,
+            subject='Get Started With Spendwell',
+            template='users/email/sync-notification.html',
+        )
+
     user.last_sync = timezone.now()
     user.save()

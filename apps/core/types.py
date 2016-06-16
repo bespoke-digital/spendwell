@@ -49,8 +49,11 @@ class Month(CustomScalar):
 
 class DateTime(CustomScalar):
     @staticmethod
-    def serialize(dt):
-        return dt.isoformat()
+    def serialize(value):
+        if type(value) is datetime:
+            return value.isoformat()
+        else:
+            return value
 
     @staticmethod
     def parse_value(value):

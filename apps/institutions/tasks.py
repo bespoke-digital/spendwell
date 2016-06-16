@@ -3,7 +3,7 @@ from celery import shared_task, chain
 
 from apps.transactions.tasks import detect_transfers
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
-from apps.users.tasks import estimate_income as estimate_income_task, set_last_sync
+from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
 from apps.users.models import User
 
 
@@ -41,6 +41,6 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
     if estimate_income:
         chain_tasks.append(estimate_income_task.si(user.id))
 
-    chain_tasks.append(set_last_sync.si(user.id))
+    chain_tasks.append(user_sync_complete.si(user.id))
 
     return chain(chain_tasks).delay()
