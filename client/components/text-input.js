@@ -22,9 +22,9 @@ export default class TextInput extends Component {
     select: false,
   };
 
-  constructor () {
-    super()
-    this.state = {}
+  constructor() {
+    super();
+    this.state = { value: '' };
   }
 
   componentDidMount () {
