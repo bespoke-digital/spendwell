@@ -22,7 +22,6 @@ class FinicityAccountDialog extends Component {
     onConnecting: PropTypes.func,
     fullSync: PropTypes.bool,
     onError: PropTypes.func.isRequired,
-
   };
 
   static defaultProps = {
