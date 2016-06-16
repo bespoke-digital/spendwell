@@ -1,7 +1,7 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import style from 'sass/components/icon';
+import style from 'sass/components/icon'
 
 
 export default class Icon extends Component {
@@ -20,8 +20,8 @@ export default class Icon extends Component {
     className: '',
   };
 
-  render() {
-    const { color, size, inactive, className, type } = this.props;
+  render () {
+    const { color, size, inactive, className, type } = this.props
 
     return (
       <i className={`
@@ -33,6 +33,6 @@ export default class Icon extends Component {
         ${inactive ? 'icon-inactive' : ''}
         ${className}
       `}>{type.replace(/\s/g, '_')}</i>
-    );
+    )
   }
 }

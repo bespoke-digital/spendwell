@@ -1,25 +1,25 @@
 
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 
 export class AssignTransactionsMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id,
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { assignTransactions }`;
+  getMutation () {
+    return Relay.QL`mutation { assignTransactions }`
   }
 
-  getVariables() {
-    return { month: this.props.month.format('YYYY/MM') };
+  getVariables () {
+    return { month: this.props.month.format('YYYY/MM') }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on DeleteBucketMutationPayload {
         viewer {
@@ -28,134 +28,134 @@ export class AssignTransactionsMutation extends Relay.Mutation {
           }
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }
 
 
 export class CreateBucketMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { createBucket }`;
+  getMutation () {
+    return Relay.QL`mutation { createBucket }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       name: this.props.name,
       filters: this.props.filters,
       type: this.props.type,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on CreateBucketMutationPayload {
         viewer {
           dummy
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }
 
 
 export class DeleteBucketMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
-    bucket: ()=> Relay.QL`
+    bucket: () => Relay.QL`
       fragment on BucketNode {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { deleteBucket }`;
+  getMutation () {
+    return Relay.QL`mutation { deleteBucket }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       bucketId: this.props.bucket.id,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on DeleteBucketMutationPayload {
         viewer {
           dummy
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }
 
 
 export class UpdateBucketMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
-    bucket: ()=> Relay.QL`
+    bucket: () => Relay.QL`
       fragment on BucketNode {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { updateBucket }`;
+  getMutation () {
+    return Relay.QL`mutation { updateBucket }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       bucketId: this.props.bucket.id,
       name: this.props.name,
       filters: this.props.filters,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on UpdateBucketMutationPayload {
         bucket {
@@ -163,63 +163,63 @@ export class UpdateBucketMutation extends Relay.Mutation {
           filters
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         bucket: this.props.bucket.id,
       },
-    }];
+    }]
   }
 
-  getOptimisticResponse() {
+  getOptimisticResponse () {
     return {
       bucket: {
         id: this.props.bucket.id,
         name: this.props.bucket.name,
         filters: this.props.bucket.filters,
       },
-    };
+    }
   }
 }
 
 
 export class AutodetectBillsMutation extends Relay.Mutation {
   static fragments = {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { autodetectBills }`;
+  getMutation () {
+    return Relay.QL`mutation { autodetectBills }`
   }
 
-  getVariables() {
-    return {};
+  getVariables () {
+    return {}
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on AutodetectBillsMutationPayload {
         viewer {
           dummy
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         viewer: this.props.viewer.id,
       },
-    }];
+    }]
   }
 }

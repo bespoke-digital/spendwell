@@ -1,21 +1,21 @@
 
-import { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router';
-import Relay from 'react-relay';
-import moment from 'moment';
+import { Component, PropTypes } from 'react'
+import { browserHistory } from 'react-router'
+import Relay from 'react-relay'
+import moment from 'moment'
 
-import { handleMutationError } from 'utils/network-layer';
-import Money from 'components/money';
-import CardList from 'components/card-list';
-import Card from 'components/card';
-import SuperCard from 'components/super-card';
-import ListAccount from 'components/list-account';
-import TextActions from 'components/text-actions';
-import A from 'components/a';
+import { handleMutationError } from 'utils/network-layer'
+import Money from 'components/money'
+import CardList from 'components/card-list'
+import Card from 'components/card'
+import SuperCard from 'components/super-card'
+import ListAccount from 'components/list-account'
+import TextActions from 'components/text-actions'
+import A from 'components/a'
 
-import eventEmitter from 'utils/event-emitter';
+import eventEmitter from 'utils/event-emitter'
 
-import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts';
+import { DisableAccountMutation, EnableAccountMutation } from 'mutations/accounts'
 
 
 class Institution extends Component {
@@ -27,42 +27,42 @@ class Institution extends Component {
     isAdmin: false,
   };
 
-  constructor() {
-    super();
-    this.state = { selected: null, showDisabled: false };
+  constructor () {
+    super()
+    this.state = { selected: null, showDisabled: false }
   }
 
-  forceFetch() {
-    eventEmitter.emit('forceFetch');
+  forceFetch () {
+    eventEmitter.emit('forceFetch')
   }
 
-  selectAccount({ id }) {
-    browserHistory.push({ pathname: `/accounts/${id}` });
+  selectAccount ({ id }) {
+    browserHistory.push({ pathname: `/accounts/${id}` })
   }
 
-  enableAccount(account) {
+  enableAccount (account) {
     Relay.Store.commitUpdate(new EnableAccountMutation({ account }), {
       onFailure: handleMutationError,
-      onSuccess: ()=> {
-        console.log('Success: EnableAccountMutation');
-        this.forceFetch();
+      onSuccess: () => {
+        console.log('Success: EnableAccountMutation')
+        this.forceFetch()
       },
-    });
+    })
   }
 
-  disableAccount(account) {
+  disableAccount (account) {
     Relay.Store.commitUpdate(new DisableAccountMutation({ account }), {
       onFailure: handleMutationError,
-      onSuccess: ()=> {
-        console.log('Success: DisableAccountMutation');
-        this.forceFetch();
+      onSuccess: () => {
+        console.log('Success: DisableAccountMutation')
+        this.forceFetch()
       },
-    });
+    })
   }
 
-  render() {
-    const { viewer, institution, isAdmin } = this.props;
-    const { selected, showDisabled } = this.state;
+  render () {
+    const { viewer, institution, isAdmin } = this.props
+    const { selected, showDisabled } = this.state
 
     return (
       <CardList className='institution'>
@@ -81,14 +81,14 @@ class Institution extends Component {
           </div>
         }/>
 
-        {institution.accounts.edges.map(({ node })=>
+        {institution.accounts.edges.map(({ node }) =>
           <ListAccount
             key={node.id}
             viewer={viewer}
             account={node}
             expanded={selected === node.id}
             onDisable={this.disableAccount.bind(this, node)}
-            onClick={()=> selected === node.id ?
+            onClick={() => selected === node.id ?
               this.setState({ selected: null }) :
               this.setState({ selected: node.id })}
           />
@@ -103,12 +103,12 @@ class Institution extends Component {
 
         {institution.disabledAccounts && institution.disabledAccounts.edges.length ?
           <SuperCard
-            onSummaryClick={()=> this.setState({ showDisabled: !showDisabled })}
+            onSummaryClick={() => this.setState({ showDisabled: !showDisabled })}
             expanded={showDisabled}
             summary={<Card>Disabled Accounts</Card>}
             className='disabled'
           >
-            {institution.disabledAccounts.edges.map(({ node })=>
+            {institution.disabledAccounts.edges.map(({ node }) =>
               <Card key={node.id} className='account'>
                 <div>{node.name}</div>
                 <TextActions>
@@ -119,18 +119,18 @@ class Institution extends Component {
           </SuperCard>
         : null}
       </CardList>
-    );
+    )
   }
 }
 
 Institution = Relay.createContainer(Institution, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${ListAccount.getFragment('viewer')}
       }
     `,
-    institution: ()=> Relay.QL`
+    institution: () => Relay.QL`
       fragment on InstitutionNode {
         name
         canSync
@@ -162,6 +162,6 @@ Institution = Relay.createContainer(Institution, {
       }
     `,
   },
-});
+})
 
-export default Institution;
+export default Institution

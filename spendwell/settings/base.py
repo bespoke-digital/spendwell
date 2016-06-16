@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'watchman',
     'django_extensions',
     'security_middleware',
+    'djcelery',
 
     'apps.core',
     'apps.landing',
@@ -108,10 +109,16 @@ AUTHENTICATION_BACKENDS = (
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
 
 LOGGING = {
     'version': 1,
@@ -169,6 +176,11 @@ GEOIP_PATH = '/data/shared/'
 GEOIP_COUNTRY = 'GeoIP2-Country.mmdb'
 
 
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+
+
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_PUBLIC_KEY = '4b747132cf8c427bec79f00e0dcb4a'
@@ -180,6 +192,7 @@ FINICITY_ID = '2445581415347'
 FINICITY_SECRET = None
 FINICITY_APP_KEY = 'e152b1e1dc39cd13969ffc7dc954bb88'
 
+INCLUDE_ANALYTICS = False
 MIXPANEL_PUBLIC_KEY = 'setme'
 GOOGLE_ANALYTICS_KEY = 'setme'
 FACEBOOK_PIXEL_KEY = 'setme'

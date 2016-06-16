@@ -1,41 +1,41 @@
 
-import { Component } from 'react';
-import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
-import moment from 'moment';
+import { Component } from 'react'
+import Relay from 'react-relay'
+import { browserHistory } from 'react-router'
+import moment from 'moment'
 
-import Card from 'components/card';
-import SuperCard from 'components/super-card';
-import CardList from 'components/card-list';
-import Money from 'components/money';
-import Transition from 'components/transition';
-import IncomingSummary from 'components/incoming-summary';
-import OutgoingSummary from 'components/outgoing-summary';
-import MonthSelector from 'components/month-selector';
+import Card from 'components/card'
+import SuperCard from 'components/super-card'
+import CardList from 'components/card-list'
+import Money from 'components/money'
+import Transition from 'components/transition'
+import IncomingSummary from 'components/incoming-summary'
+import OutgoingSummary from 'components/outgoing-summary'
+import MonthSelector from 'components/month-selector'
 
-import styles from 'sass/views/dashboard-summary.scss';
+import styles from 'sass/views/dashboard-summary.scss'
 
 
 class DashboardSummary extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       statusOpen: null,
       showInFromSavings: false,
-    };
+    }
   }
 
-  handleStatusClick(type) {
-    const { statusOpen } = this.state;
+  handleStatusClick (type) {
+    const { statusOpen } = this.state
     if (statusOpen === type)
-      this.setState({ statusOpen: null });
+      this.setState({ statusOpen: null })
     else
-      this.setState({ statusOpen: type });
+      this.setState({ statusOpen: type })
   }
 
-  render() {
-    const { summary, viewer, periods } = this.props;
-    const { statusOpen } = this.state;
+  render () {
+    const { summary, viewer, periods } = this.props
+    const { statusOpen } = this.state
 
     const {
       income,
@@ -44,16 +44,16 @@ class DashboardSummary extends Component {
       billsUnpaidTotal,
       spent,
       net,
-    } = summary;
+    } = summary
 
-    const allocated = goalsTotal + billsUnpaidTotal + spent;
+    const allocated = goalsTotal + billsUnpaidTotal + spent
 
     return (
       <CardList className={styles.root}>
         <MonthSelector
           month={periods.current}
           first={periods.first}
-          onChange={(month)=> browserHistory.push(`/app/dashboard/${month.format('YYYY/MM')}`)}
+          onChange={(month) => browserHistory.push(`/app/dashboard/${month.format('YYYY/MM')}`)}
         />
 
         <Card className={`status ${statusOpen ? 'open' : ''}`}>
@@ -118,18 +118,18 @@ class DashboardSummary extends Component {
           </SuperCard>
         </Transition>
       </CardList>
-    );
+    )
   }
 }
 
 DashboardSummary = Relay.createContainer(DashboardSummary, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${IncomingSummary.getFragment('viewer')}
       }
     `,
-    summary: ()=> Relay.QL`
+    summary: () => Relay.QL`
       fragment on Summary {
         ${IncomingSummary.getFragment('summary')}
         ${OutgoingSummary.getFragment('summary')}
@@ -143,6 +143,6 @@ DashboardSummary = Relay.createContainer(DashboardSummary, {
       }
     `,
   },
-});
+})
 
-export default DashboardSummary;
+export default DashboardSummary

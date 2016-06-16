@@ -1,9 +1,9 @@
 
-import styles from 'sass/components/spinner.scss';
+import styles from 'sass/components/spinner.scss'
 
 
-export default (props)=> {
-  const { className, ..._props } = props;
+export default (props) => {
+  const { className, ..._props } = props
   return (
     <svg
       viewBox='0 0 66 66'
@@ -19,5 +19,5 @@ export default (props)=> {
          r='30'
         />
     </svg>
-  );
-};
+  )
+}

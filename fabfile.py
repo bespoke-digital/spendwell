@@ -21,6 +21,7 @@ def post_to_slack(message):
 
 
 def configure_env():
+    env.hosts = env.apps + env.workers
     env.forward_agent = True
     env.user = 'deploy'
     env.bin = '/data/virtualenv/{venv_name}/bin'.format(**env)
@@ -36,7 +37,8 @@ def production():
     env.domain = 'spendwell.co'
     env.settings = 'spendwell.settings.production'
     env.branch = 'master'
-    env.hosts = ['72.51.30.238', '107.6.24.166']
+    env.apps = ['72.51.30.238', '107.6.24.166']
+    env.workers = ['72.51.29.172']
     configure_env()
 
 
@@ -46,7 +48,8 @@ def staging(branch='develop'):
     env.domain = 'staging.spendwell.co'
     env.settings = 'spendwell.settings.staging'
     env.branch = branch
-    env.hosts = ['162.248.180.146']
+    env.apps = ['162.248.180.146']
+    env.workers = ['72.51.29.189']
     configure_env()
 
 
@@ -58,28 +61,6 @@ def pip_requirements():
 
 
 @task
-def npm_install():
-    with cd(env.dir):
-        run('npm install')
-
-
-@task
-def npm_build():
-    with prefix('source {activate}'.format(**env)):
-        with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
-            with cd(env.dir):
-                run('npm run build-prod')
-
-
-@task
-def collectstatic():
-    with prefix('source {activate}'.format(**env)):
-        with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
-            with cd(env.dir):
-                run('./manage.py collectstatic --noinput'.format(**env))
-
-
-@task
 def migrate():
     with prefix('source {activate}'.format(**env)):
         with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
@@ -88,20 +69,65 @@ def migrate():
 
 
 @task
-def gunicorn_status():
-    running = 'RUNNING' in sudo('/usr/bin/supervisorctl status gunicorn-{domain}'.format(**env), shell=False)
-    run('ps aux | grep "gunicorn"')
-    if running:
-        print(green('gunicorn running'))
+def npm_install():
+    if env.host in env.workers:
+        return
+
+    with cd(env.dir):
+        run('npm install')
+
+
+@task
+def npm_build():
+    if env.host in env.workers:
+        return
+
+    with prefix('source {activate}'.format(**env)):
+        with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
+            with cd(env.dir):
+                run('npm run build-prod')
+
+
+@task
+def collectstatic():
+    if env.host in env.workers:
+        return
+
+    with prefix('source {activate}'.format(**env)):
+        with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
+            with cd(env.dir):
+                run('./manage.py collectstatic --noinput'.format(**env))
+
+
+@task
+def supervisor_status():
+    if env.host in env.workers:
+        process_name = 'celery-celeryd'
     else:
-        print(red('gunicorn not running'))
+        process_name = 'gunicorn-{domain}'.format(**env)
+
+    running = 'RUNNING' in sudo('/usr/bin/supervisorctl status {}'.format(process_name), shell=False)
+
+    if running:
+        print(green('supervisor running'))
+    else:
+        print(red('supervisor not running'))
     return running
 
 
 @task
-def gunicorn_restart():
-    sudo('/usr/bin/supervisorctl status gunicorn-{domain} | sed "s/.*[pid ]\([0-9]\+\)\,.*/\\1/" | xargs kill -HUP'.format(**env), shell=False)
-    return gunicorn_status()
+def supervisor_restart():
+    if env.host in env.workers:
+        sudo('/usr/bin/supervisorctl restart celery-celeryd', shell=False)
+    else:
+        sudo(
+            '/usr/bin/supervisorctl status gunicorn-{domain} | '
+            'sed "s/.*[pid ]\([0-9]\+\)\,.*/\\1/" | '
+            'xargs kill -HUP'.format(**env),
+            shell=False,
+        )
+
+    return supervisor_status()
 
 
 @task
@@ -135,7 +161,7 @@ def deploy(force=False):
         if static_change or force:
             collectstatic()
 
-        if not gunicorn_restart():
+        if not supervisor_restart():
             raise DeployFailException
 
     except Exception as e:

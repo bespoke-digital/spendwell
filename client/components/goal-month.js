@@ -1,14 +1,14 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import Money from 'components/money';
-import Button from 'components/button';
-import CardActions from 'components/card-actions';
-import UpdateGoalSheet from 'components/update-goal-sheet';
+import Card from 'components/card'
+import Money from 'components/money'
+import Button from 'components/button'
+import CardActions from 'components/card-actions'
+import UpdateGoalSheet from 'components/update-goal-sheet'
 
-import eventEmitter from 'utils/event-emitter';
+import eventEmitter from 'utils/event-emitter'
 
 
 class GoalMonth extends Component {
@@ -27,13 +27,13 @@ class GoalMonth extends Component {
     updateGoal: false,
   };
 
-  forceFetch() {
-    eventEmitter.emit('forceFetch');
+  forceFetch () {
+    eventEmitter.emit('forceFetch')
   }
 
-  render() {
-    const { viewer, goalMonth, onClick, selected, className } = this.props;
-    const { updateGoal } = this.state;
+  render () {
+    const { viewer, goalMonth, onClick, selected, className } = this.props
+    const { updateGoal } = this.state
 
     return (
       <Card onClick={onClick} expanded={selected} className={`goal ${className}`} summary={
@@ -44,30 +44,30 @@ class GoalMonth extends Component {
         </div>
       }>
         <CardActions>
-          <Button onClick={()=> this.setState({ updateGoal: true })}>Edit</Button>
+          <Button onClick={() => this.setState({ updateGoal: true })}>Edit</Button>
         </CardActions>
 
         <UpdateGoalSheet
           viewer={viewer}
           goal={goalMonth.goal}
           visible={updateGoal}
-          onRequestClose={()=> this.setState({ updateGoal: false })}
+          onRequestClose={() => this.setState({ updateGoal: false })}
           onUpdated={::this.forceFetch}
           onDeleted={::this.forceFetch}
         />
       </Card>
-    );
+    )
   }
 }
 
 GoalMonth = Relay.createContainer(GoalMonth, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${UpdateGoalSheet.getFragment('viewer')}
       }
     `,
-    goalMonth: ()=> Relay.QL`
+    goalMonth: () => Relay.QL`
       fragment on GoalMonthNode {
         name
         targetAmount
@@ -78,6 +78,6 @@ GoalMonth = Relay.createContainer(GoalMonth, {
       }
     `,
   },
-});
+})
 
-export default GoalMonth;
+export default GoalMonth

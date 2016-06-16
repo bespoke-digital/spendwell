@@ -1,10 +1,10 @@
 
-import Dialog from 'components/dialog';
+import Dialog from 'components/dialog'
 
-import styles from 'sass/components/graphic-dialog.scss';
+import styles from 'sass/components/graphic-dialog.scss'
 
 
-export default (props)=> {
+export default (props) => {
   const {
       scheme,
       image,
@@ -15,7 +15,7 @@ export default (props)=> {
       prev,
       onRequestClose,
       ...childProps,
-  } = props;
+  } = props
 
   return (
     <Dialog
@@ -40,5 +40,5 @@ export default (props)=> {
         {next ? next : null}
       </div>
     </Dialog>
-  );
-};
+  )
+}

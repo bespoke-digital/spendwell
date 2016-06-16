@@ -1,14 +1,14 @@
 
-import { PropTypes, Component } from 'react';
-import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
+import { PropTypes, Component } from 'react'
+import Relay from 'react-relay'
+import { browserHistory } from 'react-router'
 
-import OnboardProgress from 'components/onboard-progress';
-import Icon from 'components/icon';
-import A from 'components/a';
+import OnboardProgress from 'components/onboard-progress'
+import Icon from 'components/icon'
+import A from 'components/a'
 
-import store from 'store';
-import style from 'sass/components/header';
+import store from 'store'
+import style from 'sass/components/header'
 
 
 class Header extends Component {
@@ -26,30 +26,30 @@ class Header extends Component {
     back: false,
   };
 
-  handleHandleClick(event) {
-    event.preventDefault();
+  handleHandleClick (event) {
+    event.preventDefault()
     if (this.props.toggleNav)
-      this.props.toggleNav();
+      this.props.toggleNav()
   }
 
-  handleBackClick(event) {
-    event.preventDefault();
-    browserHistory.goBack();
+  handleBackClick (event) {
+    event.preventDefault()
+    browserHistory.goBack()
   }
 
-  handleChatlio() {
-    const { chatlioOpen } = this.props;
-    const expanded = !chatlioOpen;
+  handleChatlio () {
+    const { chatlioOpen } = this.props
+    const expanded = !chatlioOpen
 
-    window._chatlio.show({ expanded });
+    window._chatlio.show({ expanded })
     if (expanded)
-      store.dispatch({ type: 'CHATLIO_OPEN' });
+      store.dispatch({ type: 'CHATLIO_OPEN' })
     else
-      store.dispatch({ type: 'CHATLIO_CLOSED' });
+      store.dispatch({ type: 'CHATLIO_CLOSED' })
   }
 
-  render() {
-    const { viewer, back, plain, title, chatlioOpen } = this.props;
+  render () {
+    const { viewer, back, plain, title, chatlioOpen } = this.props
 
     return (
       <nav className={`mui-appbar ${style.root}`}>
@@ -77,13 +77,13 @@ class Header extends Component {
 
         {!plain ? <OnboardProgress viewer={viewer}/> : null}
       </nav>
-    );
+    )
   }
 }
 
 Header = Relay.createContainer(Header, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${OnboardProgress.getFragment('viewer')}
 
@@ -91,6 +91,6 @@ Header = Relay.createContainer(Header, {
       }
     `,
   },
-});
+})
 
-export default Header;
+export default Header

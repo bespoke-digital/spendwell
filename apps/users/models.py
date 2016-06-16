@@ -1,24 +1,13 @@
 
 import logging
 from uuid import uuid4
-from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from django.dispatch import receiver
 from django.conf import settings
 from delorean import Delorean
 
-from apps.core.signals import day_start
-from apps.core.utils import months_ago, this_month
 from apps.core.utils.email import send_email
-from apps.buckets.models import Bucket
-from apps.transactions.models import Transaction
-
-try:
-    from raven.contrib.django.raven_compat.models import client as raven
-except ImportError:
-    raven = None
 
 
 logger = logging.getLogger(__name__)
@@ -98,51 +87,12 @@ class User(AbstractBaseUser):
     def as_json(self):
         return self.as_serializer().as_json()
 
-    def estimate_income(self):
-        current_month = this_month()
-        income_months = [
-            self.transactions
-            .filter(amount__gt=0)
-            .filter(account__disabled=False)
-            .filter(date__lt=current_month - relativedelta(months=i))
-            .filter(date__gte=current_month - relativedelta(months=i + 1))
-            .is_transfer(False)
-            .sum()
-            for i in range(months_ago(self.first_data_month()) - 1)
-        ]
-        if len(income_months) > 0:
-            self.estimated_income = min(income_months)
-        else:
-            self.estimated_income = 0
-
     def first_data_month(self):
         first_transaction = self.transactions.order_by('date').first()
         if not first_transaction:
             return self.created
         else:
             return Delorean(first_transaction.date).truncate('month').datetime
-
-    def sync(self):
-        for institution in self.institutions.all():
-            institution.sync()
-
-        Transaction.objects.detect_transfers(owner=self)
-
-        for bucket in Bucket.objects.filter(owner=self):
-            bucket.assign_transactions()
-
-
-@receiver(day_start)
-def on_day_start(*args, **kwargs):
-    for user in User.objects.all():
-        try:
-            user.sync()
-        except:
-            if raven is not None:
-                raven.captureException()
-
-            # Don't fail on exceptions so one bad FI doesn't kill an entire sync
-            logger.exception('Exception occurred while syncing {}'.format(user.id))
 
 
 def get_beta_code():
@@ -153,7 +103,12 @@ class BetaSignup(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
-    beta_code = models.OneToOneField('users.BetaCode', blank=True, null=True, related_name='beta_signup')
+    beta_code = models.OneToOneField(
+        'users.BetaCode',
+        related_name='beta_signup',
+        blank=True,
+        null=True,
+    )
 
     def invited(self):
         return bool(self.beta_code) or User.objects.filter(email=self.email).exists()

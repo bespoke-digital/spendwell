@@ -1,21 +1,21 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import A from 'components/a';
-import Icon from 'components/icon';
-import style from 'sass/components/nav';
+import A from 'components/a'
+import Icon from 'components/icon'
+import style from 'sass/components/nav'
 
-import { handleMutationError } from 'utils/network-layer';
-import { AutodetectBillsMutation } from 'mutations/buckets';
-import { SyncInstitutionsMutation } from 'mutations/institutions';
-import eventEmitter from 'utils/event-emitter';
+import { handleMutationError } from 'utils/network-layer'
+import { AutodetectBillsMutation } from 'mutations/buckets'
+import { SyncInstitutionsMutation } from 'mutations/institutions'
+import eventEmitter from 'utils/event-emitter'
 
-import logoGreen from 'img/logo-green.svg';
-import logoWhite from 'img/logo-white.svg';
+import logoGreen from 'img/logo-green.svg'
+import logoWhite from 'img/logo-white.svg'
 
 
-const isActive = (path)=> document.location.pathname.indexOf(path) === 0;
+const isActive = (path) => document.location.pathname.indexOf(path) === 0
 
 
 class Nav extends Component {
@@ -24,8 +24,8 @@ class Nav extends Component {
     toggleNav: PropTypes.func.isRequired,
   };
 
-  render() {
-    const { viewer, toggleNav, open } = this.props;
+  render () {
+    const { viewer, toggleNav, open } = this.props
 
     return (
       <div className={`${style.root} ${open ? 'open' : ''}`}>
@@ -67,14 +67,14 @@ class Nav extends Component {
           {viewer.isAdmin ? <li className='divider'/> : null}
           {viewer.isAdmin ? (
             <li>
-              <A onClick={()=> {
+              <A onClick={() => {
                 Relay.Store.commitUpdate(new AutodetectBillsMutation({ viewer }), {
                   onFailure: handleMutationError,
-                  onSuccess: ()=> {
-                    console.log('Success: AutodetectBillsMutation');
-                    eventEmitter.emit('forceFetch');
+                  onSuccess: () => {
+                    console.log('Success: AutodetectBillsMutation')
+                    eventEmitter.emit('forceFetch')
                   },
-                });
+                })
               }}>
                 <Icon type='find replace'/>
                 <div className='label'>Autodetect Bills</div>
@@ -83,14 +83,14 @@ class Nav extends Component {
           ) : null}
           {viewer.isAdmin ? (
             <li>
-              <A onClick={()=> {
+              <A onClick={() => {
                 Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer, autodetectBills: false }), {
                   onFailure: handleMutationError,
-                  onSuccess: ()=> {
-                    console.log('Success: SyncInstitutionsMutation');
-                    eventEmitter.emit('forceFetch');
+                  onSuccess: () => {
+                    console.log('Success: SyncInstitutionsMutation')
+                    eventEmitter.emit('forceFetch')
                   },
-                });
+                })
               }}>
                 <Icon type='file download'/>
                 <div className='label'>Sync</div>
@@ -99,13 +99,13 @@ class Nav extends Component {
           ) : null}
         </ul>
       </div>
-    );
+    )
   }
 }
 
 Nav = Relay.createContainer(Nav, {
   fragments: {
-    viewer() {
+    viewer () {
       return Relay.QL`
         fragment on Viewer {
           ${AutodetectBillsMutation.getFragment('viewer')}
@@ -114,9 +114,9 @@ Nav = Relay.createContainer(Nav, {
           email
           isAdmin
         }
-      `;
+      `
     },
   },
-});
+})
 
-export default Nav;
+export default Nav

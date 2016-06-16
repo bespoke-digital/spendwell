@@ -1,19 +1,19 @@
 
-import { Component } from 'react';
-import Relay from 'react-relay';
+import { Component } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import TextActions from 'components/text-actions';
-import A from 'components/a';
-import Transition from 'components/transition';
-import FinicityAccountDialog from 'components/finicity-account-dialog';
-import Icon from 'components/icon';
+import Card from 'components/card'
+import TextActions from 'components/text-actions'
+import A from 'components/a'
+import Transition from 'components/transition'
+import FinicityAccountDialog from 'components/finicity-account-dialog'
+import Icon from 'components/icon'
 
-import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
-import plaidAccountDialog from 'utils/plaid-account-dialog';
-import eventEmitter from 'utils/event-emitter';
+import { ConnectPlaidInstitutionMutation } from 'mutations/institutions'
+import plaidAccountDialog from 'utils/plaid-account-dialog'
+import eventEmitter from 'utils/event-emitter'
 
-import style from 'sass/components/institution-reauth';
+import style from 'sass/components/institution-reauth'
 
 class InstitutionReauth extends Component {
   state = {
@@ -21,10 +21,10 @@ class InstitutionReauth extends Component {
     canceled: false,
   };
 
-  reauth(institution) {
-    const { viewer } = this.props;
+  reauth (institution) {
+    const { viewer } = this.props
 
-    this.setState({ canceled: false });
+    this.setState({ canceled: false })
 
     if (institution.plaidId)
       plaidAccountDialog({
@@ -32,31 +32,31 @@ class InstitutionReauth extends Component {
         plaidInstitutionId: institution.plaidId,
         plaidPublicToken: institution.plaidPublicToken,
         fullSync: true,
-        onConnecing: ()=> this.setState({ loading: true }),
-        onConnected: ()=> {
-          eventEmitter.emit('forceFetch');
-          this.setState({ loading: false });
+        onConnecing: () => this.setState({ loading: true }),
+        onConnected: () => {
+          eventEmitter.emit('forceFetch')
+          this.setState({ loading: false })
         },
-      });
+      })
 
     else if (institution.finicityId)
-      this.setState({ finicityConnect: institution });
+      this.setState({ finicityConnect: institution })
 
     else
-      console.warn('Cannot reauth an unknown institution type');
+      console.warn('Cannot reauth an unknown institution type')
   }
 
-  handleFinicityConnected() {
-    eventEmitter.emit('forceFetch');
-    this.setState({ finicityConnect: null, loading: false });
+  handleFinicityConnected () {
+    eventEmitter.emit('forceFetch')
+    this.setState({ finicityConnect: null, loading: false })
   }
 
-  render() {
-    const { viewer } = this.props;
-    const { finicityConnect, loading, canceled } = this.state;
+  render () {
+    const { viewer } = this.props
+    const { finicityConnect, loading, canceled } = this.state
 
     if (!viewer.institutions || viewer.institutions.edges.length === 0)
-      return null;
+      return null
 
     return (
       <div className={style.root}>
@@ -64,14 +64,14 @@ class InstitutionReauth extends Component {
           <FinicityAccountDialog
             viewer={viewer}
             institutionTemplate={finicityConnect ? finicityConnect.institutionTemplate : null}
-            onRequestClose={()=> this.setState({ canceled: true, loading: false })}
-            onConnecing={()=> this.setState({ loading: true })}
+            onRequestClose={() => this.setState({ canceled: true, loading: false })}
+            onConnecing={() => this.setState({ loading: true })}
             onConnected={::this.handleFinicityConnected}
-            fullSync
+            sync
           />
         </Transition>
 
-        {viewer.institutions.edges.map(({ node })=>
+        {viewer.institutions.edges.map(({ node }) =>
           <Card key={node.id}>
             <div className='icon-row'>
               <div><Icon type='warning'/></div>
@@ -91,13 +91,13 @@ class InstitutionReauth extends Component {
           </Card>
         )}
       </div>
-    );
+    )
   }
 }
 
 InstitutionReauth = Relay.createContainer(InstitutionReauth, {
   fragments: {
-    viewer() {
+    viewer () {
       return Relay.QL`
         fragment on Viewer {
           ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
@@ -119,9 +119,9 @@ InstitutionReauth = Relay.createContainer(InstitutionReauth, {
             }
           }
         }
-      `;
+      `
     },
   },
-});
+})
 
-export default InstitutionReauth;
+export default InstitutionReauth

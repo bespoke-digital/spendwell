@@ -1,0 +1,2 @@
+
+import spendwell.celery  # noqa

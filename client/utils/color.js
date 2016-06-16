@@ -292,8 +292,8 @@ const colors = {
     '800': '#37474f',
     '900': '#263238',
   },
-};
+}
 
-export default function(color, level = 500) {
-  return colors[color][level];
+export default function (color, level = 500) {
+  return colors[color][level]
 }

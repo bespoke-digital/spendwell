@@ -1,80 +1,80 @@
 
-import { Component } from 'react';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
-import Container from 'muicss/lib/react/container';
-import _ from 'lodash';
-import 'sass/app';
+import { Component } from 'react'
+import Row from 'muicss/lib/react/row'
+import Col from 'muicss/lib/react/col'
+import Container from 'muicss/lib/react/container'
+import _ from 'lodash'
+import 'sass/app'
 
-import Card from 'components/card';
-import CardList from 'components/card-list';
-import TextInput from 'components/text-input';
-import Dropdown from 'components/dropdown';
-import A from 'components/a';
-import CreateGraph from 'components/graph';
-import style from 'sass/views/debt-repayment-calculator';
+import Card from 'components/card'
+import CardList from 'components/card-list'
+import TextInput from 'components/text-input'
+import Dropdown from 'components/dropdown'
+import A from 'components/a'
+import CreateGraph from 'components/graph'
+import style from 'sass/views/debt-repayment-calculator'
 
-const yearlyAdjustment = function(time) {
-  return time === 'Years' ? 12 : 1;
-};
+const yearlyAdjustment = function (time) {
+  return time === 'Years' ? 12 : 1
+}
 
-const delay = 300;
+const delay = 300
 
 export default class DebtRepaymentCalculator extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       time: 'Months',
-    };
-    this.setPrincipleGraph = _.debounce(::this.setPrincipleGraph, delay);
-    this.setRateGraph = _.debounce(::this.setRateGraph, delay);
-    this.setPaymentGraph = _.debounce(::this.setPaymentGraph, delay);
-    this.setNumberOfPaymentsGraph = _.debounce(::this.setNumberOfPaymentsGraph, delay);
+    }
+    this.setPrincipleGraph = _.debounce(::this.setPrincipleGraph, delay)
+    this.setRateGraph = _.debounce(::this.setRateGraph, delay)
+    this.setPaymentGraph = _.debounce(::this.setPaymentGraph, delay)
+    this.setNumberOfPaymentsGraph = _.debounce(::this.setNumberOfPaymentsGraph, delay)
   }
 
-  handlePrincipleChange(principle) {
-    this.setState({ principle });
-    this.setPrincipleGraph(principle);
+  handlePrincipleChange (principle) {
+    this.setState({ principle })
+    this.setPrincipleGraph(principle)
   }
 
-  setPrincipleGraph(principleGraph) {
-    this.setState({ principleGraph });
+  setPrincipleGraph (principleGraph) {
+    this.setState({ principleGraph })
   }
 
-  handleRateChange(rate) {
-    this.setState({ rate });
-    this.setRateGraph(rate);
+  handleRateChange (rate) {
+    this.setState({ rate })
+    this.setRateGraph(rate)
   }
-  setRateGraph(rateGraph) {
-    this.setState({ rateGraph });
-  }
-
-  handlePaymentsChange(payment) {
-    this.setState({ payment, numberOfPayments: null, numberOfPaymentsGraph: null });
-    this.setPaymentGraph(payment);
+  setRateGraph (rateGraph) {
+    this.setState({ rateGraph })
   }
 
-  setPaymentGraph(paymentGraph) {
-    this.setState({ paymentGraph });
+  handlePaymentsChange (payment) {
+    this.setState({ payment, numberOfPayments: null, numberOfPaymentsGraph: null })
+    this.setPaymentGraph(payment)
   }
 
-  handleNumberOfPaymentsChange(numberOfPayments) {
-    this.setState({ numberOfPayments, payment: null, paymentGraph: null });
-    this.setNumberOfPaymentsGraph(numberOfPayments);
+  setPaymentGraph (paymentGraph) {
+    this.setState({ paymentGraph })
   }
 
-  setNumberOfPaymentsGraph(numberOfPaymentsGraph) {
-    this.setState({ numberOfPaymentsGraph });
+  handleNumberOfPaymentsChange (numberOfPayments) {
+    this.setState({ numberOfPayments, payment: null, paymentGraph: null })
+    this.setNumberOfPaymentsGraph(numberOfPayments)
   }
 
-  handleDateToggle(time) {
-    this.setState({ time });
+  setNumberOfPaymentsGraph (numberOfPaymentsGraph) {
+    this.setState({ numberOfPaymentsGraph })
   }
 
-  render() {
-    const { principle, rate, numberOfPayments, payment, time } = this.state;
-    const { principleGraph, rateGraph, numberOfPaymentsGraph, paymentGraph } = this.state;
-    return(
+  handleDateToggle (time) {
+    this.setState({ time })
+  }
+
+  render () {
+    const { principle, rate, numberOfPayments, payment, time } = this.state
+    const { principleGraph, rateGraph, numberOfPaymentsGraph, paymentGraph } = this.state
+    return (
       <div className={style.root}>
         <Container className='container'>
           <Row className='row'>
@@ -154,6 +154,6 @@ export default class DebtRepaymentCalculator extends Component {
           </Row>
         </Container>
       </div>
-    );
+    )
   }
 }

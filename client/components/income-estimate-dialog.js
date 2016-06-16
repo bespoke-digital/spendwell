@@ -1,16 +1,16 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import Button from 'components/button';
-import MoneyInput from 'components/money-input';
-import Dialog from 'components/dialog';
-import DialogActions from 'components/dialog-actions';
+import Button from 'components/button'
+import MoneyInput from 'components/money-input'
+import Dialog from 'components/dialog'
+import DialogActions from 'components/dialog-actions'
 
-import track from 'utils/track';
-import { handleMutationError } from 'utils/network-layer';
-import { SetIncomeEstimateMutation } from 'mutations/users';
+import track from 'utils/track'
+import { handleMutationError } from 'utils/network-layer'
+import { SetIncomeEstimateMutation } from 'mutations/users'
 
 
 class IncomeEstimateDialog extends Component {
@@ -18,34 +18,34 @@ class IncomeEstimateDialog extends Component {
     onRequestClose: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = { loading: false };
+  constructor () {
+    super()
+    this.state = { loading: false }
   }
 
-  handleSubmit() {
-    const { viewer, onRequestClose } = this.props;
-    const amount = _.isUndefined(this.state.amount) ? viewer.estimatedIncome : this.state.amount;
+  handleSubmit () {
+    const { viewer, onRequestClose } = this.props
+    const amount = _.isUndefined(this.state.amount) ? viewer.estimatedIncome : this.state.amount
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
 
     Relay.Store.commitUpdate(new SetIncomeEstimateMutation({ viewer, amount }), {
-      onFailure: (response)=> {
-        this.setState({ loading: false });
-        handleMutationError(response);
+      onFailure: (response) => {
+        this.setState({ loading: false })
+        handleMutationError(response)
       },
-      onSuccess: ()=> {
-        console.log('SetIncomeEstimateMutation Success');
-        this.setState({ loading: false });
-        onRequestClose();
-        track('update-income-estimate');
+      onSuccess: () => {
+        console.log('SetIncomeEstimateMutation Success')
+        this.setState({ loading: false })
+        onRequestClose()
+        track('update-income-estimate')
       },
-    });
+    })
   }
 
-  render() {
-    const { viewer, onRequestClose } = this.props;
-    const { loading } = this.state;
+  render () {
+    const { viewer, onRequestClose } = this.props
+    const { loading } = this.state
 
     return (
       <Dialog size='sm' onRequestClose={onRequestClose}>
@@ -58,7 +58,7 @@ class IncomeEstimateDialog extends Component {
           <MoneyInput
             label='Amount'
             initialValue={viewer.estimatedIncome}
-            onChange={(amount)=> this.setState({ amount })}
+            onChange={(amount) => this.setState({ amount })}
           />
         </div>
         <DialogActions>
@@ -66,13 +66,13 @@ class IncomeEstimateDialog extends Component {
           <Button onClick={::this.handleSubmit} loading={loading}>save</Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 IncomeEstimateDialog = Relay.createContainer(IncomeEstimateDialog, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${SetIncomeEstimateMutation.getFragment('viewer')}
 
@@ -80,6 +80,6 @@ IncomeEstimateDialog = Relay.createContainer(IncomeEstimateDialog, {
       }
     `,
   },
-});
+})
 
-export default IncomeEstimateDialog;
+export default IncomeEstimateDialog
