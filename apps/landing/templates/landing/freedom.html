@@ -12,6 +12,8 @@
 {% block body %}
  {{ block.super }}
   <script>
-    window.mixpanel.track('Landing: Freedom Loaded');
+    if (window.mixpanel) {
+      window.mixpanel.track('Landing: Freedom Loaded');
+    }
   </script>
 {% endblock %}
