@@ -1,5 +1,5 @@
 
-import { Component } from 'react'
+import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import Row from 'muicss/lib/react/row'
 import Col from 'muicss/lib/react/col'
@@ -19,12 +19,14 @@ import privacyImage from 'img/views/onboarding/privacy.svg'
 import connectStyles from 'sass/views/add-plaid.scss'
 import style from 'sass/views/onboarding/add-account.scss'
 
-
 class AddAccountView extends Component {
-  constructor () {
-    super()
-    this.state = { help: true }
-  }
+  static propTypes = {
+    viewer: PropTypes.object,
+  };
+
+  state = {
+    help: true,
+  };
 
   render () {
     const { viewer } = this.props
@@ -91,7 +93,6 @@ class AddAccountView extends Component {
     )
   }
 }
-
 
 AddAccountView = Relay.createContainer(AddAccountView, {
   fragments: {

@@ -1,25 +1,25 @@
 
+import { PropTypes } from 'react'
+
 import Dialog from 'components/dialog'
 
 import styles from 'sass/components/graphic-dialog.scss'
 
-
-export default (props) => {
+export default function GraphicDialog (props) {
   const {
       scheme,
       image,
-      gif,
       header,
       paragraph,
       next,
       prev,
       onRequestClose,
-      ...childProps,
+      className,
   } = props
 
   return (
     <Dialog
-      className={`${styles.root} scheme-${scheme}`}
+      className={`${styles.root} scheme-${scheme} ${className || ''}`}
       onRequestClose={onRequestClose}
       size={null}
     >
@@ -32,13 +32,19 @@ export default (props) => {
         <p>{paragraph}</p>
       </div>
 
-      <div className='control-prev'>
-        {prev ? prev : null}
-      </div>
-
-      <div className='control-next'>
-        {next ? next : null}
-      </div>
+      <div className='control-prev'>{prev || null}</div>
+      <div className='control-next'>{next || null}</div>
     </Dialog>
   )
+}
+
+GraphicDialog.propTypes = {
+  scheme: PropTypes.string,
+  image: PropTypes.string,
+  header: PropTypes.string,
+  paragraph: PropTypes.string,
+  next: PropTypes.object,
+  prev: PropTypes.object,
+  onRequestClose: PropTypes.func,
+  className: PropTypes.string,
 }
