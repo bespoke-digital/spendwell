@@ -1,7 +1,7 @@
 
-from dateutil.relativedelta import relativedelta
-
 from celery import shared_task
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 from apps.core.utils import this_month, months_ago
 from apps.users.models import User
@@ -28,4 +28,11 @@ def estimate_income(user_id):
     else:
         user.estimated_income = 0
 
+    user.save()
+
+
+@shared_task
+def set_last_sync(user_id):
+    user = User.objects.get(id=user_id)
+    user.last_sync = timezone.now()
     user.save()

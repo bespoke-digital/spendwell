@@ -41,6 +41,7 @@ class User(AbstractBaseUser):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    last_sync = models.DateTimeField(null=True, blank=True)
 
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
     estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)

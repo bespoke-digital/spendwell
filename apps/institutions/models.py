@@ -204,7 +204,7 @@ class Institution(SWModel):
 
 @receiver(day_start)
 def on_day_start(*args, **kwargs):
-    sync_all().delay()
+    sync_all()
 
 
 class InstitutionTemplate(models.Model):

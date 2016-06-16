@@ -65,14 +65,11 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
-        estimate_income = input.get('estimate_income', True)
-        autodetect_bills = input.get('autodetect_bills', True)
-
         sync_user(
             context.user,
-            estimate_income=estimate_income,
-            autodetect_bills=autodetect_bills,
-        ).delay().get()
+            estimate_income=input.get('estimate_income', True),
+            autodetect_bills=input.get('autodetect_bills', True),
+        )
 
         return SyncInstitutionsMutation(viewer=Viewer())
 

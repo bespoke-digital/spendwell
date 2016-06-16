@@ -46,7 +46,6 @@ export class ConnectPlaidInstitutionMutation extends Relay.Mutation {
   }
 }
 
-
 export class SyncInstitutionsMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
