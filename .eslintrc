@@ -8,8 +8,8 @@
   },
   "extends": ["standard", "plugin:react/recommended"],
   "rules": {
-    "comma-dangle": ["error", "always-multiline"],
-    "no-console": "warn",
+    "comma-dangle": [2, "always-multiline"],
+    "no-console": 1,
     "operator-linebreak": 0,
     "no-class-assign": 0,
   },
