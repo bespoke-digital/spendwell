@@ -36,7 +36,8 @@ def bill_month_match(transaction, month_start, ago):
 
 
 @shared_task
-def autodetect_bills(user):
+def autodetect_bills(user_id):
+    user = User.objects.get(id=user_id)
     Bucket.objects.filter(owner=user, type='bill').delete()
 
     full_month_end = this_month()

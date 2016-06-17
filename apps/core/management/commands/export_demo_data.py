@@ -72,6 +72,8 @@ class Command(BaseCommand):
             demo_file.write(delorean.now().truncate('day').datetime.isoformat())
 
         for key, values in export.items():
+            if len(values) == 0:
+                continue
             with open(os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(key)), 'w') as demo_file:
                 writer = csv.DictWriter(demo_file, fieldnames=values[0].keys())
                 writer.writeheader()
