@@ -29,6 +29,7 @@ def import_demo_data():
 
     institutions = {}
     accounts = {}
+    transactions = {}
 
     exported_on = delorean.parse(export['exported_on']).datetime
     today = delorean.now().truncate('day').datetime
@@ -61,11 +62,11 @@ def import_demo_data():
 
     for transaction_data in export['transactions']:
         exported_date = delorean.parse(transaction_data['date']).datetime
-        date = exported_date - relativedelta(months=months_offset)
+        date = exported_date + relativedelta(months=months_offset)
         if relativedelta(today, date).months == 4 and date.day <= today.day:
             date = exported_date + relativedelta(months=4)
 
-        Transaction.objects.create(
+        transaction = Transaction.objects.create(
             owner=owner,
             account=accounts[transaction_data['account']],
             description=transaction_data['description'],
@@ -74,10 +75,16 @@ def import_demo_data():
             from_savings=transaction_data.get('from_savings', False),
             source='demo',
         )
+        transactions[transaction_data['id']] = transaction
 
     print('processing demo data')
 
     Transaction.objects.detect_transfers(owner)
+
+    print('\ndata imported:')
+    print('institutions', len(institutions))
+    print('accounts', len(accounts))
+    print('transactions', len(transactions))
 
 
 class Command(BaseCommand):
