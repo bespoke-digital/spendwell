@@ -15,6 +15,7 @@ from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.buckets.models import Bucket
 from apps.buckets.tasks import assign_bucket_transactions
+from apps.goals.models import Goal
 
 
 def import_demo_data():
@@ -29,11 +30,13 @@ def import_demo_data():
     print('clearing existing demo data')
     owner.institutions.all().delete()
     owner.buckets.all().delete()
+    owner.goals.all().delete()
 
     institutions = {}
     accounts = {}
     transactions = {}
     buckets = {}
+    goals = {}
 
     exported_on = delorean.parse(export['exported_on']).datetime
     today = delorean.now().truncate('day').datetime
@@ -100,6 +103,14 @@ def import_demo_data():
         )
         buckets[bucket_data['id']] = bucket
 
+    for goal_data in export['goals']:
+        goal = Goal.objects.create(
+            owner=owner,
+            name=goal_data['name'],
+            monthly_amount=goal_data['monthly_amount'],
+        )
+        goals[goal_data['id']] = goal
+
     print('processing demo data')
 
     Transaction.objects.detect_transfers(owner)
@@ -109,6 +120,8 @@ def import_demo_data():
     print('institutions', len(institutions))
     print('accounts', len(accounts))
     print('transactions', len(transactions))
+    print('buckets', len(buckets))
+    print('goals', len(goals))
 
 
 class Command(BaseCommand):

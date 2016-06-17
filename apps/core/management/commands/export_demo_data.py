@@ -23,6 +23,7 @@ class Command(BaseCommand):
             'accounts': [],
             'transactions': [],
             'buckets': [],
+            'goals': [],
             'exported_on': today,
         }
 
@@ -53,14 +54,18 @@ class Command(BaseCommand):
             })
 
         for bucket in owner.buckets.all():
-            for filter in bucket.filters:
-                if 'account' in filter:
-                    assert owner.accounts.filter(id=filter['account']).exists()
             export['buckets'].append({
                 'id': bucket.id,
                 'name': bucket.name,
                 'type': bucket.type,
                 'filters': bucket._filters,
+            })
+
+        for goal in owner.goals.all():
+            export['goals'].append({
+                'id': goal.id,
+                'name': goal.name,
+                'monthly_amount': goal.monthly_amount,
             })
 
         with open(os.path.join(settings.BASE_DIR, 'local/demo.json'), 'w') as demo_file:
