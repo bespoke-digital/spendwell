@@ -1,6 +1,7 @@
 
-import csv
 import os
+import csv
+import json
 from decimal import Decimal
 
 from django.conf import settings
@@ -110,7 +111,7 @@ def import_demo_data():
             owner=owner,
             name=bucket_data['name'],
             type=bucket_data['type'],
-            filters=bucket_data['filters'],
+            filters=json.loads(bucket_data['filters']),
         )
         buckets[bucket_data['id']] = bucket
 

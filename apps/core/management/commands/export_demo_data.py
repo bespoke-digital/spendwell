@@ -1,6 +1,7 @@
 
 import os
 import csv
+import json
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -53,7 +54,7 @@ class Command(BaseCommand):
                 'id': bucket.id,
                 'name': bucket.name,
                 'type': bucket.type,
-                'filters': bucket._filters,
+                'filters': json.dumps(bucket._filters),
             })
 
         for goal in owner.goals.all():
