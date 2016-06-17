@@ -20,9 +20,31 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-8">
-          <ul class="list-inline">
-            <li class="logo"><a href="{% url 'landing:home' %}">
+          <ul class="list-inline nav-dropdown" align="right">
+            <li class="logo hidden-xs"><a href="{% url 'landing:home' %}">
               <img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell"/>
+            </a></li>
+            <div class="mui-dropdown top-nav-dropdown">
+              <button class="mui-btn mui-btn--default mui-btn--flat visible-xs-inline nav-dropdown toggle-dropdown">
+                <i class="material-icons">more_vert</i>
+              </button>
+              <ul id="collapse" class="mui-dropdown__menu mui-dropdown__menu--right hidden-sm hidden-md hidden-lg">
+                {% if request.user.is_authenticated %}
+                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'app' %}">Dashboard</a></li>
+                {% endif %}
+                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:home' %}#security">Security</a></li>
+                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:faq' %}">FAQ</a></li>
+                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'calculators' %}">Calculators</a></li>
+                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="https://blog.spendwell.co">Blog</a></li>
+                {% if request.user.is_authenticated %}
+                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'logout' %}?next=/">Logout</a></li>
+                {% else %}
+                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+              </ul>
+            </div>
+            <li class="logo visible-xs-inline"><a href="{% url 'landing:home' %}">
+              <img src="{% static 'img/landing/logo.svg' %}" alt="Spendwell" align="left">
             </a></li>
             <li class="hidden-xs"><a href="{% url 'landing:home' %}#security">
               Security
@@ -76,8 +98,12 @@
             <li><a href="{% url 'landing:faq' %}">FAQ</a></li>
             <li><a href="{% url 'calculators' %}">Calculators</a></li>
             <li><a href="https://blog.spendwell.co">Blog</a></li>
-            <li><a href="{% url 'login' %}">Login</a></li>
-            <li><a href="{% url 'signup' %}">Signup</a></li>
+            {% if request.user.is_authenticated %}
+              <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Login</a></li>
+              <li><a href="{% url 'signup' %}">Signup</a></li>
+            {% endif %}
           </ul>
         </div>
         <div class="col-sm-3 col right">
