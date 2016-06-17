@@ -63,7 +63,7 @@ class OnboardingAccounts extends Component {
             image={connectImage}
             header={<span>Your Bank Has Been <br className='visible-xs'/>Succesfully Connected</span>}
             paragraph={`
-              If you have any other bank accounts, make sure to add them before
+              If you have any other accounts, make sure to add them before
               continuing. You can also disable any unwanted accounts (eg. business).
             `}
             next={
