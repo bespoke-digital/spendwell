@@ -181,6 +181,9 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
 
+DEMO_DATA_DIR = os.path.join(BASE_DIR, 'local/demo-data')
+
+
 PLAID_PRODUCTION = False
 PLAID_CLIENT_ID = '5642567be7dbd3891f08e5a4'
 PLAID_PUBLIC_KEY = '4b747132cf8c427bec79f00e0dcb4a'

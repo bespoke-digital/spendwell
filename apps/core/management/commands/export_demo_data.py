@@ -1,8 +1,7 @@
 
-import json
 import os
+import csv
 
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import delorean
@@ -16,15 +15,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         owner = User.objects.get(email='demo@spendwell.co')
 
-        today = delorean.now().truncate('day').datetime
-
         export = {
             'institutions': [],
             'accounts': [],
             'transactions': [],
             'buckets': [],
             'goals': [],
-            'exported_on': today,
         }
 
         for institution in owner.institutions.all():
@@ -49,7 +45,7 @@ class Command(BaseCommand):
                 'account': transaction.account.id,
                 'description': transaction.description,
                 'amount': transaction.amount,
-                'date': transaction.date,
+                'date': transaction.date.isoformat(),
             })
 
         for bucket in owner.buckets.all():
@@ -67,5 +63,17 @@ class Command(BaseCommand):
                 'monthly_amount': goal.monthly_amount,
             })
 
-        with open(os.path.join(settings.BASE_DIR, 'local/demo.json'), 'w') as demo_file:
-            json.dump(export, demo_file, cls=DjangoJSONEncoder, indent=2)
+        try:
+            os.makedirs(settings.DEMO_DATA_DIR)
+        except FileExistsError:
+            pass
+
+        with open(os.path.join(settings.DEMO_DATA_DIR, 'export_date'), 'w') as demo_file:
+            demo_file.write(delorean.now().truncate('day').datetime.isoformat())
+
+        for key, values in export.items():
+            with open(os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(key)), 'w') as demo_file:
+                writer = csv.DictWriter(demo_file, fieldnames=values[0].keys())
+                writer.writeheader()
+                for row in values:
+                    writer.writerow(row)
