@@ -34,6 +34,10 @@ def import_demo_data():
     exported_on = delorean.parse(export['exported_on']).datetime
     today = delorean.now().truncate('day').datetime
     months_offset = relativedelta(today, exported_on).months
+    oldest_month_offset = max(
+        relativedelta(today, delorean.parse(t['date']).datetime).months
+        for t in export['transactions']
+    )
 
     print('importing demo data')
 
@@ -63,8 +67,10 @@ def import_demo_data():
     for transaction_data in export['transactions']:
         exported_date = delorean.parse(transaction_data['date']).datetime
         date = exported_date + relativedelta(months=months_offset)
-        if relativedelta(today, date).months == 3 and date.day <= today.day:
-            date = exported_date + relativedelta(months=relativedelta(today, exported_date).months)
+
+        current_month_offset = relativedelta(today, exported_date).months
+        if current_month_offset == oldest_month_offset and date.day <= today.day:
+            date = exported_date + relativedelta(months=oldest_month_offset)
 
         transaction = Transaction.objects.create(
             owner=owner,

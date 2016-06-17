@@ -5,8 +5,6 @@ import os
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.management.base import BaseCommand
 from django.conf import settings
-
-from dateutil.relativedelta import relativedelta
 import delorean
 
 from apps.users.models import User
