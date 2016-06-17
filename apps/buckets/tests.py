@@ -237,7 +237,7 @@ class AutodetectBillsAlgorithmTestCase(SWTestCase):
             )
         )
 
-        autodetect_bills(user=owner)
+        autodetect_bills(owner.id)
         bills_bucket_transactions = Bucket.objects.filter(type='bill').first().raw_transactions()
 
         for bill_transaction in bill_transactions:
@@ -313,5 +313,5 @@ class AutodetectBillsAlgorithmTestCase(SWTestCase):
             date=this_month() - relativedelta(months=3),
         )
 
-        autodetect_bills(user=owner)
+        autodetect_bills(owner.id)
         self.assertEqual(len(Bucket.objects.all()), 0)
