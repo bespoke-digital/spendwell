@@ -4,6 +4,7 @@ import moment from 'moment-timezone'
 
 import 'sass/pages'
 import 'utils/landing-email-form'
+import 'utils/page-navigation'
 
 const analyticsPageName = document.querySelector('meta[name=analytics-page-name]').getAttribute('content')
 window.mixpanel.track(`Landing: ${analyticsPageName}`)
