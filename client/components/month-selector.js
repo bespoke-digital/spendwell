@@ -8,7 +8,6 @@ import Icon from 'components/icon'
 
 import styles from 'sass/components/month-selector.scss'
 
-
 export default class MonthSelector extends Component {
   static propTypes = {
     month: PropTypes.instanceOf(moment).isRequired,
@@ -31,7 +30,7 @@ export default class MonthSelector extends Component {
       <Card className={styles.root}>
         <Button
           onClick={() => onChange(periods.previous)}
-          disabled={first ? periods.previous.isSame(first) : false}
+          disabled={first ? periods.previous.isBefore(first) : false}
           color='default'
           flat
         >

@@ -15,6 +15,8 @@ import styles from 'sass/views/dashboard.scss'
 
 class Dashboard extends Component {
   static propTypes = {
+    relay: PropTypes.object,
+    viewer: PropTypes.object,
     params: PropTypes.object.isRequired,
   };
 
