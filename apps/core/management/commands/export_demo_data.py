@@ -50,7 +50,6 @@ class Command(BaseCommand):
                 'description': transaction.description,
                 'amount': transaction.amount,
                 'date': transaction.date,
-                'from_savings': transaction.from_savings,
             })
 
         for bucket in owner.buckets.all():
