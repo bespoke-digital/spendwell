@@ -24,15 +24,19 @@ def bill_month_match(transaction, month_start, ago):
 
     amount_variation = transaction.amount * Decimal('.10')
 
-    match_count = transaction.account.transactions.filter(
+    match_by_description = transaction.account.transactions.filter(
         description=transaction.description,
         date__gte=prev_month_start,
         date__lt=prev_month_end,
-        amount__gt=transaction.amount + amount_variation,
-        amount__lt=transaction.amount - amount_variation,
-    ).count()
+    )
 
-    return match_count == 1
+    if len(match_by_description) is not 1:
+        return False
+    else:
+        return match_by_description.filter(
+            amount__gt=transaction.amount + amount_variation,
+            amount__lt=transaction.amount - amount_variation,
+        ).count() == 1
 
 
 @shared_task
