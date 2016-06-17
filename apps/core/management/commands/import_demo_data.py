@@ -13,6 +13,8 @@ from apps.users.models import User
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
+from apps.buckets.models import Bucket
+from apps.buckets.tasks import assign_bucket_transactions
 
 
 def import_demo_data():
@@ -26,10 +28,12 @@ def import_demo_data():
 
     print('clearing existing demo data')
     owner.institutions.all().delete()
+    owner.buckets.all().delete()
 
     institutions = {}
     accounts = {}
     transactions = {}
+    buckets = {}
 
     exported_on = delorean.parse(export['exported_on']).datetime
     today = delorean.now().truncate('day').datetime
@@ -83,9 +87,23 @@ def import_demo_data():
         )
         transactions[transaction_data['id']] = transaction
 
+    for bucket_data in export['buckets']:
+        for filter in bucket_data['filters']:
+            if 'account' in filter:
+                filter['account'] = accounts[filter['account']].id
+
+        bucket = Bucket.objects.create(
+            owner=owner,
+            name=bucket_data['name'],
+            type=bucket_data['type'],
+            filters=bucket_data['filters'],
+        )
+        buckets[bucket_data['id']] = bucket
+
     print('processing demo data')
 
     Transaction.objects.detect_transfers(owner)
+    assign_bucket_transactions(owner.id)
 
     print('\ndata imported:')
     print('institutions', len(institutions))

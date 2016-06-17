@@ -22,6 +22,7 @@ class Command(BaseCommand):
             'institutions': [],
             'accounts': [],
             'transactions': [],
+            'buckets': [],
             'exported_on': today,
         }
 
@@ -41,7 +42,7 @@ class Command(BaseCommand):
                 'current_balance': account.current_balance,
             })
 
-        for transaction in owner.transactions.filter(account__disabled=False):
+        for transaction in owner.transactions.all():
             export['transactions'].append({
                 'id': transaction.id,
                 'account': transaction.account.id,
@@ -49,6 +50,17 @@ class Command(BaseCommand):
                 'amount': transaction.amount,
                 'date': transaction.date,
                 'from_savings': transaction.from_savings,
+            })
+
+        for bucket in owner.buckets.all():
+            for filter in bucket.filters:
+                if 'account' in filter:
+                    assert owner.accounts.filter(id=filter['account']).exists()
+            export['buckets'].append({
+                'id': bucket.id,
+                'name': bucket.name,
+                'type': bucket.type,
+                'filters': bucket._filters,
             })
 
         with open(os.path.join(settings.BASE_DIR, 'local/demo.json'), 'w') as demo_file:
