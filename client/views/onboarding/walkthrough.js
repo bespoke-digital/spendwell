@@ -56,7 +56,7 @@ const STEPS = [
       header: 'We\'re Crunching The Numbers',
       paragraph: `
         We're downloading and processing your financial data. It could take a
-        minute or two. If you don't feel like waiting, don't worry. We'll email
+        few minutes. If you don't feel like waiting, don't worry. We'll email
         you when the process is complete.
       `,
     },

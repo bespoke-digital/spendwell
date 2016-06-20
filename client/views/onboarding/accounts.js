@@ -64,7 +64,7 @@ class OnboardingAccounts extends Component {
             header={<span>Your Bank Has Been <br className='visible-xs'/>Succesfully Connected</span>}
             paragraph={`
               If you have any other accounts, make sure to add them before
-              continuing. You can also disable any unwanted accounts (eg. business).
+              continuing. You can also disable any unwanted accounts.
             `}
             next={
               <Button onClick={() => this.setState({ help: false })} fab><Icon type='done'/></Button>

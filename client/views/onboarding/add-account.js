@@ -41,7 +41,7 @@ class AddAccountView extends Component {
             image={welcomeImage}
             header='Welcome To Spendwell'
             paragraph={`
-              Get started by connecting your bank accounts. It's important that
+              Get started by connecting your accounts. It's important that
               you connect all accounts where money comes in or is spent.
             `}
             next={
