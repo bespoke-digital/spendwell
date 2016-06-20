@@ -34,7 +34,7 @@ class Bucket(SWModel):
     @property
     def filters(self):
         if not hasattr(self, '_high_filters'):
-            self._high_filters = self._filters
+            self._high_filters = deepcopy(self._filters)
             for filter in self._high_filters:
                 for key, value in filter.items():
                     if isinstance(value, str) and value.startswith('decimal:'):
@@ -55,7 +55,6 @@ class Bucket(SWModel):
         # Delete and cached filter value
         if hasattr(self, '_high_filters'):
             delattr(self, '_high_filters')
-            self.filters
 
     @property
     def avatar(self):
