@@ -30,16 +30,16 @@
               </button>
               <ul id="collapse" class="mui-dropdown__menu mui-dropdown__menu--right hidden-sm hidden-md hidden-lg">
                 {% if request.user.is_authenticated %}
-                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'app' %}">Dashboard</a></li>
+                  <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'app' %}">Dashboard</a></li>
                 {% endif %}
-                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:home' %}#security">Security</a></li>
-                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:faq' %}">FAQ</a></li>
-                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'calculators' %}">Calculators</a></li>
-                <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="https://blog.spendwell.co">Blog</a></li>
+                <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:home' %}#security">Security</a></li>
+                <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'landing:faq' %}">FAQ</a></li>
+                <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'calculators' %}">Calculators</a></li>
+                <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="https://blog.spendwell.co">Blog</a></li>
                 {% if request.user.is_authenticated %}
-                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'logout' %}?next=/">Logout</a></li>
+                  <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'logout' %}?next=/">Logout</a></li>
                 {% else %}
-                  <li class="visible-xs-inline mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'login' %}">Login</a></li>
+                  <li class="mobile-nav-conf"><a class="mobile-nav-pad" href="{% url 'login' %}">Login</a></li>
                 {% endif %}
               </ul>
             </div>
