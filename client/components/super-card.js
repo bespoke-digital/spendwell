@@ -1,9 +1,9 @@
 
-import _ from 'lodash';
-import styles from 'sass/components/super-card.scss';
+import _ from 'lodash'
+import styles from 'sass/components/super-card.scss'
 
 
-export default (props)=> {
+export default (props) => {
   const {
     expanded,
     className,
@@ -11,9 +11,9 @@ export default (props)=> {
     children,
     onSummaryClick,
     ...childProps,
-  } = props;
+  } = props
 
-  const canExpand = !_.isUndefined(expanded) && _.any(children);
+  const canExpand = !_.isUndefined(expanded) && _.any(children)
 
   return (
     <div {...childProps} className={`
@@ -26,5 +26,5 @@ export default (props)=> {
       <div className='summary' onClick={onSummaryClick}>{summary}</div>
       {expanded ? children : null}
     </div>
-  );
-};
+  )
+}

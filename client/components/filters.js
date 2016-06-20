@@ -1,12 +1,12 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import Card from 'components/card';
-import Button from 'components/button';
-import Filter from 'components/filter';
+import Card from 'components/card'
+import Button from 'components/button'
+import Filter from 'components/filter'
 
-import style from 'sass/components/filters';
+import style from 'sass/components/filters'
 
 
 class Filters extends Component {
@@ -16,31 +16,31 @@ class Filters extends Component {
     onRemove: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = { selected: null };
+  constructor () {
+    super()
+    this.state = { selected: null }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.filters.length > this.props.filters.length)
-      this.setState({ selected: nextProps.filters.length - 1 });
+      this.setState({ selected: nextProps.filters.length - 1 })
   }
 
-  selectFilter(index) {
-    const { selected } = this.state;
+  selectFilter (index) {
+    const { selected } = this.state
 
-    if (selected === index) index = null;
+    if (selected === index) index = null
 
-    this.setState({ selected: index });
+    this.setState({ selected: index })
   }
 
-  render() {
-    const { filters, viewer, onRemove, onAdd, onChange } = this.props;
-    const { selected } = this.state;
+  render () {
+    const { filters, viewer, onRemove, onAdd, onChange } = this.props
+    const { selected } = this.state
 
     return (
       <div className={style.root}>
-        {filters.map((filter, index)=> (
+        {filters.map((filter, index) => (
           <Filter
             key={index}
             viewer={viewer}
@@ -48,9 +48,9 @@ class Filters extends Component {
             onExpand={this.selectFilter.bind(this, index)}
             onCollapse={this.selectFilter.bind(this, null)}
             expanded={selected === index}
-            onRemove={()=> onRemove(index)}
+            onRemove={() => onRemove(index)}
             canRemove={filters.length === 1}
-            onChange={(filter)=> onChange(index, filter)}
+            onChange={(filter) => onChange(index, filter)}
           />
         ))}
 
@@ -60,18 +60,18 @@ class Filters extends Component {
           </Button>
         </Card>
       </div>
-    );
+    )
   }
 }
 
 Filters = Relay.createContainer(Filters, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${Filter.getFragment('viewer')}
       }
     `,
   },
-});
+})
 
-export default Filters;
+export default Filters

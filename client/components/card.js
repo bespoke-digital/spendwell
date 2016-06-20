@@ -1,14 +1,14 @@
 
-import _ from 'lodash';
-import { Component } from 'react';
+import _ from 'lodash'
+import { Component } from 'react'
 
-import Progress from 'components/progress';
+import Progress from 'components/progress'
 
-import styles from 'sass/components/card.scss';
+import styles from 'sass/components/card.scss'
 
 
 export default class Card extends Component {
-  render() {
+  render () {
     const {
         expanded,
         className,
@@ -17,9 +17,9 @@ export default class Card extends Component {
         children,
         onSummaryClick,
         ...childProps,
-    } = this.props;
+    } = this.props
 
-    const canExpand = !_.isUndefined(expanded);
+    const canExpand = !_.isUndefined(expanded)
 
     return (
       <div {...childProps} className={`
@@ -46,6 +46,6 @@ export default class Card extends Component {
           <Progress className='card-progress' indeterminate/>
         : null}
       </div>
-    );
+    )
   }
 }

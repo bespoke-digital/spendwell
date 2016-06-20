@@ -1,31 +1,31 @@
 
-import 'sass/app';
-import 'chatlio';
-import 'utils/moment-as-utc';
-import 'utils/class-list';
+import 'sass/app'
+import 'chatlio'
+import 'utils/moment-as-utc'
+import 'utils/class-list'
 
-import { render } from 'react-dom';
-import Relay from 'react-relay';
-import { Provider } from 'react-redux';
+import { render } from 'react-dom'
+import Relay from 'react-relay'
+import { Provider } from 'react-redux'
 
-import networkLayer from 'utils/network-layer';
-import routes from 'routes';
-import store from 'store';
-
-
-const userID = document.querySelector('meta[name=user-id]').getAttribute('content');
-const userEmail = document.querySelector('meta[name=user-email]').getAttribute('content');
+import networkLayer from 'utils/network-layer'
+import routes from 'routes'
+import store from 'store'
 
 
-Relay.injectNetworkLayer(networkLayer);
+const userID = document.querySelector('meta[name=user-id]').getAttribute('content')
+const userEmail = document.querySelector('meta[name=user-email]').getAttribute('content')
 
 
-window.onload = ()=> render(
+Relay.injectNetworkLayer(networkLayer)
+
+
+window.onload = () => render(
   <Provider store={store}>{routes}</Provider>,
   document.getElementById('root'),
-  ()=> document.getElementById('loading').remove()
-);
+  () => document.getElementById('loading').remove()
+)
 
 // Sentry
 if (window.Raven)
-  window.Raven.setUserContext({ email: userEmail, id: userID });
+  window.Raven.setUserContext({ email: userEmail, id: userID })

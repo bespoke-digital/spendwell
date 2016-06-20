@@ -3,6 +3,7 @@ import delorean
 import graphene
 from graphene.contrib.django.fields import DjangoConnectionField
 from graphene.utils import with_context
+from graphene.core.types.custom_scalars import DateTime
 
 from apps.core.types import Money, Month
 from apps.goals.schema import GoalMonthNode
@@ -78,6 +79,7 @@ class UsersQuery(graphene.ObjectType):
     email = graphene.Field(graphene.String())
     is_admin = graphene.Field(graphene.Boolean())
     estimated_income = graphene.Field(Money())
+    last_sync = graphene.Field(DateTime())
 
     settings = graphene.Field(Settings)
 
@@ -107,6 +109,10 @@ class UsersQuery(graphene.ObjectType):
     @with_context
     def resolve_estimated_income(self, args, context, info):
         return context.user.estimated_income
+
+    @with_context
+    def resolve_last_sync(self, args, context, info):
+        return context.user.last_sync
 
     @with_context
     def resolve_settings(self, args, context, info):

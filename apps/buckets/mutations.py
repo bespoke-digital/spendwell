@@ -11,7 +11,7 @@ from apps.transactions.filters import TransactionFilter
 
 from .models import Bucket
 from .schema import BucketNode
-from .utils import autodetect_bills
+from .tasks import autodetect_bills
 
 
 BucketEdge = Edge.for_node(BucketNode)
@@ -136,7 +136,7 @@ class AutodetectBillsMutation(graphene.relay.ClientIDMutation):
     @with_context
     def mutate_and_get_payload(Cls, input, context, info):
         from spendwell.schema import Viewer
-        autodetect_bills(context.user)
+        autodetect_bills(context.user.id)
         return Cls(viewer=Viewer())
 
 

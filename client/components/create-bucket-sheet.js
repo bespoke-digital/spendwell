@@ -1,22 +1,22 @@
 
-import Relay from 'react-relay';
-import { Component, PropTypes } from 'react';
+import Relay from 'react-relay'
+import { Component, PropTypes } from 'react'
 
-import BucketForm from 'components/bucket-form';
-import Card from 'components/card';
-import CardList from 'components/card-list';
-import TextActions from 'components/text-actions';
-import BottomSheet from 'components/bottom-sheet';
-import A from 'components/a';
-import Button from 'components/button';
-import Spinner from 'components/spinner';
+import BucketForm from 'components/bucket-form'
+import Card from 'components/card'
+import CardList from 'components/card-list'
+import TextActions from 'components/text-actions'
+import BottomSheet from 'components/bottom-sheet'
+import A from 'components/a'
+import Button from 'components/button'
+import Spinner from 'components/spinner'
 
-import track from 'utils/track';
-import { handleMutationError } from 'utils/network-layer';
-import { CreateBucketMutation } from 'mutations/buckets';
-import { SettingsMutation } from 'mutations/users';
+import track from 'utils/track'
+import { handleMutationError } from 'utils/network-layer'
+import { CreateBucketMutation } from 'mutations/buckets'
+import { SettingsMutation } from 'mutations/users'
 
-import styles from 'sass/components/create-bucket-sheet';
+import styles from 'sass/components/create-bucket-sheet'
 
 
 class CreateBucketSheet extends Component {
@@ -33,59 +33,59 @@ class CreateBucketSheet extends Component {
     loading: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.visible !== this.props.visible)
-      this.props.relay.setVariables({ open: nextProps.visible });
+      this.props.relay.setVariables({ open: nextProps.visible })
   }
 
-  handleSubmit() {
-    const { viewer, type, onRequestClose, onComplete } = this.props;
-    const { loading } = this.state;
-    const bucketForm = this.refs.bucketForm.refs.component;
+  handleSubmit () {
+    const { viewer, type, onRequestClose, onComplete } = this.props
+    const { loading } = this.state
+    const bucketForm = this.refs.bucketForm.refs.component
 
     if (!bucketForm.isValid() || loading)
-      return;
+      return
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
     Relay.Store.commitUpdate(new CreateBucketMutation({ viewer, type, ...bucketForm.getData() }), {
-      onFailure: (response)=> {
-        this.setState({ loading: false });
-        handleMutationError(response);
+      onFailure: (response) => {
+        this.setState({ loading: false })
+        handleMutationError(response)
       },
-      onSuccess: ()=> {
-        console.log('Success: CreateBucketMutation');
+      onSuccess: () => {
+        console.log('Success: CreateBucketMutation')
 
-        this.setState({ loading: false });
-        bucketForm.reset();
+        this.setState({ loading: false })
+        bucketForm.reset()
 
         if (onComplete)
-          onComplete();
+          onComplete()
 
-        onRequestClose();
+        onRequestClose()
 
         track(
           type === 'expense' ? 'create-label' :
           type === 'bill' ? 'create-bill' :
           type === 'account' ? 'create-external-account' :
           'create-bucket'
-        );
+        )
       },
-    });
+    })
   }
 
-  dismissHelp() {
-    const { viewer, type } = this.props;
+  dismissHelp () {
+    const { viewer, type } = this.props
 
     Relay.Store.commitUpdate(new SettingsMutation({
       viewer,
       [type === 'expense' ? 'createLabelHelp' : 'createBillHelp']: false,
-    }), { onFailure: handleMutationError });
+    }), { onFailure: handleMutationError })
   }
 
-  render() {
-    const { viewer, type, onRequestClose, initialFilters, initialName, relay } = this.props;
-    const { open } = relay.variables;
-    const { loading } = this.state;
+  render () {
+    const { viewer, type, onRequestClose, initialFilters, initialName, relay } = this.props
+    const { open } = relay.variables
+    const { loading } = this.state
 
     return (
       <BottomSheet
@@ -130,7 +130,7 @@ class CreateBucketSheet extends Component {
           />
         : null}
       </BottomSheet>
-    );
+    )
   }
 }
 
@@ -140,7 +140,7 @@ CreateBucketSheet = Relay.createContainer(CreateBucketSheet, {
     count: 50,
   },
   fragments: {
-    viewer: (variables)=> Relay.QL`
+    viewer: (variables) => Relay.QL`
       fragment on Viewer {
         ${BucketForm.getFragment('viewer').if(variables.open)}
         ${CreateBucketMutation.getFragment('viewer').if(variables.open)}
@@ -153,6 +153,6 @@ CreateBucketSheet = Relay.createContainer(CreateBucketSheet, {
       }
     `,
   },
-});
+})
 
-export default CreateBucketSheet;
+export default CreateBucketSheet

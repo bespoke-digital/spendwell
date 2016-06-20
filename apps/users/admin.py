@@ -56,7 +56,7 @@ class UserAdmin(AuthUserAdmin):
         'finicity_id',
         'estimated_income',
         'timezone',
-        'dashboard_help',
+        'last_sync',
     )}),)
     add_fieldsets = (
         (None, {

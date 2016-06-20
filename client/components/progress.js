@@ -1,10 +1,10 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import style from 'sass/components/progress';
+import style from 'sass/components/progress'
 
 
-const percent = (v, t)=> parseInt((Math.abs(v) / Math.abs(t)) * 100);
+const percent = (v, t) => parseInt((Math.abs(v) / Math.abs(t)) * 100)
 
 
 export default class Progress extends Component {
@@ -24,17 +24,17 @@ export default class Progress extends Component {
     indeterminate: false,
   };
 
-  render() {
-    const { current, target, marker, className, color, indeterminate } = this.props;
+  render () {
+    const { current, target, marker, className, color, indeterminate } = this.props
 
-    let progress = percent(current, target);
-    const full = progress === 100;
-    const over = progress > 100;
+    let progress = percent(current, target)
+    const full = progress === 100
+    const over = progress > 100
 
     if (over && progress <= 200)
-      progress -= 100;
+      progress -= 100
     else if (over)
-      progress = 100;
+      progress = 100
 
     return (
       <div className={`
@@ -55,6 +55,6 @@ export default class Progress extends Component {
           }}/>
         : null}
       </div>
-    );
+    )
   }
 }

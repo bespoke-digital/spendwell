@@ -21,12 +21,6 @@ FINICITY_URL = 'https://api.finicity.com/aggregation'
 FINICITY_RETRIES = 3
 
 
-if settings.FINICITY_PRODUCTION:
-    VALID_QUERIES = ('cibc', 'bmo', 'president', 'scotia', 'rbc')
-else:
-    VALID_QUERIES = ('finbank',)
-
-
 def mfa_cache_key(user):
     return 'finicity-mfa:{}'.format(user.id)
 
@@ -131,6 +125,9 @@ class Finicity(object):
 
             if data['error']['code'] in ('108', '109'):
                 raise FinicityValidation('finicity-user-action-required')
+
+            if data['error']['code'] in ('331',):
+                raise FinicityValidation('finicity-mfa-expired')
 
             if settings.DEBUG:
                 print('\n\nFINICITY REQUEST')

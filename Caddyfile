@@ -13,3 +13,4 @@ proxy / localhost:3000 {
 
 startup node ./webpack/dev.server.js &
 startup ./manage.py runserver &
+startup celery -A spendwell worker -l info &

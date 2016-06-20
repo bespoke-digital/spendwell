@@ -1,12 +1,10 @@
 
-import json
 import os
+import csv
+import json
 
-from django.core.serializers.json import DjangoJSONEncoder
 from django.core.management.base import BaseCommand
 from django.conf import settings
-
-from dateutil.relativedelta import relativedelta
 import delorean
 
 from apps.users.models import User
@@ -18,13 +16,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         owner = User.objects.get(email='demo@spendwell.co')
 
-        today = delorean.now().truncate('day').datetime
-
         export = {
             'institutions': [],
             'accounts': [],
             'transactions': [],
-            'exported_on': today,
+            'buckets': [],
+            'goals': [],
         }
 
         for institution in owner.institutions.all():
@@ -43,15 +40,43 @@ class Command(BaseCommand):
                 'current_balance': account.current_balance,
             })
 
-        for transaction in owner.transactions.filter(account__disabled=False):
+        for transaction in owner.transactions.all():
             export['transactions'].append({
                 'id': transaction.id,
                 'account': transaction.account.id,
                 'description': transaction.description,
                 'amount': transaction.amount,
-                'date': transaction.date,
-                'from_savings': transaction.from_savings,
+                'date': transaction.date.isoformat(),
             })
 
-        with open(os.path.join(settings.BASE_DIR, 'local/demo.json'), 'w') as demo_file:
-            json.dump(export, demo_file, cls=DjangoJSONEncoder, indent=2)
+        for bucket in owner.buckets.all():
+            export['buckets'].append({
+                'id': bucket.id,
+                'name': bucket.name,
+                'type': bucket.type,
+                'filters': json.dumps(bucket._filters),
+            })
+
+        for goal in owner.goals.all():
+            export['goals'].append({
+                'id': goal.id,
+                'name': goal.name,
+                'monthly_amount': goal.monthly_amount,
+            })
+
+        try:
+            os.makedirs(settings.DEMO_DATA_DIR)
+        except FileExistsError:
+            pass
+
+        with open(os.path.join(settings.DEMO_DATA_DIR, 'export_date'), 'w') as demo_file:
+            demo_file.write(delorean.now().truncate('day').datetime.isoformat())
+
+        for key, values in export.items():
+            if len(values) == 0:
+                continue
+            with open(os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(key)), 'w') as demo_file:
+                writer = csv.DictWriter(demo_file, fieldnames=values[0].keys())
+                writer.writeheader()
+                for row in values:
+                    writer.writerow(row)

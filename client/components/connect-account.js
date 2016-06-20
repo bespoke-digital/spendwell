@@ -9,6 +9,7 @@ import Card from 'components/card';
 import CardList from 'components/card-list';
 import Transition from 'components/transition';
 import FinicityAccountDialog from 'components/finicity-account-dialog';
+import ErrorDialog from 'components/error-dialog';
 
 import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
 import plaidAccountDialog from 'utils/plaid-account-dialog';
@@ -74,18 +75,25 @@ class ConnectAccount extends Component {
         </Card>
 
         <Transition show={!!viewer.institutionTemplate}>
-          <FinicityAccountDialog
-            viewer={viewer}
-            institutionTemplate={viewer.institutionTemplate}
-            onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
-            onConnected={::this.handleConnected}
-          />
+          {!this.state.isError ?
+            <FinicityAccountDialog
+              viewer={viewer}
+              institutionTemplate={viewer.institutionTemplate}
+              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
+              onConnected={::this.handleConnected}
+              onError={() => this.setState({ isError: !this.state.isError })}
+            /> 
+          :
+            <ErrorDialog 
+              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
+              onError={() => this.setState({ isError: !this.state.isError })}
+            />
+          }
         </Transition>
 
         {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node })=>
           <Card
             key={node.id}
-            className='fi'
             className={`fi ${node.image ? 'has-logo' : ''}`}
             onClick={this.handleTemplateClick.bind(this, node)}
             style={{ borderLeftColor: node.color }}
@@ -144,7 +152,7 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
         ${FinicityAccountDialog.getFragment('viewer')}
         ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
 
-        institutionTemplates(query: $query, first: 12) {
+        institutionTemplates(query: $query, first: 10) {
           edges {
             node {
               id

@@ -1,21 +1,21 @@
 
-import { Component } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import { handleMutationError } from 'utils/network-layer';
-import Button from 'components/button';
-import Onboarding from 'components/onboarding';
-import Graphicdialog from 'components/graphic-dialog';
-import Icon from 'components/icon';
+import { handleMutationError } from 'utils/network-layer'
+import Button from 'components/button'
+import Onboarding from 'components/onboarding'
+import Graphicdialog from 'components/graphic-dialog'
+import Icon from 'components/icon'
 
-import { SyncInstitutionsMutation } from 'mutations/institutions';
-import track from 'utils/track';
+import { SyncInstitutionsMutation } from 'mutations/institutions'
+import track from 'utils/track'
 
-import pyfImage from 'img/views/onboarding/pyf.svg';
-import liveImage from 'img/views/onboarding/live.svg';
-import philosophyImage from 'img/views/onboarding/philosophy.svg';
-import crunchingImage from 'img/views/onboarding/crunching.svg';
-import readyImage from 'img/views/onboarding/ready.svg';
+import pyfImage from 'img/views/onboarding/pyf.svg'
+import liveImage from 'img/views/onboarding/live.svg'
+import philosophyImage from 'img/views/onboarding/philosophy.svg'
+import crunchingImage from 'img/views/onboarding/crunching.svg'
+import readyImage from 'img/views/onboarding/ready.svg'
 
 
 const STEPS = [
@@ -56,8 +56,8 @@ const STEPS = [
       header: 'We\'re Crunching The Numbers',
       paragraph: `
         We're downloading and processing your financial data. It could take a
-        minute or two. We’ll be estimating your income and detecting some of
-        your bills in the process.
+        few minutes. If you don't feel like waiting, don't worry. We'll email
+        you when the process is complete.
       `,
     },
     doneSyncing: {
@@ -71,42 +71,56 @@ const STEPS = [
       `,
     },
   },
-];
-
+]
 
 class OnboardingWalkthrough extends Component {
-  constructor() {
-    super();
-    this.state = { syncing: false, stepIndex: 0 };
+  static propTypes = {
+    viewer: PropTypes.object,
+    relay: PropTypes.object,
+  };
+
+  state = {
+    stepIndex: 0,
+    syncing: true,
+  };
+
+  constructor () {
+    super()
+    this.poll = ::this.poll
   }
 
-  componentDidMount() {
-    const { viewer } = this.props;
+  componentDidMount () {
+    const { viewer } = this.props
 
-    track('onboard-walkthrough');
+    track('onboard-walkthrough')
 
-    this.setState({ syncing: true });
     Relay.Store.commitUpdate(new SyncInstitutionsMutation({ viewer }), {
-      onFailure: (response)=> {
-        this.setState({ syncing: false });
-        handleMutationError(response);
-      },
-      onSuccess: ()=> {
-        console.log('Success: SyncInstitutionsMutation');
-        this.setState({ syncing: false });
-        track('onboard-sync');
-      },
-    });
+      onFailure: handleMutationError,
+      onSuccess: () => console.info('Success: SyncInstitutionsMutation'),
+    })
+
+    this.pollTimeout = setInterval(this.poll, 5000)
   }
 
-  render() {
-    const { viewer } = this.props;
-    const { syncing, stepIndex } = this.state;
+  poll () {
+    const { relay } = this.props
+    relay.forceFetch()
+  }
 
-    let step = STEPS[stepIndex];
+  componentWillUnmount () {
+    clearInterval(this.pollTimeout)
+  }
 
-    if (step.syncing)
-      step = step[syncing ? 'syncing' : 'doneSyncing'];
+  render () {
+    const { viewer } = this.props
+    const { stepIndex } = this.state
+    const syncing = !viewer.lastSync
+
+    let step = STEPS[stepIndex]
+
+    if (step.syncing) {
+      step = step[syncing ? 'syncing' : 'doneSyncing']
+    }
 
     return (
       <Onboarding viewer={viewer}>
@@ -117,7 +131,7 @@ class OnboardingWalkthrough extends Component {
           header={step.header}
           paragraph={step.paragraph}
           prev={stepIndex > 0 ?
-            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex - 1 })}>
+            <Button fab onClick={() => this.setState({ stepIndex: stepIndex - 1 })}>
               <Icon type='arrow back'/>
             </Button>
           : null}
@@ -131,25 +145,27 @@ class OnboardingWalkthrough extends Component {
               <Icon type='done'/>
             </Button>
           :
-            <Button fab onClick={()=> this.setState({ stepIndex: stepIndex + 1 })}>
+            <Button fab onClick={() => this.setState({ stepIndex: stepIndex + 1 })}>
               <Icon type='arrow forward'/>
             </Button>
           }
         />
       </Onboarding>
-    );
+    )
   }
 }
 
 OnboardingWalkthrough = Relay.createContainer(OnboardingWalkthrough, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${SyncInstitutionsMutation.getFragment('viewer')}
         ${Onboarding.getFragment('viewer')}
+
+        lastSync
       }
     `,
   },
-});
+})
 
-export default OnboardingWalkthrough;
+export default OnboardingWalkthrough

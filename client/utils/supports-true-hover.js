@@ -1,4 +1,4 @@
-/*eslint-env browser, es6 */
+/*eslint -env browser, es6 */
 /*eslint no-var:2*/
 /* jshint browser: true, esnext: true */
 /* jshint -W080 */
@@ -9,19 +9,19 @@
 
 
 /** @type {boolean|undefined} */
-let canTrulyHover = undefined;
+let canTrulyHover = undefined
 
 /**
 * @private
 * @fires mq4HoverShim#mq4hsChange
 */
-function triggerEvent() {
-  const event = new Event('mq4hsChange', { bubbles: false, trueHover: canTrulyHover });
-  document.dispatchEvent(event);
+function triggerEvent () {
+  const event = new Event('mq4hsChange', { bubbles: false, trueHover: canTrulyHover })
+  document.dispatchEvent(event)
 }
 
 // IIFE so we can use `return`s to avoid deeply-nested if-s
-(function() {
+(function () {
   if (!window.matchMedia) {
     // Opera Mini, IE<=9, Android<=2.3, ancient, or obscure; per http://caniuse.com/#feat=matchmedia
 
@@ -35,31 +35,31 @@ function triggerEvent() {
     // IE Mobile <9 seems to always have "Windows CE", "Windows Phone", or "IEMobile" in its UA string.
     // IE Mobile 9 in desktop view doesn't include "IEMobile" or "Windows Phone" in the UA string,
     // but it instead includes "XBLWP7" and/or "ZuneWP7".
-    canTrulyHover = !/Opera Mini|Android|IEMobile|Windows (Phone|CE)|(XBL|Zune)WP7/.test(navigator.userAgent);
+    canTrulyHover = !/Opera Mini|Android|IEMobile|Windows (Phone|CE)|(XBL|Zune)WP7/.test(navigator.userAgent)
 
     // Since there won't be any event handlers to fire our events, do the one-and-only firing of it here and now.
-    triggerEvent();
-    return;
+    triggerEvent()
+    return
   }
 
   // CSSWG Media Queries Level 4 draft
   //     http://drafts.csswg.org/mediaqueries/#hover
-  const HOVER_NONE = '(hover: none),(-moz-hover: none),(-ms-hover: none),(-webkit-hover: none)';
-  const HOVER_ON_DEMAND = '(hover: on-demand),(-moz-hover: on-demand),(-ms-hover: on-demand),(-webkit-hover: on-demand)';
-  const HOVER_HOVER = '(hover: hover),(-moz-hover: hover),(-ms-hover: hover),(-webkit-hover: hover)';
+  const HOVER_NONE = '(hover: none),(-moz-hover: none),(-ms-hover: none),(-webkit-hover: none)'
+  const HOVER_ON_DEMAND = '(hover: on-demand),(-moz-hover: on-demand),(-ms-hover: on-demand),(-webkit-hover: on-demand)'
+  const HOVER_HOVER = '(hover: hover),(-moz-hover: hover),(-ms-hover: hover),(-webkit-hover: hover)'
   if (window.matchMedia(`${HOVER_NONE},${HOVER_ON_DEMAND},${HOVER_HOVER}`).matches) {
     // Browser understands the `hover` media feature
-    const hoverCallback = function(mql) {
-      const doesMatch = mql.matches;
+    const hoverCallback = function (mql) {
+      const doesMatch = mql.matches
       if (doesMatch !== canTrulyHover) {
-        canTrulyHover = doesMatch;
-        triggerEvent();
+        canTrulyHover = doesMatch
+        triggerEvent()
       }
-    };
-    const atHoverQuery = window.matchMedia(HOVER_HOVER);
-    atHoverQuery.addListener(hoverCallback);
-    hoverCallback(atHoverQuery);
-    return;
+    }
+    const atHoverQuery = window.matchMedia(HOVER_HOVER)
+    atHoverQuery.addListener(hoverCallback)
+    hoverCallback(atHoverQuery)
+    return
   }
 
   // Check for touch support instead.
@@ -75,33 +75,33 @@ function triggerEvent() {
 
     // Browser supports touch if it has touch points
     /* jshint -W018 */
-    canTrulyHover = !((window.navigator.maxTouchPoints || window.navigator.msMaxTouchPoints) > 0);
+    canTrulyHover = !((window.navigator.maxTouchPoints || window.navigator.msMaxTouchPoints) > 0)
     /* jshint +W018 */
-    triggerEvent();
-    return;
+    triggerEvent()
+    return
   }
 
   // Mozilla's -moz-touch-enabled
   //     https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Media_queries#-moz-touch-enabled
-  const touchEnabledQuery = window.matchMedia('(touch-enabled),(-moz-touch-enabled),(-ms-touch-enabled),(-webkit-touch-enabled)');
+  const touchEnabledQuery = window.matchMedia('(touch-enabled),(-moz-touch-enabled),(-ms-touch-enabled),(-webkit-touch-enabled)')
   if (touchEnabledQuery.matches) {
-    canTrulyHover = false;
-    triggerEvent();
-    return;
+    canTrulyHover = false
+    triggerEvent()
+    return
   }
 
   // W3C Touch Events REC, 10 October 2013
   //     http://www.w3.org/TR/2013/REC-touch-events-20131010/
   if ('ontouchstart' in window) {
-    canTrulyHover = false;
-    triggerEvent();
-    return;
+    canTrulyHover = false
+    triggerEvent()
+    return
   }
 
   // UA's pointer is non-touch and thus likely either supports true hovering or at least does not try to emulate it.
-  canTrulyHover = true;
-  triggerEvent();
-})();
+  canTrulyHover = true
+  triggerEvent()
+})()
 
 
 /**
@@ -113,6 +113,6 @@ function triggerEvent() {
 * @returns {boolean}
 * @since 0.0.1
 */
-export default function supportsTrueHover() {
-  return canTrulyHover;
+export default function supportsTrueHover () {
+  return canTrulyHover
 }

@@ -1,6 +1,6 @@
 
-export default function track(name, props) {
+export default function track (name, props) {
   if (window.mixpanel)
-    window.mixpanel.track(name, props);
-  console.info('track', name, props);
+    window.mixpanel.track(name, props)
+  console.info('track', name, props)
 }

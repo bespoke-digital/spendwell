@@ -1,38 +1,40 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
-import moment from 'moment';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
+import moment from 'moment'
 
-import CardList from 'components/card-list';
-import Button from 'components/button';
-import TransactionList from 'components/transaction-list';
-import ScrollTrigger from 'components/scroll-trigger';
-import App from 'components/app';
-import MonthSelector from 'components/month-selector';
+import CardList from 'components/card-list'
+import Button from 'components/button'
+import TransactionList from 'components/transaction-list'
+import ScrollTrigger from 'components/scroll-trigger'
+import App from 'components/app'
+import MonthSelector from 'components/month-selector'
 
-import styles from 'sass/views/dashboard.scss';
+import styles from 'sass/views/dashboard.scss'
 
 
 class Dashboard extends Component {
   static propTypes = {
+    relay: PropTypes.object,
+    viewer: PropTypes.object,
     params: PropTypes.object.isRequired,
   };
 
-  loadTransactions() {
-    const { relay } = this.props;
-    const { transactionCount } = relay.variables;
+  loadTransactions () {
+    const { relay } = this.props
+    const { transactionCount } = relay.variables
 
-    relay.setVariables({ transactionCount: transactionCount + 20 });
+    relay.setVariables({ transactionCount: transactionCount + 20 })
   }
 
   // Loads mutated variables immediately.
-  loadNewTransactions(arg) {
-    this.props.relay.setVariables(arg);
-    this.props.relay.forceFetch();
+  loadNewTransactions (arg) {
+    this.props.relay.setVariables(arg)
+    this.props.relay.forceFetch()
   }
 
-  render() {
-    const { viewer, relay } = this.props;
+  render () {
+    const { viewer, relay } = this.props
 
     return (
       <App
@@ -46,7 +48,7 @@ class Dashboard extends Component {
             <MonthSelector
               month={relay.variables.month}
               first={moment(viewer.firstMonth, 'YYYY/MM')}
-              onChange={(m)=> this.loadNewTransactions({ month: m })}
+              onChange={(m) => this.loadNewTransactions({ month: m })}
             />
           </CardList>
 
@@ -65,7 +67,7 @@ class Dashboard extends Component {
           </CardList>
         </ScrollTrigger>
       </App>
-    );
+    )
   }
 }
 
@@ -74,14 +76,14 @@ Dashboard = Relay.createContainer(Dashboard, {
     month: moment().startOf('month'),
     transactionCount: 20,
   },
-  prepareVariables: (variables)=> {
+  prepareVariables: (variables) => {
     return {
       ...variables,
       date: variables.month.format('YYYY/MM'),
-    };
+    }
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
         ${TransactionList.getFragment('viewer')}
@@ -100,6 +102,6 @@ Dashboard = Relay.createContainer(Dashboard, {
       }
     `,
   },
-});
+})
 
-export default Dashboard;
+export default Dashboard

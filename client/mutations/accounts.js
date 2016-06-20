@@ -1,102 +1,102 @@
 
-import Relay from 'react-relay';
+import Relay from 'react-relay'
 
 
 export class DisableAccountMutation extends Relay.Mutation {
   static fragments = {
-    account: ()=> Relay.QL`
+    account: () => Relay.QL`
       fragment on AccountNode {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { disableAccount }`;
+  getMutation () {
+    return Relay.QL`mutation { disableAccount }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       accountId: this.props.account.id,
       detectTransfers: this.props.detectTransfers,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on DisableAccountMutationPayload {
         account {
           disabled
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         account: this.props.account.id,
       },
-    }];
+    }]
   }
 
-  getOptimisticResponse() {
+  getOptimisticResponse () {
     return {
       account: {
         id: this.props.account.id,
         disabled: true,
       },
-    };
+    }
   }
 }
 
 
 export class EnableAccountMutation extends Relay.Mutation {
   static fragments = {
-    account: ()=> Relay.QL`
+    account: () => Relay.QL`
       fragment on AccountNode {
         id
       }
     `,
   };
 
-  getMutation() {
-    return Relay.QL`mutation { enableAccount }`;
+  getMutation () {
+    return Relay.QL`mutation { enableAccount }`
   }
 
-  getVariables() {
+  getVariables () {
     return {
       accountId: this.props.account.id,
       sync: this.props.sync,
-    };
+    }
   }
 
-  getFatQuery() {
+  getFatQuery () {
     return Relay.QL`
       fragment on EnableAccountMutationPayload {
         account {
           disabled
         }
       }
-    `;
+    `
   }
 
-  getConfigs() {
+  getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         account: this.props.account.id,
       },
-    }];
+    }]
   }
 
-  getOptimisticResponse() {
+  getOptimisticResponse () {
     return {
       account: {
         id: this.props.account.id,
         disabled: false,
       },
-    };
+    }
   }
 }

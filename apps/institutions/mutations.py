@@ -6,10 +6,9 @@ from django.conf import settings
 
 from plaid import Client
 
-from apps.buckets.utils import autodetect_bills
-
 from .models import Institution
 from .schema import InstitutionNode
+from .utils import sync_user
 
 
 InstitutionEdge = Edge.for_node(InstitutionNode)
@@ -66,14 +65,11 @@ class SyncInstitutionsMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
-        context.user.sync()
-
-        if input.get('estimate_income', True):
-            context.user.estimate_income()
-            context.user.save()
-
-        if input.get('autodetect_bills', True):
-            autodetect_bills(context.user)
+        sync_user(
+            context.user,
+            estimate_income=input.get('estimate_income', True),
+            autodetect_bills=input.get('autodetect_bills', True),
+        )
 
         return SyncInstitutionsMutation(viewer=Viewer())
 

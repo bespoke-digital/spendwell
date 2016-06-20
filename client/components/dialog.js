@@ -1,10 +1,10 @@
 
-import { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react'
 
-import Card from 'components/card';
-import SubtreeContainer from 'components/subtree-container';
+import Card from 'components/card'
+import SubtreeContainer from 'components/subtree-container'
 
-import style from 'sass/components/dialog';
+import style from 'sass/components/dialog'
 
 
 export default class Dialog extends Component {
@@ -18,17 +18,17 @@ export default class Dialog extends Component {
     visible: false,
     size: 'md',
     className: '',
-    onRequestClose() {},
+    onRequestClose () {},
   };
 
-  render() {
-    const { size, onRequestClose, className, children } = this.props;
+  render () {
+    const { size, onRequestClose, className, children } = this.props
 
     return (
       <SubtreeContainer>
         <Card className={`${style.root} ${size ? size : ''} ${className}`}>{children}</Card>
         <div className='overlay' onClick={onRequestClose}/>
       </SubtreeContainer>
-    );
+    )
   }
 }

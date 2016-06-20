@@ -11,6 +11,7 @@ from apps.accounts.factories import AccountFactory
 
 from .factories import BucketFactory
 from .models import Bucket
+from .tasks import autodetect_bills
 
 
 class BucktsTestCase(SWTestCase):
@@ -173,3 +174,144 @@ class BucktsTestCase(SWTestCase):
 
         self.assertEqual(bucket.filters[0]['amount_gt'], fetched_bucket.filters[0]['amount_gt'])
         self.assertTrue(isinstance(fetched_bucket.filters[0]['amount_gt'], Decimal))
+
+
+class AutodetectBillsAlgorithmTestCase(SWTestCase):
+    '''
+    Tests which use the autodetect_bills() function from tasks, and checks
+    to see if they work as they should with the correct transactions in the
+    generated 'bill'-type bucket. All transactions that should be for bills
+    are in the bill_transactions array.
+    '''
+
+    def test_bills_current_month(self):
+        owner = UserFactory.create()
+        account = AccountFactory.create(owner=owner)
+        bill_transactions = []
+
+        bill_transactions.append(
+            TransactionFactory.create(
+                owner=owner,
+                account=account,
+                description='bill',
+                amount=-29,
+                date=this_month(),
+            )
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-333,
+            date=this_month(),
+        )
+
+        bill_transactions.append(
+            TransactionFactory.create(
+                owner=owner,
+                account=account,
+                description='bill',
+                amount=-28,
+                date=this_month() - relativedelta(months=1),
+            )
+        )
+
+        bill_transactions.append(
+            TransactionFactory.create(
+                owner=owner,
+                account=account,
+                description='bill',
+                amount=-30,
+                date=this_month() - relativedelta(months=2),
+            )
+        )
+
+        bill_transactions.append(
+            TransactionFactory.create(
+                owner=owner,
+                account=account,
+                description='bill',
+                amount=-26,
+                date=this_month() - relativedelta(months=3),
+            )
+        )
+
+        autodetect_bills(owner.id)
+        bills_bucket_transactions = Bucket.objects.filter(type='bill').first().raw_transactions()
+
+        for bill_transaction in bill_transactions:
+            self.assertTrue(bill_transaction in bills_bucket_transactions)
+
+        self.assertEqual(len(bill_transactions), len(bills_bucket_transactions))
+
+    def test_bills_issue_139(self):
+        owner = UserFactory.create()
+        account = AccountFactory.create(owner=owner)
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-46.71,
+            date=this_month(),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-32.41,
+            date=this_month(),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-46.71,
+            date=this_month() - relativedelta(months=1),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-32.41,
+            date=this_month() - relativedelta(months=1),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-46.71,
+            date=this_month() - relativedelta(months=2),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-32.41,
+            date=this_month() - relativedelta(months=2),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-46.71,
+            date=this_month() - relativedelta(months=3),
+        )
+
+        TransactionFactory.create(
+            owner=owner,
+            account=account,
+            description='not-bill',
+            amount=-32.41,
+            date=this_month() - relativedelta(months=3),
+        )
+
+        autodetect_bills(owner.id)
+        self.assertEqual(len(Bucket.objects.all()), 0)

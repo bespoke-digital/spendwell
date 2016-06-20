@@ -14,6 +14,8 @@
 {% block body %}
  {{ block.super }}
   <script>
-    window.mixpanel.track('Landing: Debt Loaded');
+    if (window.mixpanel) {
+      window.mixpanel.track('Landing: Debt Loaded');
+    }
   </script>
 {% endblock %}

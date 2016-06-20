@@ -1,7 +1,7 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import { findDOMNode } from 'react-dom'
 
 
 export default class ScrollTrigger extends Component {
@@ -14,28 +14,28 @@ export default class ScrollTrigger extends Component {
     fromBottom: 2000,
   };
 
-  constructor() {
-    super();
-    this.handleScroll = _.debounce(::this.handleScroll, 100);
+  constructor () {
+    super()
+    this.handleScroll = _.debounce(::this.handleScroll, 100)
   }
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll);
+  componentDidMount () {
+    window.addEventListener('scroll', this.handleScroll)
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 
-  handleScroll() {
-    const { onTrigger, fromBottom } = this.props;
-    const { bottom } = findDOMNode(this).getBoundingClientRect();
+  handleScroll () {
+    const { onTrigger, fromBottom } = this.props
+    const { bottom } = findDOMNode(this).getBoundingClientRect()
 
-    if (bottom < fromBottom) onTrigger();
+    if (bottom < fromBottom) onTrigger()
   }
 
-  render() {
-    const { onTrigger, fromBottom, ...props } = this.props;
-    return <div {...props}/>;
+  render () {
+    const { onTrigger, fromBottom, ...props } = this.props
+    return <div {...props}/>
   }
 }

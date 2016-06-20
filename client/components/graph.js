@@ -1,12 +1,12 @@
 
-import { Component, PropTypes } from 'react';
-import _ from 'lodash';
-import 'sass/app';
+import { Component, PropTypes } from 'react'
+import _ from 'lodash'
+import 'sass/app'
 
-import Money from 'components/money';
-import style from 'sass/components/graph';
+import Money from 'components/money'
+import style from 'sass/components/graph'
 
-function computeSchedule(
+function computeSchedule (
   principle,
   rate,
   numberOfPayments,
@@ -15,59 +15,59 @@ function computeSchedule(
   ) {
 
   if (_.isUndefined(paymentsPerYear)) {
-    paymentsPerYear = 12;
+    paymentsPerYear = 12
   }
-  let totalSchedule = '';
-  let remaining = principle;
-  let totalInterest = 0;
-  let principleSchedule = '';
-  let actualTotal = 0;
+  let totalSchedule = ''
+  let remaining = principle
+  let totalInterest = 0
+  let principleSchedule = ''
+  let actualTotal = 0
 
-  const schedules = {};
-  const totalAmount = numberOfPayments * payment;
-  const yAxisRatio = 100 / totalAmount;
-  const xAxisRatio = 100 / numberOfPayments;
+  const schedules = {}
+  const totalAmount = numberOfPayments * payment
+  const yAxisRatio = 100 / totalAmount
+  const xAxisRatio = 100 / numberOfPayments
 
   for (let i = 0; i < numberOfPayments; i++) {
-    const interest = remaining * (rate / 100 / paymentsPerYear);
-    const subFromTotal = payment;
-    const subFromPrinciple = payment - interest;
-    actualTotal += (remaining > payment ? payment : remaining + interest);
-    remaining -= (payment - interest < remaining ? payment - interest : remaining);
-    totalInterest += interest;
-    totalSchedule = `${totalSchedule}l${xAxisRatio} ${subFromTotal * yAxisRatio} `;
-    principleSchedule = `${principleSchedule}l${xAxisRatio} ${subFromPrinciple * yAxisRatio} `;
+    const interest = remaining * (rate / 100 / paymentsPerYear)
+    const subFromTotal = payment
+    const subFromPrinciple = payment - interest
+    actualTotal += (remaining > payment ? payment : remaining + interest)
+    remaining -= (payment - interest < remaining ? payment - interest : remaining)
+    totalInterest += interest
+    totalSchedule = `${totalSchedule}l${xAxisRatio} ${subFromTotal * yAxisRatio} `
+    principleSchedule = `${principleSchedule}l${xAxisRatio} ${subFromPrinciple * yAxisRatio} `
   }
 
-  schedules.totalSchedule = `M0 0 ${totalSchedule} L0 ${totalAmount * yAxisRatio}`;
+  schedules.totalSchedule = `M0 0 ${totalSchedule} L0 ${totalAmount * yAxisRatio}`
   schedules.principleSchedule = `M0 ${(totalAmount - principle) * yAxisRatio}${principleSchedule} 
-    L0 ${totalAmount * yAxisRatio}`;
+    L0 ${totalAmount * yAxisRatio}`
 
-  schedules.debtTotal = Math.round(actualTotal * 100) / 100;
-  schedules.interestTotal = totalInterest;
-  return schedules;
+  schedules.debtTotal = Math.round(actualTotal * 100) / 100
+  schedules.interestTotal = totalInterest
+  return schedules
 }
 
 
-function paymentsGivenTime(principle, rate, numberOfPayments) {
-  const monthlyRate = rate / 1200;
-  const pvif = Math.pow(1 + monthlyRate, numberOfPayments);
-  let payment = monthlyRate / (pvif - 1) * (principle * pvif);
-  payment = payment < (principle * monthlyRate + 0.01) ? null : payment;
-  return payment;
+function paymentsGivenTime (principle, rate, numberOfPayments) {
+  const monthlyRate = rate / 1200
+  const pvif = Math.pow(1 + monthlyRate, numberOfPayments)
+  let payment = monthlyRate / (pvif - 1) * (principle * pvif)
+  payment = payment < (principle * monthlyRate + 0.01) ? null : payment
+  return payment
 }
 
-function timeGivenPayment(principle, rate, payment) {
-  const monthlyRate = rate / 1200;
+function timeGivenPayment (principle, rate, payment) {
+  const monthlyRate = rate / 1200
   const numberOfPayments = (Math.log(payment / (payment - (principle * monthlyRate)))) /
-    Math.log(1 + monthlyRate);
-  return numberOfPayments;
+    Math.log(1 + monthlyRate)
+  return numberOfPayments
 }
 
-function solvable(principle, payment, rate, numberOfPayments) {
+function solvable (principle, payment, rate, numberOfPayments) {
   // ensure loan can be paid off.
-  const tempPayment = paymentsGivenTime(principle, rate, numberOfPayments);
-  const tempNumberOfPayments = timeGivenPayment(principle, rate, payment);
+  const tempPayment = paymentsGivenTime(principle, rate, numberOfPayments)
+  const tempNumberOfPayments = timeGivenPayment(principle, rate, payment)
   const resultOfComplexIfStatment =
     _.isFinite(principle) &&
     _.isFinite(rate) &&
@@ -75,19 +75,19 @@ function solvable(principle, payment, rate, numberOfPayments) {
       (_.isFinite(tempPayment) &&
       _.round(tempPayment, 2) > 0) ||
       _.isFinite(tempNumberOfPayments)
-    );
-  return !resultOfComplexIfStatment;
+    )
+  return !resultOfComplexIfStatment
 }
 
-function sufficientInput(principle, payment, rate, numberOfPayments) {
-  //make sure enough fields are populated .
+function sufficientInput (principle, payment, rate, numberOfPayments) {
+  // make sure enough fields are populated .
   const resultOfComplexIfStatment =
     _.isFinite(principle) &&
     _.isFinite(rate) &&
     (
       (payment > 0 || numberOfPayments > 0)
-    );
-  return resultOfComplexIfStatment;
+    )
+  return resultOfComplexIfStatment
 }
 
 const monthNames = [
@@ -95,7 +95,7 @@ const monthNames = [
   'Apr', 'May', 'Jun', 'Jul',
   'Aug', 'Sep', 'Oct',
   'Nov', 'Dec',
-];
+]
 
 export default class CreateGraph extends Component {
   static propTypes = {
@@ -105,62 +105,62 @@ export default class CreateGraph extends Component {
     numberOfPayments: PropTypes.number,
   };
 
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       animateIn: null,
       emptyState: true,
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const{ principle, payment, rate, numberOfPayments } = nextProps;
-    this.setState({ animateIn: false });
-    if (sufficientInput(principle, payment, rate, numberOfPayments)) {
-      clearTimeout(this.timeout);
-      this.setState({ emptyState: false });
-      this.timeout = setTimeout(()=> this.setState({ animateIn: true }), 10);
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    const { animateIn } = this.state;
-    const{ principle, payment, rate, numberOfPayments } = nextProps;
-    return (sufficientInput(principle, payment, rate, numberOfPayments) && 
-      ((!_.isEqual(nextProps, this.props)) || !animateIn));
+  componentWillReceiveProps (nextProps) {
+    const { principle, payment, rate, numberOfPayments } = nextProps
+    this.setState({ animateIn: false })
+    if (sufficientInput(principle, payment, rate, numberOfPayments)) {
+      clearTimeout(this.timeout)
+      this.setState({ emptyState: false })
+      this.timeout = setTimeout(() => this.setState({ animateIn: true }), 10)
+    }
+  }
+
+  shouldComponentUpdate (nextProps) {
+    const { animateIn } = this.state
+    const { principle, payment, rate, numberOfPayments } = nextProps
+    return (sufficientInput(principle, payment, rate, numberOfPayments) &&
+      ((!_.isEqual(nextProps, this.props)) || !animateIn))
 
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
+  componentWillUnmount () {
+    clearTimeout(this.timeout)
   }
 
-  render() {
-    const { principle, rate, numberOfPayments, payment } = this.props;
-    const { animateIn, emptyState } = this.state;
+  render () {
+    const { principle, rate, numberOfPayments, payment } = this.props
+    const { animateIn, emptyState } = this.state
     const calcNumber = (_.isFinite(numberOfPayments) && numberOfPayments !== 0)
       ? numberOfPayments
-      : timeGivenPayment(principle, rate, payment);
+      : timeGivenPayment(principle, rate, payment)
     const calcPayment = (_.isFinite(payment) && payment !== 0)
       ? payment
-      : paymentsGivenTime(principle, rate, numberOfPayments);
-    const schedule = computeSchedule(principle, rate, calcNumber, calcPayment, 12);
-    const { debtTotal, totalSchedule, principleSchedule } = schedule;
-    const principleTop = (1 - principle / debtTotal) * 100;
-    const principleRatio = principle / debtTotal;
+      : paymentsGivenTime(principle, rate, numberOfPayments)
+    const schedule = computeSchedule(principle, rate, calcNumber, calcPayment, 12)
+    const { debtTotal, totalSchedule, principleSchedule } = schedule
+    const principleTop = (1 - principle / debtTotal) * 100
+    const principleRatio = principle / debtTotal
     const principleAdjustment = principleRatio > 0.92 ?
       7.5 : principleRatio < 0.15 ?
-      -15 : 0;
-    const tempDate = new Date();
-    const startDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
-    tempDate.setMonth(tempDate.getMonth() + calcNumber);
-    const endDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear();
-    const interest = debtTotal - principle;
-    const mobileAdj = window.matchMedia('(max-width: 768px)').matches ? 0.818 : 1;
-    const principlePosition = { top: (principleAdjustment + principleTop) * mobileAdj + '%' };
-    const ableToPayOff = solvable(principle, payment, rate, numberOfPayments);
-    const totalPosition = { top: '0' };
-    return(
+      -15 : 0
+    const tempDate = new Date()
+    const startDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear()
+    tempDate.setMonth(tempDate.getMonth() + calcNumber)
+    const endDate = monthNames[tempDate.getMonth()] + ' ' + tempDate.getFullYear()
+    const interest = debtTotal - principle
+    const mobileAdj = window.matchMedia('(max-width: 768px)').matches ? 0.818 : 1
+    const principlePosition = { top: (principleAdjustment + principleTop) * mobileAdj + '%' }
+    const ableToPayOff = solvable(principle, payment, rate, numberOfPayments)
+    const totalPosition = { top: '0' }
+    return (
       <div className = {style.root}>
         {emptyState ?
           <div className='graph-card empty-state'>
@@ -168,7 +168,7 @@ export default class CreateGraph extends Component {
             <div className='empty-text'>
               Fill out the form to see a beautiful chart.
               <div className='text-small'>
-                Once you have entered in your debt repayment info, this area will 
+                Once you have entered in your debt repayment info, this area will
       become a chart with your debt broken down in detail.
               </div>
             </div>
@@ -209,13 +209,13 @@ export default class CreateGraph extends Component {
                   viewBox='0 0 100 100'
                   preserveAspectRatio='none slice'
                 >
-                  <path 
-                    className='total-schedule' 
-                    d={emptyState ? '' : totalSchedule} 
+                  <path
+                    className='total-schedule'
+                    d={emptyState ? '' : totalSchedule}
                     height= '500'
                   />
-                  <path 
-                    className='principle-schedule' 
+                  <path
+                    className='principle-schedule'
                     d={emptyState ? '' : principleSchedule}
                   />
                   <line
@@ -247,6 +247,6 @@ export default class CreateGraph extends Component {
           </div>
         }
       </div>
-    );
+    )
   }
 }

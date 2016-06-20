@@ -1,11 +1,11 @@
 
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import SuperCard from 'components/super-card';
-import Card from 'components/card';
-import Money from 'components/money';
-import TransactionList from 'components/transaction-list';
+import SuperCard from 'components/super-card'
+import Card from 'components/card'
+import Money from 'components/money'
+import TransactionList from 'components/transaction-list'
 
 
 class SpentFromSavings extends Component {
@@ -19,11 +19,11 @@ class SpentFromSavings extends Component {
     selected: false,
   };
 
-  render() {
-    const { viewer, summary, onClick, selected } = this.props;
+  render () {
+    const { viewer, summary, onClick, selected } = this.props
 
     if (summary.spentFromSavings === 0)
-      return <span/>;
+      return <span/>
 
     return (
       <SuperCard expanded={selected} summary={
@@ -38,18 +38,18 @@ class SpentFromSavings extends Component {
       }>
         <TransactionList viewer={viewer} transactions={summary.transactions}/>
       </SuperCard>
-    );
+    )
   }
 }
 
 SpentFromSavings = Relay.createContainer(SpentFromSavings, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${TransactionList.getFragment('viewer')}
       }
     `,
-    summary: ()=> Relay.QL`
+    summary: () => Relay.QL`
       fragment on Summary {
         spentFromSavings
         transactions(first: 1000, fromSavings: true) {
@@ -58,6 +58,6 @@ SpentFromSavings = Relay.createContainer(SpentFromSavings, {
       }
     `,
   },
-});
+})
 
-export default SpentFromSavings;
+export default SpentFromSavings

@@ -5,9 +5,12 @@ from django.conf import settings
 from html2text import html2text
 
 
-def send_email(subject, to, template, context, from_email=settings.DEFAULT_FROM_EMAIL):
+def send_email(subject, to, template, context=None, from_email=settings.DEFAULT_FROM_EMAIL):
     if isinstance(to, str):
         to = [to]
+
+    if context is None:
+        context = {}
 
     context['subject'] = subject
     context['SITE_DOMAIN'] = settings.SITE_DOMAIN

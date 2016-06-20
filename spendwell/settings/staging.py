@@ -1,7 +1,7 @@
 
 import raven
 
-from .base import *
+from .base import *  # NOQA
 from .secrets import (
     db_password,
     plaid_secret,
@@ -26,8 +26,12 @@ DATABASES['default'] = {
 
 INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
-MIDDLEWARE_CLASSES.append('raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware')
+MIDDLEWARE_CLASSES.append(
+    'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+)
 
+
+CACHES['default']['LOCATION'] = 'redis://172.16.87.156:6379/1'
 
 LOGGING['handlers']['sentry'] = {
     'level': 'ERROR',
@@ -44,6 +48,8 @@ RAVEN_CONFIG = {
     'dsn': raven_dsn,
     'release': raven.fetch_git_sha(BASE_DIR),
 }
+
+BROKER_URL = 'redis://172.16.87.156:6379/0'
 
 PLAID_PRODUCTION = True
 PLAID_SECRET = plaid_secret

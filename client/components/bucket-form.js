@@ -1,31 +1,31 @@
 
-import _ from 'lodash';
-import Relay from 'react-relay';
-import { Component, PropTypes } from 'react';
+import _ from 'lodash'
+import Relay from 'react-relay'
+import { Component, PropTypes } from 'react'
 
-import Card from 'components/card';
-import CardList from 'components/card-list';
-import TextInput from 'components/text-input';
-import Filters from 'components/filters';
-import TransactionList from 'components/transaction-list';
-import ListHeading from 'components/list-heading';
+import Card from 'components/card'
+import CardList from 'components/card-list'
+import TextInput from 'components/text-input'
+import Filters from 'components/filters'
+import TransactionList from 'components/transaction-list'
+import ListHeading from 'components/list-heading'
 
-import style from 'sass/components/bucket-form';
+import style from 'sass/components/bucket-form'
 
 
-function cleanFilter(filter) {
-  return _.pick(filter, (v, k)=> !(_.isNull(v) || k === '__dataID__' || v === ''));
+function cleanFilter (filter) {
+  return _.pick(filter, (v, k) => !(_.isNull(v) || k === '__dataID__' || v === ''))
 }
 
-function cleanFilters(filters) {
-  return filters.map(cleanFilter).filter((filter)=> _.some(_.values(filter)));
+function cleanFilters (filters) {
+  return filters.map(cleanFilter).filter((filter) => _.some(_.values(filter)))
 }
 
-function getInitialState({ bucket, initialFilters, initialName }) {
+function getInitialState ({ bucket, initialFilters, initialName }) {
   return {
     filters: bucket ? cleanFilters(bucket.filters) : (initialFilters || []),
     name: bucket ? bucket.name : (initialName || ''),
-  };
+  }
 }
 
 class BucketForm extends Component {
@@ -39,71 +39,71 @@ class BucketForm extends Component {
     type: 'expense',
   };
 
-  constructor(props) {
-    super();
-    this.state = getInitialState(props);
+  constructor (props) {
+    super()
+    this.state = getInitialState(props)
   }
 
-  componentWillMount() {
-    const { filters } = this.state;
+  componentWillMount () {
+    const { filters } = this.state
     this.props.relay.setVariables({
       isTransfer: this.props.bucket && this.props.bucket.type === 'account',
       filters: cleanFilters(filters),
-    });
+    })
   }
 
-  getData() {
-    const { filters, name } = this.state;
-    return { name, filters: cleanFilters(filters) };
+  getData () {
+    const { filters, name } = this.state
+    return { name, filters: cleanFilters(filters) }
   }
 
-  reset() {
-    this.setState(getInitialState(this.props));
+  reset () {
+    this.setState(getInitialState(this.props))
   }
 
-  isValid() {
-    const { filters, name } = this.state;
-    return filters.length > 0 & name.length > 0;
+  isValid () {
+    const { filters, name } = this.state
+    return filters.length > 0 & name.length > 0
   }
 
-  handleAddFilter() {
-    const filters = _.clone(this.state.filters);
+  handleAddFilter () {
+    const filters = _.clone(this.state.filters)
 
-    filters.push({ descriptionContains: '' });
+    filters.push({ descriptionContains: '' })
 
-    this.setState({ filters });
+    this.setState({ filters })
   }
 
-  handleRemoveFilter(index) {
-    const filters = _.clone(this.state.filters);
+  handleRemoveFilter (index) {
+    const filters = _.clone(this.state.filters)
 
-    filters.splice(index, 1);
+    filters.splice(index, 1)
 
-    this.setState({ filters });
-    this.props.relay.setVariables({ filters: cleanFilters(filters) });
+    this.setState({ filters })
+    this.props.relay.setVariables({ filters: cleanFilters(filters) })
   }
 
-  handleChangeFilter(index, filter) {
-    const filters = _.clone(this.state.filters);
+  handleChangeFilter (index, filter) {
+    const filters = _.clone(this.state.filters)
 
-    filters[index] = filter;
+    filters[index] = filter
 
-    this.setState({ filters });
-    this.props.relay.setVariables({ filters: cleanFilters(filters) });
+    this.setState({ filters })
+    this.props.relay.setVariables({ filters: cleanFilters(filters) })
   }
 
-  handleChangeName(name) {
-    this.setState({ name });
+  handleChangeName (name) {
+    this.setState({ name })
   }
 
-  handleLoad() {
-    const { count } = this.props.relay.variables;
-    this.props.relay.setVariables({ count: count + 50 });
+  handleLoad () {
+    const { count } = this.props.relay.variables
+    this.props.relay.setVariables({ count: count + 50 })
   }
 
-  render() {
-    const { viewer } = this.props;
-    const { name, filters } = this.state;
+  render () {
+    const { viewer } = this.props
+    const { name, filters } = this.state
 
     return (
       <div className={style.root}>
@@ -138,7 +138,7 @@ class BucketForm extends Component {
           : null}
         </CardList>
       </div>
-    );
+    )
   }
 }
 
@@ -149,14 +149,14 @@ BucketForm = Relay.createContainer(BucketForm, {
     count: 50,
     isTransfer: false,
   },
-  prepareVariables(variables) {
+  prepareVariables (variables) {
     return {
       ...variables,
       includeTransactions: variables.filters.length > 0,
-    };
+    }
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${Filters.getFragment('viewer')}
         ${TransactionList.getFragment('viewer')}
@@ -166,7 +166,7 @@ BucketForm = Relay.createContainer(BucketForm, {
         }
       }
     `,
-    bucket: ()=> Relay.QL`
+    bucket: () => Relay.QL`
       fragment on BucketNode {
         name
         type
@@ -184,6 +184,6 @@ BucketForm = Relay.createContainer(BucketForm, {
       }
     `,
   },
-});
+})
 
-export default BucketForm;
+export default BucketForm
