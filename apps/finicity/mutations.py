@@ -58,6 +58,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
                 institution.save()
 
         except FinicityError as e:
+            institution.delete()
+
             if use_raven:
                 raven.captureException()
             raise e
