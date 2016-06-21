@@ -32,6 +32,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         from spendwell.schema import Viewer
 
+        institution = None
+
         try:
             client = Finicity(context.user)
 
@@ -58,7 +60,8 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
                 institution.save()
 
         except FinicityError as e:
-            institution.delete()
+            if institution is not None:
+                institution.delete()
 
             if use_raven:
                 raven.captureException()
