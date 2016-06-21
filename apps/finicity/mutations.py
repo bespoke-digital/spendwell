@@ -8,7 +8,7 @@ from django.utils import timezone
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 
-from .client import Finicity, FinicityError
+from .client import Finicity, FinicityError, FinicityMFAException, FinicityValidation
 
 try:
     from raven.contrib.django.raven_compat.models import client as raven
@@ -63,7 +63,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
             if institution is not None:
                 institution.delete()
 
-            if use_raven:
+            if not isinstance(e, (FinicityMFAException, FinicityValidation)) and use_raven:
                 raven.captureException()
             raise e
 
