@@ -21,6 +21,12 @@ config.entry.calculators = [
   'webpack/hot/dev-server',
 ];
 
+config.entry.blog = [
+  config.entry.blog,
+  'webpack-dev-server/client?https://dev.spendwell.co/',
+  'webpack/hot/dev-server',
+];
+
 config.entry.pages = [
   config.entry.pages,
   'webpack-dev-server/client?https://dev.spendwell.co/',

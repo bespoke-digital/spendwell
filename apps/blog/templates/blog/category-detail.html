@@ -1,0 +1,46 @@
+{% extends "blog/base.html" %}
+
+{% load django_markdown %}
+{% load paginator %}
+{% load staticfiles %}
+
+{% block body_class %}{{ block.super }} category-detail {% endblock %}
+
+{% block title %}{{ category.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="color-bar" style="background-color:{{category.primary_color}}">
+    <h1>{{category.name |title }}<h1>
+  </div>
+
+  {% for entry in entries %}
+    <div class= "box-container">
+      <div class="headline">
+        <a href="{{ entry.get_absolute_url }}">
+          <img class="hero-art" src="{{ entry.hero_art.resized_urls.750x500 }}">
+        </a>
+        <div class="title-card">
+          <h1 class="title">
+            <a
+              href="{{ entry.get_absolute_url }}"
+            >
+              {{ entry.title }}
+            </a>
+          </h1>
+          <a
+            class="category"
+            href="{{ entry.category.get_absolute_url }}"
+            style="color:{{ entry.category.primary_color }}";
+          >
+            {{ entry.category }}
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="box-container">
+    {% paginator %}
+  </div>
+
+{% endblock %}

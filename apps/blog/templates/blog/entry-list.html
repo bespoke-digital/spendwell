@@ -1,0 +1,80 @@
+{% extends "blog/base.html" %}
+
+{% load django_markdown %}
+{% load paginator %}
+{% load staticfiles %}
+
+{% block body_class %}{{ block.super }} entry-list {% endblock %}
+
+{% block content %}
+
+  {% for entry in entries %}
+
+    <div class="{% if not forloop.first or not entry.featured %}box-container{% endif %}">
+      <div class="headline">
+        <a href="{{ entry.get_absolute_url }}">
+          {% if forloop.first and entry.featured %}
+            <img class="hero-art-feature" src="{{ entry.hero_art.resized_urls.1920x700 }}">
+            <img class="hero-art-feature-md" src="{{ entry.hero_art.resized_urls.750x500 }}">
+          {% else %}
+            <img class="hero-art" src="{{ entry.hero_art.resized_urls.750x500 }}">
+          {% endif %}
+        </a>
+        <div class="title-card">
+          <h1 class="title">
+            <a href="{{ entry.get_absolute_url }}">
+              {{ entry.title }}
+            </a>
+          </h1>
+          <a
+            class="category"
+            href="{{ entry.category.get_absolute_url }}"
+            style="color:{{ entry.category.primary_color }};"
+          >
+            {{ entry.category }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% if forloop.first %}
+      <div class="box-container">
+        <div class="email-ask">
+
+          <div class="text-mid">
+            Get <b>Spendwell</b> in your inbox
+          </div>
+
+          <form
+            class = "form-email"
+            action="//spendwell.us12.list-manage.com/subscribe/post?u=f06a44d9caea5e9890f52c259&amp;id=644bb4fe5a"
+            method="post"
+            target="_blank"
+            novalidate
+          >
+            <div class="mui-textfield mui-textfield--float-label email-box">
+              <input class="form-control" name="EMAIL" type="email">
+              <label>Enter your email</label>
+            </div>
+            <div style="position: absolute; left: -5000px;" aria-hidden="true">
+              <input
+                type="text"
+                name="b_f06a44d9caea5e9890f52c259_644bb4fe5a"
+                tabindex="-1"
+                value=""
+              >
+            </div>
+            <button type="submit" name="subscribe" class="mui-btn mui-btn--primary">
+              GET
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="box-container">
+    {% paginator %}
+  </div>
+
+{% endblock %}

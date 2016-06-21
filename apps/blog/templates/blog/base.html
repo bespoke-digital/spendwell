@@ -1,0 +1,16 @@
+{% extends "landing/base.html" %}
+
+{% load staticfiles %}
+
+{% block body_class %}{{ block.super }} blog{% endblock %}
+
+{% block title %}Spendwell Blog{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'dist/blog.css' %}">
+{% endblock %}
+
+{% block body %}
+  {{ block.super }}
+  <script src="{% static 'dist/blog.js' %}"></script>
+{% endblock %}

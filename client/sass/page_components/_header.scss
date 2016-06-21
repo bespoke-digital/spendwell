@@ -8,17 +8,21 @@
 
   background-color: $primary;
   color: white;
-  text-align: center;
 
-  .brand {
-    display: inline-block;
-    height: $appbar-height;
-    padding: 12px 0;
+  @media (min-width: $screen-sm-min) {
+    text-align: center;
+  }
 
-    img {
-      margin: 0;
-      padding: 0;
-      height: $appbar-height - (12px * 2);
+  .mui-dropdown {
+    float: right;
+
+    button .material-icons {
+      line-height: 36px;
+    }
+
+    li a {
+      padding: 16px;
+      line-height: 1;
     }
   }
 }

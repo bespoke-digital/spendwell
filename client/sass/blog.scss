@@ -1,0 +1,156 @@
+
+@import 'variables';
+@import 'font-awesome';
+@import 'mui';
+@import 'bootstrap';
+@import 'generic';
+
+
+@import 'page_components/topbar';
+@import 'page_components/email-form';
+@import 'page_components/header';
+@import 'components/card';
+
+@import 'pages/base';
+
+@import 'blog/variables';
+@import 'blog/entry-detail';
+@import 'blog/entry-list';
+@import 'blog/category-detail';
+@import 'blog/tag-detail';
+
+
+.color-bar {
+  h1 {
+    margin: 0;
+  }
+}
+
+.headline {
+  position: relative;
+  width: 100%;
+}
+
+.hero-art {
+  width: 100%;
+  min-height: 533px;
+
+  @media screen and (max-width: $screen-md) {
+    min-height: 20px;
+  }
+}
+
+.hero-art-feature {
+  width: 100%;
+  min-height: 275px;
+
+  @media screen and (max-width: $screen-md) {
+    min-height: 20px;
+    display: none;
+  }
+}
+
+.hero-art-feature-md {
+  width: 100%;
+  display: none;
+  min-height: 533px;
+
+  @media screen and (max-width: $screen-md) {
+    display: inline;
+    min-height: 20px;
+  }
+}
+
+.title-card {
+  max-width: $blog-width;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(white, .75);
+  padding: 30px;
+  padding-bottom: 15px;
+}
+
+.title {
+  color: $gray-darker;
+  margin: 0;
+  font-weight: 700;
+
+  a {
+    color: $gray-darker;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: $gray;
+    text-decoration: none;
+  }
+
+}
+
+.category {
+  font-size: 18px;
+  line-height: 2;
+}
+
+.post-date {
+  color: $gray;
+  font-size: 14px;
+  line-height: 24px;
+  margin-bottom: 24px;
+
+  .material-icons {
+    font-size: 24px;
+    line-height: 1;
+    vertical-align: middle;
+    color: $gray-light;
+  }
+}
+
+
+.box-container {
+  position: relative;
+  padding-top: 40px;
+  max-width: $blog-width;
+  margin-right: auto;
+  margin-left: auto;
+
+}
+
+.tags {
+  color: $primary;
+  font-size: 17px;
+}
+
+@media screen and (max-width: $screen-md) {
+  .title-card {
+    padding: 10px;
+
+    .title {
+      font-size: 22px;
+      line-height: normal;
+
+    }
+
+    .category {
+      font-size: 16px;
+      line-height: normal;
+      padding-bottom: 10px;
+
+    }
+
+  }
+
+  .text-mid {
+    font-size: 16px;
+  }
+}
+
+.pagination {
+  @media (max-width: $screen-xs) {
+    margin-left: 32px;
+  }
+}

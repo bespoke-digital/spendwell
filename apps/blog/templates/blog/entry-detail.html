@@ -1,0 +1,80 @@
+{% extends "blog/base.html" %}
+
+{% load django_markdown %}
+{% load staticfiles %}
+
+{% block body_class %}{{ block.super }} post {% endblock %}
+
+{% block title %}{{ entry.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+
+  <div class="headline">
+    <img class="hero-art-feature" src="{{entry.hero_art.resized_urls.1920x700}}">
+    <img class="hero-art-feature-md" src="{{entry.hero_art.resized_urls.750x500}}">
+    <div class="title-card">
+      <h1 class="title">{{ entry.title }}</h1>
+      <a
+        class="category"
+        style="color:{{entry.category.primary_color}}"
+        href="{{ entry.category.get_absolute_url }}"
+      >
+        {{ entry.category }}
+      </a>
+    </div>
+  </div>
+
+  <div class="box-container">
+    <p class="post-date">
+      <i class="material-icons date-icon">schedule</i>
+      {{ entry.created }}
+    </p>
+
+    <div class="entry-content">
+      {{ entry.body|markdown }}
+    </div>
+
+    {% if entry.tags %}
+      <p class="tags">
+        {% for tag in entry.tags.all %}
+          <a href="{% url 'blog:tag-detail' slug=tag.slug %}">#{{tag}}</a>
+        {% endfor %}
+      </p>
+    {% endif %}
+  </div>
+
+  {% if recommend_posts %}
+    <div class="recommended-articles">
+      Recommended Articles
+    </div>
+
+    <div class="flex-it">
+      {% for entry in recommend_posts %}
+        {% if forloop.counter < 3 %}
+          <div class="box-container">
+            <div class="headline">
+              <a href="{{ entry.get_absolute_url }}">
+                <img class="hero-art" src="{{entry.hero_art.resized_urls.750x500}}">
+              </a>
+              <div class="title-card">
+                <h1>
+                  <a class="title" href="{{ entry.get_absolute_url }}">
+                    {{ entry.title }}
+                  </a>
+                </h1>
+                <a
+                  class="category"
+                  href="{{ entry.category.get_absolute_url }}"
+                  style="color:{{entry.category.primary_color}};"
+                >
+                  {{ entry.category }}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,11 @@
+@import '../variables';
+
+
+body.tag-detail {
+  .head {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient($primary, white);
+    color: red;
+  }
+}

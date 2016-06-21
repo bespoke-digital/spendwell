@@ -19,7 +19,6 @@ CSP_DEFAULT_SRC = ('https:', "'self'")
 CSP_STYLE_SRC = ('https:', "'self'", "'unsafe-inline'")
 CSP_IMG_SRC = ('https:', 'data:', "'self'")
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,6 +32,10 @@ INSTALLED_APPS = [
     'watchman',
     'django_extensions',
     'security_middleware',
+    'django_markdown',
+    'taggit',
+    'bootstrap_paginator',
+    'resize',
     'djcelery',
 
     'apps.core',
@@ -45,6 +48,7 @@ INSTALLED_APPS = [
     'apps.buckets',
     'apps.goals',
     'apps.finicity',
+    'apps.blog',
     'apps.ads',
 ]
 
@@ -200,6 +204,7 @@ MIXPANEL_PUBLIC_KEY = 'setme'
 GOOGLE_ANALYTICS_KEY = 'setme'
 FACEBOOK_PIXEL_KEY = 'setme'
 
+MARKDOWN_EDITOR_SKIN = 'simple'
 TWITTER_CONSUMER_KEY = '1C9J8kD7rQjB2aPeFn2KdAHuM'
 TWITTER_CONSUMER_SECRET = None
 TWITTER_ACCESS_TOKEN_KEY = '4510053751-KpDrPjddh9CDm3hvf5hdVoQWyH538JgKqpaa0r0'

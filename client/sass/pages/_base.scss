@@ -1,8 +1,10 @@
 
+@import '../color';
+
 body.landing {
   .header {
     padding: 13px 0 10px;
-    background-color: transparent;
+    background-color: color('grey', '100');
 
     .col-sm-6:first-child {
       text-align: left;
@@ -25,7 +27,7 @@ body.landing {
     }
 
     a:not(.mui-btn) {
-      color: $gray;
+      color: color('grey', '700');
     }
 
     .logo {
@@ -47,31 +49,31 @@ body.landing {
   .color-bar {
     padding: 30px 5px;
     margin-bottom: 0;
-    background-color: $brand-primary;
+    background-color: $primary;
     text-align: center;
     color: white;
   }
 
   footer {
     padding: 60px 0;
-    background-color: $gray-2;
-    color: $gray-8;
+    background-color: color('grey', '800');
+    color: color('grey', '50');
 
     ul {
       margin-bottom: 0;
     }
 
     a {
-      color: $gray-lightest;
+      color: color('grey', '50');
 
       .fa {
         font-size: 20px;
-        color: $brand-primary;
+        color: $primary;
       }
     }
 
     .right {
-      color: $gray-5;
+      color: color('grey', '500');
     }
 
     @media (max-width: $screen-xs-max) {

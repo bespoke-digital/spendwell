@@ -1,11 +1,11 @@
 
 import $ from 'jquery'
 
-$(".toggle-dropdown").click(function(event){
-  event.stopPropagation();
-  $(".mui-dropdown__menu").toggle();
-});
+$('.header .mui-dropdown').click(function (event) {
+  event.stopPropagation()
+  $('.mui-dropdown__menu').toggle()
+})
 
-$(document).click(function(){
-  $(".mui-dropdown__menu").hide();
-});
+$(document).click(function () {
+  $('.mui-dropdown__menu').hide()
+})

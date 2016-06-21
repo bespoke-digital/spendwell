@@ -10,6 +10,7 @@ module.exports = {
     app: './client/app.js',
     pages: './client/pages.js',
     calculators: './client/calculators.js',
+    blog: './client/blog.js',
   },
 
   output: {

@@ -1,0 +1,60 @@
+
+@import '../variables';
+
+body.entry-list {
+  .email-ask {
+    clear: both;
+
+    @media screen and (min-width: $screen-md) {
+      padding-left: 30px;
+    }
+  }
+
+  .form-email {
+    @media screen and (max-width: $screen-md) {
+      text-align: center;
+    }
+  }
+
+  .email-box {
+
+    padding-right: 30px;
+
+    @media screen and (min-width: $screen-md) {
+      float: left;
+      top: -15px;
+      margin-left: 15%;
+    }
+
+    @media screen and (max-width: $screen-md) {
+      display: inline-block;
+      text-align: left;
+    }
+  }
+
+  .text-mid {
+    font-size: 24px;
+
+    @media screen and (min-width: $screen-md) {
+      float: left;
+      padding-right: 30px;
+    }
+    @media screen and (max-width: $screen-md) {
+      text-align: center;
+    }
+    //   float: none;
+    //   padding-right: 0;
+    //   padding-bottom: 10px;
+    // }
+  }
+
+  b {
+    padding: 0;
+  }
+
+  .buttonx {
+    margin-left: 10px;
+    background-color: $gray-lightest;
+  }
+
+}
