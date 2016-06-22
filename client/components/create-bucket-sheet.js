@@ -78,7 +78,7 @@ class CreateBucketSheet extends Component {
 
     Relay.Store.commitUpdate(new SettingsMutation({
       viewer,
-      [type === 'expense' ? 'createLabelHelp' : 'createBillHelp']: false,
+      [`create${type.charAt(0).toUpperCase()}${type.slice(1)}Help`]: false,
     }), { onFailure: handleMutationError })
   }
 
@@ -92,7 +92,12 @@ class CreateBucketSheet extends Component {
         className={`${styles.root} ${type}`}
         visible={open}
         onRequestClose={onRequestClose}
-        title={type === 'expense' ? 'New Label' : type === 'bill' ? 'New Bill' : 'New External Account'}
+        title={
+            type === 'expense' ? 'New Label' :
+            type === 'bill' ? 'New Bill' :
+            type === 'goal' ? 'New Goal' :
+            null
+        }
         actions={loading ?
           <div className='spinner-container'><Spinner/></div>
         :
@@ -101,17 +106,21 @@ class CreateBucketSheet extends Component {
       >
         {open && (
           (type === 'expense' && viewer.settings.createLabelHelp) ||
-          (type === 'bill' && viewer.settings.createBillHelp)
+          (type === 'bill' && viewer.settings.createBillHelp) ||
+          (type === 'goal' && viewer.settings.createGoalHelp)
         ) ?
           <CardList>
             <Card>
               {type === 'expense' ? `
                 Labels are for tracking spending. We'll show you a 3-month average,
                 and if you're on track to be over or under for the current month.
-              ` : `
+              ` : type === 'bill' ? `
                 Bills are for monthly recurring expenses. We'll track if the bill has been
                 paid and take unpaid bills out of safe-to-spend.
-              `}
+              ` : type === 'goal' ? `
+                Goals are for saving. They come out of safe-to-spend at the
+                beginning of the month so you're paying yourself first.
+              ` : null}
               <TextActions>
                 <A onClick={::this.dismissHelp}>Dismiss</A>
               </TextActions>
@@ -125,6 +134,7 @@ class CreateBucketSheet extends Component {
             viewer={viewer}
             bucket={null}
             loading={loading}
+            type={type}
             initialName={initialName}
             initialFilters={initialFilters}
           />
@@ -149,6 +159,7 @@ CreateBucketSheet = Relay.createContainer(CreateBucketSheet, {
         settings @include(if: $open) {
           createLabelHelp
           createBillHelp
+          createGoalHelp
         }
       }
     `,

@@ -9,6 +9,11 @@ import TextInput from 'components/text-input'
 import Filters from 'components/filters'
 import TransactionList from 'components/transaction-list'
 import ListHeading from 'components/list-heading'
+import ButtonSeperator from 'components/button-seperator'
+import Button from 'components/button'
+import Money from 'components/money'
+import StaticLabel from 'components/static-label'
+import Icon from 'components/icon'
 
 import style from 'sass/components/bucket-form'
 
@@ -23,10 +28,18 @@ function cleanFilters (filters) {
   return filters.map(cleanFilter).filter((filter) => _.some(_.values(filter)))
 }
 
-function getInitialState ({ bucket, initialFilters, initialName }) {
+function centsForInput (value) {
+  return (Math.abs(value) / 100).toString()
+}
+
+function getInitialState ({ bucket, type, initialFilters, initialName }) {
   return {
     filters: bucket ? cleanFilters(bucket.filters) : (initialFilters || []),
     name: bucket ? bucket.name : (initialName || ''),
+    type: bucket ? bucket.type : type,
+    goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
+    goalType: null,
+    useGoalAvg: true,
   }
 }
 
@@ -34,7 +47,8 @@ class BucketForm extends Component {
   static propTypes = {
     relay: PropTypes.object.isRequired,
     viewer: PropTypes.object.isRequired,
-    bucket: PropTypes.object.isRequired,
+    bucket: PropTypes.object,
+    type: PropTypes.oneOf(['bill', 'expense', 'goal']),
     loading: PropTypes.bool,
     initialName: PropTypes.string,
     initialFilters: PropTypes.arrayOf(PropTypes.object),
@@ -50,7 +64,7 @@ class BucketForm extends Component {
   }
 
   componentWillMount () {
-    const { relay } = this.state
+    const { relay } = this.props
     const { filters } = this.state
 
     relay.setVariables({ filters: cleanFilters(filters) })
@@ -105,9 +119,36 @@ class BucketForm extends Component {
     this.props.relay.setVariables({ count: count + 50 })
   }
 
+  selectFilterGoal () {
+    const { bucket } = this.props
+    this.setState({
+      goalType: 'filter',
+      goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
+    })
+    if (!this.state.filters) {
+      this.handleAddFilter()
+    }
+  }
+
+  selectAmountGoal () {
+    const { bucket } = this.props
+    this.setState({
+      goalType: 'amount',
+      filters: [],
+      goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
+    })
+  }
+
+  handleGoalAmountChange (goalAmount) {
+    goalAmount = -parseInt(goalAmount * 100)
+    if (!_.isNaN(goalAmount)) {
+      this.setState({ goalAmount })
+    }
+  }
+
   render () {
     const { viewer } = this.props
-    const { name, filters } = this.state
+    const { name, type, filters, goalType, goalAmount, useGoalAvg } = this.state
 
     return (
       <div className={style.root}>
@@ -120,16 +161,72 @@ class BucketForm extends Component {
             />
           </Card>
 
-          <Filters
-            filters={filters}
-            viewer={viewer}
-            onAdd={::this.handleAddFilter}
-            onRemove={::this.handleRemoveFilter}
-            onChange={::this.handleChangeFilter}
-          />
+          {type === 'goal' ?
+            <Card>
+              <Button
+                active={goalType === 'amount'}
+                onClick={::this.selectAmountGoal}
+              >Fixed Amount</Button>
+              <ButtonSeperator>or</ButtonSeperator>
+              <Button
+                active={goalType === 'filter'}
+                onClick={::this.selectFilterGoal}
+              >With Transactions</Button>
+            </Card>
+          : null}
+
+          {type !== 'goal' || goalType === 'filter' ?
+            <Filters
+              filters={filters}
+              viewer={viewer}
+              onAdd={::this.handleAddFilter}
+              onRemove={::this.handleRemoveFilter}
+              onChange={::this.handleChangeFilter}
+            />
+          : null}
+
+          {type === 'goal' && goalType === 'filter' && viewer.transactions ?
+            <Card className='filter-goal-amount'>
+              <StaticLabel>Monthly Amount</StaticLabel>
+              <div className='filter-goal-amount-value'>
+                {useGoalAvg ?
+                  <Money amount={viewer.transactions.avgAmount} abs/>
+                :
+                  <TextInput
+                    value={_.isNumber(goalAmount) && goalAmount !== 0 ?
+                      centsForInput(goalAmount)
+                    :
+                      centsForInput(viewer.transactions.avgAmount)
+                    }
+                    onChange={::this.handleGoalAmountChange}
+                    autoFocus
+                  />
+                }
+              </div>
+              <div
+                className='filter-goal-amount-toggle'
+                onClick={() => this.setState({ useGoalAvg: !useGoalAvg })}
+              >
+                <Icon type={useGoalAvg ? 'check box' : 'check box outline blank'}/>
+                Use transaction average
+              </div>
+            </Card>
+          : null}
+
+          {type === 'goal' && goalType === 'amount' ?
+            <Card>
+              <TextInput
+                label='Monthly Amount'
+                value={_.isNumber(goalAmount) && goalAmount !== 0 ? centsForInput(goalAmount) : ''}
+                onChange={::this.handleGoalAmountChange}
+              />
+            </Card>
+          : null}
         </CardList>
 
-        <ListHeading>Filtered Transactions</ListHeading>
+        {type !== 'goal' || goalType === 'filter' ?
+          <ListHeading>Filtered Transactions</ListHeading>
+        : null}
 
         <CardList>
           {viewer.transactions ?
@@ -167,6 +264,8 @@ BucketForm = Relay.createContainer(BucketForm, {
 
         transactions(first: $count, filters: $filters, isTransfer: $isTransfer) @include(if: $includeTransactions) {
           ${TransactionList.getFragment('transactions')}
+
+          avgAmount
         }
       }
     `,

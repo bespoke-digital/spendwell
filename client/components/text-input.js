@@ -9,10 +9,13 @@ export default class TextInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string,
+    initialValue: PropTypes.string,
+    label: PropTypes.string,
     error: PropTypes.any,
     className: PropTypes.string,
     type: PropTypes.string,
     select: PropTypes.bool,
+    autoFocus: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,25 +25,28 @@ export default class TextInput extends Component {
     select: false,
   };
 
-  constructor() {
-    super();
-    this.state = { value: '' };
+  constructor ({ initialValue }) {
+    super()
+    this.state = { value: initialValue || '' }
   }
 
   componentDidMount () {
     const { select } = this.props
-    if (select)
+    if (select) {
       this.refs.input.select()
+    }
   }
 
   changeValue (event) {
     const value = event.currentTarget.value
 
-    if (_.isUndefined(this.props.value))
+    if (_.isUndefined(this.props.value)) {
       this.setState({ value })
+    }
 
-    if (this.props.onChange)
+    if (this.props.onChange) {
       this.props.onChange(value)
+    }
   }
 
   render () {
@@ -49,7 +55,7 @@ export default class TextInput extends Component {
     return (
       <div className={`
         mui-textfield
-        ${label ? 'mui-textfield--float-label' : ''}
+        ${label ? 'mui-textfield--float-label' : 'mui-textfield--no-label'}
         ${error ? 'mui-textfield--invalid' : ''}
         ${className}
         ${style.root}

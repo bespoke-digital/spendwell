@@ -1,4 +1,8 @@
 
 :local(.root) {
   margin-bottom: 0;
+
+  &.mui-textfield--no-label {
+    padding-top: 0;
+  }
 }

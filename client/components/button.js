@@ -3,7 +3,6 @@ import _ from 'lodash'
 import { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 
-
 export default class Button extends Component {
   static propTypes = {
     className: PropTypes.string,
@@ -22,6 +21,7 @@ export default class Button extends Component {
     raised: PropTypes.bool,
     fab: PropTypes.bool,
     disabled: PropTypes.bool,
+    active: PropTypes.bool,
     flat: PropTypes.bool,
     plain: PropTypes.bool,
     propagateClick: PropTypes.bool,
@@ -39,6 +39,7 @@ export default class Button extends Component {
     raised: false,
     fab: false,
     disabled: false,
+    active: false,
     flat: true,
     plain: false,
     propagateClick: false,
@@ -48,16 +49,18 @@ export default class Button extends Component {
   onClick (event, ...args) {
     const { propagateClick, loading, onClick } = this.props
 
-    if (propagateClick === false)
+    if (propagateClick === false) {
       event.stopPropagation()
+    }
 
     if (loading) {
       event.preventDefault()
       return
     }
 
-    if (onClick)
+    if (onClick) {
       onClick(event, ...args)
+    }
   }
 
   classes () {
@@ -68,6 +71,7 @@ export default class Button extends Component {
       raised,
       fab,
       disabled,
+      active,
       flat,
       plain,
       loading,
@@ -75,22 +79,33 @@ export default class Button extends Component {
 
     let classes = className || ''
     classes += ' mui-btn btn'
-    if (variant || color)
+    if (variant || color) {
       classes += ` mui-btn--${variant || color} mui-btn--color-${variant || color}`
-    if (raised)
+    }
+    if (raised) {
       classes += ' mui-btn--raised'
-    if ((flat || plain) && !fab)
+    }
+    if ((flat || plain) && !fab) {
       classes += ' mui-btn--flat'
-    if (plain)
+    }
+    if (plain) {
       classes += ' mui-btn--plain'
-    if (fab)
+    }
+    if (fab) {
       classes += ' mui-btn--fab'
-    if (disabled)
+    }
+    if (disabled) {
       classes += ' mui--is-disabled'
-    if (!_.isUndefined(loading))
+    }
+    if (active) {
+      classes += ' mui-btn--active'
+    }
+    if (!_.isUndefined(loading)) {
       classes += ' mui-btn--can-load'
-    if (loading)
+    }
+    if (loading) {
       classes += ' mui-btn--is-loading'
+    }
 
     return classes
   }
