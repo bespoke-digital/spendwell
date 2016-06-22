@@ -12,6 +12,7 @@ from graphene.contrib.django.views import GraphQLView
 from django_graphiql.views import GraphiQL
 from csp.decorators import csp_exempt
 
+from apps.finicity.client import FinicityException
 from spendwell.schema import schema
 from .models import LoadingQuote
 
@@ -30,7 +31,12 @@ class AuthGraphQLView(GraphQLView):
 
     @classmethod
     def format_error(Cls, error):
-        if hasattr(error, 'original_error') and error.original_error and use_raven:
+        if (
+            hasattr(error, 'original_error') and
+            error.original_error and
+            use_raven and
+            not isinstance(error.original_error, FinicityException)
+        ):
             try:
                 raise error.original_error
             except:
