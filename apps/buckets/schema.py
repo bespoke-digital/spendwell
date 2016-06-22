@@ -34,6 +34,9 @@ class BucketNode(SWNode):
         return self.instance.transactions.all()
 
     def resolve_filters(self, args, info):
+        if self.instance.filters is None:
+            return
+
         filters = []
 
         for filter in self.instance.filters:

@@ -8,7 +8,7 @@ import Card from 'components/card'
 import CardList from 'components/card-list'
 import Money from 'components/money'
 import GoalMonth from 'components/goal-month'
-import BucketMonth from 'components/bucket-month'
+import LabelMonth from 'components/label-month'
 import BillMonth from 'components/bill-month'
 import SpentFromSavings from 'components/spent-from-savings'
 import TransactionList from 'components/transaction-list'
@@ -29,6 +29,8 @@ import styles from 'sass/views/dashboard.scss'
 class Dashboard extends Component {
   static propTypes = {
     params: PropTypes.object.isRequired,
+    relay: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
   };
 
   state = {
@@ -41,10 +43,11 @@ class Dashboard extends Component {
   select (id) {
     const { selected } = this.state
 
-    if (selected === id)
+    if (selected === id) {
       this.setState({ selected: null })
-    else
+    } else {
       this.setState({ selected: id })
+    }
   }
 
   loadTransactions () {
@@ -56,8 +59,6 @@ class Dashboard extends Component {
 
   render () {
     const { params: { year, month }, viewer, relay } = this.props
-    const { spentFromSavings } = viewer.summary
-
     const { selected, createLabel, createBill, createGoal } = this.state
 
     const now = moment().startOf('month')
@@ -72,8 +73,10 @@ class Dashboard extends Component {
     }
 
     const goalMonths = _.sortBy(
-      viewer.summary.goalMonths.edges.map((e) => e.node),
-      (n) => n.name.toLowerCase()
+      viewer.summary.bucketMonths.edges
+        .map(({ node }) => node)
+        .filter(({ bucket }) => bucket.type === 'goal'),
+      (bm) => bm.bucket.name.toLowerCase()
     )
     const billMonths = _.sortBy(
       viewer.summary.bucketMonths.edges
@@ -81,7 +84,7 @@ class Dashboard extends Component {
         .filter(({ bucket }) => bucket.type === 'bill'),
       (bm) => bm.bucket.name.toLowerCase()
     )
-    const bucketMonths = _.sortBy(
+    const labelMonths = _.sortBy(
       viewer.summary.bucketMonths.edges
         .map(({ node }) => node)
         .filter(({ bucket }) => bucket.type === 'expense'),
@@ -93,8 +96,8 @@ class Dashboard extends Component {
     const billAvgTotal = _.sum(billMonths, 'avgAmount')
     const billTotal = _.sum(billMonths, 'amount')
 
-    const bucketAvgTotal = _.sum(bucketMonths, 'avgAmount')
-    const bucketTotal = _.sum(bucketMonths, 'amount')
+    const bucketAvgTotal = _.sum(labelMonths, 'avgAmount')
+    const bucketTotal = _.sum(labelMonths, 'amount')
 
     return (
       <App
@@ -118,8 +121,8 @@ class Dashboard extends Component {
             <GoalMonth
               key={node.id}
               viewer={viewer}
-              goalMonth={node}
-              selected={selected === node.id}
+              bucketMonth={node}
+              expanded={selected === node.id}
               onClick={this.select.bind(this, node.id)}
               onForceFetch={() => relay.forceFetch()}
               className='month'
@@ -151,18 +154,6 @@ class Dashboard extends Component {
             </div>
           : null}
         </CardList>
-
-        {spentFromSavings > 0 ?
-          <CardList>
-            <SpentFromSavings
-              viewer={viewer}
-              summary={viewer.summary}
-              month={periods.current}
-              selected={selected === 'spentFromSavings'}
-              onClick={this.select.bind(this, 'spentFromSavings')}
-            />
-          </CardList>
-        : null}
 
         <CardList className='month-list'>
           <ListHeading>
@@ -224,7 +215,7 @@ class Dashboard extends Component {
             Labels <small> for tracking spending</small>
           </ListHeading>
 
-          {bucketMonths.length > 0 ?
+          {labelMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div></div>
               <div className='amount'>Average</div>
@@ -232,8 +223,8 @@ class Dashboard extends Component {
             </Card>
           : null}
 
-          {bucketMonths.length > 0 ? bucketMonths.map((node) =>
-            <BucketMonth
+          {labelMonths.length > 0 ? labelMonths.map((node) =>
+            <LabelMonth
               key={node.id}
               viewer={viewer}
               bucketMonth={node}
@@ -245,7 +236,7 @@ class Dashboard extends Component {
             />
           ) : null}
 
-          {bucketMonths.length > 0 ?
+          {labelMonths.length > 0 ?
             <Card className='card-list-heading'>
               <div><strong>Total</strong></div>
               <div className='amount avg'>
@@ -257,7 +248,7 @@ class Dashboard extends Component {
             </Card>
           : null}
 
-          {bucketMonths.length === 0 ?
+          {labelMonths.length === 0 ?
             <div className='month-placeholder'>
               <div className='placeholder-icon label'>
                 <Icon type='local offer' color='light'/>
@@ -312,10 +303,11 @@ class Dashboard extends Component {
           viewer={viewer}
         />
 
-        <CreateGoalSheet
+        <CreateBucketSheet
           visible={createGoal}
           onRequestClose={() => this.setState({ createGoal: false })}
           onComplete={() => relay.forceFetch()}
+          type='goal'
           viewer={viewer}
         />
       </App>
@@ -331,10 +323,11 @@ Dashboard = Relay.createContainer(Dashboard, {
     year: now.format('YYYY'),
   },
   prepareVariables: (variables) => {
-    if (variables.year && variables.month)
+    if (variables.year && variables.month) {
       return { ...variables, date: `${variables.year}/${variables.month}` }
-    else
+    } else {
       return variables
+    }
   },
   fragments: {
     viewer: () => Relay.QL`
@@ -344,7 +337,7 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${TransactionList.getFragment('viewer')}
         ${SpentFromSavings.getFragment('viewer')}
         ${GoalMonth.getFragment('viewer')}
-        ${BucketMonth.getFragment('viewer')}
+        ${LabelMonth.getFragment('viewer')}
         ${BillMonth.getFragment('viewer')}
         ${SettingsMutation.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
@@ -356,25 +349,12 @@ Dashboard = Relay.createContainer(Dashboard, {
           ${SpentFromSavings.getFragment('summary')}
           ${DashboardSummary.getFragment('summary')}
 
-          spentFromSavings
-
-          goalMonths(first: 1000) {
-            edges {
-              node {
-                ${GoalMonth.getFragment('goalMonth')}
-
-                id
-                name
-                targetAmount
-              }
-            }
-          }
-
           bucketMonths(first: 1000) {
             edges {
               node {
-                ${BucketMonth.getFragment('bucketMonth')}
+                ${LabelMonth.getFragment('bucketMonth')}
                 ${BillMonth.getFragment('bucketMonth')}
+                ${GoalMonth.getFragment('bucketMonth')}
 
                 id
                 avgAmount

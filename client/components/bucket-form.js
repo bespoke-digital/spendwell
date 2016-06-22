@@ -18,6 +18,8 @@ function cleanFilter (filter) {
 }
 
 function cleanFilters (filters) {
+  if (!filters) return []
+
   return filters.map(cleanFilter).filter((filter) => _.some(_.values(filter)))
 }
 
@@ -30,6 +32,9 @@ function getInitialState ({ bucket, initialFilters, initialName }) {
 
 class BucketForm extends Component {
   static propTypes = {
+    relay: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
+    bucket: PropTypes.object.isRequired,
     loading: PropTypes.bool,
     initialName: PropTypes.string,
     initialFilters: PropTypes.arrayOf(PropTypes.object),
@@ -45,11 +50,10 @@ class BucketForm extends Component {
   }
 
   componentWillMount () {
+    const { relay } = this.state
     const { filters } = this.state
-    this.props.relay.setVariables({
-      isTransfer: this.props.bucket && this.props.bucket.type === 'account',
-      filters: cleanFilters(filters),
-    })
+
+    relay.setVariables({ filters: cleanFilters(filters) })
   }
 
   getData () {

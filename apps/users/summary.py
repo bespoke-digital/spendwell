@@ -2,11 +2,9 @@
 import delorean
 from dateutil.relativedelta import relativedelta
 
-from apps.core.utils import months_avg
-from apps.goals.models import GoalMonth
+from apps.core.utils import months_avg, this_month
 from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction, IncomeFromSavings
-from apps.core.utils import this_month
 
 
 def bucket_month(bucket, month):
@@ -15,12 +13,19 @@ def bucket_month(bucket, month):
         date__lt=month + relativedelta(months=1),
     )
 
+    if bucket.type == 'goal' and bucket.goal_amount:
+        amount = bucket.goal_amount
+        avg_amount = amount
+    else:
+        amount = bucket.transactions.sum()
+        avg_amount = months_avg(bucket.transactions.all(), month_start=month)
+
     return {
         'bucket': bucket,
         'month': month,
         'transactions': transactions,
-        'amount': transactions.sum(),
-        'avg_amount': months_avg(bucket.transactions.all(), month_start=month),
+        'amount': amount,
+        'avg_amount': avg_amount,
     }
 
 
@@ -86,10 +91,8 @@ class MonthSummary(object):
     @property
     def goals_total(self):
         if not hasattr(self, '_goals_total'):
-            self._goals_total = GoalMonth.objects.filter(
-                goal__owner=self.user,
-                month_start=self.month_start,
-            ).sum('target_amount')
+            goals = Bucket.objects.filter(owner=self.user, type='goal')
+            self._goals_total = sum(goal.goal_amount for goal in goals)
         return self._goals_total
 
     @property
@@ -152,15 +155,6 @@ class MonthSummary(object):
                 self.spent,
             ])
         return self._net
-
-    @property
-    def goal_months(self):
-        if not hasattr(self, '_goal_months'):
-            self._goal_months = GoalMonth.objects.filter(
-                goal__owner=self.user,
-                month_start=self.month_start,
-            )
-        return self._goal_months
 
     @property
     def bucket_months(self):
