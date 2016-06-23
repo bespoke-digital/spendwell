@@ -106,8 +106,6 @@ class Finicity(object):
         headers['Finicity-App-Key'] = settings.FINICITY_APP_KEY
         headers['Finicity-App-Token'] = self.access_token
 
-        raise FinicityError('unknown-error')
-
         response = getattr(requests, method.lower())(
             '{}{}'.format(FINICITY_URL, path),
             headers=headers,
