@@ -17,6 +17,9 @@ import eventEmitter from 'utils/event-emitter'
 
 class BillMonth extends Component {
   static propTypes = {
+    relay: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
+    bucketMonth: PropTypes.object.isRequired,
     month: PropTypes.object.isRequired,
     expanded: PropTypes.bool,
     onClick: PropTypes.func,
@@ -33,8 +36,9 @@ class BillMonth extends Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.expanded !== this.props.expanded)
+    if (nextProps.expanded !== this.props.expanded) {
       this.props.relay.setVariables({ open: nextProps.expanded })
+    }
   }
 
   loadTransactions () {
@@ -60,6 +64,7 @@ class BillMonth extends Component {
     )
 
     const paid = bucketMonth.amount !== 0 && (
+      bucketMonth.amount > bucketMonth.avgAmount ||
       Math.abs(bucketMonth.avgAmount - bucketMonth.amount) / Math.abs(bucketMonth.avgAmount) < 0.10
     )
 
