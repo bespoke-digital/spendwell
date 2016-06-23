@@ -34,6 +34,10 @@ class FinicityError(FinicityException):
     pass
 
 
+class FinicityInvalidAccountError(FinicityError):
+    pass
+
+
 class FinicityValidation(FinicityException):
     pass
 
@@ -131,6 +135,9 @@ class Finicity(object):
 
             if data['error']['code'] in ('331',):
                 raise FinicityValidation('finicity-mfa-expired')
+
+            if data['error']['code'] in ('38006',):
+                raise FinicityInvalidAccountError()
 
             if settings.DEBUG:
                 print('\n\nFINICITY REQUEST')
