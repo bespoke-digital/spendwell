@@ -1,9 +1,8 @@
 /*eslint no-var: 0*/
 
-var path = require('path');
-var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
-
+var path = require('path')
+var webpack = require('webpack')
+var autoprefixer = require('autoprefixer')
 
 module.exports = {
   entry: {
@@ -17,6 +16,7 @@ module.exports = {
     path: path.join(__dirname, '..', 'static', 'dist'),
     publicPath: '/static/dist/',
     filename: '[name].js',
+    sourceMapFilename: '[name].map.js',
   },
 
   module: {
@@ -53,4 +53,4 @@ module.exports = {
     'react/addons': true,
     'cheerio': 'window',
   },
-};
+}
