@@ -127,7 +127,7 @@ class Finicity(object):
             if not force_auth and data['error']['code'] in ('44000',) and retries < FINICITY_RETRIES:
                 return self.request(path, method, headers, force_auth=False, retries=retries + 1, **kwargs)
 
-            if data['error']['code'] in ('103',):
+            if data['error']['code'] in ('103', '187', '185'):
                 raise FinicityValidation('finicity-invalid-credentials')
 
             if data['error']['code'] in ('108', '109'):

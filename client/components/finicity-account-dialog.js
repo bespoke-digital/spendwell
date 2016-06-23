@@ -1,22 +1,23 @@
 
-import _ from 'lodash';
-import { Component, PropTypes } from 'react';
-import Relay from 'react-relay';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
 
-import { handleMutationError } from 'utils/network-layer';
-import TextInput from 'components/text-input';
-import Button from 'components/button';
-import Dialog from 'components/dialog';
-import DialogActions from 'components/dialog-actions';
+import { handleMutationError } from 'utils/network-layer'
+import TextInput from 'components/text-input'
+import Button from 'components/button'
+import Dialog from 'components/dialog'
+import DialogActions from 'components/dialog-actions'
 
-import track from 'utils/track';
-import { ConnectFinicityInstitutionMutation } from 'mutations/finicity';
+import track from 'utils/track'
+import { ConnectFinicityInstitutionMutation } from 'mutations/finicity'
 
-import style from 'sass/components/finicity-account-dialog';
+import style from 'sass/components/finicity-account-dialog'
 
 
 class FinicityAccountDialog extends Component {
   static propTypes = {
+    viewer: PropTypes.object.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     onConnected: PropTypes.func.isRequired,
     onConnecting: PropTypes.func,
@@ -34,31 +35,32 @@ class FinicityAccountDialog extends Component {
     loading: false,
   };
 
-  setCredentialValue(name, id, value) {
-    const { credentials } = this.state;
+  setCredentialValue (name, id, value) {
+    const { credentials } = this.state
     this.setState({
       credentials: Object.assign({}, credentials, { [id]: { value, name } }),
-    });
+    })
   }
 
-  setMfaValue(challenge, index, value, event) {
-    if (event) event.preventDefault();
+  setMfaValue (challenge, index, value, event) {
+    if (event) event.preventDefault()
 
-    const { mfaAnswers } = this.state;
-    mfaAnswers[index] = value;
-    this.setState({ mfaAnswers });
+    const { mfaAnswers } = this.state
+    mfaAnswers[index] = value
+    this.setState({ mfaAnswers })
   }
 
-  handleSubmit(event) {
-    if (event) event.preventDefault();
+  handleSubmit (event) {
+    if (event) event.preventDefault()
 
-    const { viewer, institutionTemplate, onConnected, onConnecting, fullSync , onError } = this.props;
-    const { credentials, mfaAnswers } = this.state;
+    const { viewer, institutionTemplate, onConnected, onConnecting, fullSync, onError } = this.props
+    const { credentials, mfaAnswers } = this.state
 
-    if (onConnecting)
-      onConnecting();
+    if (onConnecting) {
+      onConnecting()
+    }
 
-    this.setState({ loading: true });
+    this.setState({ loading: true })
     Relay.Store.commitUpdate(new ConnectFinicityInstitutionMutation({
       viewer,
       institutionTemplate,
@@ -66,73 +68,74 @@ class FinicityAccountDialog extends Component {
       mfaAnswers,
       fullSync,
     }), {
-      onFailure: (transaction)=> {
-        console.log('Failure: ConnectFinicityInstitutionMutation');
+      onFailure: (transaction) => {
+        console.log('Failure: ConnectFinicityInstitutionMutation')
 
-        this.setState({ loading: false });
+        this.setState({ loading: false })
 
-        const errors = transaction.getError().source.errors;
-        const error = (testMessage)=> errors.find(({ message })=> message.indexOf(testMessage) === 0);
+        const errors = transaction.getError().source.errors
+        const error = (testMessage) => errors.find(({ message }) => message.indexOf(testMessage) === 0)
 
-        const mfaError = error('finicity-mfa-required');
-        const mfaExpired = error('finicity-mfa-expired');
-        const invalidCredentials = error('finicity-invalid-credentials');
-        const userActionRequired = error('finicity-user-action-required');
+        const mfaError = error('finicity-mfa-required')
+        const mfaExpired = error('finicity-mfa-expired')
+        const invalidCredentials = error('finicity-invalid-credentials')
+        const userActionRequired = error('finicity-user-action-required')
 
         if (mfaError) {
-          const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'));
-          console.log('Finicity MFA Required', mfaChallenges);
+          const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'))
+          console.log('Finicity MFA Required', mfaChallenges)
           this.setState({
             mfaChallenges,
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
-          });
+          })
 
         } else if (mfaExpired) {
           this.setState({
             mfaChallenges: null,
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
-          });
+          })
 
         } else {
           this.setState({
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
-          });
+          })
 
           track('connect-error', {
             provider: 'finicity',
             institution: institutionTemplate.name,
-          });
+          })
 
-          if (!invalidCredentials && !userActionRequired)
-            handleMutationError(transaction);
+          if (!invalidCredentials && !userActionRequired) {
+            handleMutationError(transaction)
+          }
 
-          onError();
+          onError()
         }
       },
-      onSuccess: ()=> {
-        console.log('Success: ConnectFinicityInstitutionMutation');
+      onSuccess: () => {
+        console.log('Success: ConnectFinicityInstitutionMutation')
 
         this.setState({
           loading: false,
           invalidCredentials: false,
           userActionRequired: false,
-        });
+        })
 
         track('connect-success', {
           provider: 'finicity',
           institution: institutionTemplate.name,
-        });
+        })
 
-        onConnected();
+        onConnected()
       },
-    });
+    })
   }
 
   render() {
-    const { institutionTemplate, onRequestClose } = this.props;
+    const { institutionTemplate, onRequestClose } = this.props
     const {
       loading,
       mfaChallenges,
@@ -140,9 +143,9 @@ class FinicityAccountDialog extends Component {
       mfaAnswers,
       invalidCredentials,
       userActionRequired,
-    } = this.state;
+    } = this.state
 
-    const formFields = _.sortBy(institutionTemplate.loginForm, 'displayOrder');
+    const formFields = _.sortBy(institutionTemplate.loginForm, 'displayOrder')
 
     return (
       <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
@@ -161,7 +164,7 @@ class FinicityAccountDialog extends Component {
               </span>
             : null}
 
-            {mfaChallenges ? mfaChallenges.map((challenge, index)=>
+            {mfaChallenges ? mfaChallenges.map((challenge, index) =>
               <div className='form-field' key={index}>
                 {challenge.image ?
                   <div className='mfa-question'><img src={challenge.image} alt={challenge.text}/></div>
@@ -173,7 +176,7 @@ class FinicityAccountDialog extends Component {
 
                 {challenge.choice ?
                   <ul className='mfa-choices'>
-                    {challenge.choice.map((choice)=>
+                    {challenge.choice.map((choice) =>
                       <li key={choice['@value']}>
                         {mfaAnswers[index] === choice['@value'] ?
                           <i className='fa fa-dot-circle-o'/>
@@ -188,7 +191,7 @@ class FinicityAccountDialog extends Component {
                   </ul>
                 : challenge.imageChoice ?
                   <ul className='mfa-choices'>
-                    {challenge.imageChoice.map((choice)=>
+                    {challenge.imageChoice.map((choice) =>
                       <li key={choice['@value']}>
                         {mfaAnswers[index] === choice['@value'] ?
                           <i className='fa fa-dot-circle-o'/>
@@ -209,7 +212,7 @@ class FinicityAccountDialog extends Component {
                   />
                 }
               </div>
-            ) : formFields.map((field)=>
+            ) : formFields.map((field) =>
               <div className='form-field' key={field.name}>
                 <TextInput
                   label={field.description}
@@ -227,19 +230,19 @@ class FinicityAccountDialog extends Component {
           </DialogActions>
         </form>
       </Dialog>
-    );
+    )
   }
 }
 
 
 FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${ConnectFinicityInstitutionMutation.getFragment('viewer')}
       }
     `,
-    institutionTemplate: ()=> Relay.QL`
+    institutionTemplate: () => Relay.QL`
       fragment on InstitutionTemplateNode {
         ${ConnectFinicityInstitutionMutation.getFragment('institutionTemplate')}
 
@@ -257,6 +260,6 @@ FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
       }
     `,
   },
-});
+})
 
-export default FinicityAccountDialog;
+export default FinicityAccountDialog
