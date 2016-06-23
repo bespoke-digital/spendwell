@@ -147,7 +147,12 @@ class Finicity(object):
                 print('\nFINICITY RESPONSE')
                 print(response.content)
 
-            raise FinicityError('Finicity: {}'.format(data['error']['message']))
+            if 'message' in data['error']:
+                error_text = 'Finicity: {}'.format(data['error']['message'])
+            else:
+                error_text = 'Finicity: Error code {}'.format(data['error']['code'])
+
+            raise FinicityError(error_text)
 
         return data
 
