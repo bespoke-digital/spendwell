@@ -18,6 +18,7 @@ import style from 'sass/components/finicity-account-dialog'
 class FinicityAccountDialog extends Component {
   static propTypes = {
     viewer: PropTypes.object.isRequired,
+    institutionTemplate: PropTypes.object.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     onConnected: PropTypes.func.isRequired,
     onConnecting: PropTypes.func,
@@ -134,7 +135,7 @@ class FinicityAccountDialog extends Component {
     })
   }
 
-  render() {
+  render () {
     const { institutionTemplate, onRequestClose } = this.props
     const {
       loading,
@@ -233,7 +234,6 @@ class FinicityAccountDialog extends Component {
     )
   }
 }
-
 
 FinicityAccountDialog = Relay.createContainer(FinicityAccountDialog, {
   fragments: {
