@@ -41,8 +41,8 @@ export default function GraphicDialog (props) {
 GraphicDialog.propTypes = {
   scheme: PropTypes.string,
   image: PropTypes.string,
-  header: PropTypes.string,
-  paragraph: PropTypes.string,
+  header: PropTypes.object,
+  paragraph: PropTypes.object,
   next: PropTypes.object,
   prev: PropTypes.object,
   onRequestClose: PropTypes.func,
