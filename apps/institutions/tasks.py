@@ -5,6 +5,7 @@ from apps.transactions.tasks import detect_transfers
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
 from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
 from apps.users.models import User
+from apps.finicity.client import FinicityInvalidAccountError
 
 
 @shared_task
@@ -12,7 +13,15 @@ def sync_institution(institution_id):
     from .models import Institution
 
     institution = Institution.objects.get(id=institution_id)
-    institution.sync()
+
+    try:
+        institution.sync()
+    except FinicityInvalidAccountError:
+        # the connection process for this account failed and left the DB
+        # institution out of sync with Finicty. There is nothing we can do to
+        # recover it.
+        institution.delete()
+        return False
 
     return sum(account.transactions.count() for account in institution.accounts.all()) > 0
 
