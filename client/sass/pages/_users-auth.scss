@@ -1,6 +1,13 @@
 
-
 body.users-auth {
+  .header .brand {
+    padding: 12px;
+
+    img {
+      height: 40px;
+    }
+  }
+
   .auth-container {
     max-width: 330px;
     margin: 0 auto 50px;

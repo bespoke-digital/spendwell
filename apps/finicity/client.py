@@ -4,11 +4,12 @@ import json
 import logging
 from uuid import uuid4
 from collections import OrderedDict
+from xml.etree import ElementTree as ET
+from xml.parsers.expat import ExpatError
 
 from django.conf import settings
 from django.core.cache import cache
 
-from xml.parsers.expat import ExpatError
 import xmltodict
 import requests
 
@@ -67,22 +68,21 @@ class Finicity(object):
         if self.access_token and not force:
             return
 
+        credentials = ET.Element('credentials')
+        ET.SubElement(credentials, 'partnerId').text = settings.FINICITY_ID
+        ET.SubElement(credentials, 'partnerSecret').text = settings.FINICITY_SECRET
+
         response = requests.post(
             '{}/v2/partners/authentication'.format(FINICITY_URL),
             headers={
                 'Content-Type': 'application/xml',
                 'Finicity-App-Key': settings.FINICITY_APP_KEY,
             },
-            data='''
-                <credentials>
-                    <partnerId>{}</partnerId>
-                    <partnerSecret>{}</partnerSecret>
-                </credentials>
-            '''.format(
-                settings.FINICITY_ID,
-                settings.FINICITY_SECRET,
-            ),
+            data=ET.tostring(credentials),
         )
+
+        if b'<html>' in response.content:
+            raise FinicityError('Finicity: HTML response')
 
         data = self.parse(response)
 
@@ -107,6 +107,9 @@ class Finicity(object):
             headers=headers,
             **kwargs
         )
+
+        if b'<html>' in response.content:
+            raise FinicityError('Finicity: HTML response')
 
         data = self.parse(response)
 
@@ -156,51 +159,49 @@ class Finicity(object):
         else:
             path = '/v1/customers/testing'
 
-        body = '''
-            <customer>
-                <username>username{0}{1}</username>
-                <firstName>firstName{0}{1}</firstName>
-                <lastName>lastName{0}{1}</lastName>
-            </customer>
-        '''.format(self.user.id, uuid4().hex[:5])
+        user_id = '{}{}'.format(self.user.id, uuid4().hex[:5])
 
-        response = self.request(path, method='POST', data=body)
+        customer = ET.Element('customer')
+        ET.SubElement(customer, 'username').text = 'username{}'.format(user_id)
+        ET.SubElement(customer, 'firstName').text = 'firstName{}'.format(user_id)
+        ET.SubElement(customer, 'lastName').text = 'lastName{}'.format(user_id)
+
+        response = self.request(path, method='POST', data=ET.tostring(customer))
         self.user.finicity_id = response['customer']['id']
         self.user.save()
 
-    def credentials_xml(self, credentials):
-        return '<accounts><credentials>{}</credentials></accounts>'.format(
-            ''.join([
-                '''
-                    <loginField>
-                        <id>{id}</id>
-                        <name>{name}</name>
-                        <value>{value}</value>
-                    </loginField>
-                '''.format(id=id, **cred)
-                for id, cred in credentials.items()
-            ])
-        )
+    def credentials_xml(self, credential_data):
+        accounts = ET.Element('accounts')
+        credentials = ET.SubElement(accounts, 'credentials')
+
+        for id, cred in credential_data.items():
+            login_field = ET.SubElement(credentials, 'loginField')
+            ET.SubElement(login_field, 'id').text = id
+            ET.SubElement(login_field, 'name').text = cred['name']
+            ET.SubElement(login_field, 'value').text = cred['value']
+
+        return ET.tostring(accounts)
 
     def mfa_xml(self, answers):
         mfa_data = cache.get(mfa_cache_key(self.user))
         if not mfa_data:
             raise FinicityValidation('finicity-mfa-expired')
 
-        body = '<accounts><mfaChallenges><questions>{}</questions></mfaChallenges></accounts>'.format(
-            ''.join([
-                '<question>{question}<answer>{answer}</answer></question>'.format(
-                    answer=answers[index],
-                    question=''.join([
-                        '<{key}>{value}</{key}>'.format(key=key, value=value)
-                        for key, value in question.items()
-                    ]),
-                )
-                for index, question in enumerate(mfa_data['challenges'])
-            ]),
-        )
+        accounts = ET.Element('accounts')
+        mfa_challenges = ET.SubElement(accounts, 'mfaChallenges')
+        questions = ET.SubElement(mfa_challenges, 'questions')
 
-        return body, mfa_data['session']
+        for index, question_data in enumerate(mfa_data['challenges']):
+            question = ET.SubElement(questions, 'question')
+
+            for key, value in question_data.items():
+                question_item = ET.SubElement(question, key)
+                question_item.text = value
+
+            answer = ET.SubElement(question, 'answer')
+            answer.text = answers[index]
+
+        return ET.tostring(accounts), mfa_data['session']
 
     def list_institutions(self, query):
         response = self.request('/v1/institutions', params={
