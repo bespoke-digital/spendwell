@@ -84,36 +84,33 @@ class FinicityAccountDialog extends Component {
         const userActionRequired = error('finicity-user-action-required')
 
         if (mfaError) {
-          const mfaChallenges = JSON.parse(mfaError.message.split(':').slice(1).join(':'))
-          console.log('Finicity MFA Required', mfaChallenges)
           this.setState({
-            mfaChallenges,
-            invalidCredentials: !!invalidCredentials,
-            userActionRequired: !!userActionRequired,
+            mfaChallenges: JSON.parse(mfaError.message.split(':').slice(1).join(':')),
+            mfaExpired: false,
+            invalidCredentials: false,
+            userActionRequired: false,
           })
         } else if (mfaExpired) {
           this.setState({
             mfaChallenges: null,
             mfaAnswers: [],
+            mfaExpired: true,
+            invalidCredentials: false,
+            userActionRequired: false,
+          })
+        } else if (!!invalidCredentials || !!userActionRequired) {
+          this.setState({
+            mfaExpired: false,
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
           })
         } else {
-          this.setState({
-            invalidCredentials: !!invalidCredentials,
-            userActionRequired: !!userActionRequired,
-          })
-
           track('connect-error', {
             provider: 'finicity',
             institution: institutionTemplate.name,
           })
-
-          if (!invalidCredentials && !userActionRequired) {
-            handleMutationError(transaction)
-          }
-
           onError()
+          handleMutationError(transaction)
         }
       },
       onSuccess: () => {

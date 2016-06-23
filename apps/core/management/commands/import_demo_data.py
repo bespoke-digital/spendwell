@@ -27,19 +27,24 @@ def import_demo_data():
 
     export = {}
 
-    for data_name in [
-        'institutions',
-        'accounts',
-        'transactions',
-        'buckets',
-        'goals',
-    ]:
-        data_file_name = os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(data_name))
-        with open(data_file_name, 'r') as data_file:
-            export[data_name] = [row for row in csv.DictReader(data_file)]
+    try:
+        for data_name in [
+            'institutions',
+            'accounts',
+            'transactions',
+            'buckets',
+            'goals',
+        ]:
+            data_file_name = os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(data_name))
+            with open(data_file_name, 'r') as data_file:
+                export[data_name] = [row for row in csv.DictReader(data_file)]
 
-    with open(os.path.join(settings.DEMO_DATA_DIR, 'export_date'), 'r') as data_file:
-        exported_on = delorean.parse(data_file.read()).datetime
+        with open(os.path.join(settings.DEMO_DATA_DIR, 'export_date'), 'r') as data_file:
+            exported_on = delorean.parse(data_file.read()).datetime
+
+    except FileNotFoundError:
+        print('Unable to load demo data: files missing')
+        return
 
     print('clearing existing demo data')
     owner.institutions.all().delete()
