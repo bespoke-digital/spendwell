@@ -8,6 +8,7 @@ import TextInput from 'components/text-input'
 import Button from 'components/button'
 import Dialog from 'components/dialog'
 import DialogActions from 'components/dialog-actions'
+import Icon from 'components/icon'
 
 import track from 'utils/track'
 import { ConnectFinicityInstitutionMutation } from 'mutations/finicity'
@@ -90,14 +91,13 @@ class FinicityAccountDialog extends Component {
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
           })
-
         } else if (mfaExpired) {
           this.setState({
             mfaChallenges: null,
+            mfaAnswers: [],
             invalidCredentials: !!invalidCredentials,
             userActionRequired: !!userActionRequired,
           })
-
         } else {
           this.setState({
             invalidCredentials: !!invalidCredentials,
@@ -180,9 +180,9 @@ class FinicityAccountDialog extends Component {
                     {challenge.choice.map((choice) =>
                       <li key={choice['@value']}>
                         {mfaAnswers[index] === choice['@value'] ?
-                          <i className='fa fa-dot-circle-o'/>
+                          <Icon type='radio button checked'/>
                         :
-                          <i className='fa fa-circle-o'/>
+                          <Icon type='radio button unchecked'/>
                         }
                         <a href='#' onClick={this.setMfaValue.bind(this, challenge, index, choice['@value'])}>
                           {choice['#text']}
@@ -195,9 +195,9 @@ class FinicityAccountDialog extends Component {
                     {challenge.imageChoice.map((choice) =>
                       <li key={choice['@value']}>
                         {mfaAnswers[index] === choice['@value'] ?
-                          <i className='fa fa-dot-circle-o'/>
+                          <Icon type='radio button checked'/>
                         :
-                          <i className='fa fa-circle-o'/>
+                          <Icon type='radio button unchecked'/>
                         }
                         <a href='#' onClick={this.setMfaValue.bind(this, challenge, index, choice['@value'])}>
                           <img src={choice['#text']} alt={choice['@value']}/>

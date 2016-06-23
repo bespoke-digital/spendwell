@@ -113,9 +113,20 @@ class Finicity(object):
         )
 
         if b'<html>' in response.content:
+            if settings.DEBUG:
+                print('\n\nFINICITY REQUEST')
+                print(method, path)
+                if 'data' in kwargs:
+                    print(kwargs['data'])
+                print('\nFINICITY RESPONSE')
+                print(response.content)
+
             raise FinicityError('Finicity: HTML response')
 
         data = self.parse(response)
+
+        if data is None:
+            return
 
         if response.status_code == 203:
             raise FinicityMFAException(self.user, response, data)
@@ -157,6 +168,9 @@ class Finicity(object):
         return data
 
     def parse(self, response):
+        if not response.content:
+            return None
+
         try:
             return xmltodict.parse(response.content)
         except ExpatError:
@@ -207,8 +221,15 @@ class Finicity(object):
             question = ET.SubElement(questions, 'question')
 
             for key, value in question_data.items():
-                question_item = ET.SubElement(question, key)
-                question_item.text = value
+                if key == 'imageChoice':
+                    continue
+                if isinstance(value, list):
+                    for item in value:
+                        question_item = ET.SubElement(question, key, value=item['@value'])
+                        question_item.text = item['#text']
+                else:
+                    question_item = ET.SubElement(question, key)
+                    question_item.text = value
 
             answer = ET.SubElement(question, 'answer')
             answer.text = answers[index]
@@ -293,3 +314,18 @@ class Finicity(object):
                 break
 
         return transactions
+
+    def list_customers(self, test=True):
+        params = {}
+
+        if test:
+            params['type'] = 'testing'
+        else:
+            params['type'] = 'active'
+
+        response = self.request('/v1/customers', params=params)
+
+        return maybe_list(response['customers'].get('customer', []))
+
+    def delete_customer(self, finicity_id):
+        return self.request('/v1/customers/{}'.format(finicity_id), method='DELETE')
