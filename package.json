@@ -8,7 +8,7 @@
   "scripts": {
     "start": "concurrently --kill-others --raw 'caddy' 'node ./webpack/dev.server.js'",
     "build-dev": "./node_modules/.bin/webpack --config=./webpack/dev.config.js",
-    "build-prod": "./node_modules/.bin/webpack --config=./webpack/prod.config.js"
+    "build-prod": "NODE_ENV=production ./node_modules/.bin/webpack --config=./webpack/prod.config.js"
   },
   "dependencies": {
     "autoprefixer": "^6.3.1",
