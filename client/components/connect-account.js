@@ -1,72 +1,80 @@
 
-import _ from 'lodash';
-import { Component } from 'react';
-import Relay from 'react-relay';
-import { browserHistory } from 'react-router';
+import _ from 'lodash'
+import { Component, PropTypes } from 'react'
+import Relay from 'react-relay'
+import { browserHistory } from 'react-router'
 
-import TextInput from 'components/text-input';
-import Card from 'components/card';
-import CardList from 'components/card-list';
-import Transition from 'components/transition';
-import FinicityAccountDialog from 'components/finicity-account-dialog';
-import ErrorDialog from 'components/error-dialog';
+import TextInput from 'components/text-input'
+import Card from 'components/card'
+import CardList from 'components/card-list'
+import Transition from 'components/transition'
+import FinicityAccountDialog from 'components/finicity-account-dialog'
+import FinicityErrorDialog from 'components/finicity-error-dialog'
 
-import { ConnectPlaidInstitutionMutation } from 'mutations/institutions';
-import plaidAccountDialog from 'utils/plaid-account-dialog';
-import { parseUrl } from 'utils';
+import { ConnectPlaidInstitutionMutation } from 'mutations/institutions'
+import plaidAccountDialog from 'utils/plaid-account-dialog'
+import { parseUrl } from 'utils'
 
-import styles from 'sass/views/add-plaid.scss';
+import styles from 'sass/views/add-plaid.scss'
 
 
-// const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true';
+// const PLAID_PRODUCTION = document.querySelector('meta[name=plaid-production]').getAttribute('content') === 'true'
 
 
 class ConnectAccount extends Component {
-  constructor() {
-    super();
-    this.state = { results: [] };
-    this.handleSearch = _.debounce(this.handleSearch.bind(this), 300);
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+    relay: PropTypes.object.isRequired,
+  };
+
+  state = { results: [] };
+
+  constructor () {
+    super()
+    this.handleSearch = _.debounce(this.handleSearch.bind(this), 300)
   }
 
-  handleSearch(query) {
-    const { relay } = this.props;
+  handleSearch (query) {
+    const { relay } = this.props
 
-    relay.setVariables({ query });
+    relay.setVariables({ query })
 
     // fetch(`https://${PLAID_PRODUCTION ? 'api' : 'tartan'}.plaid.com` +
     //     `/institutions/search?p=connect&q=${query}`)
     //   .then((response)=> response.json())
-    //   .then((results)=> this.setState({ results }));
+    //   .then((results)=> this.setState({ results }))
   }
 
-  handleConnected() {
-    if (document.location.pathname.indexOf('onboarding') !== -1)
-      browserHistory.push('/onboarding/accounts');
-    else
-      browserHistory.push('/app/accounts');
+  handleConnected () {
+    if (document.location.pathname.indexOf('onboarding') !== -1) {
+      browserHistory.push('/onboarding/accounts')
+    } else {
+      browserHistory.push('/app/accounts')
+    }
   }
 
-  selectPlaidInstitution(plaidId) {
-    const { viewer } = this.props;
+  selectPlaidInstitution (plaidId) {
+    const { viewer } = this.props
     plaidAccountDialog({
       viewer,
       plaidInstitutionId: plaidId,
       onConnected: ::this.handleConnected,
-    });
+    })
   }
 
-  handleTemplateClick(institutionTemplate) {
-    const { relay } = this.props;
+  handleTemplateClick (institutionTemplate) {
+    const { relay } = this.props
 
-    if (institutionTemplate.finicityId)
-      relay.setVariables({ finicitySelectedId: institutionTemplate.id });
-    else if (institutionTemplate.plaidId)
-      this.selectPlaidInstitution(institutionTemplate.plaidId);
+    if (institutionTemplate.finicityId) {
+      relay.setVariables({ finicitySelectedId: institutionTemplate.id })
+    } else if (institutionTemplate.plaidId) {
+      this.selectPlaidInstitution(institutionTemplate.plaidId)
+    }
   }
 
-  render() {
-    const { viewer, relay } = this.props;
-    const { results } = this.state;
+  render () {
+    const { viewer, relay } = this.props
+    const { results, finicityError } = this.state
 
     return (
       <CardList className={styles.root}>
@@ -75,23 +83,20 @@ class ConnectAccount extends Component {
         </Card>
 
         <Transition show={!!viewer.institutionTemplate}>
-          {!this.state.isError ?
+          {!finicityError ?
             <FinicityAccountDialog
               viewer={viewer}
               institutionTemplate={viewer.institutionTemplate}
-              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
+              onRequestClose={() => relay.setVariables({ finicitySelectedId: null })}
               onConnected={::this.handleConnected}
-              onError={() => this.setState({ isError: !this.state.isError })}
-            /> 
-          :
-            <ErrorDialog 
-              onRequestClose={()=> relay.setVariables({ finicitySelectedId: null })}
-              onError={() => this.setState({ isError: !this.state.isError })}
+              onError={() => this.setState({ finicityError: true })}
             />
+          :
+            <FinicityErrorDialog onRequestClose={() => this.setState({ finicityError: false })}/>
           }
         </Transition>
 
-        {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node })=>
+        {viewer.institutionTemplates ? viewer.institutionTemplates.edges.map(({ node }) =>
           <Card
             key={node.id}
             className={`fi ${node.image ? 'has-logo' : ''}`}
@@ -104,15 +109,15 @@ class ConnectAccount extends Component {
           </Card>
         ) : null}
 
-        {results.length ? results.map((plaidInstitution)=> (
+        {results.length ? results.map((plaidInstitution) => (
           <Card
             className={`fi ${plaidInstitution.logo ? 'has-logo' : ''}`}
-            onClick={()=> this.selectPlaidInstitution(plaidInstitution)}
+            onClick={() => this.selectPlaidInstitution(plaidInstitution)}
             key={plaidInstitution.id}
             style={{ borderLeftColor: plaidInstitution.colors.darker }}
           >
             {plaidInstitution.logo ?
-              <img src={`data:image/png;base64,${plaidInstitution.logo}`} alt={plaidInstitution.name}/>
+              <img src={`data:image/pngbase64,${plaidInstitution.logo}`} alt={plaidInstitution.name}/>
             : null}
 
             <div className='fi-name'>
@@ -130,24 +135,23 @@ class ConnectAccount extends Component {
         )) : null}
 
       </CardList>
-    );
+    )
   }
 }
-
 
 ConnectAccount = Relay.createContainer(ConnectAccount, {
   initialVariables: {
     query: null,
     finicitySelectedId: null,
   },
-  prepareVariables(vars) {
+  prepareVariables (vars) {
     return {
       finicitySelected: !!vars.finicitySelectedId,
       ...vars,
-    };
+    }
   },
   fragments: {
-    viewer: ()=> Relay.QL`
+    viewer: () => Relay.QL`
       fragment on Viewer {
         ${FinicityAccountDialog.getFragment('viewer')}
         ${ConnectPlaidInstitutionMutation.getFragment('viewer')}
@@ -172,6 +176,6 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
       }
     `,
   },
-});
+})
 
-export default ConnectAccount;
+export default ConnectAccount
