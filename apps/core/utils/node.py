@@ -17,6 +17,9 @@ def instance_for_node_id(node_id, context, info, check_owner=True):
     object_type = schema.get_type(resolved_type)
     node = object_type.get_node(resolved_id, context, info)
 
+    if node is None:
+        return
+
     if check_owner and not node.instance.owner == context.user:
         raise SuspiciousOperation('invalid user')
 
