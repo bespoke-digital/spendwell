@@ -228,7 +228,7 @@ class FilterComponent extends Component {
                 />
               : Filter.fields[field].type === 'account' ?
                 <Select
-                  initialValue={Math.abs(filter.value(field))}
+                  initialValue={filter.value(field)}
                   onChange={(value) => filter.update(field, value)}
                   label='Select Account'
                   selectedLabel={false}
