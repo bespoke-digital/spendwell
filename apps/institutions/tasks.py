@@ -12,7 +12,10 @@ from apps.finicity.client import FinicityInvalidAccountError
 def sync_institution(institution_id):
     from .models import Institution
 
-    institution = Institution.objects.get(id=institution_id)
+    try:
+        institution = Institution.objects.get(id=institution_id)
+    except Institution.DoesNotExist:
+        return True
 
     try:
         institution.sync()
@@ -21,7 +24,7 @@ def sync_institution(institution_id):
         # institution out of sync with Finicty. There is nothing we can do to
         # recover it.
         institution.delete()
-        return False
+        return True
 
     return sum(account.transactions.count() for account in institution.accounts.all()) > 0
 

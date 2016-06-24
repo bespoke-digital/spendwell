@@ -69,6 +69,7 @@ MIDDLEWARE_CLASSES = [
     'security_middleware.middleware.NoSniffMiddleware',
     'csp.middleware.CSPMiddleware',
 
+    'apps.users.middleware.SentryUserContextMiddleware',
     'apps.users.middleware.BetaCodeMiddleware',
 ]
 

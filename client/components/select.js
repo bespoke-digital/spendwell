@@ -5,7 +5,6 @@ import { Component, PropTypes } from 'react'
 import Dropdown from 'components/dropdown'
 import A from 'components/a'
 
-
 export default class Select extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
@@ -40,8 +39,9 @@ export default class Select extends Component {
   handleOptionClick (value) {
     const { onChange } = this.props
 
-    if (!this.isControled())
+    if (!this.isControled()) {
       this.setState({ value })
+    }
 
     onChange(value)
   }
@@ -50,10 +50,11 @@ export default class Select extends Component {
     const { initialValue, selectedLabel, label, options, variant, className } = this.props
 
     let value
-    if (this.isControled())
+    if (this.isControled()) {
       value = this.props.value
-    else
+    } else {
       value = this.state.value || initialValue
+    }
 
     const valueLabel = _.result(_.find(options, { value }), 'label')
 
@@ -61,9 +62,7 @@ export default class Select extends Component {
       <span className={className}>
         <Dropdown
           label={
-            valueLabel && selectedLabel ? `${label}: ${valueLabel}` :
-            valueLabel ? valueLabel :
-            label
+            valueLabel && selectedLabel ? `${label}: ${valueLabel}` : valueLabel || label
           }
           variant={variant}
         >

@@ -86,6 +86,8 @@ class Finicity(object):
         )
 
         if b'<html>' in response.content:
+            # This makes it easy to see the content in Sentry
+            response_content = response.content  # noqa
             raise FinicityError('Finicity: HTML response')
 
         data = self.parse(response)
@@ -121,6 +123,8 @@ class Finicity(object):
                 print('\nFINICITY RESPONSE')
                 print(response.content)
 
+            # This makes it easy to see the content in Sentry
+            response_content = response.content  # noqa
             raise FinicityError('Finicity: HTML response')
 
         data = self.parse(response)

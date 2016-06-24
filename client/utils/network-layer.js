@@ -1,9 +1,9 @@
 
+import _ from 'lodash'
 import Relay from 'react-relay'
 
 import { getCookie } from 'utils/cookies'
 import store from 'store'
-
 
 function finishPromise (arg) {
   store.dispatch({ type: 'LOADING_START' })
@@ -15,7 +15,6 @@ function loadingPromise (promise) {
   return promise.then(finishPromise, finishPromise)
 }
 
-
 const defaultNetworkLayer = new Relay.DefaultNetworkLayer('/graphql', {
   credentials: 'same-origin',
   headers: {
@@ -23,8 +22,7 @@ const defaultNetworkLayer = new Relay.DefaultNetworkLayer('/graphql', {
   },
 })
 
-
-export default Object.assign({}, defaultNetworkLayer, {
+export default _.assign({}, defaultNetworkLayer, {
   sendMutation (request) {
     return loadingPromise(defaultNetworkLayer.sendMutation(request))
   },
