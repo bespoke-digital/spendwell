@@ -1,6 +1,27 @@
 
 from django.http import HttpResponseRedirect
 
+try:
+    from raven.contrib.django.raven_compat.models import client as raven
+    use_raven = True
+except ImportError:
+    use_raven = False
+
+
+class SentryUserContextMiddleware(object):
+    def process_request(self, request):
+        if use_raven:
+            if request.user.is_authenticated():
+                raven.user_context({
+                    'email': request.user.email,
+                    'id': request.user.id,
+                })
+            else:
+                raven.user_context({
+                    'email': None,
+                    'id': None,
+                })
+
 
 class BetaCodeMiddleware(object):
     def process_request(self, request):
