@@ -301,6 +301,52 @@ class TransactionsTestCase(SWTestCase):
 
         self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
 
+    def test_account_filterset(self):
+        owner = UserFactory.create()
+
+        account = AccountFactory.create()
+        TransactionFactory.create(owner=owner)
+        TransactionFactory.create(owner=owner, account=account)
+        TransactionFactory.create(owner=owner, account=account)
+
+        result = self.graph_query('''{{
+            viewer {{
+                transactions(filters: [{{ account: "{}" }}]) {{
+                    edges {{
+                        node {{
+                            description
+                        }}
+                    }}
+                }}
+            }}
+        }}'''.format(node_id_from_instance(account)), user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+
+    def test_account_description_filterset(self):
+        owner = UserFactory.create()
+
+        account = AccountFactory.create()
+        TransactionFactory.create(owner=owner)
+        TransactionFactory.create(owner=owner, account=account)
+        TransactionFactory.create(owner=owner, account=account)
+        TransactionFactory.create(owner=owner, account=account, description='match 1')
+        TransactionFactory.create(owner=owner, account=account, description='match 2')
+
+        result = self.graph_query('''{{
+            viewer {{
+                transactions(filters: [{{ account: "{}", descriptionContains: "match" }}]) {{
+                    edges {{
+                        node {{
+                            description
+                        }}
+                    }}
+                }}
+            }}
+        }}'''.format(node_id_from_instance(account)), user=owner)
+
+        self.assertEqual(len(result.data['viewer']['transactions']['edges']), 2)
+
     def test_quick_add(self):
         owner = UserFactory.create()
         bucket = BucketFactory.create(owner=owner)
