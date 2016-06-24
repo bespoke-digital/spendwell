@@ -149,7 +149,7 @@ class FinicityAccountDialog extends Component {
       <Dialog size='sm' onRequestClose={onRequestClose} className={style.root}>
         <form onSubmit={::this.handleSubmit}>
           <div className='body'>
-            <h3>Connect {institutionTemplate.name}</h3>
+            <h3>{institutionTemplate.name}</h3>
 
             {invalidCredentials ?
               <span className='form-error'>
@@ -227,6 +227,10 @@ class FinicityAccountDialog extends Component {
             <Button type='submit' loading={loading}>Submit</Button>
           </DialogActions>
         </form>
+
+        <div className='security-bar'>
+          <Icon type='lock'/> We use bank-level security.
+        </div>
       </Dialog>
     )
   }
