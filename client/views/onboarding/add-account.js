@@ -52,42 +52,18 @@ class AddAccountView extends Component {
         </Transition>
 
         <div className={style.root}>
-          <Row>
-            <Col md='8' className={`connect ${connectStyles.root}`}>
-              <div className='heading'>
-                <h1>Connect Accounts</h1>
-              </div>
+          <div className='heading'>
+            <h1>Connect Accounts</h1>
+          </div>
 
-              <ConnectAccount viewer={viewer}/>
+          <ConnectAccount viewer={viewer}/>
 
-              <div className='flex-row'>
-                <div/>
-                {hasInstitutions ?
-                  <Button to='/onboarding/accounts'>Skip</Button>
-                : null}
-              </div>
-            </Col>
-
-            <Col md='4' className='welcome'>
-              <div>
-                <div>
-                  <img src={securityImage}/>
-                  <h3>Bank Level Security</h3>
-                </div>
-
-                <div>
-                  <img src={anonymityImage}/>
-                  <h3>Anonymity</h3>
-                </div>
-
-                <div>
-                  <img src={privacyImage}/>
-                  <h3>Data Privacy</h3>
-                </div>
-              </div>
-            </Col>
-          </Row>
-
+          <div className='flex-row'>
+            <div/>
+            {hasInstitutions ?
+              <Button to='/onboarding/accounts'>Skip</Button>
+            : null}
+          </div>
         </div>
       </Onboarding>
     )
