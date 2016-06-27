@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = 'Exports the GraphQL schema in JSON format.'
 
     def handle(self, *args, **options):
-        owner = User.objects.get(email='aron@spendwell.co')
+        owner = User.objects.get(email='demo@spendwell.co')
 
         export = {
             'institutions': [],
