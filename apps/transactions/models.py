@@ -4,8 +4,9 @@ from datetime import datetime
 from pytz import timezone
 import logging
 
-from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import SuspiciousOperation
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel, SWQuerySet, SWManager
 from apps.accounts.models import Account
@@ -95,9 +96,15 @@ class TransactionManager(SWManager):
 
         try:
             transaction = Transaction.objects.get(finicity_id=data['id'])
+        except Transaction.MultipleObjectsReturned:
+            transaction = Transaction.objects.filter(finicity_id=data['id']).first()
+            Transaction.objects.exclude(id__in=(transaction.id,)).delete()
         except Transaction.DoesNotExist:
             transaction = Transaction()
             transaction.finicity_id = data['id']
+
+        if transaction.owner_id and transaction.owner != institution.owner:
+            raise SuspiciousOperation('Finicity transaction owner mispatch')
 
         transaction.account = account
         transaction.owner = institution.owner
