@@ -1,5 +1,6 @@
 
 from celery import shared_task, chain
+from django.conf import settings
 
 from apps.transactions.tasks import detect_transfers
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
@@ -9,7 +10,7 @@ from apps.finicity.client import FinicityInvalidAccountError
 
 
 @shared_task
-def sync_institution(institution_id):
+def sync_institution(institution_id, reauth=False):
     from .models import Institution
 
     try:
@@ -26,7 +27,12 @@ def sync_institution(institution_id):
         institution.delete()
         return True
 
-    return sum(account.transactions.count() for account in institution.accounts.all()) > 0
+    success = sum(account.transactions.count() for account in institution.accounts.all()) > 0
+
+    if reauth and not success:
+        institution.reauth_required = True
+
+    return success
 
 
 @shared_task
@@ -36,7 +42,7 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
     user = User.objects.get(id=user_id)
 
     if not all(sync_status):
-        if backoff > 5:
+        if backoff > settings.SYNC_BACKOFF_MAX:
             return
         return sync_user(
             user,
