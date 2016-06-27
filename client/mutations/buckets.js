@@ -1,47 +1,6 @@
 
 import Relay from 'react-relay'
 
-
-export class AssignTransactionsMutation extends Relay.Mutation {
-  static fragments = {
-    viewer: () => Relay.QL`
-      fragment on Viewer {
-        id,
-      }
-    `,
-  };
-
-  getMutation () {
-    return Relay.QL`mutation { assignTransactions }`
-  }
-
-  getVariables () {
-    return { month: this.props.month.format('YYYY/MM') }
-  }
-
-  getFatQuery () {
-    return Relay.QL`
-      fragment on DeleteBucketMutationPayload {
-        viewer {
-          summary {
-            transactions
-          }
-        }
-      }
-    `
-  }
-
-  getConfigs () {
-    return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        viewer: this.props.viewer.id,
-      },
-    }]
-  }
-}
-
-
 export class CreateBucketMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
@@ -60,15 +19,15 @@ export class CreateBucketMutation extends Relay.Mutation {
       name: this.props.name,
       filters: this.props.filters,
       type: this.props.type,
+      goalAmount: this.props.goalAmount,
+      isFixed: this.props.isFixed,
     }
   }
 
   getFatQuery () {
     return Relay.QL`
       fragment on CreateBucketMutationPayload {
-        viewer {
-          dummy
-        }
+        viewer { dummy }
       }
     `
   }
@@ -82,7 +41,6 @@ export class CreateBucketMutation extends Relay.Mutation {
     }]
   }
 }
-
 
 export class DeleteBucketMutation extends Relay.Mutation {
   static fragments = {
@@ -111,9 +69,7 @@ export class DeleteBucketMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on DeleteBucketMutationPayload {
-        viewer {
-          dummy
-        }
+        viewer { dummy }
       }
     `
   }
@@ -127,7 +83,6 @@ export class DeleteBucketMutation extends Relay.Mutation {
     }]
   }
 }
-
 
 export class UpdateBucketMutation extends Relay.Mutation {
   static fragments = {
@@ -152,16 +107,15 @@ export class UpdateBucketMutation extends Relay.Mutation {
       bucketId: this.props.bucket.id,
       name: this.props.name,
       filters: this.props.filters,
+      goalAmount: this.props.goalAmount,
+      isFixed: this.props.isFixed,
     }
   }
 
   getFatQuery () {
     return Relay.QL`
       fragment on UpdateBucketMutationPayload {
-        bucket {
-          name
-          filters
-        }
+        viewer { dummy }
       }
     `
   }
@@ -186,7 +140,6 @@ export class UpdateBucketMutation extends Relay.Mutation {
   }
 }
 
-
 export class AutodetectBillsMutation extends Relay.Mutation {
   static fragments = {
     viewer: () => Relay.QL`
@@ -207,9 +160,7 @@ export class AutodetectBillsMutation extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on AutodetectBillsMutationPayload {
-        viewer {
-          dummy
-        }
+        viewer { dummy }
       }
     `
   }

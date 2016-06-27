@@ -13,7 +13,7 @@ def bucket_month(bucket, month):
         date__lt=month + relativedelta(months=1),
     )
 
-    if bucket.type == 'goal' and bucket.goal_amount:
+    if bucket.type == 'goal':
         amount = bucket.goal_amount
         avg_amount = amount
     else:

@@ -6,6 +6,7 @@ from graphene.utils import to_snake_case, with_context
 from graphql_relay import from_global_id
 
 from apps.core.utils import instance_for_node_id
+from apps.core.types import Money
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
 
@@ -39,6 +40,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'CreateBucketFilterSet')
+        fixed_goal_amount = graphene.InputField(Money())
+        is_fixed = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
 
@@ -56,6 +59,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
             name=input['name'],
             filters=filters,
             type=input['type'],
+            fixed_goal_amount=input.get('fixed_goal_amount'),
+            is_fixed=input.get('is_fixed', bool(input.get('fixed_goal_amount'))),
         )
 
         return Cls(viewer=Viewer())
@@ -67,6 +72,8 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'UpdateBucketFilterSet')
+        fixed_goal_amount = graphene.InputField(Money())
+        is_fixed = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
     bucket = graphene.Field(BucketNode)
@@ -86,6 +93,13 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
 
         if 'filters' in input and input['filters']:
             bucket.filters = clean_filters(input['filters'])
+
+        if 'fixed_goal_amount' in input:
+            bucket.fixed_goal_amount = input['fixed_goal_amount']
+            bucket.is_fixed = True
+
+        elif 'is_fixed' in input:
+            bucket.is_fixed = input['is_fixed']
 
         bucket.save()
 

@@ -77,7 +77,7 @@ class GoalMonth extends Component {
               </div>
               <div>{bucketMonth.bucket.name}</div>
               <div className='amount'>
-                <Money amount={bucketMonth.amount} abs={true}/>
+                <Money amount={bucketMonth.avgAmount} abs={true}/>
               </div>
             </div>
           }
@@ -123,7 +123,7 @@ GoalMonth = Relay.createContainer(GoalMonth, {
     `,
     bucketMonth: () => Relay.QL`
       fragment on BucketMonthNode {
-        amount
+        avgAmount
 
         bucket {
           ${UpdateBucketSheet.getFragment('bucket')}

@@ -93,6 +93,12 @@ class Bucket(SWModel):
 
         return self._goal_amount
 
+    @property
+    def is_fixed(self):
+        if not hasattr(self, '_is_fixed'):
+            self._is_fixed = bool(self.fixed_goal_amount)
+        return self._is_fixed
+
     def raw_transactions(self, **filters):
         if self.filters is None:
             return []

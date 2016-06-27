@@ -38,8 +38,8 @@ function getInitialState ({ bucket, type, initialFilters, initialName }) {
     name: bucket ? bucket.name : (initialName || ''),
     type: bucket ? bucket.type : type,
     goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
-    goalType: null,
-    useGoalAvg: true,
+    goalType: bucket && bucket.type === 'goal' && bucket.filters.length ? 'filter' : 'amount',
+    isFixed: true,
   }
 }
 
@@ -71,8 +71,8 @@ class BucketForm extends Component {
   }
 
   getData () {
-    const { filters, name } = this.state
-    return { name, filters: cleanFilters(filters) }
+    const { name, filters, goalAmount, isFixed } = this.state
+    return { name, filters: cleanFilters(filters), goalAmount, isFixed }
   }
 
   reset () {
@@ -148,7 +148,7 @@ class BucketForm extends Component {
 
   render () {
     const { viewer } = this.props
-    const { name, type, filters, goalType, goalAmount, useGoalAvg } = this.state
+    const { name, type, filters, goalType, goalAmount, isFixed } = this.state
 
     return (
       <div className={style.root}>
@@ -189,7 +189,7 @@ class BucketForm extends Component {
             <Card className='filter-goal-amount'>
               <StaticLabel>Monthly Amount</StaticLabel>
               <div className='filter-goal-amount-value'>
-                {useGoalAvg ?
+                {!isFixed ?
                   <Money amount={viewer.transactions.avgAmount} abs/>
                 :
                   <TextInput
@@ -205,9 +205,9 @@ class BucketForm extends Component {
               </div>
               <div
                 className='filter-goal-amount-toggle'
-                onClick={() => this.setState({ useGoalAvg: !useGoalAvg })}
+                onClick={() => this.setState({ isFixed: !isFixed })}
               >
-                <Icon type={useGoalAvg ? 'check box' : 'check box outline blank'}/>
+                <Icon type={!isFixed ? 'check box' : 'check box outline blank'}/>
                 Use transaction average
               </div>
             </Card>
@@ -273,6 +273,7 @@ BucketForm = Relay.createContainer(BucketForm, {
       fragment on BucketNode {
         name
         type
+        isFixed
 
         filters {
           amountGt

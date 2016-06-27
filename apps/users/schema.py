@@ -18,6 +18,7 @@ class BucketMonthNode(graphene.relay.Node):
     month = graphene.Field(Month())
     amount = graphene.Field(Money())
     avg_amount = graphene.Field(Money())
+    is_fixed = graphene.Field(graphene.Boolean())
     transactions = TransactionConnectionField(TransactionNode)
 
     @classmethod

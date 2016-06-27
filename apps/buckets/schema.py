@@ -19,6 +19,7 @@ class BucketNode(SWNode):
     filters = filter_list_schema(TransactionFilter, name='BucketFilters', input=False)
     type = graphene.Field(graphene.String())
     avatar = graphene.Field(graphene.String())
+    is_fixed = graphene.Field(graphene.Boolean())
 
     class Meta:
         model = Bucket
@@ -28,6 +29,7 @@ class BucketNode(SWNode):
             'transactions',
             'filters',
             'type',
+            'is_fixed',
         )
 
     def resolve_transactions(self, args, info):

@@ -6,7 +6,7 @@ from graphene.relay.types import Connection
 
 from apps.core.fields import SWNode
 from apps.core.types import Money
-from apps.core.utils import months_avg, this_month
+from apps.core.utils import months_avg
 from apps.buckets.models import Bucket
 
 from .models import Transaction
@@ -18,7 +18,7 @@ class TransactionConnection(Connection):
 
     @with_context
     def resolve_avg_amount(self, args, context, info):
-        return months_avg(self._connection_data, month_start=this_month())
+        return months_avg(self._connection_data)
 
 
 class TransactionNode(SWNode):
