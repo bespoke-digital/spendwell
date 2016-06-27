@@ -17,7 +17,7 @@ def bucket_month(bucket, month):
         amount = bucket.goal_amount
         avg_amount = amount
     else:
-        amount = bucket.transactions.sum()
+        amount = transactions.sum()
         avg_amount = months_avg(bucket.transactions.all(), month_start=month)
 
     return {

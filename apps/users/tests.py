@@ -10,7 +10,6 @@ from apps.core.tests import SWTestCase
 from apps.core.utils import this_month
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
-from apps.goals.factories import GoalFactory
 from apps.buckets.factories import BucketFactory
 
 from .factories import UserFactory
@@ -104,7 +103,7 @@ class UsersTestCase(SWTestCase):
     def test_summary_goals(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
-        GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
+        BucketFactory.create(type='goal', fixed_goal_amount=Decimal('-500'), owner=owner)
 
         result = self.graph_query('{ viewer { safeToSpend } }', user=owner)
 
@@ -116,16 +115,15 @@ class UsersTestCase(SWTestCase):
 
     def test_summary_goal_months(self):
         current_month_start = delorean.now().truncate('month').datetime
-        last_month_start = current_month_start - relativedelta(months=1)
         owner = UserFactory.create(estimated_income=Decimal('2000'))
         query = '''{{
             viewer {{
                 summary(month: "{month:%Y/%m}") {{
                     allocated
-                    goalMonths(first: 10) {{
+                    bucketMonths(first: 10) {{
                         edges {{
                             node {{
-                                monthStart
+                                id
                             }}
                         }}
                     }}
@@ -135,26 +133,13 @@ class UsersTestCase(SWTestCase):
 
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
+        self.assertEqual(len(result.data['viewer']['summary']['bucketMonths']['edges']), 0)
 
-        goal = GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
-
-        self.assertEqual(goal.months.count(), 1)
-        self.assertEqual(goal.months.all()[0].month_start, current_month_start)
+        BucketFactory.create(type='goal', fixed_goal_amount=Decimal('-500'), owner=owner)
 
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
-
-        result = self.graph_query(query.format(month=last_month_start), user=owner)
-        self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
-
-        goal.generate_month(last_month_start)
-
-        result = self.graph_query(query.format(month=last_month_start), user=owner)
-        self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
+        self.assertEqual(len(result.data['viewer']['summary']['bucketMonths']['edges']), 1)
 
     def test_summary_bills(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
@@ -179,6 +164,8 @@ class UsersTestCase(SWTestCase):
             filters=[{'description_exact': 'phone'}],
         )
         bucket.assign_transactions()
+
+        self.assertEqual(bucket.transactions.count(), 2)
 
         summary = MonthSummary(owner)
 
