@@ -18,7 +18,6 @@ import ListHeading from 'components/list-heading'
 import PrimaryFab from 'components/primary-fab'
 import Icon from 'components/icon'
 import CreateBucketSheet from 'components/create-bucket-sheet'
-import CreateGoalSheet from 'components/create-goal-sheet'
 import Button from 'components/button'
 
 import { SettingsMutation } from 'mutations/users'
@@ -341,7 +340,6 @@ Dashboard = Relay.createContainer(Dashboard, {
         ${BillMonth.getFragment('viewer')}
         ${SettingsMutation.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
-        ${CreateGoalSheet.getFragment('viewer')}
 
         firstMonth
 
