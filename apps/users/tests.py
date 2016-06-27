@@ -100,7 +100,7 @@ class UsersTestCase(SWTestCase):
             msg='Income should not be estimated'
         )
 
-    def test_summary_goals(self):
+    def test_summary_fixed_goals(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
         BucketFactory.create(type='goal', fixed_goal_amount=Decimal('-500'), owner=owner)
@@ -112,6 +112,45 @@ class UsersTestCase(SWTestCase):
             150000,
             msg='Should return estimate for current month minus the goal amount'
         )
+
+    def test_summary_filtered_goals(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=1),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=2),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=3),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='mismatch',
+            date=this_month() - relativedelta(months=2),
+        )
+
+        goal = BucketFactory.create(
+            type='goal',
+            owner=owner,
+            filters=[{'description_exact': 'match'}],
+        )
+        goal.assign_transactions()
+
+        summary = MonthSummary(owner)
+
+        self.assertEqual(summary.goals_total, Decimal('-111'))
 
     def test_summary_goal_months(self):
         current_month_start = delorean.now().truncate('month').datetime
