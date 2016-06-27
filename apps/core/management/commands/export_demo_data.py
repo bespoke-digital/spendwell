@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = 'Exports the GraphQL schema in JSON format.'
 
     def handle(self, *args, **options):
-        owner = User.objects.get(email='demo@spendwell.co')
+        owner = User.objects.get(email='aron@spendwell.co')
 
         export = {
             'institutions': [],
@@ -40,14 +40,14 @@ class Command(BaseCommand):
                 'current_balance': account.current_balance,
             })
 
-        for transaction in owner.transactions.all():
-            export['transactions'].append({
-                'id': transaction.id,
-                'account': transaction.account.id,
-                'description': transaction.description,
-                'amount': transaction.amount,
-                'date': transaction.date.isoformat(),
-            })
+            for transaction in account.transactions.all():
+                export['transactions'].append({
+                    'id': transaction.id,
+                    'account': transaction.account.id,
+                    'description': transaction.description,
+                    'amount': transaction.amount,
+                    'date': transaction.date.isoformat(),
+                })
 
         for bucket in owner.buckets.all():
             export['buckets'].append({
