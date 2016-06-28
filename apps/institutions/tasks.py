@@ -4,6 +4,7 @@ from django.conf import settings
 
 from spendwell.mixpanel import mixpanel
 from apps.transactions.tasks import detect_transfers
+from apps.transactions.models import Transaction
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
 from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
 from apps.users.models import User
@@ -26,7 +27,7 @@ def sync_institution(institution_id, reauth_on_fail=False):
         institution.save()
         return True
 
-    success = sum(account.transactions.count() for account in institution.accounts.all()) > 0
+    success = Transaction.objects.filter(account__institution=institution).count() > 0
 
     if not success and reauth_on_fail:
         institution.reauth_required = True
