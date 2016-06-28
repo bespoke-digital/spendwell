@@ -41,7 +41,7 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
 
     user = User.objects.get(id=user_id)
 
-    if not all(sync_status):
+    if not any(sync_status):
         if backoff > settings.SYNC_BACKOFF_MAX:
             return
         return sync_user(
