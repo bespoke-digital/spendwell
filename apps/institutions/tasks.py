@@ -1,16 +1,23 @@
 
+import logging
+
 from celery import shared_task, chain
 from django.conf import settings
 
+from spendwell.mixpanel import mixpanel
 from apps.transactions.tasks import detect_transfers
+from apps.transactions.models import Transaction
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
 from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
 from apps.users.models import User
 from apps.finicity.client import FinicityInvalidAccountError
 
 
+logger = logging.getLogger(__name__)
+
+
 @shared_task
-def sync_institution(institution_id, reauth=False):
+def sync_institution(institution_id, reauth_on_fail=False):
     from .models import Institution
 
     try:
@@ -21,16 +28,18 @@ def sync_institution(institution_id, reauth=False):
     try:
         institution.sync()
     except FinicityInvalidAccountError:
-        # the connection process for this account failed and left the DB
-        # institution out of sync with Finicty. There is nothing we can do to
-        # recover it.
-        institution.delete()
+        institution.reauth_required = True
+        institution.save()
+
+        logger.exception()
+
         return True
 
-    success = sum(account.transactions.count() for account in institution.accounts.all()) > 0
+    success = Transaction.objects.filter(account__institution=institution).count() > 0
 
-    if reauth and not success:
+    if not success and reauth_on_fail:
         institution.reauth_required = True
+        institution.save()
 
     return success
 
@@ -41,9 +50,14 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
 
     user = User.objects.get(id=user_id)
 
-    if not any(sync_status):
-        if backoff > settings.SYNC_BACKOFF_MAX:
-            return
+    if backoff > settings.SYNC_BACKOFF_MAX:
+        mixpanel.track(user.id, 'sync: failed')
+        return
+    elif (
+        (backoff == settings.SYNC_BACKOFF_MAX and not any(sync_status)) or
+        (backoff < settings.SYNC_BACKOFF_MAX and not all(sync_status))
+    ):
+        mixpanel.track(user.id, 'sync: retry')
         return sync_user(
             user,
             estimate_income=estimate_income,

@@ -96,9 +96,11 @@ class TransactionManager(SWManager):
 
         try:
             transaction = Transaction.objects.get(finicity_id=data['id'])
+
         except Transaction.MultipleObjectsReturned:
             transaction = Transaction.objects.filter(finicity_id=data['id']).first()
-            Transaction.objects.exclude(id__in=(transaction.id,)).delete()
+            logger.exception()
+
         except Transaction.DoesNotExist:
             transaction = Transaction()
             transaction.finicity_id = data['id']

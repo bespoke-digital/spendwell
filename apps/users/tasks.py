@@ -3,6 +3,7 @@ from celery import shared_task
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
+from spendwell.mixpanel import mixpanel
 from apps.core.utils import this_month, months_ago
 from apps.core.utils.email import send_email
 from apps.users.models import User
@@ -37,6 +38,7 @@ def user_sync_complete(user_id):
     user = User.objects.get(id=user_id)
 
     if not user.last_sync:
+        mixpanel.track(user.id, 'sync: init')
         send_email(
             to=user.email,
             subject='Get Started With Spendwell',
@@ -45,3 +47,5 @@ def user_sync_complete(user_id):
 
     user.last_sync = timezone.now()
     user.save()
+
+    mixpanel.track(user.id, 'sync: success')

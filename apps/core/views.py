@@ -1,5 +1,6 @@
 
 from random import randint
+import logging
 
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
@@ -16,11 +17,8 @@ from apps.finicity.client import FinicityException
 from spendwell.schema import schema
 from .models import LoadingQuote
 
-try:
-    from raven.contrib.django.raven_compat.models import client as raven
-    use_raven = True
-except ImportError:
-    use_raven = False
+
+logger = logging.getLogger(__name__)
 
 
 class AuthGraphQLView(GraphQLView):
@@ -34,13 +32,12 @@ class AuthGraphQLView(GraphQLView):
         if (
             hasattr(error, 'original_error') and
             error.original_error and
-            use_raven and
             not isinstance(error.original_error, FinicityException)
         ):
             try:
                 raise error.original_error
             except:
-                raven.captureException()
+                logger.exception()
 
         return super(AuthGraphQLView, Cls).format_error(error)
 

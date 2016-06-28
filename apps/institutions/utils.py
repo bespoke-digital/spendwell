@@ -2,22 +2,25 @@
 from celery import chord
 from django.conf import settings
 
+from spendwell.mixpanel import mixpanel
 from apps.users.models import User
 
 from .tasks import sync_institution, post_user_sync
 
 
-def sync_user(owner, backoff=0, **kwargs):
-    if owner.institutions.count() == 0:
+def sync_user(user, backoff=0, **kwargs):
+    if user.institutions.count() == 0:
         return
+
+    mixpanel.track(user.id, 'sync: start')
 
     return chord(
         (sync_institution
-            .si(id, reauth=backoff > settings.SYNC_BACKOFF_MAX)
+            .si(id, reauth_on_fail=backoff > settings.SYNC_BACKOFF_MAX)
             .set(countdown=backoff * 60 * 2))
-        for id in owner.institutions.values_list('id', flat=True)
+        for id in user.institutions.values_list('id', flat=True)
     )(
-        post_user_sync.s(owner.id, backoff=backoff, **kwargs)
+        post_user_sync.s(user.id, backoff=backoff, **kwargs)
     )
 
 

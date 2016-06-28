@@ -1,5 +1,6 @@
 
 import json
+import logging
 
 import graphene
 from graphene.utils import with_context
@@ -10,12 +11,8 @@ from apps.accounts.models import Account
 
 from .client import Finicity, FinicityError, FinicityMFAException, FinicityValidation
 
-try:
-    from raven.contrib.django.raven_compat.models import client as raven
-    use_raven = True
-except ImportError:
-    raven = None
-    use_raven = False
+
+logger = logging.getLogger(__name__)
 
 
 class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
@@ -63,8 +60,9 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
             if institution is not None:
                 institution.delete()
 
-            if not isinstance(e, (FinicityMFAException, FinicityValidation)) and use_raven:
-                raven.captureException()
+            if not isinstance(e, (FinicityMFAException, FinicityValidation)):
+                logger.exception()
+
             raise e
 
         return ConnectFinicityInstitutionMutation(viewer=Viewer())
