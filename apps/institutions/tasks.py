@@ -50,11 +50,13 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
 
     user = User.objects.get(id=user_id)
 
-    if not any(sync_status):
-        if backoff > settings.SYNC_BACKOFF_MAX:
-            mixpanel.track(user.id, 'sync: failed')
-            return
-
+    if backoff > settings.SYNC_BACKOFF_MAX:
+        mixpanel.track(user.id, 'sync: failed')
+        return
+    elif (
+        (backoff == settings.SYNC_BACKOFF_MAX and not any(sync_status)) or
+        (backoff < settings.SYNC_BACKOFF_MAX and not all(sync_status))
+    ):
         return sync_user(
             user,
             estimate_income=estimate_income,
