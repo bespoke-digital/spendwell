@@ -57,6 +57,7 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
         (backoff == settings.SYNC_BACKOFF_MAX and not any(sync_status)) or
         (backoff < settings.SYNC_BACKOFF_MAX and not all(sync_status))
     ):
+        mixpanel.track(user.id, 'sync: retry')
         return sync_user(
             user,
             estimate_income=estimate_income,
