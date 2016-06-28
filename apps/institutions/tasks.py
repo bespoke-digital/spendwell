@@ -2,6 +2,7 @@
 from celery import shared_task, chain
 from django.conf import settings
 
+from spendwell.mixpanel import mixpanel
 from apps.transactions.tasks import detect_transfers
 from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as autodetect_bills_task
 from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
@@ -10,7 +11,7 @@ from apps.finicity.client import FinicityInvalidAccountError
 
 
 @shared_task
-def sync_institution(institution_id, reauth=False):
+def sync_institution(institution_id, reauth_on_fail=False):
     from .models import Institution
 
     try:
@@ -21,16 +22,15 @@ def sync_institution(institution_id, reauth=False):
     try:
         institution.sync()
     except FinicityInvalidAccountError:
-        # the connection process for this account failed and left the DB
-        # institution out of sync with Finicty. There is nothing we can do to
-        # recover it.
-        institution.delete()
+        institution.reauth_required = True
+        institution.save()
         return True
 
     success = sum(account.transactions.count() for account in institution.accounts.all()) > 0
 
-    if reauth and not success:
+    if not success and reauth_on_fail:
         institution.reauth_required = True
+        institution.save()
 
     return success
 
@@ -43,7 +43,9 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
 
     if not any(sync_status):
         if backoff > settings.SYNC_BACKOFF_MAX:
+            mixpanel.track(user.id, 'sync: failed')
             return
+
         return sync_user(
             user,
             estimate_income=estimate_income,

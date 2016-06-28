@@ -9,8 +9,8 @@ from django.conf import settings
 from django.utils import timezone
 from plaid import Client
 from plaid.errors import ResourceNotFoundError, RequestFailedError
-from mixpanel import Mixpanel
 
+from spendwell.mixpanel import mixpanel
 from apps.core.models import SWModel, SWManager
 from apps.core.signals import day_start
 from apps.accounts.models import Account
@@ -21,7 +21,6 @@ from .utils import sync_all
 
 
 logger = logging.getLogger(__name__)
-mixpanel = Mixpanel(settings.MIXPANEL_PUBLIC_KEY)
 
 
 class InstitutionManager(SWManager):
