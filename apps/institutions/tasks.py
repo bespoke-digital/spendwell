@@ -1,4 +1,6 @@
 
+import logging
+
 from celery import shared_task, chain
 from django.conf import settings
 
@@ -9,6 +11,9 @@ from apps.buckets.tasks import assign_bucket_transactions, autodetect_bills as a
 from apps.users.tasks import estimate_income as estimate_income_task, user_sync_complete
 from apps.users.models import User
 from apps.finicity.client import FinicityInvalidAccountError
+
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -25,6 +30,9 @@ def sync_institution(institution_id, reauth_on_fail=False):
     except FinicityInvalidAccountError:
         institution.reauth_required = True
         institution.save()
+
+        logger.exception()
+
         return True
 
     success = Transaction.objects.filter(account__institution=institution).count() > 0
