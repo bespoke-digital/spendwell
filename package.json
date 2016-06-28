@@ -6,8 +6,13 @@
   "author": "defrex",
   "license": "LicenseRef-LICENSE",
   "scripts": {
+    "test": "jest",
     "build-dev": "NODE_ENV=development ./node_modules/.bin/webpack --config=./webpack/dev.config.js",
     "build-prod": "NODE_ENV=production ./node_modules/.bin/webpack --config=./webpack/prod.config.js"
+  },
+  "jest": {
+    "moduleDirectories": ["node_modules", "client"],
+    "unmockedModulePathPatterns": ["react", "react-dom", "enzyme"]
   },
   "dependencies": {
     "autoprefixer": "^6.3.1",
@@ -69,6 +74,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",
+    "babel-jest": "^13.0.0",
+    "babel-polyfill": "^6.9.1",
     "babel-preset-react-hmre": "^1.1.1",
     "chai": "^3.5.0",
     "concurrently": "^2.0.0",
@@ -82,6 +89,7 @@
     "eslint-plugin-react": "^5.1.1",
     "eslint-plugin-standard": "^1.3.2",
     "jasmine-core": "^2.4.1",
+    "jest-cli": "^13.0.0",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
     "karma-jasmine": "^1.0.2",
