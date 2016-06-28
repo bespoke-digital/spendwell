@@ -186,6 +186,9 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
 
+SYNC_BACKOFF_MAX = 5
+
+
 DEMO_DATA_DIR = os.path.join(BASE_DIR, 'local/demo-data')
 
 

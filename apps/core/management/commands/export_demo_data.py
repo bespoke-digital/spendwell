@@ -40,14 +40,14 @@ class Command(BaseCommand):
                 'current_balance': account.current_balance,
             })
 
-        for transaction in owner.transactions.all():
-            export['transactions'].append({
-                'id': transaction.id,
-                'account': transaction.account.id,
-                'description': transaction.description,
-                'amount': transaction.amount,
-                'date': transaction.date.isoformat(),
-            })
+            for transaction in account.transactions.all():
+                export['transactions'].append({
+                    'id': transaction.id,
+                    'account': transaction.account.id,
+                    'description': transaction.description,
+                    'amount': transaction.amount,
+                    'date': transaction.date.isoformat(),
+                })
 
         for bucket in owner.buckets.all():
             export['buckets'].append({

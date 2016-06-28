@@ -1,5 +1,6 @@
 
 from celery import chord
+from django.conf import settings
 
 from apps.users.models import User
 
@@ -11,7 +12,9 @@ def sync_user(owner, backoff=0, **kwargs):
         return
 
     return chord(
-        sync_institution.si(id).set(countdown=backoff * 60 * 2)
+        (sync_institution
+            .si(id, reauth=backoff > settings.SYNC_BACKOFF_MAX)
+            .set(countdown=backoff * 60 * 2))
         for id in owner.institutions.values_list('id', flat=True)
     )(
         post_user_sync.s(owner.id, backoff=backoff, **kwargs)
