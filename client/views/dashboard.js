@@ -141,7 +141,7 @@ class Dashboard extends Component {
                 <Icon type='show chart' color='light'/>
               </div>
               <div className='placeholder-copy'>
-                You don't have any goals set up
+                No goals set up yet
               </div>
               <div className='placeholder-cta'>
                 <Button onClick={() => this.setState({ createGoal: true })} color='goal'>
@@ -208,7 +208,7 @@ class Dashboard extends Component {
                 <Icon type='receipt' color='light'/>
               </div>
               <div className='placeholder-copy'>
-                You don't have any bills set up
+                No bills set up yet
               </div>
               <div className='placeholder-cta'>
                 <Button onClick={() => this.setState({ createBill: true })} color='bill'>
@@ -263,7 +263,7 @@ class Dashboard extends Component {
                 <Icon type='local offer' color='light'/>
               </div>
               <div className='placeholder-copy'>
-                You don't have any labels set up
+                No labels set up yet
               </div>
               <div className='placeholder-cta'>
                 <Button onClick={() => this.setState({ createLabel: true })} color='label'>
