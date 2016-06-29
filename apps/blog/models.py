@@ -33,6 +33,9 @@ class Entry(models.Model):
         help_text="Featured articles will always come before non-featured ones"
     )
 
+    byline_name = models.CharField(max_length=255, blank=True, default='')
+    byline_url = models.URLField(blank=True, default='')
+
     tags = TaggableManager(blank=True)
     objects = EntryQuerySet.as_manager()
 
