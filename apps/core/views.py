@@ -38,7 +38,7 @@ class AuthGraphQLView(GraphQLView):
             try:
                 raise error.original_error
             except:
-                logger.exception()
+                logger.exception('GraphQL error')
 
         return super(AuthGraphQLView, Cls).format_error(error)
 

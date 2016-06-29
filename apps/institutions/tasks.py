@@ -31,7 +31,7 @@ def sync_institution(institution_id, reauth_on_fail=False):
         institution.reauth_required = True
         institution.save()
 
-        logger.exception()
+        logger.exception('Finicity account missing')
 
         return True
 

@@ -99,7 +99,7 @@ class TransactionManager(SWManager):
 
         except Transaction.MultipleObjectsReturned:
             transaction = Transaction.objects.filter(finicity_id=data['id']).first()
-            logger.exception()
+            logger.exception('Multiple Transactions for finicity_id {}'.format(data['id']))
 
         except Transaction.DoesNotExist:
             transaction = Transaction()

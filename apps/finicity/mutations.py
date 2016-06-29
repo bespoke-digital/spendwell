@@ -61,7 +61,7 @@ class ConnectFinicityInstitutionMutation(graphene.relay.ClientIDMutation):
                 institution.delete()
 
             if not isinstance(e, (FinicityMFAException, FinicityValidation)):
-                logger.exception()
+                logger.exception('Finicity Error')
 
             raise e
 
