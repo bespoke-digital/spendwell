@@ -21,7 +21,18 @@ import OnboardingWalkthrough from 'views/onboarding/walkthrough'
 
 import track from 'utils/track'
 
-const rootQuery = { viewer: () => Relay.QL`query { viewer }` }
+const queries = { viewer: () => Relay.QL`query { viewer }` }
+
+function render ({ props, element }) {
+  if (props) {
+    const loading = document.getElementById('loading')
+    if (loading) loading.remove()
+
+    return React.cloneElement(element, props)
+  }
+}
+
+const viewKwargs = { render, queries }
 
 function onUpdate () {
   window.scrollTo(0, 0)
@@ -39,24 +50,24 @@ export default (
     <Route path='onboarding'>
       <IndexRedirect to='connect'/>
 
-      <Route path='connect' component={OnboardingAddAccount} queries={rootQuery}/>
-      <Route path='accounts' component={OnboardingAccounts} queries={rootQuery}/>
-      <Route path='walkthrough' component={OnboardingWalkthrough} queries={rootQuery}/>
+      <Route path='connect' component={OnboardingAddAccount} {...viewKwargs}/>
+      <Route path='accounts' component={OnboardingAccounts} {...viewKwargs}/>
+      <Route path='walkthrough' component={OnboardingWalkthrough} {...viewKwargs}/>
     </Route>
 
     <Route path='app'>
       <IndexRedirect to='dashboard'/>
 
-      <Route path='dashboard' component={Dashboard} queries={rootQuery}/>
-      <Route path='dashboard/:year/:month' component={Dashboard} queries={rootQuery}/>
+      <Route path='dashboard' component={Dashboard} {...viewKwargs}/>
+      <Route path='dashboard/:year/:month' component={Dashboard} {...viewKwargs}/>
 
-      <Route path='labels/:id' component={Bucket} queries={rootQuery}/>
+      <Route path='labels/:id' component={Bucket} {...viewKwargs}/>
 
-      <Route path='accounts' component={Accounts} queries={rootQuery}/>
-      <Route path='accounts/new' component={AddAccount} queries={rootQuery}/>
-      <Route path='accounts/:id/upload' component={AccountUpload} queries={rootQuery}/>
+      <Route path='accounts' component={Accounts} {...viewKwargs}/>
+      <Route path='accounts/new' component={AddAccount} {...viewKwargs}/>
+      <Route path='accounts/:id/upload' component={AccountUpload} {...viewKwargs}/>
 
-      <Route path='transactions' component={Transactions} queries={rootQuery}/>
+      <Route path='transactions' component={Transactions} {...viewKwargs}/>
     </Route>
   </Router>
 )
