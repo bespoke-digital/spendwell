@@ -25,10 +25,22 @@
   </div>
 
   <div class="box-container">
-    <p class="post-date">
-      <i class="material-icons date-icon">schedule</i>
-      {{ entry.created }}
-    </p>
+    <div class="entry-meta">
+      <p>
+        <i class="material-icons">schedule</i>
+        {{ entry.created }}
+      </p>
+      {% if entry.byline_name %}
+        <p>
+          <i class="material-icons">face</i>
+          {% if entry.byline_url %}
+            <a href="{{ entry.byline_url }}" target="_blank">{{ entry.byline_name }}</a>
+          {% else %}
+            {{ entry.byline_name }}
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
 
     <div class="entry-content">
       {{ entry.body|markdown }}

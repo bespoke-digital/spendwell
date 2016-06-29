@@ -1,6 +1,5 @@
 
 from celery import chord
-from django.conf import settings
 
 from spendwell.mixpanel import mixpanel
 from apps.users.models import User
@@ -15,9 +14,7 @@ def sync_user(user, backoff=0, **kwargs):
     mixpanel.track(user.id, 'sync: start')
 
     return chord(
-        (sync_institution
-            .si(id, reauth_on_fail=backoff > settings.SYNC_BACKOFF_MAX)
-            .set(countdown=backoff * 60 * 2))
+        sync_institution.si(id).set(countdown=backoff * 60 * 2)
         for id in user.institutions.values_list('id', flat=True)
     )(
         post_user_sync.s(user.id, backoff=backoff, **kwargs)
