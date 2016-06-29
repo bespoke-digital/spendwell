@@ -7,5 +7,6 @@ class SWAdminSite(AdminSite):
     site_title = 'Spendwell'
     site_url = 'https://dev.spendwell.co'
     index_title = 'Spendwell Admin'
+    index_template = 'admin/spendwell-index.html'
 
 admin_site = SWAdminSite(name='admin')

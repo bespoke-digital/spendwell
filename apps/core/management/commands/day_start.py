@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 from apps.core.signals import day_start, month_start
 from apps.core.utils import this_month
-from apps.core.management.commands.import_demo_data import import_demo_data
+from apps.core.utils.demo import import_demo_data
 
 
 class Command(BaseCommand):

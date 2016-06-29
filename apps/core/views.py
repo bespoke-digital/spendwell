@@ -5,16 +5,17 @@ import logging
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.conf import settings
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from graphene.contrib.django.views import GraphQLView
 from django_graphiql.views import GraphiQL
 from csp.decorators import csp_exempt
 
-from apps.finicity.client import FinicityException
 from spendwell.schema import schema
+from apps.core.utils.demo import export_demo_data, import_demo_data
+from apps.finicity.client import FinicityException
 from .models import LoadingQuote
 
 
@@ -86,3 +87,23 @@ class ManifestView(TemplateView):
     content_type = 'application/json'
 
 manifest_view = ManifestView.as_view()
+
+
+def export_demo_data_view(request):
+    if not request.user.is_authenticated() and request.user.is_admin:
+        raise Http404
+
+    export_demo_data()
+    messages.success(request, 'Demo data saved')
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def import_demo_data_view(request):
+    if not request.user.is_authenticated() and request.user.is_admin:
+        raise Http404
+
+    import_demo_data()
+    messages.success(request, 'Demo data loaded')
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
