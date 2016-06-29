@@ -8,13 +8,18 @@ from apps.core.views import (
     manifest_view,
     auth_graphql_view,
     graphiql_view,
+    export_demo_data_view,
+    import_demo_data_view,
 )
 
 from .admin import admin_site
 
 
 urlpatterns = [
+    url(r'^admin/export-demo-data$', export_demo_data_view, name='export-demo-data'),
+    url(r'^admin/import-demo-data$', import_demo_data_view, name='import-demo-data'),
     url(r'^admin/', admin_site.urls),
+
     url(r'^watchman/', include('watchman.urls')),
     url(r'^blog/', include('apps.blog.urls', namespace='blog')),
     url(r'^markdown/', include('django_markdown.urls')),
