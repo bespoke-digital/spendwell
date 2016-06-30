@@ -68,4 +68,4 @@ class SignupForm(forms.ModelForm):
 
 class AuthTokenForm(AuthenticationForm):
     device_type = forms.CharField()
-    device_id = forms.CharField()
+    device_name = forms.CharField()

@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 from django.views.generic.edit import FormView
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login
 
 from .models import User, BetaSignup, AuthToken
@@ -86,15 +86,21 @@ def beta_signup_view(request):
 
 
 class AuthTokenView(FormView):
+    template_name = 'base.html'
     form_class = AuthTokenForm
 
     def get(self, reqwurst):
         return HttpResponse(status_code=405)
 
+    def form_invalid(self, form):
+        return JsonResponse(form.errors, status=400)
+
     def form_valid(self, form):
         auth_token = AuthToken.generate(
             user=form.get_user(),
             device_type=form.cleaned_data['device_type'],
-            device_name=form.cleaned_data['device_id'],
+            device_name=form.cleaned_data['device_name'],
         )
-        return HttpResponse(json.dumps({'token': auth_token.token}))
+        return JsonResponse({'token': auth_token.token})
+
+token_auth_view = AuthTokenView.as_view()
