@@ -21,6 +21,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'pending',
         'location',
         'source',
+        'amount',
     )
 
 admin_site.register(Transaction, TransactionAdmin)

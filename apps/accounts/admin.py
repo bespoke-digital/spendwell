@@ -17,6 +17,7 @@ class AccountAdmin(admin.ModelAdmin):
         'plaid_id',
         'finicity_id',
         'disabled',
+        'current_balance',
     )
 
 admin_site.register(Account, AccountAdmin)
