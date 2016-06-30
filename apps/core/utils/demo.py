@@ -8,6 +8,7 @@ from django.conf import settings
 from dateutil.relativedelta import relativedelta
 import delorean
 
+from apps.core.utils.date import this_month
 from apps.users.models import User
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
@@ -194,6 +195,8 @@ def import_demo_data():
             name=goal_data['name'],
             monthly_amount=goal_data['monthly_amount'],
         )
+        for offset in range(relativedelta(this_month(), owner.first_data_month()).months):
+            goal.generate_month(this_month() - relativedelta(months=offset))
         goals[goal_data['id']] = goal
 
     print('processing demo data')
