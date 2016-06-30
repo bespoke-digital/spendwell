@@ -154,7 +154,7 @@ def import_demo_data():
             subtype=account_data['subtype'],
             current_balance=current_balance,
         )
-        accounts[account_data['id']] = account
+        accounts[int(account_data['id'])] = account
 
     for transaction_data in export['transactions']:
         exported_date = delorean.parse(transaction_data['date']).datetime
@@ -166,7 +166,7 @@ def import_demo_data():
 
         transaction = Transaction.objects.create(
             owner=owner,
-            account=accounts[transaction_data['account']],
+            account=accounts[int(transaction_data['account'])],
             description=transaction_data['description'],
             amount=Decimal(transaction_data['amount']),
             date=date,
@@ -175,15 +175,16 @@ def import_demo_data():
         transactions[transaction_data['id']] = transaction
 
     for bucket_data in export['buckets']:
-        for filter in bucket_data['filters']:
+        filters = json.loads(bucket_data['filters'])
+        for filter in filters:
             if 'account' in filter:
-                filter['account'] = accounts[filter['account']].id
+                filter['account'] = accounts[int(filter['account'])].id
 
         bucket = Bucket.objects.create(
             owner=owner,
             name=bucket_data['name'],
             type=bucket_data['type'],
-            filters=json.loads(bucket_data['filters']),
+            filters=filters,
         )
         buckets[bucket_data['id']] = bucket
 
