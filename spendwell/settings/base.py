@@ -110,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'apps.users.backends.DemoBackend',
+    'apps.users.backends.TokenBackend',
 )
 
 CACHES = {
