@@ -3,6 +3,7 @@ import pytz
 
 from django import forms
 from django.utils import timezone
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import User, BetaCode
 
@@ -63,3 +64,8 @@ class SignupForm(forms.ModelForm):
         beta_code.save()
 
         return user
+
+
+class AuthTokenForm(AuthenticationForm):
+    device_type = forms.CharField()
+    device_name = forms.CharField()

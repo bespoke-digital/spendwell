@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from graphene.contrib.django.views import GraphQLView
@@ -24,6 +25,19 @@ logger = logging.getLogger(__name__)
 
 class AuthGraphQLView(GraphQLView):
     def dispatch(self, request, *args, **kwargs):
+        auth_header = request.META.get('HTTP_AUTHORIZATION')
+        if auth_header:
+            auth_method, auth_token = auth_header.split(' ')
+
+            if auth_method.lower() != 'token':
+                return HttpResponse(status=403)
+
+            user = authenticate(token=auth_token)
+            if not user:
+                return HttpResponse(status=403)
+
+            request.user = user
+
         if not request.user.is_authenticated():
             return HttpResponse(status=403)
         return super(AuthGraphQLView, self).dispatch(request, *args, **kwargs)
