@@ -1,6 +1,4 @@
 
-import json
-
 from django.core.urlresolvers import reverse
 from django.core.signing import Signer
 from django.core.validators import validate_email
@@ -12,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login
 
 from .models import User, BetaSignup, AuthToken
-from .forms import SignupForm, AuthTokenForm
+from .forms import SignupForm, AuthTokenForm, BetaSignupGeneratorForm
 
 
 class SignupView(CreateView):
@@ -83,6 +81,24 @@ def beta_signup_view(request):
     BetaSignup.objects.get_or_create(email=request.POST['email'])
 
     return HttpResponse()
+
+
+class BetaSignupGeneratorView(FormView):
+    template_name = 'users/beta-signup-generator.html'
+    form_class = BetaSignupGeneratorForm
+
+    def form_valid(self, form):
+        beta_sigup = BetaSignup.objects.create(email=form.cleaned_data['email'])
+
+        if 'invite' in form.cleaned_data and form.cleaned_data['invite']:
+            beta_sigup.invite_user(email=True)
+
+        return super(BetaSignupGeneratorView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('beta-signup-generator')
+
+beta_signup_generator_view = BetaSignupGeneratorView.as_view()
 
 
 class AuthTokenView(FormView):

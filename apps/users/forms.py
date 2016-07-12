@@ -69,3 +69,8 @@ class SignupForm(forms.ModelForm):
 class AuthTokenForm(AuthenticationForm):
     device_type = forms.CharField()
     device_name = forms.CharField()
+
+
+class BetaSignupGeneratorForm(forms.Form):
+    email = forms.EmailField()
+    invite = forms.BooleanField(label='Send Invite Email', required=False)

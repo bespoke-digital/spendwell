@@ -1,0 +1,40 @@
+{% extends "page.html" %}
+
+{% load i18n %}
+{% load class_name %}
+
+{% block body_class %}{{ block.super }} users-auth{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="auth-container card">
+    <h1>{% trans "Beta Signup" %}</h1>
+
+    <form action="" method="post">
+      {% csrf_token %}
+
+      {{ form.non_field_errors }}
+
+      {% for field in form %}
+        {% if field.field.widget|class_name == 'CheckboxInput' %}
+          <div class="mui-checkbox">
+            {{ field.errors }}
+            <label for="{{ field.id_for_label }}">
+              {{ field }}
+              {{ field.label }}
+            </label>
+          </div>
+        {% else %}
+          <div class="mui-textfield mui-textfield--float-label {% if field.errors %} has-error {% endif %}">
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field.errors }}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <button type="submit" class="mui-btn mui-btn--accent mui-btn--flat">{% trans "Submit" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
