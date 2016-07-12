@@ -20,7 +20,6 @@ Relay.injectNetworkLayer(networkLayer)
 window.onload = () => render(
   <Provider store={store}>{routes}</Provider>,
   document.getElementById('root'),
-  () => document.getElementById('loading').remove()
 )
 
 // Sentry

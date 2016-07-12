@@ -185,7 +185,7 @@ class Transaction(SWModel):
     finicity_id = models.CharField(max_length=255, blank=True, null=True, db_index=True)
     from_savings = models.BooleanField(default=False)
     pending = models.BooleanField(default=False)
-    location = JSONField(null=True)
+    location = JSONField(null=True, blank=True)
 
     source = models.CharField(max_length=255, choices=(
         ('csv', 'CSV'),

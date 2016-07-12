@@ -8,6 +8,7 @@ from django.conf import settings
 from dateutil.relativedelta import relativedelta
 import delorean
 
+from apps.core.utils.date import this_month
 from apps.users.models import User
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
@@ -154,7 +155,7 @@ def import_demo_data():
             subtype=account_data['subtype'],
             current_balance=current_balance,
         )
-        accounts[account_data['id']] = account
+        accounts[int(account_data['id'])] = account
 
     for transaction_data in export['transactions']:
         exported_date = delorean.parse(transaction_data['date']).datetime
@@ -166,7 +167,7 @@ def import_demo_data():
 
         transaction = Transaction.objects.create(
             owner=owner,
-            account=accounts[transaction_data['account']],
+            account=accounts[int(transaction_data['account'])],
             description=transaction_data['description'],
             amount=Decimal(transaction_data['amount']),
             date=date,
@@ -175,15 +176,16 @@ def import_demo_data():
         transactions[transaction_data['id']] = transaction
 
     for bucket_data in export['buckets']:
-        for filter in bucket_data['filters']:
+        filters = json.loads(bucket_data['filters'])
+        for filter in filters:
             if 'account' in filter:
-                filter['account'] = accounts[filter['account']].id
+                filter['account'] = accounts[int(filter['account'])].id
 
         bucket = Bucket.objects.create(
             owner=owner,
             name=bucket_data['name'],
             type=bucket_data['type'],
-            filters=json.loads(bucket_data['filters']),
+            filters=filters,
         )
         buckets[bucket_data['id']] = bucket
 
@@ -193,6 +195,8 @@ def import_demo_data():
             name=goal_data['name'],
             monthly_amount=goal_data['monthly_amount'],
         )
+        for offset in range(relativedelta(this_month(), owner.first_data_month()).months):
+            goal.generate_month(this_month() - relativedelta(months=offset))
         goals[goal_data['id']] = goal
 
     print('processing demo data')

@@ -1,13 +1,18 @@
 
+import json
 from datetime import timedelta
 from decimal import Decimal
 
+from django.core.signing import Signer
+from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.contrib.auth.models import AnonymousUser
 from dateutil.relativedelta import relativedelta
 import delorean
 
 from apps.core.tests import SWTestCase
 from apps.core.utils import this_month
+from apps.core.views import auth_graphql_view
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
 from apps.goals.factories import GoalFactory
@@ -15,6 +20,7 @@ from apps.buckets.factories import BucketFactory
 
 from .factories import UserFactory
 from .summary import MonthSummary
+from .views import token_auth_view
 
 
 class UsersTestCase(SWTestCase):
@@ -186,7 +192,7 @@ class UsersTestCase(SWTestCase):
 
         result = self.graph_query('''{{
             viewer {{
-                summary(month: "{month:%Y/%m}") {{
+            summary(month: "{month:%Y/%m}") {{
                     allocated
                     spent
                 }}
@@ -197,3 +203,63 @@ class UsersTestCase(SWTestCase):
             result.data['viewer']['summary']['allocated'],
             -11100,
         )
+
+    def test_token_auth(self):
+        user = UserFactory.create()
+        user.set_password('passw0rd')
+        user.save()
+
+        request = self.request_factory.post('/graphql')
+        request.user = AnonymousUser()
+        response = auth_graphql_view(request)
+        self.assertEqual(response.status_code, 403)
+
+        request = self.request_factory.post('/graphql')
+        request.user = AnonymousUser()
+        request.META['HTTP_AUTHORIZATION'] = 'Token badtoken'
+        response = auth_graphql_view(request)
+        self.assertEqual(response.status_code, 403)
+
+        request = self.request_factory.post(reverse('token-auth'), {
+            'username': user.email,
+            'password': 'wrongpassword',
+            'device_type': 'test',
+            'device_name': 'test_token_auth',
+        })
+
+        response = token_auth_view(request)
+
+        self.assertEqual(response.status_code, 400)
+
+        request = self.request_factory.post(reverse('token-auth'), {
+            'username': user.email,
+            'password': 'passw0rd',
+            'device_type': 'test',
+            'device_name': 'test_token_auth',
+        })
+
+        response = token_auth_view(request)
+        response_content = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('token' in response_content)
+
+        token = response_content['token']
+        signer = Signer()
+        user_id, salt = signer.unsign(token).split(':')
+        self.assertEqual(user.id, int(user_id))
+
+        request = self.request_factory.post(
+            '/graphql',
+            content_type='application/json',
+            data=json.dumps({
+                'query': '{ viewer { dummy } }',
+                'variables': {},
+            }),
+        )
+        request.META['HTTP_AUTHORIZATION'] = 'Token {}'.format(token)
+        request.user = AnonymousUser()
+
+        response = auth_graphql_view(request)
+
+        self.assertEqual(response.status_code, 200)
