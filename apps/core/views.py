@@ -3,7 +3,7 @@ from random import randint
 import logging
 
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.conf import settings
@@ -16,6 +16,7 @@ from csp.decorators import csp_exempt
 
 from spendwell.schema import schema
 from apps.core.utils.demo import export_demo_data, import_demo_data
+from apps.core.utils.email import render_email
 from apps.finicity.client import FinicityException
 from .models import LoadingQuote
 
@@ -121,3 +122,38 @@ def import_demo_data_view(request):
     messages.success(request, 'Demo data loaded')
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class EmailView(View):
+    email_template = None
+    subject = None
+
+    def get_user(self):
+        return self.request.user
+
+    def get_subject(self):
+        if self.subject:
+            return self.subject
+        else:
+            return self.context_data.get('subject', '')
+
+    def get_context_data(self):
+        return {}
+
+    @property
+    def context_data(self):
+        if not hasattr(self, '_context_data'):
+            self._context_data = self.get_context_data()
+        return self._context_data
+
+    def get(self, request):
+        if not request.user.is_authenticated():
+            return HttpResponse(status_code=401)
+
+        html, text = render_email(
+            self.get_subject(),
+            self.get_user(),
+            self.email_template,
+            context=self.context_data,
+        )
+        return HttpResponse(html)

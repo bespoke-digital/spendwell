@@ -1,0 +1,78 @@
+
+
+.logo {
+  margin: 20px 0 12px;
+  height: 80px;
+}
+
+.header {
+  padding: 20px 0 20px;
+  text-align: center;
+  color: #fff;
+  background-color: #4CAF50;
+}
+
+.mui-container {
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+h2 {
+  margin: 40px 0 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.sts {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.sts--positive {
+  color: #4CAF50;
+}
+
+.sts--negative {
+  color: #F44336;
+}
+.sts--negative:before {
+  content: '(';
+}
+.sts--negative:after {
+  content: ')';
+}
+
+.chart {
+  width: 568px;
+  margin-top: 10px;
+}
+
+.bill-title {
+  margin: 40px 0 15px;
+}
+
+.bill-name {
+  margin: 10px 0 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+.bill-amount {
+  font-size: 18px;
+  color: #F44336;
+}
+
+a.mui-btn.call-to-action {
+  margin: 40px 0;
+
+  border-top: 1px solid #448AFF;
+  border-left: 1px solid #448AFF;
+  border-right: 1px solid #448AFF;
+  border-bottom: 1px solid #448AFF;
+  color: #FFF;
+  background-color: #448AFF;
+}

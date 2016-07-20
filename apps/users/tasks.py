@@ -8,6 +8,8 @@ from apps.core.utils import this_month, months_ago
 from apps.core.utils.email import send_email
 from apps.users.models import User
 
+from .email import weekly_email_context
+
 
 @shared_task
 def estimate_income(user_id):
@@ -40,7 +42,7 @@ def user_sync_complete(user_id):
     if not user.last_sync:
         mixpanel.track(user.id, 'sync: init')
         send_email(
-            to=user.email,
+            user=user,
             subject='Get Started With Spendwell',
             template='users/email/sync-notification.html',
         )
@@ -49,3 +51,14 @@ def user_sync_complete(user_id):
     user.save()
 
     mixpanel.track(user.id, 'sync: success')
+
+
+@shared_task
+def send_weekly_email(user_id):
+    user = User.objects.get(id=user_id)
+    send_email(
+        user=user,
+        subject='Your Money',
+        template='users/email/weekly.html',
+        context=weekly_email_context(user),
+    )

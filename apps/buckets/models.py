@@ -1,13 +1,16 @@
 
 from decimal import Decimal
 from copy import deepcopy
+from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
+import delorean
 
 from apps.core.models import SWModel
+from apps.core.utils import months_avg, this_month
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -66,6 +69,55 @@ class Bucket(SWModel):
                 self._avatar = None
 
         return self._avatar
+
+    def avg_amount(self, month=None):
+        if not month:
+            month = this_month()
+
+        return months_avg(self.transactions.all(), month_start=month)
+
+    def bill_due_date(self):
+        if not self.type == 'bill':
+            raise ValueError('bill_due_date called for non-bill bucket')
+
+        if hasattr(self, '_bill_due_date'):
+            return self._bill_due_date
+
+        dates = []
+
+        for months_ago in range(1, 4):
+            month_start = this_month() - relativedelta(months=months_ago)
+            month_end = month_start + relativedelta(months=1)
+
+            transaction = self.transactions.filter(date__gt=month_start, date__lt=month_end).first()
+
+            if not transaction:
+                return None
+
+            dates.append(transaction.date.day)
+
+        date_range = max(dates) - min(dates)
+
+        if date_range > 4:
+            return None
+
+        self._bill_due_date = this_month().replace(day=max(dates) - int(date_range / 2))
+
+        return self._bill_due_date
+
+    def bill_paid(self, month=None):
+        if not self.type == 'bill':
+            raise ValueError('bill_paid called for non-bill bucket')
+
+        if not month:
+            month = this_month()
+
+        paid_amount = self.transactions.filter(
+            date__gt=month,
+            date__lt=month + relativedelta(months=1),
+        ).sum()
+
+        return paid_amount <= (self.avg_amount(month) * Decimal('0.95'))
 
     def raw_transactions(self, **filters):
         filters['owner'] = self.owner

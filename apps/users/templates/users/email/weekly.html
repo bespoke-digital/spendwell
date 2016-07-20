@@ -1,0 +1,50 @@
+{% extends "email/base.html" %}
+
+{% load mathfilters %}
+{% load staticfiles %}
+
+{% block css-inline %}
+  {{ block.super }}
+  {% include 'users/email/css/weekly.css' %}
+{% endblock %}
+
+{% block content %}
+<center>
+  <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
+  <div class="mui-container">
+    <img src="{% static 'img/logo-icon-green.svg' %}" class="logo" alt="Spendwell">
+  </div>
+  <!--[if mso]></td></tr></table><![endif]-->
+</center>
+
+<div class="header">
+  <h1>Your Money</h1>
+  <div class="subtitle">As of {{ as_of|date }}</div>
+</div>
+
+<center>
+  <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
+  <div class="mui-container">
+    <h2>Safe to Spend</h2>
+    <p class="sts sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}">
+      ${{ summary.net|floatformat:2 }}
+    </p>
+
+    {% if spending_chart_url %}
+      <h2>Your Spending So Far</h2>
+      <img src="{{ spending_chart_url }}" class="chart">
+    {% endif %}
+
+    {% if upcoming_bills|length %}
+      <h2 class="bill-title">Upcoming Bills</h2>
+      {% for bill in upcoming_bills %}
+        <h3 class="bill-name">{{ bill.name }}</h3>
+        <div class="bill-amount">(${{ bill.avg_amount|abs|floatformat:2 }})</div>
+      {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'app' %}" class="mui-btn call-to-action">View Dashboard</a>
+  </div>
+  <!--[if mso]></td></tr></table><![endif]-->
+</center>
+{% endblock %}

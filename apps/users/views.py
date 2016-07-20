@@ -4,13 +4,18 @@ from django.core.signing import Signer
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, View
 from django.views.generic.edit import FormView
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login
+
+from apps.core.views import EmailView
 
 from .models import User, BetaSignup, AuthToken
 from .forms import SignupForm, AuthTokenForm, BetaSignupGeneratorForm
+from .email import weekly_email_context
+from .utils import unsubscribe_verify
 
 
 class SignupView(CreateView):
@@ -120,3 +125,27 @@ class AuthTokenView(FormView):
         return JsonResponse({'token': auth_token.token})
 
 token_auth_view = AuthTokenView.as_view()
+
+
+class WeeklyEmailView(EmailView):
+    email_template = 'users/email/weekly.html'
+
+    def get_context_data(self):
+        return weekly_email_context(self.request.user)
+
+weekly_email_view = WeeklyEmailView.as_view()
+
+
+class Unsubscribe(View):
+    def get(self, request, user_id, signature):
+        user = get_object_or_404(User, id=user_id)
+
+        if not unsubscribe_verify(signature, user):
+            raise Http404
+
+        user.email_subscribed = False
+        user.save()
+
+        return HttpResponse('You have been unsubscribed from all emails.')
+
+unsubscribe_view = Unsubscribe.as_view()

@@ -52,6 +52,7 @@ class UserAdmin(AuthUserAdmin):
     list_filter = ('is_admin',)
     fieldsets = ((None, {'fields': (
         'email',
+        'email_subscribed',
         'is_admin',
         'finicity_id',
         'estimated_income',

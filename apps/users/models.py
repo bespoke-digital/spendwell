@@ -55,6 +55,8 @@ class User(AbstractBaseUser):
     create_bill_help = models.BooleanField(default=True)
     create_goal_help = models.BooleanField(default=True)
 
+    email_subscribed = models.BooleanField(default=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -145,7 +147,7 @@ class BetaSignup(models.Model):
         if email:
             send_email(
                 subject="You're invited to join Spendwell",
-                to=self.email,
+                user=self,
                 template='users/email/beta-invite.html',
                 context={'invite_url': self.beta_code.invite_url},
             )
