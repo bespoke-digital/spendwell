@@ -1,5 +1,4 @@
-{% load staticfiles %}
-{
+{% load staticfiles %}{
   "short_name": "Spendwell",
   "name": "Spendwell",
   "icons": [
@@ -40,7 +39,9 @@
       "density": 4
     }
   ],
-  "start_url": "{% url 'app' %}",
+  "theme_color": "#4CAF50",
+  "background_color": "#4CAF50",
+  "start_url": "{% url 'app' %}?utm_source=app-manifest",
   "display": "standalone",
   "orientation": "portrait"
 }

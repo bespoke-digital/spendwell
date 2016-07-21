@@ -35,3 +35,5 @@ django-redis==4.4.3
 django-celery==3.1.17
 django-markdown==0.8.4
 django-taggit==0.18.1
+premailer==3.0.1
+django-mathfilters==0.4.0

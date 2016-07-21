@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'bootstrap_paginator',
     'resize',
     'djcelery',
+    'mathfilters',
 
     'apps.core',
     'apps.landing',

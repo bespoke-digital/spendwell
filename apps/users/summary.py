@@ -2,43 +2,46 @@
 import delorean
 from dateutil.relativedelta import relativedelta
 
-from apps.core.utils import months_avg
+from apps.core.utils import this_month
 from apps.goals.models import GoalMonth
 from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction, IncomeFromSavings
-from apps.core.utils import this_month
 
 
-def bucket_month(bucket, month):
-    transactions = bucket.transactions.filter(
-        date__gte=month,
-        date__lt=month + relativedelta(months=1),
-    )
+def bucket_month(bucket, month, month_end=None):
+    if month_end is None:
+        month_end = month + relativedelta(months=1)
+    transactions = bucket.transactions.filter(date__gte=month, date__lt=month_end)
 
     return {
         'bucket': bucket,
         'month': month,
         'transactions': transactions,
         'amount': transactions.sum(),
-        'avg_amount': months_avg(bucket.transactions.all(), month_start=month),
+        'avg_amount': bucket.avg_amount(month),
     }
 
 
 class MonthSummary(object):
-    def __init__(self, user, month_start=None):
+    def __init__(self, user, month_start=None, month_end=None):
         self.user = user
 
         if month_start is None:
-            self.month_start = delorean.now().truncate('month').datetime
+            self.month_start = this_month()
         else:
             self.month_start = month_start
+
+        if month_end is None:
+            self.month_end = self.month_start + relativedelta(months=1)
+        else:
+            self.month_end = month_end
 
     def source_transactions(self, **filters):
         return Transaction.objects.filter(
             owner=self.user,
             account__disabled=False,
-            date__lt=self.month_start + relativedelta(months=1),
             date__gte=self.month_start,
+            date__lt=self.month_end,
             **filters
         ).is_transfer(False)
 
@@ -101,7 +104,7 @@ class MonthSummary(object):
             calculate_unpaid = this_month() == self.month_start
 
             for bucket in Bucket.objects.filter(owner=self.user, type='bill'):
-                bill_month = bucket_month(bucket, self.month_start)
+                bill_month = bucket_month(bucket, self.month_start, self.month_end)
 
                 self._bills_paid_total += bill_month['amount']
 
@@ -167,7 +170,7 @@ class MonthSummary(object):
         from .schema import BucketMonthNode
         if not hasattr(self, '_bucket_months'):
             self._bucket_months = [
-                BucketMonthNode(**bucket_month(bucket, self.month_start))
+                BucketMonthNode(**bucket_month(bucket, self.month_start, self.month_end))
                 for bucket in Bucket.objects.filter(owner=self.user)
             ]
         return self._bucket_months
