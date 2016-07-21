@@ -1,11 +1,11 @@
 
-import json
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 from datetime import timedelta
 
 from django.conf import settings
 from django.utils.timezone import now
+from django.template import defaultfilters
 import requests
 
 from apps.core.utils.date import this_month
@@ -112,7 +112,7 @@ def weekly_email_context(user):
             upcoming_bills.append(bill)
 
     return {
-        'subject': 'Your Money',
+        'subject': 'Your Money as of {}'.format(defaultfilters.date(last_transaction.date)),
         'spending_chart_url': spending_chart_url,
         'summary': summary,
         'upcoming_bills': upcoming_bills,

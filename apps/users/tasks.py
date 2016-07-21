@@ -56,9 +56,10 @@ def user_sync_complete(user_id):
 @shared_task
 def send_weekly_email(user_id):
     user = User.objects.get(id=user_id)
+    context = weekly_email_context(user)
     send_email(
         user=user,
-        subject='Your Money',
+        subject=context['subject'],
         template='users/email/weekly.html',
-        context=weekly_email_context(user),
+        context=context,
     )
