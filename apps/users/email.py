@@ -77,7 +77,7 @@ def weekly_email_context(user):
                             'pointBorderColor': TRANSPARENT,
                         },
                         {
-                            'label': 'Target',
+                            'label': 'Safe to Spend',
                             'data': [
                                 float(summary.net + this_month_data[-1]),
                             ] * len(last_month_data),
