@@ -63,3 +63,4 @@ def send_weekly_email(user_id):
         template='users/email/weekly.html',
         context=context,
     )
+    mixpanel.track(user_id, 'Email Send', {'email': user.email})

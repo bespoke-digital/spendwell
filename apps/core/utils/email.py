@@ -4,12 +4,12 @@ from base64 import b64encode
 
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.conf import settings
 from html2text import html2text
 import premailer
 
+from spendwell.mixpanel import mixpanel
 from apps.users.utils import unsubscribe_sign
 
 
@@ -26,6 +26,13 @@ def send_email(subject, user, template, context=None, from_email=settings.DEFAUL
         recipient_list=[user.email],
         html_message=html_message,
     )
+    context['event_properties'] = context.get('event_properties', {})
+
+    mixpanel.track(
+        user.id,
+        'Email Send',
+        dict(context['event_properties'], **{'email': user.email}),
+    )
 
 
 def render_email(subject, user, template, context=None):
@@ -39,16 +46,15 @@ def render_email(subject, user, template, context=None):
         'signature': unsubscribe_sign(user),
     })
 
-    context['open_event_properties'] = context.get('open_event_properties', {})
-    context['open_event_properties'].update({
-        'token': settings.MIXPANEL_PUBLIC_KEY,
-        'distinct_id': user.id,
-        'email': user.email,
-    })
+    context['event_properties'] = context.get('event_properties', {})
     context['open_event_image'] = 'http://api.mixpanel.com/track/?data={}&ip=1&img=1'.format(
         b64encode(json.dumps({
             'event': 'Email Open',
-            'properties': context['open_event_properties'],
+            'properties': dict(context['event_properties'], **{
+                'token': settings.MIXPANEL_PUBLIC_KEY,
+                'distinct_id': user.id,
+                'email': user.email,
+            }),
         }).encode('utf-8')).decode('utf-8')
     )
 
