@@ -90,9 +90,6 @@ def npm_build():
 
 @task
 def collectstatic():
-    if env.host in env.workers:
-        return
-
     with prefix('source {activate}'.format(**env)):
         with shell_env(DJANGO_SETTINGS_MODULE=env.settings):
             with cd(env.dir):

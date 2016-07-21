@@ -10,6 +10,7 @@ from .secrets import (
     twitter_consumer_secret,
     twitter_access_token_secret,
     mailgun_smtp_password,
+    charturl_api_key,
 )
 
 
@@ -67,3 +68,5 @@ FACEBOOK_PIXEL_KEY = '227041677640062'
 
 TWITTER_CONSUMER_SECRET = twitter_consumer_secret
 TWITTER_ACCESS_TOKEN_SECRET = twitter_access_token_secret
+
+CHARTURL_API_KEY = charturl_api_key
