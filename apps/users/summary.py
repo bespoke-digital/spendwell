@@ -8,7 +8,9 @@ from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction, IncomeFromSavings
 
 
-def bucket_month(bucket, month, month_end):
+def bucket_month(bucket, month, month_end=None):
+    if month_end is None:
+        month_end = month + relativedelta(months=1)
     transactions = bucket.transactions.filter(date__gte=month, date__lt=month_end)
 
     return {
