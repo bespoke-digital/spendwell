@@ -117,4 +117,7 @@ def weekly_email_context(user):
         'summary': summary,
         'upcoming_bills': upcoming_bills,
         'as_of': last_transaction.date,
+        'open_event_properties': {
+            'email type': 'weekly',
+        },
     }

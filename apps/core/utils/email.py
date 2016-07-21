@@ -4,6 +4,7 @@ from base64 import b64encode
 
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.conf import settings
 from html2text import html2text
@@ -39,13 +40,15 @@ def render_email(subject, user, template, context=None):
     })
 
     context['open_event_properties'] = context.get('open_event_properties', {})
+    context['open_event_properties'].update({
+        'token': settings.MIXPANEL_PUBLIC_KEY,
+        'distinct_id': user.id,
+        'email': user.email,
+    })
     context['open_event_image'] = 'http://api.mixpanel.com/track/?data={}&ip=1&img=1'.format(
         b64encode(json.dumps({
             'event': 'Email Open',
-            'properties': context['open_event_properties'].update({
-                'distinct_id': '{}'.format(user.id),
-                'token': settings.MIXPANEL_PUBLIC_KEY,
-            }),
+            'properties': context['open_event_properties'],
         }).encode('utf-8')).decode('utf-8')
     )
 
