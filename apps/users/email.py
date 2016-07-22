@@ -25,25 +25,36 @@ GREY_600 = '#757575'
 
 
 def weekly_email_context(user):
-    this_month_start = this_month()
-    summary = MonthSummary(user, this_month_start)
+    month_start = this_month()
+    month_end = month_start + relativedelta(months=1)
 
     last_transaction = user.transactions.order_by('-date').first()
-    if not last_transaction or last_transaction.date < this_month_start:
+
+    if last_transaction and last_transaction.date < month_end:
+        month_end = last_transaction.date
+
+    summary = MonthSummary(user, month_start, month_end)
+
+    if not last_transaction or last_transaction.date < month_start:
         spending_chart_url = None
 
     else:
         this_month_data = []
-        for day in rrule.rrule(rrule.DAILY, dtstart=this_month_start, until=last_transaction.date):
-            day_summary = MonthSummary(user, this_month_start, day)
+        for day in rrule.rrule(rrule.DAILY, dtstart=month_start, until=month_end):
+            day_summary = MonthSummary(user, month_start, day)
             this_month_data.append(int(abs(day_summary.spent - day_summary.bills_paid_total)))
 
-        last_month_start = this_month_start - relativedelta(months=1)
+        last_month_start = month_start - relativedelta(months=1)
 
         last_month_data = []
-        for day in rrule.rrule(rrule.DAILY, dtstart=last_month_start, until=this_month_start):
+        for day in rrule.rrule(rrule.DAILY, dtstart=last_month_start, until=month_start):
             day_summary = MonthSummary(user, last_month_start, day)
             last_month_data.append(int(abs(day_summary.spent - day_summary.bills_paid_total)))
+
+        if len(last_month_data) > len(this_month_data):
+            chart_length = len(last_month_data)
+        else:
+            chart_length = len(this_month_data)
 
         chart_options = {
             'template': 'weekly-email-status',
@@ -51,7 +62,7 @@ def weekly_email_context(user):
                 'type': 'line',
                 'size': {'height': 200, 'width': 568},
                 'data': {
-                    'labels': list(range(1, len(last_month_data))),
+                    'labels': list(range(1, chart_length)),
                     'datasets': [
                         {
                             'label': 'This Month',
@@ -79,8 +90,8 @@ def weekly_email_context(user):
                         {
                             'label': 'Safe to Spend',
                             'data': [
-                                float(this_month_data[-1] + summary.net),
-                            ] * len(last_month_data),
+                                float(abs(summary.net) - this_month_data[-1]),
+                            ] * chart_length,
                             'fill': False,
                             'backgroundColor': TRANSPARENT,
                             'borderColor': GREY_600,
@@ -113,7 +124,7 @@ def weekly_email_context(user):
             upcoming_bill_months.append(bill_month)
 
     return {
-        'subject': 'Your Money as of {}'.format(defaultfilters.date(last_transaction.date)),
+        'subject': 'Your Money as of {}'.format(defaultfilters.date(month_end)),
         'spending_chart_url': spending_chart_url,
         'summary': summary,
         'upcoming_bill_months': upcoming_bill_months,

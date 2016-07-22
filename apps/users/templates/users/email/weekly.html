@@ -26,9 +26,10 @@
   <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
   <div class="mui-container">
     <h2>Safe to Spend</h2>
-    <p class="sts sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}">
-      ${{ summary.net|floatformat:2 }}
-    </p>
+    <p class="
+      sts
+      sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}
+    ">${{ summary.net|abs|floatformat:2 }}</p>
 
     {% if spending_chart_url %}
       <h2>Your Spending so Far</h2>
