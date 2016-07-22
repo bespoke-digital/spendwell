@@ -17,6 +17,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'raw_description',
         'date',
         'plaid_id',
+        'finicity_id',
         'from_savings',
         'pending',
         'location',
