@@ -31,12 +31,6 @@ class InstitutionManager(SWManager):
             defaults={'name': data['name']},
         )
 
-        # Make sure reauth for FIs without plaid_public_token causes accounts
-        # to be deleted. This can be removed later, since it only applies to
-        # accounts connected before 2016/04/25
-        if not created and not institution.plaid_public_token:
-            institution.accounts.all().delete()
-
         institution.plaid_public_token = plaid_public_token
         institution.plaid_access_token = plaid_access_token
 
@@ -165,9 +159,11 @@ class Institution(SWModel):
                 Account.objects.from_finicity(self, account_data)
 
     def sync_transactions(self):
+        new_transactions = []
+
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
-                Transaction.objects.from_plaid(self, transaction_data)
+                new_transactions.append(Transaction.objects.from_plaid(self, transaction_data))
 
         elif self.finicity_client:
             try:
@@ -178,7 +174,26 @@ class Institution(SWModel):
                 raise
 
             for transaction_data in transactions_data:
-                Transaction.objects.from_finicity(self, transaction_data)
+                new_transactions.append(Transaction.objects.from_finicity(self, transaction_data))
+
+        new_transactions = [t for t in new_transactions if t is not None]
+        if not len(new_transactions):
+            return
+
+        new_transactions.sort(key=lambda t: t.date)
+        existing_transactions_count = Transaction.objects.filter(
+            account__institution=self,
+            date__gte=new_transactions[0].date,
+            date__lte=new_transactions[-1].date,
+        ).count()
+
+        if existing_transactions_count != len(new_transactions):
+            logger.error('Suspected duplicate transactions for user', extra={
+                'user_id': self.owner.id,
+                'institution_id': self.id,
+                'synced_transactions': len(new_transactions),
+                'existing_transactions': existing_transactions_count,
+            })
 
     def sync(self):
         self.sync_accounts()
