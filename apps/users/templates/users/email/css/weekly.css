@@ -48,7 +48,8 @@ h2 {
 }
 
 .chart {
-  width: 568px;
+  width: 100%;
+  max-width: 568px;
   margin-top: 10px;
 }
 
