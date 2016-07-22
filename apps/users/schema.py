@@ -12,7 +12,7 @@ from apps.transactions.fields import TransactionConnectionField
 from apps.buckets.schema import BucketNode
 from apps.buckets.models import Bucket
 
-from .summary import MonthSummary, bucket_month
+from .summary import MonthSummary, BucketMonth
 
 
 class BucketMonthNode(graphene.relay.Node):
@@ -23,19 +23,27 @@ class BucketMonthNode(graphene.relay.Node):
     transactions = TransactionConnectionField(TransactionNode)
 
     @classmethod
-    def get_node(Cls, id, info):
-        bucket_id, month_start = id.split(':')
+    @with_context
+    def get_node(Cls, id, context, info):
+        bucket_id, month = id.split(':')
 
-        month_start = delorean.parse('{}/01'.format(month_start)).truncate('month').datetime
-        bucket = Bucket.objects.get(id=bucket_id)
+        try:
+            bucket = Bucket.objects.get(id=bucket_id, owner=context.user)
+        except Bucket.DoesNotExist:
+            return None
 
-        return Cls(**bucket_month(bucket, month_start))
+        month_start = delorean.parse('{}/01'.format(month)).truncate('month').datetime
+        bucket_month = BucketMonth(bucket, month_start)
+        return Cls(
+            bucket=bucket_month.bucket,
+            month=bucket_month.month_start,
+            amount=bucket_month.amount,
+            avg_amount=bucket_month.avg_amount,
+            transactions=bucket_month.transactions,
+        )
 
     def to_global_id(self):
-        return self.global_id('{}:{:%Y/%m}'.format(
-            self.bucket.id,
-            self.month,
-        ))
+        return self.global_id('{}:{:%Y/%m}'.format(self.bucket.id, self.month))
 
 
 class Summary(graphene.ObjectType):
