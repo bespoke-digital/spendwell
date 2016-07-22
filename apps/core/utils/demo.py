@@ -19,7 +19,7 @@ from apps.goals.models import Goal
 
 
 def export_demo_data():
-    owner = User.objects.get(email='demo@spendwell.co')
+    owner = User.objects.get(email='mattskillz@gmail.com')
 
     export = {
         'institutions': [],
