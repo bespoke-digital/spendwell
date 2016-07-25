@@ -76,6 +76,8 @@ class ConnectAccount extends Component {
     const { viewer, relay } = this.props
     const { results, finicityError } = this.state
 
+    console.log(viewer)
+
     return (
       <CardList className={styles.root}>
         <Card>
@@ -172,6 +174,11 @@ ConnectAccount = Relay.createContainer(ConnectAccount, {
 
         institutionTemplate(id: $finicitySelectedId) @include(if: $finicitySelected) {
           ${FinicityAccountDialog.getFragment('institutionTemplate')}
+        }
+
+        yodleeFastlink {
+          url
+          parameters
         }
       }
     `,

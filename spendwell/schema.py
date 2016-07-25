@@ -14,6 +14,7 @@ from apps.goals.mutations import GoalsMutations
 from apps.buckets.schema import BucketsQuery
 from apps.buckets.mutations import BucketsMutations
 from apps.finicity.mutations import FinicityMutations
+from apps.yodlee.schema import YodleeQuery
 
 
 class Viewer(
@@ -24,6 +25,7 @@ class Viewer(
     UsersQuery,
     GoalsQuery,
     BucketsQuery,
+    YodleeQuery,
 ):
     dummy = graphene.Field(graphene.String())
 

@@ -1,6 +1,4 @@
 
-from uuid import uuid4
-
 from django.contrib.gis.geoip2 import GeoIP2
 import graphene
 from graphene.utils import with_context

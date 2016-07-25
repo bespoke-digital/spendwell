@@ -45,8 +45,9 @@ class User(AbstractBaseUser):
     last_sync = models.DateTimeField(null=True, blank=True)
 
     finicity_id = models.CharField(max_length=255, null=True, blank=True)
-    estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
+    yodlee_password = models.CharField(max_length=255, null=True, blank=True)
 
+    estimated_income = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     timezone = models.CharField(max_length=100, default='America/Toronto')
     estimated_income_confirmed = models.BooleanField(default=False)
 
