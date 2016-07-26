@@ -7,14 +7,14 @@ from apps.users.models import User
 from .tasks import sync_institution, post_user_sync
 
 
-def sync_user(user, backoff=0, **kwargs):
+def sync_user(user, backoff=0, delete_duplicates=False, **kwargs):
     if user.institutions.count() == 0:
         return
 
     mixpanel.track(user.id, 'sync: start')
 
     return chord(
-        sync_institution.si(id).set(countdown=backoff * 60 * 2)
+        sync_institution.si(id, delete_duplicates=delete_duplicates).set(countdown=backoff * 60 * 2)
         for id in user.institutions.values_list('id', flat=True)
     )(
         post_user_sync.s(user.id, backoff=backoff, **kwargs)
