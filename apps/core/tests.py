@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.conf import settings
 from dateutil.relativedelta import relativedelta
 import graphene
 
@@ -18,6 +19,7 @@ from .utils import months_avg, this_month
 class SWTestCase(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
+        settings.CELERY_ALWAYS_EAGER = True
 
     def graph_query(self, query, user=None, assert_errors=True, schema=None, **kwargs):
         if user is None:

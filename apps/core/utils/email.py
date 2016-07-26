@@ -14,8 +14,8 @@ from apps.users.utils import unsubscribe_sign
 
 
 def send_email(subject, user, template, context=None, from_email=settings.DEFAULT_FROM_EMAIL):
-    if isinstance(user, str):
-        user = [user]
+    if context is None:
+        context = {}
 
     html_message, text_message = render_email(subject, user, template, context)
 
@@ -26,12 +26,11 @@ def send_email(subject, user, template, context=None, from_email=settings.DEFAUL
         recipient_list=[user.email],
         html_message=html_message,
     )
-    context['event_properties'] = context.get('event_properties', {})
 
     mixpanel.track(
         user.id,
         'Email Send',
-        dict(context['event_properties'], **{'email': user.email}),
+        dict(context.get('event_properties', {}), **{'email': user.email}),
     )
 
 
@@ -46,11 +45,10 @@ def render_email(subject, user, template, context=None):
         'signature': unsubscribe_sign(user),
     })
 
-    context['event_properties'] = context.get('event_properties', {})
     context['open_event_image'] = 'http://api.mixpanel.com/track/?data={}&ip=1&img=1'.format(
         b64encode(json.dumps({
             'event': 'Email Open',
-            'properties': dict(context['event_properties'], **{
+            'properties': dict(context.get('event_properties', {}), **{
                 'token': settings.MIXPANEL_PUBLIC_KEY,
                 'distinct_id': user.id,
                 'email': user.email,

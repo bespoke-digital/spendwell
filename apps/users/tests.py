@@ -192,7 +192,7 @@ class UsersTestCase(SWTestCase):
 
         result = self.graph_query('''{{
             viewer {{
-            summary(month: "{month:%Y/%m}") {{
+                summary(month: "{month:%Y/%m}") {{
                     allocated
                     spent
                 }}
@@ -203,6 +203,134 @@ class UsersTestCase(SWTestCase):
             result.data['viewer']['summary']['allocated'],
             -11100,
         )
+
+    def test_bucket_months(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        one_month_ago = timezone.now() - relativedelta(months=1)
+        two_month_ago = timezone.now() - relativedelta(months=2)
+        three_month_ago = timezone.now() - relativedelta(months=3)
+
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=one_month_ago,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=two_month_ago,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=three_month_ago,
+        )
+        TransactionFactory.create(owner=owner, amount=Decimal('-151'), description='phone')
+        TransactionFactory.create(owner=owner, amount=Decimal('-111'), description='phone')
+        TransactionFactory.create(owner=owner, amount=Decimal('-222'), description='waaa')
+
+        bucket = BucketFactory.create(
+            owner=owner,
+            type='bill',
+            filters=[{'description_exact': 'phone'}],
+        )
+        bucket.assign_transactions()
+
+        bucket = BucketFactory.create(
+            owner=owner,
+            type='label',
+            filters=[{'description_exact': 'waaa'}],
+        )
+        bucket.assign_transactions()
+
+        summary = MonthSummary(owner)
+
+        self.assertEqual(len(summary.bucket_months), 2)
+
+        for bucket_month in summary.bucket_months:
+            self.assertEqual(bucket_month.month_start, this_month())
+
+            if bucket_month.bucket.type == 'bill':
+                self.assertEqual(bucket_month.amount, Decimal('-151') + Decimal('-111'))
+                self.assertEqual(bucket_month.avg_amount, Decimal('-234'))
+
+                self.assertEqual(len(bucket_month.transactions), 2)
+                for transaction in bucket_month.transactions:
+                    self.assertEqual(transaction.description, 'phone')
+
+            else:
+                self.assertEqual(bucket_month.amount, Decimal('-222'))
+                self.assertEqual(len(bucket_month.transactions), 1)
+                self.assertEqual(bucket_month.transactions.first().description, 'waaa')
+
+        result = self.graph_query('''{{
+            viewer {{
+                summary(month: "{month:%Y/%m}") {{
+                    bucketMonths {{
+                        edges {{
+                            node {{
+                                id
+                                amount
+                                avgAmount
+
+                                bucket {{
+                                    type
+                                }}
+
+                                transactions(first: 10) {{
+                                    edges {{
+                                        node {{
+                                            description
+                                        }}
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }}
+                }}
+            }}
+        }}'''.format(month=this_month()), user=owner)
+
+        self.assertEqual(
+            len(result.data['viewer']['summary']['bucketMonths']['edges']),
+            2,
+        )
+
+        bill_node_id = None
+
+        for edge in result.data['viewer']['summary']['bucketMonths']['edges']:
+            if edge['node']['bucket']['type'] == 'bill':
+                self.assertEqual(edge['node']['amount'], -15100 + -11100)
+                self.assertEqual(edge['node']['avgAmount'], -23400)
+
+                self.assertEqual(len(edge['node']['transactions']['edges']), 2)
+                for transaction_edge in edge['node']['transactions']['edges']:
+                    self.assertEqual(transaction_edge['node']['description'], 'phone')
+
+                bill_node_id = edge['node']['id']
+            else:
+                self.assertEqual(edge['node']['amount'], -22200)
+                self.assertEqual(len(edge['node']['transactions']['edges']), 1)
+                self.assertEqual(edge['node']['transactions']['edges'][0]['node']['description'], 'waaa')
+
+        result = self.graph_query('''
+            query {{
+                node(id: "{}") {{
+                    ...BucketMonthFragment
+                }}
+            }}
+            fragment BucketMonthFragment on BucketMonthNode {{
+                id
+                avgAmount
+            }}
+        '''.format(bill_node_id), user=owner)
+
+        self.assertEqual(result.data['node']['id'], bill_node_id)
+        self.assertEqual(result.data['node']['avgAmount'], -23400)
 
     def test_token_auth(self):
         user = UserFactory.create()

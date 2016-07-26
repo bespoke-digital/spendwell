@@ -26,20 +26,21 @@
   <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
   <div class="mui-container">
     <h2>Safe to Spend</h2>
-    <p class="sts sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}">
-      ${{ summary.net|floatformat:2 }}
-    </p>
+    <p class="
+      sts
+      sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}
+    ">${{ summary.net|abs|floatformat:2 }}</p>
 
     {% if spending_chart_url %}
       <h2>Your Spending so Far</h2>
       <img src="{{ spending_chart_url }}" class="chart">
     {% endif %}
 
-    {% if upcoming_bills|length %}
+    {% if upcoming_bill_months|length %}
       <h2 class="bill-title">Upcoming Bills</h2>
-      {% for bill in upcoming_bills %}
-        <h3 class="bill-name">{{ bill.name }}</h3>
-        <div class="bill-amount">(${{ bill.avg_amount|abs|floatformat:2 }})</div>
+      {% for bill_month in upcoming_bill_months %}
+        <h3 class="bill-name">{{ bill_month.bucket.name }}</h3>
+        <div class="bill-amount">(${{ bill_month.avg_amount|abs|floatformat:2 }})</div>
       {% endfor %}
     {% endif %}
 
