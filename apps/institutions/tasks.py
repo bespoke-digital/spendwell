@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def sync_institution(institution_id, reauth_on_fail=False):
+def sync_institution(institution_id, reauth_on_fail=False, delete_duplicates=False):
     from .models import Institution
 
     try:
@@ -26,7 +26,7 @@ def sync_institution(institution_id, reauth_on_fail=False):
         return True
 
     try:
-        institution.sync()
+        institution.sync(delete_duplicates=delete_duplicates)
     except FinicityInvalidAccountError:
         institution.reauth_required = True
         institution.save()
