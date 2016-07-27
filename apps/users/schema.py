@@ -21,6 +21,7 @@ class BucketMonthNode(graphene.relay.Node):
     amount = graphene.Field(Money())
     avg_amount = graphene.Field(Money())
     transactions = TransactionConnectionField(TransactionNode)
+    bill_paid = graphene.Field(graphene.Boolean())
 
     @classmethod
     @with_context
@@ -40,6 +41,7 @@ class BucketMonthNode(graphene.relay.Node):
             amount=bucket_month.amount,
             avg_amount=bucket_month.avg_amount,
             transactions=bucket_month.transactions,
+            bill_paid=bucket_month.bill_paid,
         )
 
     def to_global_id(self):
