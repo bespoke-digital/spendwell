@@ -90,7 +90,7 @@ def weekly_email_context(user):
                         {
                             'label': 'Safe to Spend',
                             'data': [
-                                float(abs(summary.net) - this_month_data[-1]),
+                                float(summary.net + this_month_data[-1]),
                             ] * chart_length,
                             'fill': False,
                             'backgroundColor': TRANSPARENT,
