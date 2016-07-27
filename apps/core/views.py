@@ -148,7 +148,7 @@ class EmailView(View):
 
     def get(self, request):
         if not request.user.is_authenticated():
-            return HttpResponse(status_code=401)
+            return HttpResponse(status=401)
 
         html, text = render_email(
             self.get_subject(),
