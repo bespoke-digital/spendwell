@@ -1,0 +1,48 @@
+@import '../variables';
+
+:local(.root) {
+  position: relative;
+
+  h2 {
+    .btn {
+      float: right;
+    }
+
+    small {
+      color: white;
+      opacity: 0.8;
+    }
+  }
+
+  .card:last-child { // Kinda specific, but we have to override stuff...
+    background-color: color('orange', '600');
+    border-bottom: none;
+    color: white;
+  }
+
+  .chart {
+    margin-top: 40px;
+
+    > div {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  .cta {
+    text-align: left;
+    padding: 20px;
+    max-width: 35em;
+
+    button {
+      margin: 10px 0 0 0;
+    }
+  }
+}

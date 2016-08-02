@@ -16,6 +16,7 @@ import App from 'components/app'
 import DashboardSummary from 'components/dashboard-summary'
 import DashboardHero from 'components/dashboard-hero'
 import LabelsHero from 'components/labels-hero'
+import BillsHero from 'components/bills-hero'
 import ListHeading from 'components/list-heading'
 import PrimaryFab from 'components/primary-fab'
 import Icon from 'components/icon'
@@ -172,7 +173,7 @@ class Dashboard extends Component {
           </CardList>
         : null}
 
-        <CardList className='month-list'>
+        {/*<CardList className='month-list'>
           <ListHeading>
             Bills <small> for monthly recurring expenses</small>
           </ListHeading>
@@ -225,7 +226,11 @@ class Dashboard extends Component {
               </div>
             </div>
           : null}
-        </CardList>
+        </CardList>*/}
+
+        <BillsHero
+          data={billMonths}
+        />
 
         <LabelsHero
           data={bucketMonths}
