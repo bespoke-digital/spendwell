@@ -5,6 +5,7 @@ import Relay from 'react-relay'
 import moment from 'moment'
 
 import Card from 'components/card'
+import CardGrid from 'components/card-grid'
 import CardList from 'components/card-list'
 import Money from 'components/money'
 import GoalMonth from 'components/goal-month'
@@ -23,6 +24,7 @@ import Icon from 'components/icon'
 import CreateBucketSheet from 'components/create-bucket-sheet'
 import CreateGoalSheet from 'components/create-goal-sheet'
 import Button from 'components/button'
+import GoalCard from 'components/goal-card'
 
 import { SettingsMutation } from 'mutations/users'
 
@@ -118,7 +120,7 @@ class Dashboard extends Component {
           periods={periods}
         />
 
-        <CardList className='month-list'>
+        {/* <CardList className='month-list'>
           <ListHeading>
             Goals <small> for long and short term savings</small>
           </ListHeading>
@@ -159,7 +161,13 @@ class Dashboard extends Component {
               </div>
             </div>
           : null}
-        </CardList>
+        </CardList> */}
+
+        <CardGrid>
+          {goalMonths.length > 0 ? goalMonths.map(node =>
+            <GoalCard node={node} />
+          ) : null}
+        </CardGrid>
 
         {spentFromSavings > 0 ?
           <CardList>

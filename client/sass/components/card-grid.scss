@@ -1,0 +1,16 @@
+:local(.root) {
+  display: flex; // Shit is getting real, folks
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+
+
+  .card {
+    margin-bottom: 20px;
+    width: calc(33% - 10px);
+    min-width: 300px;
+    flex: 0 0 auto;
+  }
+}

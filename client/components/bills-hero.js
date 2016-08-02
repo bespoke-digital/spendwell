@@ -57,8 +57,6 @@ export default class BillsHero extends React.Component {
     const names = this.props.data.map(node => node.bucket.name);
     const values = this.props.data.map(node => Math.abs(Math.floor(node.amount / 100)));
 
-    console.log(names, values);
-
     let scaleX = scales.numeric(values, c.width * 0.7);
 
     function drawBars() {

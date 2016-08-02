@@ -1,0 +1,18 @@
+@import '../variables';
+
+:local(.root) {
+  overflow: hidden;
+
+  h2 {
+    background-color: color('purple', '500');
+    color: white;
+    margin: -16px -16px 20px -16px;
+    padding: 16px;
+
+    small {
+      color: white;
+      opacity: 0.8;
+      font-size: 0.9em;
+    }
+  }
+}
