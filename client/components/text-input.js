@@ -8,9 +8,9 @@ import style from 'sass/components/text-input'
 export default class TextInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
+    label: PropTypes.string,
     value: PropTypes.string,
     initialValue: PropTypes.string,
-    label: PropTypes.string,
     error: PropTypes.any,
     className: PropTypes.string,
     type: PropTypes.string,
@@ -50,7 +50,7 @@ export default class TextInput extends Component {
   }
 
   render () {
-    const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props
+    const { onChange, select, type, label, className, error, autoFocus, value, ..._props } = this.props
     const _value = _.isUndefined(value) ? this.state.value : value
     return (
       <div className={`

@@ -72,7 +72,6 @@ class Header extends Component {
         <A
           onClick={::this.handleChatlio}
           className={`chatlio-btn ${chatlioOpen ? 'open' : ''}`}
-          plain
         ><Icon type='chat' color='light'/></A>
 
         {!plain ? <OnboardProgress viewer={viewer}/> : null}
