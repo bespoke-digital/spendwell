@@ -51,8 +51,9 @@ class OnboardProgress extends Component {
     const progressTarget = Object.keys(status).length
     const progressCurrent = _.values(status).filter((v) => v).length
 
-    if (progressTarget === progressCurrent)
+    if (progressTarget === progressCurrent) {
       return null
+    }
 
     return (
       <div className={style.root}>
