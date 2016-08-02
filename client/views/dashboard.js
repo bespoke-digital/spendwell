@@ -14,6 +14,7 @@ import SpentFromSavings from 'components/spent-from-savings'
 import TransactionList from 'components/transaction-list'
 import App from 'components/app'
 import DashboardSummary from 'components/dashboard-summary'
+import DashboardHero from 'components/dashboard-hero'
 import ListHeading from 'components/list-heading'
 import PrimaryFab from 'components/primary-fab'
 import Icon from 'components/icon'
@@ -103,7 +104,13 @@ class Dashboard extends Component {
         className={styles.root}
         onForceFetch={relay.forceFetch}
       >
-        <DashboardSummary
+        {/*<DashboardSummary
+          viewer={viewer}
+          summary={viewer.summary}
+          periods={periods}
+        />*/}
+
+        <DashboardHero
           viewer={viewer}
           summary={viewer.summary}
           periods={periods}
