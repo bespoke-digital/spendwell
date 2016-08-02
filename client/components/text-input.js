@@ -8,11 +8,13 @@ import style from 'sass/components/text-input'
 export default class TextInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
+    label: PropTypes.string,
     value: PropTypes.string,
     error: PropTypes.any,
     className: PropTypes.string,
     type: PropTypes.string,
     select: PropTypes.bool,
+    autoFocus: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,29 +24,31 @@ export default class TextInput extends Component {
     select: false,
   };
 
-  constructor() {
-    super();
-    this.state = { value: '' };
-  }
+  state = {
+    value: '',
+  };
 
   componentDidMount () {
     const { select } = this.props
-    if (select)
+    if (select) {
       this.refs.input.select()
+    }
   }
 
   changeValue (event) {
     const value = event.currentTarget.value
 
-    if (_.isUndefined(this.props.value))
+    if (_.isUndefined(this.props.value)) {
       this.setState({ value })
+    }
 
-    if (this.props.onChange)
+    if (this.props.onChange) {
       this.props.onChange(value)
+    }
   }
 
   render () {
-    const { onChange, type, label, className, error, autoFocus, value, ..._props } = this.props
+    const { onChange, select, type, label, className, error, autoFocus, value, ..._props } = this.props
     const _value = _.isUndefined(value) ? this.state.value : value
     return (
       <div className={`
