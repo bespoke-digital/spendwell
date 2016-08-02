@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def sync_institution(institution_id, reauth_on_fail=False):
+def sync_institution(institution_id, reauth_on_fail=False, delete_duplicates=False):
     from .models import Institution
 
     try:
@@ -26,7 +26,7 @@ def sync_institution(institution_id, reauth_on_fail=False):
         return True
 
     try:
-        institution.sync()
+        institution.sync(delete_duplicates=delete_duplicates)
     except FinicityInvalidAccountError:
         institution.reauth_required = True
         institution.save()
@@ -51,7 +51,7 @@ def post_user_sync(sync_status, user_id, estimate_income=False, autodetect_bills
     user = User.objects.get(id=user_id)
 
     if backoff > settings.SYNC_BACKOFF_MAX:
-        logger.error('sync backoff maxed out for user: {}'.format(user_id))
+        logger.error('sync backoff maxed out for user', extra={'user_id': user_id})
         mixpanel.track(user.id, 'sync: failed')
         return
     elif (

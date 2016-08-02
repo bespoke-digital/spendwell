@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'bootstrap_paginator',
     'resize',
     'djcelery',
+    'mathfilters',
 
     'apps.core',
     'apps.landing',
@@ -110,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'apps.users.backends.DemoBackend',
+    'apps.users.backends.TokenBackend',
 )
 
 CACHES = {

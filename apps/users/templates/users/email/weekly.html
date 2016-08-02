@@ -1,0 +1,51 @@
+{% extends "email/base.html" %}
+
+{% load mathfilters %}
+{% load staticfiles %}
+
+{% block css-inline %}
+  {{ block.super }}
+  {% include 'users/email/css/weekly.css' %}
+{% endblock %}
+
+{% block content %}
+<center>
+  <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
+  <div class="mui-container">
+    <img src="{% static 'img/favicon/favicon-194x194.png' %}" class="logo" alt="Spendwell">
+  </div>
+  <!--[if mso]></td></tr></table><![endif]-->
+</center>
+
+<div class="header">
+  <h1>Your Money</h1>
+  <div class="subtitle">As of {{ as_of|date }}</div>
+</div>
+
+<center>
+  <!--[if mso]><table><tr><td class="mui-container-fixed"><![endif]-->
+  <div class="mui-container">
+    <h2>Safe to Spend</h2>
+    <p class="
+      sts
+      sts--{% if summary.net >= 0 %}positive{% else %}negative{% endif %}
+    ">${{ summary.net|abs|floatformat:2 }}</p>
+
+    {% if spending_chart_url %}
+      <h2>Your Spending so Far</h2>
+      <img src="{{ spending_chart_url }}" class="chart">
+    {% endif %}
+
+    {% if upcoming_bill_months|length %}
+      <h2 class="bill-title">Upcoming Bills</h2>
+      {% for bill_month in upcoming_bill_months %}
+        <h3 class="bill-name">{{ bill_month.bucket.name }}</h3>
+        <div class="bill-amount">(${{ bill_month.avg_amount|abs|floatformat:2 }})</div>
+      {% endfor %}
+    {% endif %}
+
+    <a href="{% url 'app' %}?utm_medium=email&utm_source=weekly" class="mui-btn call-to-action">View Dashboard</a>
+  </div>
+  <!--[if mso]></td></tr></table><![endif]-->
+</center>
+{% endblock %}

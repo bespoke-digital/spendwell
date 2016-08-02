@@ -2,9 +2,10 @@
 import logging
 from uuid import uuid4
 
+from django.core.signing import Signer
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.conf import settings
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from delorean import Delorean
 
 from apps.core.utils.email import send_email
@@ -54,6 +55,8 @@ class User(AbstractBaseUser):
     create_bill_help = models.BooleanField(default=True)
     create_goal_help = models.BooleanField(default=True)
 
+    email_subscribed = models.BooleanField(default=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -100,6 +103,18 @@ def get_beta_code():
     return uuid4().hex
 
 
+class AuthToken(models.Model):
+    user = models.ForeignKey('users.User')
+    token = models.CharField(max_length=255)
+    device_type = models.CharField(max_length=255)
+    device_name = models.CharField(max_length=255)
+
+    @classmethod
+    def generate(Cls, user, **kwargs):
+        token = Signer().sign('{}:{}'.format(user.id, uuid4().hex[:5]))
+        return AuthToken.objects.create(user=user, token=token, **kwargs)
+
+
 class BetaSignup(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -132,7 +147,7 @@ class BetaSignup(models.Model):
         if email:
             send_email(
                 subject="You're invited to join Spendwell",
-                to=self.email,
+                user=self,
                 template='users/email/beta-invite.html',
                 context={'invite_url': self.beta_code.invite_url},
             )

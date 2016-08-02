@@ -1,6 +1,11 @@
-{% extends "email/base.html" %}
-
-{% block body %}
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{{ subject }}</title>
+  </head>
+  <body>
   <p>It’s time to check out your financial dashboard and get your money in shape.</p>
 
   <p><a href="https://{{ SITE_DOMAIN }}{% url 'app' %}">Get Started</a></p>
@@ -11,5 +16,5 @@
     Thanks and enjoy!<br>
     Matt and Aron
   </p>
-
-{% endblock %}
+  </body>
+</html>

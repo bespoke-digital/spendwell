@@ -63,17 +63,12 @@ class BillMonth extends Component {
       bucketMonth.transactions.edges.length > 0
     )
 
-    const paid = bucketMonth.amount !== 0 && (
-      bucketMonth.amount > bucketMonth.avgAmount ||
-      Math.abs(bucketMonth.avgAmount - bucketMonth.amount) / Math.abs(bucketMonth.avgAmount) < 0.10
-    )
-
     return (
       <SuperCard expanded={open} summary={
         <Card
           onSummaryClick={onClick}
           expanded={open}
-          className={`bill ${paid ? 'bucket-success' : 'bucket-warn'} ${className}`}
+          className={`bill ${bucketMonth.billPaid ? 'bucket-success' : 'bucket-warn'} ${className}`}
           summary={
             <div>
               <div className='icon'>
@@ -96,9 +91,9 @@ class BillMonth extends Component {
           }
         >
           <IconList>
-            <div className={`${paid ? '' : 'warn'}`}>
-              <Icon type={paid ? 'done' : 'alarm' }/>
-              <div className='content'>{paid ? 'Paid' : 'Unpaid'}</div>
+            <div className={`${bucketMonth.billPaid ? '' : 'warn'}`}>
+              <Icon type={bucketMonth.billPaid ? 'done' : 'alarm' }/>
+              <div className='content'>{bucketMonth.billPaid ? 'Paid' : 'Unpaid'}</div>
             </div>
           </IconList>
 
@@ -147,6 +142,7 @@ BillMonth = Relay.createContainer(BillMonth, {
       fragment on BucketMonthNode {
         amount
         avgAmount
+        billPaid
 
         bucket {
           ${UpdateBucketSheet.getFragment('bucket')}

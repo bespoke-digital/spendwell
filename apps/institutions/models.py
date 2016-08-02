@@ -31,12 +31,6 @@ class InstitutionManager(SWManager):
             defaults={'name': data['name']},
         )
 
-        # Make sure reauth for FIs without plaid_public_token causes accounts
-        # to be deleted. This can be removed later, since it only applies to
-        # accounts connected before 2016/04/25
-        if not created and not institution.plaid_public_token:
-            institution.accounts.all().delete()
-
         institution.plaid_public_token = plaid_public_token
         institution.plaid_access_token = plaid_access_token
 
@@ -164,10 +158,12 @@ class Institution(SWModel):
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync_transactions(self):
+    def sync_transactions(self, delete_duplicates=False):
+        new_transactions = []
+
         if self.plaid_client and self.plaid_data:
             for transaction_data in self.plaid_data['transactions']:
-                Transaction.objects.from_plaid(self, transaction_data)
+                new_transactions.append(Transaction.objects.from_plaid(self, transaction_data))
 
         elif self.finicity_client:
             try:
@@ -178,11 +174,33 @@ class Institution(SWModel):
                 raise
 
             for transaction_data in transactions_data:
-                Transaction.objects.from_finicity(self, transaction_data)
+                new_transactions.append(Transaction.objects.from_finicity(self, transaction_data))
 
-    def sync(self):
+        new_transactions = [t for t in new_transactions if t is not None]
+        if not len(new_transactions):
+            return
+
+        duplicate_transactions = Transaction.objects.filter(
+            account__institution=self,
+            date__gte=new_transactions[0].date,
+            date__lte=new_transactions[-1].date,
+        ).exclude(
+            id__in=[t.id for t in new_transactions],
+        )
+
+        if duplicate_transactions.count():
+            logger.error('Suspected duplicate transactions for user', extra={
+                'user_id': self.owner.id,
+                'institution_id': self.id,
+                'synced_transactions': len(new_transactions),
+                'duplicate_transactions': duplicate_transactions.count(),
+            })
+            if delete_duplicates:
+                duplicate_transactions.delete()
+
+    def sync(self, delete_duplicates=False):
         self.sync_accounts()
-        self.sync_transactions()
+        self.sync_transactions(delete_duplicates=delete_duplicates)
         self.last_sync = timezone.now()
         self.reauth_required = False
         self.save()
