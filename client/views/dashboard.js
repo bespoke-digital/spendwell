@@ -15,6 +15,7 @@ import TransactionList from 'components/transaction-list'
 import App from 'components/app'
 import DashboardSummary from 'components/dashboard-summary'
 import DashboardHero from 'components/dashboard-hero'
+import LabelsHero from 'components/labels-hero'
 import ListHeading from 'components/list-heading'
 import PrimaryFab from 'components/primary-fab'
 import Icon from 'components/icon'
@@ -226,7 +227,11 @@ class Dashboard extends Component {
           : null}
         </CardList>
 
-        <CardList className='month-list'>
+        <LabelsHero
+          data={bucketMonths}
+        />
+
+        {/*<CardList className='month-list'>
           <ListHeading>
             Labels <small> for tracking spending</small>
           </ListHeading>
@@ -279,7 +284,7 @@ class Dashboard extends Component {
               </div>
             </div>
           : null}
-        </CardList>
+        </CardList>*/}
 
         <PrimaryFab actions={[
           {

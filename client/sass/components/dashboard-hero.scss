@@ -1,0 +1,54 @@
+@import '../variables';
+
+:local(.root) {
+  background-color: white;
+
+  .card:not(.month-selector) {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .contain {
+    display: table;
+    width: 100%;
+
+    .text, .chart {
+      display: table-cell;
+      box-sizing: border-box;
+    }
+    .text {
+      white-space: nowrap;
+      padding: 1em;
+      vertical-align: top;
+    }
+    .chart {
+      width: 100%;
+      vertical-align: bottom;
+    }
+
+    @media (max-width: $screen-sm-min) {
+      display: block;
+
+      .text, .chart {
+        display: block;
+      }
+    }
+  }
+
+  .chart > div {
+    position: relative;
+
+    &::before {
+      content: "";
+      display: block;
+      padding-top: 60%;
+    }
+
+    canvas {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      // background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

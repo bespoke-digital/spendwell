@@ -1,0 +1,200 @@
+:local(.root) {
+  position: relative;
+
+  h2 {
+    .btn {
+      float: right;
+    }
+
+    small {
+      color: white;
+      opacity: 0.8;
+    }
+  }
+
+  .card:last-child { // Kinda specific, but we have to override stuff...
+    background-color: #448aff;
+    color: white;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .active {
+    opacity: 1 !important;
+    transition: opacity 0.1s !important;
+  }
+  .inactive {
+    opacity: 0.2 !important;
+    transition: opacity 0.1s !important;
+  }
+
+  .cta {
+    text-align: right;
+    width: 280px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    @media screen and (max-width: 600px) {
+      position: static;
+      width: auto;
+      padding: 10px 20px;
+      border-top: 2px solid rgba(255, 255, 255, 0.8);
+
+      button {
+        margin: 0;
+      }
+    }
+
+    &.empty {
+      text-align: center;
+      margin-left: -140px;
+      margin-bottom: 50px;
+      left: 50%;
+    }
+
+    p {
+      text-align: left;
+    }
+  }
+
+  .chart {
+    overflow: visible;
+    position: relative;
+
+    @media screen and (max-width: 600px) {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+    }
+
+    .hover-targets {
+      font-size: 0;
+      white-space: nowrap;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 10px 10px 0 10px;
+      z-index: 10;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+
+      .hover-target {
+        display: inline-block;
+        height: 100%;
+        width: 50px;
+        margin: 0;
+        // background-color: rgba(255, 0, 0, 0.3);
+      }
+    }
+
+    .names {
+      text-align: left;
+      font-size: 0;
+      padding: 20px 10px 0px 10px;
+      white-space: nowrap;
+
+      label {
+        font-size: 10pt;
+        width: 30px;
+        margin: 0 10px;
+        display: inline-block;
+        line-height: 1;
+        opacity: 0.8;
+        transform-origin: left;
+        transform: translateX(10px) rotate(-20deg);
+        transition: opacity 0.6s;
+        white-space: normal;
+        position: relative;
+        z-index: 9;
+
+        &.active .info {
+          display: block;
+        }
+      }
+
+      .info {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0) rotate(20deg);
+        background-color: black;
+        padding: 8px 12px;
+        line-height: 1.4;
+      }
+    }
+    .bars {
+      height: 300px;
+      text-align: left;
+      font-size: 0;
+      box-sizing: border-box;
+      padding: 24px 10px 0 10px;
+      opacity: 0.8;
+      position: relative;
+      white-space: nowrap;
+
+      @media screen and (max-width: 450px) {
+        height: 200px;
+      }
+
+      .bar {
+        transition: transform 0.3s cubic-bezier(.51,1.98,.8,.72);
+        transform-origin: bottom;
+        height: 100%;
+        width: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        margin: 0 10px;
+        display: inline-block;
+        vertical-align: bottom;
+      }
+
+      .lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 10px;
+        right: 10px;
+        box-sizing: border-box;
+        padding: 10px;
+        overflow: hidden;
+
+        .line {
+          opacity: 0.3;
+          display: inline-block;
+          vertical-align: top;
+          margin: 0 (10px + (30px - 4px) / 2);
+          width: 4px;
+          height: 100%;
+          background-color: white;
+          transform-origin: top;
+          transition: opacity 0.6s, transform 0.3s 0.15s cubic-bezier(.51,1.98,.8,.72);
+        }
+      }
+    }
+  }
+
+  // Animations
+  .anim-bar-appear {
+    transform: scaleY(0) !important;
+  }
+  .anim-bar-first-appear {
+    transform: scaleY(0) !important;
+  }
+
+  .anim-name-first-appear {
+    opacity: 0 !important;
+  }
+  .anim-name-appear {
+
+  }
+
+  .anim-line-first-appear {
+    opacity: 0 !important;
+  }
+  .anim-line-appear {
+    transform: translateY(100%) scaleY(0.1) !important;
+  }
+
+}
