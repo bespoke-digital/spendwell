@@ -3,7 +3,7 @@
 :local(.root) {
   background-color: white;
 
-  .card:not(.month-selector) {
+  .card:not(:first-child) {
     padding: 0;
     border-bottom: 0;
   }
