@@ -37,23 +37,32 @@ class BucketMonth(object):
     @property
     def amount(self):
         if not hasattr(self, '_amount'):
-            if self.bucket.type == 'goal':
-                self._amount = self.bucket.goal_amount
-            else:
-                self._amount = self.transactions.sum()
+            self._amount = self.transactions.sum()
         return self._amount
 
     @property
     def avg_amount(self):
         if not hasattr(self, '_avg_amount'):
-            if self.bucket.type == 'goal':
-                self._avg_amount = self.bucket.goal_amount
-            else:
-                self._avg_amount = months_avg(
-                    self.bucket.transactions.all(),
-                    month_start=self.month_start,
-                )
+            self._avg_amount = months_avg(
+                self.bucket.transactions.all(),
+                month_start=self.month_start,
+            )
         return self._avg_amount
+
+    @property
+    def fixed_amount(self):
+        if not hasattr(self, '_fixed_amount'):
+            self._fixed_amount = self.bucket.fixed_amount
+        return self._fixed_amount
+
+    @property
+    def target_amount(self):
+        if not hasattr(self, '_target_amount'):
+            if self.bucket.use_fixed_amount:
+                self._target_amount = self.fixed_amount
+            else:
+                self._target_amount = self.avg_amount
+        return self._target_amount
 
     @property
     def bill_due_date(self):
@@ -165,7 +174,7 @@ class MonthSummary(object):
     def goals_total(self):
         if not hasattr(self, '_goals_total'):
             goals = Bucket.objects.filter(owner=self.user, type='goal')
-            self._goals_total = sum(goal.goal_amount for goal in goals)
+            self._goals_total = sum(BucketMonth(goal).target_amount for goal in goals)
         return self._goals_total
 
     @property

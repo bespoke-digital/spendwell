@@ -47,10 +47,12 @@ INSTALLED_APPS = [
     'apps.transactions',
     'apps.categories',
     'apps.buckets',
-    # 'apps.goals',
     'apps.finicity',
     'apps.blog',
     'apps.ads',
+
+    # temp
+    'apps.goals',
 ]
 
 AUTH_USER_MODEL = 'users.User'

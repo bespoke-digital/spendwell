@@ -1,16 +1,13 @@
 
 from decimal import Decimal
 from copy import deepcopy
-from dateutil.relativedelta import relativedelta
 
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
-import delorean
 
 from apps.core.models import SWModel
-from apps.core.utils import months_avg, this_month
 from apps.transactions.models import Transaction, BucketTransaction
 from apps.transactions.filters import TransactionFilter
 from apps.transactions.utils import apply_filter_list
@@ -31,7 +28,8 @@ class Bucket(SWModel):
         ('goal', 'Goal'),
         ('account', 'External Account'),
     ))
-    fixed_goal_amount = models.DecimalField(
+    use_fixed_amount = models.BooleanField(default=False)
+    fixed_amount = models.DecimalField(
         decimal_places=2,
         max_digits=12,
         blank=True,
@@ -84,22 +82,6 @@ class Bucket(SWModel):
                 self._avatar = None
 
         return self._avatar
-
-    @property
-    def goal_amount(self):
-        if not hasattr(self, '_goal_amount'):
-            if self.fixed_goal_amount:
-                self._goal_amount = self.fixed_goal_amount
-            else:
-                self._goal_amount = months_avg(self.transactions.all(), month_start=this_month())
-
-        return self._goal_amount
-
-    @property
-    def is_fixed(self):
-        if not hasattr(self, '_is_fixed'):
-            self._is_fixed = bool(self.fixed_goal_amount)
-        return self._is_fixed
 
     def raw_transactions(self, **filters):
         if self.filters is None:

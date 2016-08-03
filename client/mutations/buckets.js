@@ -19,8 +19,8 @@ export class CreateBucketMutation extends Relay.Mutation {
       name: this.props.name,
       filters: this.props.filters,
       type: this.props.type,
-      goalAmount: this.props.goalAmount,
-      isFixed: this.props.isFixed,
+      fixedAmount: this.props.fixedAmount,
+      useFixedAmount: this.props.useFixedAmount,
     }
   }
 
@@ -107,8 +107,8 @@ export class UpdateBucketMutation extends Relay.Mutation {
       bucketId: this.props.bucket.id,
       name: this.props.name,
       filters: this.props.filters,
-      goalAmount: this.props.goalAmount,
-      isFixed: this.props.isFixed,
+      fixedAmount: this.props.fixedAmount,
+      useFixedAmount: this.props.useFixedAmount,
     }
   }
 
@@ -124,19 +124,9 @@ export class UpdateBucketMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        bucket: this.props.bucket.id,
+        viewer: this.props.viewer.id,
       },
     }]
-  }
-
-  getOptimisticResponse () {
-    return {
-      bucket: {
-        id: this.props.bucket.id,
-        name: this.props.bucket.name,
-        filters: this.props.bucket.filters,
-      },
-    }
   }
 }
 

@@ -40,8 +40,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'CreateBucketFilterSet')
-        fixed_goal_amount = graphene.InputField(Money())
-        is_fixed = graphene.Boolean()
+        fixed_amount = graphene.InputField(Money())
+        use_fixed_amount = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
 
@@ -51,7 +51,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         from spendwell.schema import Viewer
 
         filters = clean_filters(input['filters'])
-        if not len(filters):
+        if not len(filters) and not input['type'] == 'goal':
             raise ValueError('filters are required')
 
         Bucket.objects.create(
@@ -59,8 +59,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
             name=input['name'],
             filters=filters,
             type=input['type'],
-            fixed_goal_amount=input.get('fixed_goal_amount'),
-            is_fixed=input.get('is_fixed', bool(input.get('fixed_goal_amount'))),
+            fixed_amount=input.get('fixed_amount'),
+            use_fixed_amount=input.get('use_fixed_amount', bool(input.get('fixed_amount'))),
         )
 
         return Cls(viewer=Viewer())
@@ -72,8 +72,8 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'UpdateBucketFilterSet')
-        fixed_goal_amount = graphene.InputField(Money())
-        is_fixed = graphene.Boolean()
+        fixed_amount = graphene.InputField(Money())
+        use_fixed_amount = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
     bucket = graphene.Field(BucketNode)
@@ -94,12 +94,11 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
         if 'filters' in input and input['filters']:
             bucket.filters = clean_filters(input['filters'])
 
-        if 'fixed_goal_amount' in input:
-            bucket.fixed_goal_amount = input['fixed_goal_amount']
-            bucket.is_fixed = True
+        if 'fixed_amount' in input:
+            bucket.fixed_amount = input['fixed_amount']
 
-        elif 'is_fixed' in input:
-            bucket.is_fixed = input['is_fixed']
+        if 'use_fixed_amount' in input or 'fixed_amount' in input:
+            bucket.use_fixed_amount = input.get('use_fixed_amount', True)
 
         bucket.save()
 

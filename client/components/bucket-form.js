@@ -37,9 +37,9 @@ function getInitialState ({ bucket, type, initialFilters, initialName }) {
     filters: bucket ? cleanFilters(bucket.filters) : (initialFilters || []),
     name: bucket ? bucket.name : (initialName || ''),
     type: bucket ? bucket.type : type,
-    goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
-    goalType: bucket && bucket.type === 'goal' && bucket.filters.length ? 'filter' : 'amount',
-    isFixed: true,
+    fixedAmount: bucket ? bucket.fixedAmount : 0,
+    useFixedAmount: bucket ? bucket.useFixedAmount : type === 'goal',
+    goalType: bucket && bucket.type === 'goal' && bucket.filters && bucket.filters.length ? 'filter' : 'amount',
   }
 }
 
@@ -71,8 +71,8 @@ class BucketForm extends Component {
   }
 
   getData () {
-    const { name, filters, goalAmount, isFixed } = this.state
-    return { name, filters: cleanFilters(filters), goalAmount, isFixed }
+    const { name, filters, fixedAmount, useFixedAmount } = this.state
+    return { name, filters: cleanFilters(filters), fixedAmount, useFixedAmount }
   }
 
   reset () {
@@ -80,8 +80,8 @@ class BucketForm extends Component {
   }
 
   isValid () {
-    const { filters, name } = this.state
-    return filters.length > 0 & name.length > 0
+    const { type, filters, name } = this.state
+    return (type === 'goal' || filters.length > 0) & name.length > 0
   }
 
   handleAddFilter () {
@@ -120,35 +120,26 @@ class BucketForm extends Component {
   }
 
   selectFilterGoal () {
-    const { bucket } = this.props
-    this.setState({
-      goalType: 'filter',
-      goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
-    })
+    this.setState({ goalType: 'filter' })
     if (!this.state.filters) {
       this.handleAddFilter()
     }
   }
 
   selectAmountGoal () {
-    const { bucket } = this.props
-    this.setState({
-      goalType: 'amount',
-      filters: [],
-      goalAmount: bucket && bucket.type === 'goal' ? bucket.goalAmount : 0,
-    })
+    this.setState({ goalType: 'amount', filters: [] })
   }
 
-  handleGoalAmountChange (goalAmount) {
-    goalAmount = -parseInt(goalAmount * 100)
-    if (!_.isNaN(goalAmount)) {
-      this.setState({ goalAmount })
+  handleFixedAmountChange (fixedAmount) {
+    fixedAmount = -parseInt(fixedAmount * 100)
+    if (!_.isNaN(fixedAmount)) {
+      this.setState({ fixedAmount })
     }
   }
 
   render () {
     const { viewer } = this.props
-    const { name, type, filters, goalType, goalAmount, isFixed } = this.state
+    const { name, type, filters, goalType, fixedAmount, useFixedAmount } = this.state
 
     return (
       <div className={style.root}>
@@ -189,25 +180,25 @@ class BucketForm extends Component {
             <Card className='filter-goal-amount'>
               <StaticLabel>Monthly Amount</StaticLabel>
               <div className='filter-goal-amount-value'>
-                {!isFixed ?
+                {!useFixedAmount ?
                   <Money amount={viewer.transactions.avgAmount} abs/>
                 :
                   <TextInput
-                    value={_.isNumber(goalAmount) && goalAmount !== 0 ?
-                      centsForInput(goalAmount)
+                    value={_.isNumber(fixedAmount) && fixedAmount !== 0 ?
+                      centsForInput(fixedAmount)
                     :
                       centsForInput(viewer.transactions.avgAmount)
                     }
-                    onChange={::this.handleGoalAmountChange}
+                    onChange={::this.handleFixedAmountChange}
                     autoFocus
                   />
                 }
               </div>
               <div
                 className='filter-goal-amount-toggle'
-                onClick={() => this.setState({ isFixed: !isFixed })}
+                onClick={() => this.setState({ useFixedAmount: !useFixedAmount })}
               >
-                <Icon type={!isFixed ? 'check box' : 'check box outline blank'}/>
+                <Icon type={!useFixedAmount ? 'check box' : 'check box outline blank'}/>
                 Use transaction average
               </div>
             </Card>
@@ -217,8 +208,8 @@ class BucketForm extends Component {
             <Card>
               <TextInput
                 label='Monthly Amount'
-                value={_.isNumber(goalAmount) && goalAmount !== 0 ? centsForInput(goalAmount) : ''}
-                onChange={::this.handleGoalAmountChange}
+                value={_.isNumber(fixedAmount) && fixedAmount !== 0 ? centsForInput(fixedAmount) : ''}
+                onChange={::this.handleFixedAmountChange}
               />
             </Card>
           : null}
@@ -273,7 +264,8 @@ BucketForm = Relay.createContainer(BucketForm, {
       fragment on BucketNode {
         name
         type
-        isFixed
+        fixedAmount
+        useFixedAmount
 
         filters {
           amountGt

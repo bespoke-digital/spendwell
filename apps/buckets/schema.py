@@ -4,6 +4,7 @@ import graphene
 
 from apps.core.fields import SWNode, SWFilterConnectionField
 from apps.core.utils import node_id_from_instance
+from apps.core.types import Money
 from apps.transactions.schema import TransactionNode
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
@@ -19,7 +20,8 @@ class BucketNode(SWNode):
     filters = filter_list_schema(TransactionFilter, name='BucketFilters', input=False)
     type = graphene.Field(graphene.String())
     avatar = graphene.Field(graphene.String())
-    is_fixed = graphene.Field(graphene.Boolean())
+    fixed_amount = graphene.Field(Money())
+    use_fixed_amount = graphene.Field(graphene.Boolean())
 
     class Meta:
         model = Bucket
@@ -29,7 +31,8 @@ class BucketNode(SWNode):
             'transactions',
             'filters',
             'type',
-            'is_fixed',
+            'fixed_amount',
+            'use_fixed_amount',
         )
 
     def resolve_transactions(self, args, info):
