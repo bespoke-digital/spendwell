@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'apps.transactions',
     'apps.categories',
     'apps.buckets',
-    'apps.goals',
+    # 'apps.goals',
     'apps.finicity',
     'apps.blog',
     'apps.ads',
