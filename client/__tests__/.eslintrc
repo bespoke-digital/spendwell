@@ -3,5 +3,7 @@
   "globals": {
     "describe": false,
     "it": false,
+    "expect": false,
+    "jest": false
   }
 }
