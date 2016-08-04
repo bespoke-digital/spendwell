@@ -3,8 +3,6 @@ from decimal import Decimal
 from copy import deepcopy
 
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
 from apps.core.models import SWModel
@@ -99,17 +97,19 @@ class Bucket(SWModel):
             TransactionFilter,
         )
 
-    def assign_transactions(self):
+    def assign_transactions(self, unassigned_only=True):
         BucketTransaction.objects.filter(bucket=self).delete()
 
         if self.filters is None:
             return
 
-        for transaction_id in self.raw_transactions().values_list('id', flat=True):
+        transactions = self.raw_transactions()
+
+        if unassigned_only:
+            transactions = transactions.filter(assigned=False)
+
+        for transaction_id in transactions.values_list('id', flat=True):
             BucketTransaction.objects.get_or_create(bucket=self, transaction_id=transaction_id)
 
-
-@receiver(post_save, sender=Bucket)
-def bucket_post_save(sender, instance, created, raw, **kwargs):
-    if not raw:
-        instance.assign_transactions()
+        if unassigned_only:
+            self.raw_transactions().update(assigned=True)

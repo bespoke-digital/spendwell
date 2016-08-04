@@ -15,7 +15,7 @@ from apps.buckets.models import Bucket
 from apps.accounts.schema import AccountNode
 from apps.buckets.schema import BucketNode
 
-from .models import Transaction, IncomeFromSavings
+from .models import Transaction, IncomeFromSavings, BucketTransaction
 
 
 class DetectTransfersMutation(ClientIDMutation):
@@ -90,6 +90,14 @@ class TransactionQuickAddMutation(ClientIDMutation):
                 name=input['bucket_name'],
                 filters=[filter],
             )
+
+        # just assign transactions for the new filter
+        transactions = Transaction.objects.filter(
+            owner=context.user,
+            description__exact=transaction.description,
+        )
+        for transaction in transactions:
+            BucketTransaction.objects.get_or_create(bucket=bucket, transaction=transaction)
 
         return Cls(viewer=Viewer(), bucket=bucket, transaction=transaction)
 

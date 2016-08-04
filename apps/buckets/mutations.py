@@ -54,7 +54,7 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         if not len(filters) and not input['type'] == 'goal':
             raise ValueError('filters are required')
 
-        Bucket.objects.create(
+        bucket = Bucket.objects.create(
             owner=context.user,
             name=input['name'],
             filters=filters,
@@ -62,6 +62,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
             fixed_amount=input.get('fixed_amount'),
             use_fixed_amount=input.get('use_fixed_amount', bool(input.get('fixed_amount'))),
         )
+
+        bucket.assign_transactions(unassigned_only=False)
 
         return Cls(viewer=Viewer())
 
@@ -101,6 +103,8 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
             bucket.use_fixed_amount = input.get('use_fixed_amount', True)
 
         bucket.save()
+
+        bucket.assign_transactions(unassigned_only=False)
 
         return Cls(bucket=bucket, viewer=Viewer())
 
