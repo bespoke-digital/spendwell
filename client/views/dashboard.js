@@ -320,6 +320,7 @@ Dashboard = Relay.createContainer(Dashboard, {
   initialVariables: {
     month: now.format('MM'),
     year: now.format('YYYY'),
+    date: now.format('MM/YYYY'),
   },
   prepareVariables: (variables) => {
     if (variables.year && variables.month) {
