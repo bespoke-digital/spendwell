@@ -18,7 +18,7 @@ from .views import (
 urlpatterns = [
     url(r'^spendwell-data\.zip$', export_user_data_view, name='export-data'),
     url(
-        r'^shutdown-notice$',
+        r'^shutting-down$',
         TemplateView.as_view(template_name='shutdown-notice/index.html'),
         name='shutdown-notice',
     ),
