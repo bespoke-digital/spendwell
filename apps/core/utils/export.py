@@ -46,7 +46,7 @@ def export_user_data(export_file, owner):
             'filters': json.dumps(bucket._filters),
         })
 
-    with ZipFile(export_file, mode='x') as zip_file:
+    with ZipFile(export_file, mode='w') as zip_file:
         for key, values in export.items():
             if len(values) == 0:
                 continue
