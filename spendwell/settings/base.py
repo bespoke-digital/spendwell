@@ -18,6 +18,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSP_DEFAULT_SRC = ('https:', "'self'")
 CSP_STYLE_SRC = ('https:', "'self'", "'unsafe-inline'")
 CSP_IMG_SRC = ('https:', 'data:', "'self'")
+CSP_FONT_SRC = CSP_DEFAULT_SRC + ('data:',)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
