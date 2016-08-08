@@ -9,8 +9,6 @@ from apps.transactions.schema import TransactionsQuery
 from apps.transactions.mutations import TransactionsMutations
 from apps.users.schema import UsersQuery
 from apps.users.mutations import UsersMutations
-from apps.goals.schema import GoalsQuery
-from apps.goals.mutations import GoalsMutations
 from apps.buckets.schema import BucketsQuery
 from apps.buckets.mutations import BucketsMutations
 from apps.finicity.mutations import FinicityMutations
@@ -22,7 +20,6 @@ class Viewer(
     AccountsQuery,
     TransactionsQuery,
     UsersQuery,
-    GoalsQuery,
     BucketsQuery,
 ):
     dummy = graphene.Field(graphene.String())
@@ -50,7 +47,6 @@ class Mutations(
     InstitutionsMutations,
     AccountsMutations,
     TransactionsMutations,
-    GoalsMutations,
     BucketsMutations,
     UsersMutations,
     FinicityMutations,

@@ -1,0 +1,72 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/img/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/img/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/img/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/img/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/img/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/img/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/img/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/img/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/static/img/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/static/img/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/static/img/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/static/img/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/static/img/favicon/favicon-194x194.png" sizes="194x194">
+    <link rel="mask-icon" href="/static/img/favicon/safari-pinned-tab.svg" color="#4caf50">
+    <link rel="shortcut icon" href="/static/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#4caf50">
+    <meta name="msapplication-TileImage" content="/static/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/static/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#4caf50">
+
+    <title>Spendwell</title>
+
+    <meta name="analytics-page-name" content="{% block analytics_page_name %}Base{% endblock %}">
+
+    <meta name="mixpanel-key" content="{{ MIXPANEL_PUBLIC_KEY }}">
+    <meta name="google-analytics-key" content="{{ GOOGLE_ANALYTICS_KEY }}">
+    <meta name="raven-dsn" content="{{ RAVEN_PUBLIC_DSN }}">
+    <meta name="facebook-pixel-key" content="{{ FACEBOOK_PIXEL_KEY }}">
+
+    <link rel="stylesheet" href="{% static "dist/pages.css" %}">
+    <script src="{% static 'dist/pages.js' %}"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700|Material+Icons' rel='stylesheet' type='text/css'>
+  </head>
+  <body class="shutdown-notice">
+    <div class="container">
+      <div class="logo-container">
+        <img src="/static/img/logo-icon-green.svg" alt="Spendwell"/>
+      </div>
+
+      <p><strong>We’ve decided to shut down Spendwell.</strong> It was a great project, and we learned a lot, but we’ve ultimately decided it isn’t a great business. We want to say a big thank you to everyone who supported us, especially our beta users.</p>
+
+      <p>Spendwell was always an experiment. We saw the problem of financial literacy, and personal finance tooling in general, as an interesting problem that we both felt acutely, and wanted some software to solve.</p>
+
+      <p>With that mindset, we set out to test the idea. Our initial conversations with customers and experimentation with ad platforms told us that there were people out there who also wanted this tool.</p>
+
+      <p>Encouraged by that, we set out to build a basic MVP and test it with users to see what the response was like. We built the first version in a couple months. It was enough to test it with a close group. The feedback there was promising enough, so over the next couple months, we revised the product based on that feedback until we had something that we thought might be valuable to a bigger group.</p>
+
+      <p>We then started letting in our first real beta cohorts. The engagement was... lukewarm. Enough that, perhaps, we could spend another 6-months to a year building and optimizing to get a product that would be exciting to use.</p>
+
+      <p>We learned a lot through this process. For one thing, this business has very real data costs: to the tune of about $1/user/month. This meant we need a strong business model, which we didn’t have. </p>
+
+      <p>Consumer SaaS would likely slow growth to a crawl. Others weren’t enough $/user/month to make the company scale well. Some left us grossly unaligned with our users. All this meant we would need to raise a year+ of runway from investors and hope we could figure out a business model along the way.</p>
+
+      <p>We had intentionally not taken VC up to this point. For one thing, Spendwell was always an experiment. Until we were confident that it had long-term success potential, we didn’t want to put anyone else’s money at risk. We did, however, put in a bunch of our own.</p>
+
+      <p>A large amount of soul-searching later, we’ve decided that Spendwell was a successful experiment, but that the results of the experiment were negative. We don’t think it’s investable for others today, and It’s no longer worth investing our own time and money into.</p>
+
+      <p>We will be shutting down the servers on <strong>August 15th</strong>. If you’re a beta user and would like to export your data, we’ve added this feature to the dashboard. If you’d like to keep in touch and see what we do next, you can always find us on Twitter (<a href="https://twitter.com/defrex">@defrex</a> & <a href="https://twitter.com/mattskilly">@mattskilly</a>).</p>
+    </div>
+  </body>
+</html>
+

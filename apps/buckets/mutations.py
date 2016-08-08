@@ -6,6 +6,7 @@ from graphene.utils import to_snake_case, with_context
 from graphql_relay import from_global_id
 
 from apps.core.utils import instance_for_node_id
+from apps.core.types import Money
 from apps.transactions.utils import filter_list_schema
 from apps.transactions.filters import TransactionFilter
 
@@ -39,6 +40,8 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'CreateBucketFilterSet')
+        fixed_amount = graphene.InputField(Money())
+        use_fixed_amount = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
 
@@ -48,15 +51,19 @@ class CreateBucketMutation(graphene.relay.ClientIDMutation):
         from spendwell.schema import Viewer
 
         filters = clean_filters(input['filters'])
-        if not len(filters):
+        if not len(filters) and not input['type'] == 'goal':
             raise ValueError('filters are required')
 
-        Bucket.objects.create(
+        bucket = Bucket.objects.create(
             owner=context.user,
             name=input['name'],
             filters=filters,
             type=input['type'],
+            fixed_amount=input.get('fixed_amount'),
+            use_fixed_amount=input.get('use_fixed_amount', bool(input.get('fixed_amount'))),
         )
+
+        bucket.assign_transactions(unassigned_only=False)
 
         return Cls(viewer=Viewer())
 
@@ -67,6 +74,8 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
         name = graphene.String()
         type = graphene.String()
         filters = filter_list_schema(TransactionFilter, 'UpdateBucketFilterSet')
+        fixed_amount = graphene.InputField(Money())
+        use_fixed_amount = graphene.Boolean()
 
     viewer = graphene.Field('Viewer')
     bucket = graphene.Field(BucketNode)
@@ -87,7 +96,15 @@ class UpdateBucketMutation(graphene.relay.ClientIDMutation):
         if 'filters' in input and input['filters']:
             bucket.filters = clean_filters(input['filters'])
 
+        if 'fixed_amount' in input:
+            bucket.fixed_amount = input['fixed_amount']
+
+        if 'use_fixed_amount' in input or 'fixed_amount' in input:
+            bucket.use_fixed_amount = input.get('use_fixed_amount', True)
+
         bucket.save()
+
+        bucket.assign_transactions(unassigned_only=False)
 
         return Cls(bucket=bucket, viewer=Viewer())
 

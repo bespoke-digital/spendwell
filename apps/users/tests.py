@@ -15,15 +15,14 @@ from apps.core.utils import this_month
 from apps.core.views import auth_graphql_view
 from apps.accounts.factories import AccountFactory
 from apps.transactions.factories import TransactionFactory
-from apps.goals.factories import GoalFactory
 from apps.buckets.factories import BucketFactory
 
 from .factories import UserFactory
-from .summary import MonthSummary
+from .summary import MonthSummary, BucketMonth
 from .views import token_auth_view
 
 
-class UsersTestCase(SWTestCase):
+class SummaryTestCase(SWTestCase):
     def test_safe_to_spend(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
@@ -107,10 +106,15 @@ class UsersTestCase(SWTestCase):
             msg='Income should not be estimated'
         )
 
-    def test_summary_goals(self):
+    def test_summary_fixed_goals(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
-        GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
+        BucketFactory.create(
+            owner=owner,
+            type='goal',
+            fixed_amount=Decimal('-500'),
+            use_fixed_amount=True,
+        )
 
         result = self.graph_query('{ viewer { safeToSpend } }', user=owner)
 
@@ -120,18 +124,56 @@ class UsersTestCase(SWTestCase):
             msg='Should return estimate for current month minus the goal amount'
         )
 
+    def test_summary_filtered_goals(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=1),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=2),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='match',
+            date=this_month() - relativedelta(months=3),
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-111'),
+            description='mismatch',
+            date=this_month() - relativedelta(months=2),
+        )
+
+        goal = BucketFactory.create(
+            type='goal',
+            owner=owner,
+            filters=[{'description_exact': 'match'}],
+        )
+        goal.assign_transactions()
+
+        summary = MonthSummary(owner)
+
+        self.assertEqual(summary.goals_total, Decimal('-111'))
+
     def test_summary_goal_months(self):
         current_month_start = delorean.now().truncate('month').datetime
-        last_month_start = current_month_start - relativedelta(months=1)
         owner = UserFactory.create(estimated_income=Decimal('2000'))
         query = '''{{
             viewer {{
                 summary(month: "{month:%Y/%m}") {{
                     allocated
-                    goalMonths(first: 10) {{
+                    bucketMonths(first: 10) {{
                         edges {{
                             node {{
-                                monthStart
+                                id
                             }}
                         }}
                     }}
@@ -141,26 +183,18 @@ class UsersTestCase(SWTestCase):
 
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
+        self.assertEqual(len(result.data['viewer']['summary']['bucketMonths']['edges']), 0)
 
-        goal = GoalFactory.create(monthly_amount=Decimal('-500'), owner=owner)
-
-        self.assertEqual(goal.months.count(), 1)
-        self.assertEqual(goal.months.all()[0].month_start, current_month_start)
+        BucketFactory.create(
+            owner=owner,
+            type='goal',
+            fixed_amount=Decimal('-500'),
+            use_fixed_amount=True,
+        )
 
         result = self.graph_query(query.format(month=current_month_start), user=owner)
         self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
-
-        result = self.graph_query(query.format(month=last_month_start), user=owner)
-        self.assertEqual(result.data['viewer']['summary']['allocated'], 0)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 0)
-
-        goal.generate_month(last_month_start)
-
-        result = self.graph_query(query.format(month=last_month_start), user=owner)
-        self.assertEqual(result.data['viewer']['summary']['allocated'], -50000)
-        self.assertEqual(len(result.data['viewer']['summary']['goalMonths']['edges']), 1)
+        self.assertEqual(len(result.data['viewer']['summary']['bucketMonths']['edges']), 1)
 
     def test_summary_bills(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
@@ -186,6 +220,8 @@ class UsersTestCase(SWTestCase):
         )
         bucket.assign_transactions()
 
+        self.assertEqual(bucket.transactions.count(), 2)
+
         summary = MonthSummary(owner)
 
         self.assertEqual(summary.bills_unpaid_total, -111)
@@ -204,6 +240,8 @@ class UsersTestCase(SWTestCase):
             -11100,
         )
 
+
+class BucketMonthTestCase(SWTestCase):
     def test_bucket_months(self):
         owner = UserFactory.create(estimated_income=Decimal('2000'))
 
@@ -332,6 +370,55 @@ class UsersTestCase(SWTestCase):
         self.assertEqual(result.data['node']['id'], bill_node_id)
         self.assertEqual(result.data['node']['avgAmount'], -23400)
 
+    def test_fixed_amount(self):
+        owner = UserFactory.create(estimated_income=Decimal('2000'))
+
+        one_month_ago = timezone.now() - relativedelta(months=1)
+        two_month_ago = timezone.now() - relativedelta(months=2)
+        three_month_ago = timezone.now() - relativedelta(months=3)
+
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=one_month_ago,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=two_month_ago,
+        )
+        TransactionFactory.create(
+            owner=owner,
+            amount=Decimal('-234'),
+            description='phone',
+            date=three_month_ago,
+        )
+        TransactionFactory.create(owner=owner, amount=Decimal('-151'), description='phone')
+        TransactionFactory.create(owner=owner, amount=Decimal('-222'), description='waaa')
+
+        bucket = BucketFactory.create(
+            owner=owner,
+            type='goal',
+            filters=[{'description_exact': 'phone'}],
+            fixed_amount=Decimal('-1000'),
+        )
+        bucket.assign_transactions()
+
+        self.assertEqual(BucketMonth(bucket).avg_amount, Decimal('-234'))
+        self.assertEqual(BucketMonth(bucket).fixed_amount, Decimal('-1000'))
+        self.assertEqual(BucketMonth(bucket).target_amount, Decimal('-234'))
+
+        bucket.use_fixed_amount = True
+        bucket.save()
+
+        self.assertEqual(BucketMonth(bucket).avg_amount, Decimal('-234'))
+        self.assertEqual(BucketMonth(bucket).fixed_amount, Decimal('-1000'))
+        self.assertEqual(BucketMonth(bucket).target_amount, Decimal('-1000'))
+
+
+class AuthTestCase(SWTestCase):
     def test_token_auth(self):
         user = UserFactory.create()
         user.set_password('passw0rd')

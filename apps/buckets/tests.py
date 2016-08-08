@@ -25,6 +25,7 @@ class BucktsTestCase(SWTestCase):
         )
 
         bucket = BucketFactory.create(owner=owner, filters=[{'description_contains': 'desc'}])
+        bucket.assign_transactions()
 
         self.assertEqual(transaction.buckets.count(), 1)
         self.assertEqual(transaction.buckets.first(), bucket)
@@ -73,9 +74,10 @@ class BucktsTestCase(SWTestCase):
         TransactionFactory.create(owner=owner, account=account)
         TransactionFactory.create(owner=owner, account=account)
 
-        BucketFactory.create(owner=owner, filters=[{
+        bucket = BucketFactory.create(owner=owner, filters=[{
             'account': account.id,
         }])
+        bucket.assign_transactions()
 
         result = self.graph_query('''{
             viewer {

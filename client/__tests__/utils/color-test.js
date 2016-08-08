@@ -1,17 +1,18 @@
 
-import { expect } from 'chai'
+jest.unmock('utils/color')
+
 import color from 'utils/color'
 
 describe('color', function () {
   it('should resolve the default green', function () {
-    expect(color('green')).to.equal('#4caf50')
+    expect(color('green')).toEqual('#4caf50')
   })
 
   it('resolve numbered pink', function () {
-    expect(color('pink', '200')).to.equal('#f48fb1')
+    expect(color('pink', '200')).toEqual('#f48fb1')
   })
 
   it('resolve integers', function () {
-    expect(color('pink', 200)).to.equal('#f48fb1')
+    expect(color('pink', 200)).toEqual('#f48fb1')
   })
 })

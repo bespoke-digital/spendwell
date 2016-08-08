@@ -3,7 +3,6 @@ from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
 from apps.core.utils import months_avg, this_month
-from apps.goals.models import GoalMonth
 from apps.buckets.models import Bucket
 from apps.transactions.models import Transaction, IncomeFromSavings
 
@@ -49,6 +48,21 @@ class BucketMonth(object):
                 month_start=self.month_start,
             )
         return self._avg_amount
+
+    @property
+    def fixed_amount(self):
+        if not hasattr(self, '_fixed_amount'):
+            self._fixed_amount = self.bucket.fixed_amount
+        return self._fixed_amount
+
+    @property
+    def target_amount(self):
+        if not hasattr(self, '_target_amount'):
+            if self.bucket.use_fixed_amount:
+                self._target_amount = self.fixed_amount
+            else:
+                self._target_amount = self.avg_amount
+        return self._target_amount
 
     @property
     def bill_due_date(self):
@@ -159,10 +173,8 @@ class MonthSummary(object):
     @property
     def goals_total(self):
         if not hasattr(self, '_goals_total'):
-            self._goals_total = GoalMonth.objects.filter(
-                goal__owner=self.user,
-                month_start=self.month_start,
-            ).sum('target_amount')
+            goals = Bucket.objects.filter(owner=self.user, type='goal')
+            self._goals_total = sum(BucketMonth(goal).target_amount for goal in goals)
         return self._goals_total
 
     @property
@@ -223,15 +235,6 @@ class MonthSummary(object):
                 self.spent,
             ])
         return self._net
-
-    @property
-    def goal_months(self):
-        if not hasattr(self, '_goal_months'):
-            self._goal_months = GoalMonth.objects.filter(
-                goal__owner=self.user,
-                month_start=self.month_start,
-            )
-        return self._goal_months
 
     @property
     def bucket_months(self):

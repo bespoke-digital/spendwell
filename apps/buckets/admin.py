@@ -14,6 +14,8 @@ class BucketAdmin(admin.ModelAdmin):
         'name',
         '_filters',
         'type',
+        'fixed_amount',
+        'use_fixed_amount',
     )
 
 admin_site.register(Bucket, BucketAdmin)

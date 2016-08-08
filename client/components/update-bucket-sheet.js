@@ -16,9 +16,12 @@ import styles from 'sass/components/create-bucket-sheet'
 
 class UpdateBucketSheet extends Component {
   static propTypes = {
+    relay: PropTypes.object.isRequired,
+    viewer: PropTypes.object.isRequired,
+    bucket: PropTypes.object.isRequired,
     onRequestClose: PropTypes.func.isRequired,
-    onUpdated: PropTypes.func,
-    onDeleted: PropTypes.func,
+    onUpdated: PropTypes.func.isRequired,
+    onDeleted: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
   };
 
@@ -29,8 +32,9 @@ class UpdateBucketSheet extends Component {
   };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.visible !== this.props.visible)
+    if (nextProps.visible !== this.props.visible) {
       this.props.relay.setVariables({ open: nextProps.visible })
+    }
   }
 
   handleDelete () {
@@ -46,17 +50,10 @@ class UpdateBucketSheet extends Component {
         console.log('Success: DeleteBucketMutation')
         this.setState({ deleteLoading: false, confirmDelete: false })
 
-        if (onDeleted)
-          onDeleted()
-
+        onDeleted()
         onRequestClose()
 
-        track(
-          bucket.type === 'expense' ? 'delete-label' :
-          bucket.type === 'bill' ? 'delete-bill' :
-          bucket.type === 'account' ? 'delete-external-account' :
-          'delete-bucket'
-        )
+        track(`delete-${bucket.type}`)
       },
     })
   }
@@ -66,8 +63,7 @@ class UpdateBucketSheet extends Component {
     const { updateLoading } = this.state
     const bucketForm = this.refs.bucketForm.refs.component
 
-    if (!bucketForm.isValid() || updateLoading)
-      return
+    if (!bucketForm.isValid() || updateLoading) return
 
     const args = { viewer, bucket, ...bucketForm.getData() }
 
@@ -81,17 +77,10 @@ class UpdateBucketSheet extends Component {
         console.log('Success: UpdateBucketMutation')
         this.setState({ updateLoading: false })
 
-        if (onUpdated)
-          onUpdated()
-
+        onUpdated()
         onRequestClose()
 
-        track(
-          bucket.type === 'expense' ? 'update-label' :
-          bucket.type === 'bill' ? 'update-bill' :
-          bucket.type === 'account' ? 'update-external-account' :
-          'update-bucket'
-        )
+        track(`update-${bucket.type}`)
       },
     })
   }

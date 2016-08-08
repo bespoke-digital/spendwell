@@ -73,7 +73,7 @@ TransactionList = Relay.createContainer(TransactionList, {
       }
     `,
     transactions: () => Relay.QL`
-      fragment on TransactionNodeDefaultConnection {
+      fragment on TransactionNodeTransactionConnection {
         edges {
           node {
             ${ListTransaction.getFragment('transaction')}

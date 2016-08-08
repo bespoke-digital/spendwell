@@ -158,7 +158,7 @@ class Institution(SWModel):
             for account_data in accounts_data:
                 Account.objects.from_finicity(self, account_data)
 
-    def sync_transactions(self):
+    def sync_transactions(self, delete_duplicates=False):
         new_transactions = []
 
         if self.plaid_client and self.plaid_data:
@@ -180,24 +180,27 @@ class Institution(SWModel):
         if not len(new_transactions):
             return
 
-        new_transactions.sort(key=lambda t: t.date)
-        existing_transactions_count = Transaction.objects.filter(
+        duplicate_transactions = Transaction.objects.filter(
             account__institution=self,
             date__gte=new_transactions[0].date,
             date__lte=new_transactions[-1].date,
-        ).count()
+        ).exclude(
+            id__in=[t.id for t in new_transactions],
+        )
 
-        if existing_transactions_count != len(new_transactions):
+        if duplicate_transactions.count():
             logger.error('Suspected duplicate transactions for user', extra={
                 'user_id': self.owner.id,
                 'institution_id': self.id,
                 'synced_transactions': len(new_transactions),
-                'existing_transactions': existing_transactions_count,
+                'duplicate_transactions': duplicate_transactions.count(),
             })
+            if delete_duplicates:
+                duplicate_transactions.delete()
 
-    def sync(self):
+    def sync(self, delete_duplicates=False):
         self.sync_accounts()
-        self.sync_transactions()
+        self.sync_transactions(delete_duplicates=delete_duplicates)
         self.last_sync = timezone.now()
         self.reauth_required = False
         self.save()

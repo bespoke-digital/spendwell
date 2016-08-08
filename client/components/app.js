@@ -9,10 +9,10 @@ import Nav from 'components/nav'
 import InstitutionReauth from 'components/institution-reauth'
 import Progress from 'components/progress'
 import Toasts from 'components/toasts'
+import ShutdownNotice from 'components/shutdown-notice'
 
 import eventEmitter from 'utils/event-emitter'
 import style from 'sass/components/app'
-
 
 class App extends Component {
   static propTypes = {
@@ -47,10 +47,11 @@ class App extends Component {
   handleForceFetch () {
     const { onForceFetch } = this.props
 
-    if (onForceFetch)
+    if (onForceFetch) {
       onForceFetch()
-    else
+    } else {
       console.warn('Unhandled forceFetch event')
+    }
   }
 
   toggleNav () {
@@ -100,6 +101,7 @@ class App extends Component {
         <Toasts toasts={toasts}/>
 
         <div className={`app-container ${className}`}>
+          <ShutdownNotice/>
           <InstitutionReauth viewer={viewer}/>
           {children}
         </div>
