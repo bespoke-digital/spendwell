@@ -15,7 +15,7 @@ import UpdateBucketSheet from 'components/update-bucket-sheet'
 import eventEmitter from 'utils/event-emitter'
 
 
-class BucketMonth extends Component {
+class LabelMonth extends Component {
   static propTypes = {
     month: PropTypes.object.isRequired,
     expanded: PropTypes.bool,
@@ -130,7 +130,7 @@ class BucketMonth extends Component {
   }
 }
 
-BucketMonth = Relay.createContainer(BucketMonth, {
+LabelMonth = Relay.createContainer(LabelMonth, {
   initialVariables: {
     transactionCount: 20,
     open: false,
@@ -173,4 +173,4 @@ BucketMonth = Relay.createContainer(BucketMonth, {
   },
 })
 
-export default BucketMonth
+export default LabelMonth

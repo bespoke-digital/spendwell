@@ -1,6 +1,6 @@
 
 import _ from 'lodash'
-import { Component } from 'react'
+import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { browserHistory } from 'react-router'
 
@@ -9,23 +9,21 @@ import Card from 'components/card'
 import Money from 'components/money'
 import Institution from 'components/institution'
 import App from 'components/app'
-import ExternalAccounts from 'components/external-accounts'
 import PrimaryFab from 'components/primary-fab'
 import ListHeading from 'components/list-heading'
 import Icon from 'components/icon'
-import CreateBucketSheet from 'components/create-bucket-sheet'
 
 import styles from 'sass/views/accounts'
 
 
 class Accounts extends Component {
-  state = {
-    createExternalAccount: false,
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+    relay: PropTypes.object.isRequired,
   };
 
   render () {
     const { viewer, relay } = this.props
-    const { createExternalAccount } = this.state
 
     return (
       <App
@@ -57,14 +55,7 @@ class Accounts extends Component {
 
         <ListHeading>External Accounts</ListHeading>
 
-        <ExternalAccounts viewer={viewer}/>
-
         <PrimaryFab actions={[
-          {
-            label: 'New External Account',
-            icon: <Icon type='open in new' color='light'/>,
-            onClick: () => this.setState({ createExternalAccount: true }),
-          },
           {
             default: true,
             label: 'New Bank',
@@ -72,14 +63,6 @@ class Accounts extends Component {
             onClick: () => browserHistory.push('/app/accounts/new'),
           },
         ]}/>
-
-        <CreateBucketSheet
-          visible={createExternalAccount}
-          onRequestClose={() => this.setState({ createExternalAccount: false })}
-          onComplete={() => relay.forceFetch()}
-          type='account'
-          viewer={viewer}
-        />
       </App>
     )
   }
@@ -90,9 +73,7 @@ Accounts = Relay.createContainer(Accounts, {
     viewer: () => Relay.QL`
       fragment on Viewer {
         ${App.getFragment('viewer')}
-        ${ExternalAccounts.getFragment('viewer')}
         ${Institution.getFragment('viewer')}
-        ${CreateBucketSheet.getFragment('viewer')}
 
         isAdmin
 

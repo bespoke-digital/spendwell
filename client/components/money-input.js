@@ -4,17 +4,15 @@ import { Component, PropTypes } from 'react'
 
 import TextInput from 'components/text-input'
 
-
 export default class MoneyInput extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     initialValue: PropTypes.number,
   };
 
-  constructor () {
-    super()
-    this.state = { valid: true }
-  }
+  state = {
+    valid: true,
+  };
 
   onChange (value) {
     const numberValue = parseInt(parseFloat(value.replace(/[\$,]/g, '')) * 100)
@@ -22,8 +20,9 @@ export default class MoneyInput extends Component {
 
     this.setState({ value, valid })
 
-    if (valid && this.props.onChange)
+    if (valid && this.props.onChange) {
       this.props.onChange(numberValue)
+    }
   }
 
   render () {

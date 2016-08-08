@@ -1,0 +1,22 @@
+
+@import '../variables';
+
+body.shutdown-notice {
+  padding-bottom: 75px;
+
+  .logo-container {
+    text-align: center;
+    margin: 50px 0 50px;
+
+    img {
+      height: 100px;
+    }
+  }
+
+  p {
+    width: 650px;
+    margin: 0 auto 24px;
+    text-align: left;
+    font-size: 18px;
+  }
+}

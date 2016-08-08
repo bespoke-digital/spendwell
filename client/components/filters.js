@@ -8,22 +8,23 @@ import Filter from 'components/filter'
 
 import style from 'sass/components/filters'
 
-
 class Filters extends Component {
   static propTypes = {
+    viewer: PropTypes.object.isRequired,
     filters: PropTypes.array.isRequired,
     onAdd: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
-  constructor () {
-    super()
-    this.state = { selected: null }
-  }
+  state = {
+    selected: null,
+  };
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.filters.length > this.props.filters.length)
+    if (nextProps.filters.length > this.props.filters.length) {
       this.setState({ selected: nextProps.filters.length - 1 })
+    }
   }
 
   selectFilter (index) {
@@ -55,9 +56,7 @@ class Filters extends Component {
         ))}
 
         <Card>
-          <Button onClick={onAdd}>
-            add filter
-          </Button>
+          <Button onClick={onAdd}>Add Filter</Button>
         </Card>
       </div>
     )

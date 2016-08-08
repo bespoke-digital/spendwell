@@ -71,10 +71,13 @@ class Dashboard extends Component {
   }
 }
 
+const now = moment()
+
 Dashboard = Relay.createContainer(Dashboard, {
   initialVariables: {
-    month: moment().startOf('month'),
     transactionCount: 20,
+    month: moment().startOf('month'),
+    date: now.format('MM/YYYY'),
   },
   prepareVariables: (variables) => {
     return {

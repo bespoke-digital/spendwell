@@ -1,12 +1,10 @@
 
 import delorean
 import graphene
-from graphene.contrib.django.fields import DjangoConnectionField
 from graphene.utils import with_context
 from graphene.core.types.custom_scalars import DateTime
 
 from apps.core.types import Money, Month
-from apps.goals.schema import GoalMonthNode
 from apps.transactions.schema import TransactionNode
 from apps.transactions.fields import TransactionConnectionField
 from apps.buckets.schema import BucketNode
@@ -20,6 +18,9 @@ class BucketMonthNode(graphene.relay.Node):
     month = graphene.Field(Month())
     amount = graphene.Field(Money())
     avg_amount = graphene.Field(Money())
+    fixed_amount = graphene.Field(Money())
+    use_fixed_amount = graphene.Field(graphene.Boolean())
+    target_amount = graphene.Field(Money())
     transactions = TransactionConnectionField(TransactionNode)
     bill_paid = graphene.Field(graphene.Boolean())
 
@@ -66,7 +67,6 @@ class Summary(graphene.ObjectType):
     net = graphene.Field(Money())
     spent_from_savings = graphene.Field(Money())
 
-    goal_months = DjangoConnectionField(GoalMonthNode)
     bucket_months = graphene.relay.ConnectionField(BucketMonthNode)
     transactions = TransactionConnectionField(TransactionNode)
 

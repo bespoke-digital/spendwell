@@ -1,4 +1,5 @@
 
+from graphql_relay import from_global_id
 from graphene.contrib.django.filter import DjangoFilterConnectionField
 from graphene.utils import to_snake_case
 from graphene.utils import with_context
@@ -12,6 +13,7 @@ TransactionsFiltersField = filter_list_schema(TransactionFilter)
 
 
 class TransactionConnectionField(SWConnectionMixin, DjangoFilterConnectionField):
+
     def __init__(self, node_type, *args, **kwargs):
         kwargs['filterset_class'] = TransactionFilter
         kwargs['filters'] = TransactionsFiltersField

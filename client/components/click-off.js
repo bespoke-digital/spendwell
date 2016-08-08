@@ -2,7 +2,6 @@
 import { Component, PropTypes } from 'react'
 import { findDOMNode } from 'react-dom'
 
-
 export default class ClickOff extends Component {
   static propTypes = {
     onClickOff: PropTypes.func.isRequired,
@@ -22,11 +21,13 @@ export default class ClickOff extends Component {
   }
 
   handleDocumentClick (event) {
-    if (!findDOMNode(this).contains(event.target))
+    if (!findDOMNode(this).contains(event.target)) {
       this.props.onClickOff()
+    }
   }
 
   render () {
-    return <div {...this.props}/>
+    const { onClickOff, ..._props } = this.props
+    return <div {..._props}/>
   }
 }

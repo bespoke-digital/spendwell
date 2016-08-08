@@ -1,16 +1,19 @@
 
+import { PropTypes } from 'react'
 import { browserHistory } from 'react-router'
 
-
 export function supressEvent (handler, href, event) {
-  if (event)
+  if (event) {
     event.preventDefault()
+  }
 
-  if (handler)
+  if (handler) {
     handler()
+  }
 
-  if (href)
+  if (href) {
     browserHistory.push(href)
+  }
 }
 
 export default function A ({ onClick, href, ...props }) {
@@ -18,4 +21,9 @@ export default function A ({ onClick, href, ...props }) {
     href={href || '#'}
     onClick={supressEvent.bind(null, onClick, href)} {...props}
   />
+}
+
+A.propTypes = {
+  onClick: PropTypes.func,
+  href: PropTypes.string,
 }

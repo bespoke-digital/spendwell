@@ -8,14 +8,12 @@ from django.conf import settings
 from dateutil.relativedelta import relativedelta
 import delorean
 
-from apps.core.utils.date import this_month
 from apps.users.models import User
 from apps.institutions.models import Institution
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
 from apps.buckets.models import Bucket
 from apps.buckets.tasks import assign_bucket_transactions
-from apps.goals.models import Goal
 
 
 def export_demo_data():
@@ -26,7 +24,6 @@ def export_demo_data():
         'accounts': [],
         'transactions': [],
         'buckets': [],
-        'goals': [],
     }
 
     for institution in owner.institutions.all():
@@ -62,13 +59,6 @@ def export_demo_data():
             'filters': json.dumps(bucket._filters),
         })
 
-    for goal in owner.goals.all():
-        export['goals'].append({
-            'id': goal.id,
-            'name': goal.name,
-            'monthly_amount': goal.monthly_amount,
-        })
-
     try:
         os.makedirs(settings.DEMO_DATA_DIR)
     except FileExistsError:
@@ -101,7 +91,6 @@ def import_demo_data():
             'accounts',
             'transactions',
             'buckets',
-            'goals',
         ]:
             data_file_name = os.path.join(settings.DEMO_DATA_DIR, '{}.csv'.format(data_name))
             with open(data_file_name, 'r') as data_file:
@@ -117,13 +106,11 @@ def import_demo_data():
     print('clearing existing demo data')
     owner.institutions.all().delete()
     owner.buckets.all().delete()
-    owner.goals.all().delete()
 
     institutions = {}
     accounts = {}
     transactions = {}
     buckets = {}
-    goals = {}
 
     today = delorean.now().truncate('day').datetime
     months_offset = relativedelta(today, exported_on).months
@@ -189,16 +176,6 @@ def import_demo_data():
         )
         buckets[bucket_data['id']] = bucket
 
-    for goal_data in export['goals']:
-        goal = Goal.objects.create(
-            owner=owner,
-            name=goal_data['name'],
-            monthly_amount=goal_data['monthly_amount'],
-        )
-        for offset in range(relativedelta(this_month(), owner.first_data_month()).months):
-            goal.generate_month(this_month() - relativedelta(months=offset))
-        goals[goal_data['id']] = goal
-
     print('processing demo data')
 
     Transaction.objects.detect_transfers(owner)
@@ -209,4 +186,3 @@ def import_demo_data():
     print('accounts', len(accounts))
     print('transactions', len(transactions))
     print('buckets', len(buckets))
-    print('goals', len(goals))

@@ -1,6 +1,6 @@
 
 import _ from 'lodash'
-import { Component } from 'react'
+import { Component, PropTypes } from 'react'
 import Relay from 'react-relay'
 import { browserHistory } from 'react-router'
 
@@ -10,13 +10,16 @@ import Transition from 'components/transition'
 import ClickOff from 'components/click-off'
 import IncomeEstimateDialog from 'components/income-estimate-dialog'
 import CreateBucketSheet from 'components/create-bucket-sheet'
-import CreateGoalSheet from 'components/create-goal-sheet'
 
 import eventEmitter from 'utils/event-emitter'
 import style from 'sass/components/onboard-progress'
 
 
 class OnboardProgress extends Component {
+  static propTypes = {
+    viewer: PropTypes.object.isRequired,
+  };
+
   state = {
     todosOpen: false,
     calloutOpen: true,
@@ -36,7 +39,6 @@ class OnboardProgress extends Component {
       createLabel,
       createBill,
       createGoal,
-      createAccount,
     } = this.state
 
     const status = {
@@ -45,14 +47,14 @@ class OnboardProgress extends Component {
       hasGoal: viewer.goals.edges.length > 0,
       hasBill: viewer.bills.edges.length > 0,
       hasLabel: viewer.labels.edges.length > 0,
-      hasExternalAccount: viewer.externalAccounts.edges.length > 0,
     }
 
     const progressTarget = Object.keys(status).length
     const progressCurrent = _.values(status).filter((v) => v).length
 
-    if (progressTarget === progressCurrent)
+    if (progressTarget === progressCurrent) {
       return null
+    }
 
     return (
       <div className={style.root}>
@@ -130,16 +132,6 @@ class OnboardProgress extends Component {
                   <div className='description'>For non-recurring expenses.</div>
                 </div>
               </li>
-              <li
-                className={status.hasExternalAccount ? 'done' : 'not-done'}
-                onClick={() => this.setState({ createAccount: true })}
-              >
-                <div><Icon type={status.hasExternalAccount ? 'done' : 'radio button off'}/></div>
-                <div>
-                  <div className='title'>Create an External Account</div>
-                  <div className='description'>For transfers to non-connected accounts.</div>
-                </div>
-              </li>
             </ul>
           </ClickOff>
         </Transition>
@@ -167,18 +159,11 @@ class OnboardProgress extends Component {
           viewer={viewer}
         />
 
-        <CreateGoalSheet
+        <CreateBucketSheet
           visible={createGoal}
           onRequestClose={() => this.setState({ createGoal: false })}
           onComplete={() => eventEmitter.emit('forceFetch')}
-          viewer={viewer}
-        />
-
-        <CreateBucketSheet
-          visible={createAccount}
-          onRequestClose={() => this.setState({ createAccount: false })}
-          onComplete={() => eventEmitter.emit('forceFetch')}
-          type='account'
+          type='goal'
           viewer={viewer}
         />
       </div>
@@ -192,7 +177,6 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
       fragment on Viewer {
         ${IncomeEstimateDialog.getFragment('viewer')}
         ${CreateBucketSheet.getFragment('viewer')}
-        ${CreateGoalSheet.getFragment('viewer')}
 
         settings {
           estimatedIncomeConfirmed
@@ -202,7 +186,7 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
           edges { node { id } }
         }
 
-        goals(first: 1) {
+        goals: buckets(first: 1, type: "goal") {
           edges { node { id } }
         }
 
@@ -211,10 +195,6 @@ OnboardProgress = Relay.createContainer(OnboardProgress, {
         }
 
         labels: buckets(first: 1, type: "expense") {
-          edges { node { id } }
-        }
-
-        externalAccounts: buckets(first: 1, type: "account") {
           edges { node { id } }
         }
       }

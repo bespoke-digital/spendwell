@@ -8,6 +8,10 @@
     box-shadow: none;
   }
 
+  &:active {
+    background-color: transparent;
+  }
+
   &.mui-btn--can-load {
     height: auto;
 
@@ -67,7 +71,6 @@
       }
     }
 
-    // Animation
     @keyframes rotate {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -103,6 +106,7 @@
         border-top-color: transparent;
         border-bottom-color: transparent;
         border-left-color: transparent;
+        border-right-color: $load-for-everything;
       }
 
       &.mui-btn--is-loading {
@@ -118,6 +122,10 @@
       height: 36px;
       line-height: 36px;
     }
+  }
+
+  &.mui-btn--active {
+    background-color: color('grey', '200');
   }
 
   &.mui-btn--light {
@@ -142,27 +150,14 @@
   &.mui-btn--color-primary {
     color: $primary;
 
-    &.fab-mui-btn--can-load {
-      &:before {
-        border-right-color: $load-for-everything;
-      }
-    }
-    
     &:hover {
       color: darken($primary, 5%);
-    };
+    }
   }
 
   &.mui-btn--color-accent {
     color: $accent;
 
-    &.mui-btn--can-load {
-
-      &:before {
-        border-right-color: $load-for-everything;
-      }
-    }
-    
     &:hover {
       color: darken($accent, 5%);
     }
@@ -171,13 +166,6 @@
   &.mui-btn--color-goal {
     color: $goal;
 
-    &.mui-btn--can-load {
-
-      &:before {
-        border-right-color: $load-for-everything;
-      }
-    }
-    
     &:hover {
       color: darken($goal, 5%);
     }
@@ -186,13 +174,6 @@
   &.mui-btn--color-bill {
     color: $bill;
 
-    &.mui-btn--can-load {
-
-      &:before {
-        border-right-color: $load-for-everything;
-      }
-    }
-    
     &:hover {
       color: darken($bill, 5%);
     }
@@ -201,12 +182,6 @@
   &.mui-btn--color-label {
     color: $label;
 
-    .mui-btn--can-load {
-
-      :before {
-        border-right-color: $load-for-everything;
-      }
-    }
     &:hover {
       color: darken($label, 5%);
     }
