@@ -16,6 +16,7 @@ from csp.decorators import csp_exempt
 
 from spendwell.schema import schema
 from apps.core.utils.demo import export_demo_data, import_demo_data
+from apps.core.utils.export import export_user_data
 from apps.core.utils.email import render_email
 from apps.finicity.client import FinicityException
 from .models import LoadingQuote
@@ -157,3 +158,13 @@ class EmailView(View):
             context=self.context_data,
         )
         return HttpResponse(html)
+
+
+def export_user_data_view(request):
+    if not request.user.is_authenticated():
+        raise Http404
+
+    response = HttpResponse(content_type='application/zip')
+    export_user_data(response, request.user)
+
+    return response

@@ -10,10 +10,13 @@ from .views import (
     graphiql_view,
     export_demo_data_view,
     import_demo_data_view,
+    export_user_data_view,
 )
 
 
 urlpatterns = [
+    url(r'^spendwell-data\.zip$', export_user_data_view, name='export-data'),
+
     url(r'^admin/export-demo-data$', export_demo_data_view, name='export-demo-data'),
     url(r'^admin/import-demo-data$', import_demo_data_view, name='import-demo-data'),
 
@@ -24,5 +27,5 @@ urlpatterns = [
     url(r'^onboarding', onboarding_view, name='onboarding'),
     url(r'^calculators/debt-repayment-calculator', calculators_view, name='calculators'),
 
-    url(r'^manifest.json$', manifest_view, name='manifest'),
+    url(r'^manifest\.json$', manifest_view, name='manifest'),
 ]
