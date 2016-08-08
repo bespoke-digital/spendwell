@@ -29,6 +29,13 @@
 
     <title>Spendwell</title>
 
+    <meta name="analytics-page-name" content="{% block analytics_page_name %}Base{% endblock %}">
+
+    <meta name="mixpanel-key" content="{{ MIXPANEL_PUBLIC_KEY }}">
+    <meta name="google-analytics-key" content="{{ GOOGLE_ANALYTICS_KEY }}">
+    <meta name="raven-dsn" content="{{ RAVEN_PUBLIC_DSN }}">
+    <meta name="facebook-pixel-key" content="{{ FACEBOOK_PIXEL_KEY }}">
+
     <link rel="stylesheet" href="{% static "dist/pages.css" %}">
     <script src="{% static 'dist/pages.js' %}"></script>
 
