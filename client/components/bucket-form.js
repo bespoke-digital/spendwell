@@ -71,7 +71,13 @@ class BucketForm extends Component {
   }
 
   getData () {
-    const { name, filters, fixedAmount, useFixedAmount } = this.state
+    const { viewer } = this.props
+    let { name, filters, fixedAmount, useFixedAmount } = this.state
+
+    if (useFixedAmount && !fixedAmount) {
+      fixedAmount = viewer.transactions.avgAmount
+    }
+
     return { name, filters: cleanFilters(filters), fixedAmount, useFixedAmount }
   }
 

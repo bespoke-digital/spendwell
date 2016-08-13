@@ -1,6 +1,5 @@
 
 import 'sass/app'
-import 'chatlio'
 import 'utils/moment-as-utc'
 import 'utils/class-list'
 
