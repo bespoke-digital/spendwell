@@ -124,6 +124,11 @@ class TransactionQuickAdd extends Component {
                 Create "{searchValue}" Bill
               </A>
             : null}
+            {searchValue && searchValue.length > 0 ?
+              <A onClick={() => this.setState({ createBucketType: 'goal', createBucket: true })}>
+                Create "{searchValue}" Goal
+              </A>
+            : null}
           </Card>
         </Transition>
 

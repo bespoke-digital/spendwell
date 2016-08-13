@@ -33,13 +33,14 @@ function centsForInput (value) {
 }
 
 function getInitialState ({ bucket, type, initialFilters, initialName }) {
+  const filters = bucket ? cleanFilters(bucket.filters) : (initialFilters || [])
   return {
-    filters: bucket ? cleanFilters(bucket.filters) : (initialFilters || []),
+    filters,
     name: bucket ? bucket.name : (initialName || ''),
     type: bucket ? bucket.type : type,
     fixedAmount: bucket ? bucket.fixedAmount : 0,
     useFixedAmount: bucket ? bucket.useFixedAmount : type === 'goal',
-    goalType: bucket && bucket.type === 'goal' && bucket.filters && bucket.filters.length ? 'filter' : 'amount',
+    goalType: filters && filters.length ? 'filter' : 'amount',
   }
 }
 
