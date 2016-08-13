@@ -196,7 +196,6 @@ class BucketForm extends Component {
                       centsForInput(viewer.transactions.avgAmount)
                     }
                     onChange={::this.handleFixedAmountChange}
-                    autoFocus
                   />
                 }
               </div>
