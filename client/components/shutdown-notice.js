@@ -8,7 +8,7 @@ class ShutdownNotice extends Component {
   render () {
     return (
       <Card style={{marginBottom: 48}}>
-        <p>Spendwell is shutting down on <strong>August 15th</strong>. We want
+        <p><strong>Spendwell is shutting down</strong>. We want
         to say a big thank you to everyone who supported us, especially our beta
         users.</p>
 
