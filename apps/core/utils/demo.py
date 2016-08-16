@@ -163,10 +163,13 @@ def import_demo_data():
         transactions[transaction_data['id']] = transaction
 
     for bucket_data in export['buckets']:
-        filters = json.loads(bucket_data['filters'])
-        for filter in filters:
-            if 'account' in filter:
-                filter['account'] = accounts[int(filter['account'])].id
+        if 'filters' in bucket_data:
+            filters = json.loads(bucket_data['filters'])
+
+            if filters:
+                for filter in filters:
+                    if 'account' in filter:
+                        filter['account'] = accounts[int(filter['account'])].id
 
         bucket = Bucket.objects.create(
             owner=owner,
