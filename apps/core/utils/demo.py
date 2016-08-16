@@ -182,7 +182,7 @@ def import_demo_data():
             name=bucket_data['name'],
             type=bucket_data['type'],
             filters=filters,
-            use_fixed_amount=bool(bucket_data['use_fixed_amount']),
+            use_fixed_amount='use_fixed_amount' in bucket_data and bucket_data['use_fixed_amount'],
             fixed_amount=fixed_amount,
         )
         buckets[bucket_data['id']] = bucket
