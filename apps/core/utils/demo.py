@@ -165,7 +165,7 @@ def import_demo_data():
         transactions[transaction_data['id']] = transaction
 
     for bucket_data in export['buckets']:
-        if 'filters' in bucket_data:
+        if 'filters' in bucket_data and bucket_data['filters']:
             filters = json.loads(bucket_data['filters'])
 
             if filters:
