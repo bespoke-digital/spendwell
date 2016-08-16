@@ -166,7 +166,6 @@ def import_demo_data():
 
     for bucket_data in export['buckets']:
         if 'filters' in bucket_data and bucket_data['filters']:
-            print("bucket_data['filters']", bucket_data['filters'])
             filters = json.loads(bucket_data['filters'])
 
             if filters:
