@@ -356,8 +356,9 @@ Dashboard = Relay.createContainer(Dashboard, {
                 ${GoalMonth.getFragment('bucketMonth')}
 
                 id
-                avgAmount
                 amount
+                avgAmount
+                targetAmount
 
                 bucket {
                   id
