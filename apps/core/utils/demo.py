@@ -57,6 +57,8 @@ def export_demo_data():
             'name': bucket.name,
             'type': bucket.type,
             'filters': json.dumps(bucket._filters),
+            'use_fixed_amount': bucket.use_fixed_amount,
+            'fixed_amount': bucket.fixed_amount,
         })
 
     try:
@@ -171,11 +173,17 @@ def import_demo_data():
                     if 'account' in filter:
                         filter['account'] = accounts[int(filter['account'])].id
 
+        fixed_amount = None
+        if 'fixed_amount' in bucket_data and bucket_data['fixed_amount']:
+            fixed_amount = Decimal(bucket_data['fixed_amount'])
+
         bucket = Bucket.objects.create(
             owner=owner,
             name=bucket_data['name'],
             type=bucket_data['type'],
             filters=filters,
+            use_fixed_amount=bool(bucket_data['use_fixed_amount']),
+            fixed_amount=fixed_amount,
         )
         buckets[bucket_data['id']] = bucket
 
